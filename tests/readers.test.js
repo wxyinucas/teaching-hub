@@ -56,7 +56,7 @@ describe('runbook disclosure', () => {
   it('opens multiple cards independently and collapses all', async () => {
     wrapper = mount(RunbookReader, { props: { source: runbookSource, file: 'runbook.md' } })
     const triggers = wrapper.findAll('.segment-trigger')
-    expect(triggers).toHaveLength(8)
+    expect(triggers).toHaveLength(9)
     await triggers[0].trigger('click')
     await triggers[4].trigger('click')
     expect(wrapper.find('#segment-1-notes').isVisible()).toBe(true)

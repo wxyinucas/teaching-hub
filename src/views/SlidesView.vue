@@ -73,6 +73,7 @@ watchEffect(() => {
       <nav class="resource-tabs" aria-label="本周材料">
         <RouterLink v-if="context.week.resources.runbook" :to="{ name: 'runbook', params: { termId, courseId, weekId } }">台本</RouterLink>
         <RouterLink :to="{ name: 'slides', params: { termId, courseId, weekId, page: currentPage } }">Slides</RouterLink>
+        <RouterLink v-if="context.week.resources.guide" :to="{ name: 'guide', params: { termId, courseId, weekId } }">学生指南</RouterLink>
       </nav>
     </div>
     <p v-if="loading" class="reader-loading" role="status">正在打开课件…</p>

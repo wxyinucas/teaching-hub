@@ -41,7 +41,7 @@
 .week-kicker { color: var(--purple); font-size: 11px; font-weight: 650; letter-spacing: .06em; }
 .week-copy h3 { margin: 6px 0 7px; font-size: 18px; }
 .week-copy p { margin: 0; color: var(--ink-muted); font-size: 12px; line-height: 1.75; }
-.week-actions { display: flex; gap: 10px; }
+.week-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
 .resource-link { display: flex; flex-direction: column; min-width: 120px; padding: 13px 15px; border: 1px solid var(--purple-border); border-radius: 6px; text-decoration: none; background: var(--purple-light); }
 .resource-link span { color: var(--purple-dark); font-size: 13px; font-weight: 650; }
 .resource-link small { margin-top: 4px; color: var(--ink-muted); font-size: 10px; }
@@ -53,10 +53,17 @@
 .empty-course > span { color: var(--purple); font-size: 28px; }
 .empty-course h2 { margin: 10px 0 8px; font-size: 16px; }
 .empty-course p { margin: 0; color: var(--ink-muted); font-size: 12px; }
-.resource-tabs { display: flex; gap: 8px; margin: 14px 0 4px; }
+.resource-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 4px; }
 .resource-tabs a { padding: 7px 12px; border: 1px solid var(--border); border-radius: 5px; background: var(--surface); color: var(--ink-muted); font-size: 12px; text-decoration: none; }
 .resource-tabs a.router-link-exact-active { color: white; border-color: var(--purple); background: var(--purple); }
 .reader-loading { padding: 45px 0; color: var(--ink-muted); font-size: 14px; }
+.guide-reader { max-width: 900px; margin: 30px auto 0; padding: clamp(24px, 4vw, 52px); border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+.guide-reader .notes-content { font-size: 15px; line-height: 1.9; }
+.guide-reader .notes-content h1 { margin: 0 0 28px; color: var(--ink); font-size: clamp(26px, 4vw, 36px); line-height: 1.3; }
+.guide-reader .notes-content h2 { margin: 38px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--purple-border); color: var(--purple-dark); font-size: 21px; line-height: 1.45; }
+.guide-reader .notes-content h3 { margin: 26px 0 10px; color: var(--purple); font-size: 16px; line-height: 1.55; }
+.guide-reader .notes-content a { text-underline-offset: 3px; }
+.guide-reader .code-block { margin: 18px 0; }
 .error-state { max-width: 720px; margin: 12vh auto; padding: 28px; border: 1px solid var(--border); background: white; border-radius: 8px; line-height: 1.8; }
 .error-state h1 { margin: 0; font-size: 23px; }
 .page-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--border); margin-top: 30px; padding-top: 16px; font-size: 10px; color: var(--ink-subtle); }
@@ -75,5 +82,6 @@
   .week-card { grid-template-columns: 1fr; gap: 18px; }
   .week-actions { width: 100%; }
   .resource-link { flex: 1; min-width: 0; }
+  .guide-reader { margin-top: 20px; padding: 22px 18px; }
   .page-footer { flex-direction: column; gap: 6px; }
 }

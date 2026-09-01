@@ -50,6 +50,11 @@ watchEffect(() => {
             class="resource-link resource-slides"
             :to="{ name: 'slides', params: { termId, courseId, weekId: week.id, page: 1 } }"
           ><span>Slides</span><small>静态课堂舞台</small></RouterLink>
+          <RouterLink
+            v-if="ready(week, 'guide')"
+            class="resource-link resource-guide"
+            :to="{ name: 'guide', params: { termId, courseId, weekId: week.id } }"
+          ><span>学生指南</span><small>操作与验收</small></RouterLink>
         </div>
       </article>
     </div>

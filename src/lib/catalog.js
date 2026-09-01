@@ -1,7 +1,10 @@
 const termFiles = import.meta.glob('../../terms/*/term.json', { eager: true, import: 'default' })
 const courseFiles = import.meta.glob('../../terms/*/courses/*/course.json', { eager: true, import: 'default' })
 const weekFiles = import.meta.glob('../../terms/*/courses/*/weeks/*/week.json', { eager: true, import: 'default' })
-const sources = import.meta.glob('../../terms/*/courses/*/weeks/*/*.md', { query: '?raw', import: 'default' })
+const sources = import.meta.glob([
+  '../../terms/*/courses/*/weeks/*/*.md',
+  '!../../terms/*/courses/*/weeks/*/draft.md',
+], { query: '?raw', import: 'default' })
 
 const byOrder = (left, right) => (left.order ?? 999) - (right.order ?? 999) || left.id.localeCompare(right.id)
 

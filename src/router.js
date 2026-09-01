@@ -3,6 +3,7 @@ import HomeView from './views/HomeView.vue'
 import CourseView from './views/CourseView.vue'
 import RunbookView from './views/RunbookView.vue'
 import SlidesView from './views/SlidesView.vue'
+import GuideView from './views/GuideView.vue'
 import NotFoundView from './views/NotFoundView.vue'
 
 export function createTeachingRouter(history = createWebHashHistory(import.meta.env.BASE_URL)) {
@@ -18,6 +19,10 @@ export function createTeachingRouter(history = createWebHashHistory(import.meta.
       {
         path: '/terms/:termId/courses/:courseId/weeks/:weekId/slides/:page?',
         name: 'slides', component: SlidesView, props: true,
+      },
+      {
+        path: '/terms/:termId/courses/:courseId/weeks/:weekId/guide',
+        name: 'guide', component: GuideView, props: true,
       },
       { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundView },
     ],

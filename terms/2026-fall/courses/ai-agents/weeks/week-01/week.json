@@ -6,6 +6,7 @@
   "order": 1,
   "resources": {
     "runbook": "runbook.md",
-    "slides": "slides.md"
+    "slides": "slides.md",
+    "guide": "guide.md"
   }
 }

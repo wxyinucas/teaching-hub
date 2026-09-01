@@ -13,13 +13,18 @@ describe('term-first content catalog', () => {
     expect(term.courses[1].weeks).toEqual([])
   })
 
-  it('resolves both W1 resources within its course and term', async () => {
+  it('resolves all three declared W1 resources within its course and term', async () => {
     const context = findWeek('2026-fall', 'ai-agents', 'week-01')
     expect(context.week.resources.runbook).toContain('week-01/runbook.md')
     expect(context.week.resources.slides).toContain('week-01/slides.md')
+    expect(context.week.resources.guide).toContain('week-01/guide.md')
+    expect(context.week.resources.draft).toBeUndefined()
     expect(hasContent(context.week.resources.runbook)).toBe(true)
+    expect(hasContent(context.week.resources.guide)).toBe(true)
+    expect(hasContent('2026-fall/courses/ai-agents/weeks/week-01/draft.md')).toBe(false)
     expect(parseRunbook(await loadContent(context.week.resources.runbook)).sections).toHaveLength(3)
     expect(parseSlides(await loadContent(context.week.resources.slides)).count).toBe(17)
+    expect(await loadContent(context.week.resources.guide)).toContain('READY-CODE')
   })
 
   it('does not leak a week across courses or load an undeclared path', async () => {

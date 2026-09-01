@@ -128,7 +128,7 @@ AI Agents · 王晓宇 · 中国海洋大学 · 2026 秋
 3. 课程目录 `~/course/w01`；
 4. 从该目录执行 `code .`
 
-> **本周检查点**　过程：`READY-WSL`、`READY-VSCODE`　成功出口：`READY-CODE`
+> **本周检查点**　过程：`READY-WSL`　成功出口：`READY-CODE`
 
 ---
 <!-- layout: prompt -->

@@ -35,22 +35,26 @@ afterEach(() => {
 })
 
 describe('teaching hub navigation', () => {
-  it('navigates from the term homepage to both W1 resources', async () => {
+  it('navigates from the term homepage across all three W1 resources', async () => {
     await openPage('/')
     expect(document.title).toBe('Teaching Hub · 课程目录')
     expect(wrapper.findAll('.course-card')).toHaveLength(2)
     await wrapper.findAll('.course-card')[0].trigger('click')
     await settle()
     expect(router.currentRoute.value.path).toBe(coursePath)
-    expect(wrapper.findAll('.resource-link')).toHaveLength(2)
+    expect(wrapper.findAll('.resource-link')).toHaveLength(3)
     await wrapper.find('.resource-runbook').trigger('click')
     await settle()
     expect(router.currentRoute.value.path).toBe(`${weekPath}/runbook`)
-    expect(wrapper.findAll('.segment-trigger')).toHaveLength(8)
+    expect(wrapper.findAll('.segment-trigger')).toHaveLength(9)
     await wrapper.findAll('.resource-tabs a')[1].trigger('click')
     await settle()
     expect(router.currentRoute.value.path).toBe(`${weekPath}/slides/1`)
     expect(wrapper.find('.slide-cover').exists()).toBe(true)
+    await wrapper.findAll('.resource-tabs a')[2].trigger('click')
+    await settle()
+    expect(router.currentRoute.value.path).toBe(`${weekPath}/guide`)
+    expect(wrapper.find('.guide-reader').text()).toContain('W1 学生行动指南')
   })
 
   it('updates a stable slide page route with keyboard navigation', async () => {
@@ -74,7 +78,7 @@ describe('teaching hub navigation', () => {
     window.history.replaceState({}, '', `/#${weekPath}/runbook`)
     await openPage(undefined, createWebHashHistory('/'))
     expect(router.currentRoute.value.path).toBe(`${weekPath}/runbook`)
-    expect(wrapper.findAll('.segment-trigger')).toHaveLength(8)
+    expect(wrapper.findAll('.segment-trigger')).toHaveLength(9)
   })
 
   it.each(['/unknown', '/terms/missing/courses/ai-agents', `${coursePath}/weeks/missing/runbook`])(
