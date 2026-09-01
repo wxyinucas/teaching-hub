@@ -1,0 +1,30 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --purple: #5e33bf;
+  --purple-dark: #291344;
+  --purple-deep: #180c28;
+  --purple-light: #f1ecfa;
+  --purple-border: #d9cbed;
+  --ink: #191919;
+  --ink-muted: #626066;
+  --ink-subtle: #76727c;
+  --border: #dddce1;
+  --paper: #f7f7f8;
+  --surface: #fff;
+  --surface-muted: #f2f2f4;
+  --shadow: 0 18px 45px rgba(25, 16, 39, .12);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { color: inherit; font: inherit; cursor: pointer; }
+button:disabled { cursor: default; }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--purple); outline-offset: 4px; }
+a { color: var(--purple); text-underline-offset: 3px; }
+code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }

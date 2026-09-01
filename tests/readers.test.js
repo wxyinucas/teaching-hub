@@ -1,0 +1,61 @@
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { flushPromises, mount } from '@vue/test-utils'
+import RunbookReader from '../src/components/runbook/RunbookReader.vue'
+import SegmentNotes from '../src/components/runbook/SegmentNotes.vue'
+import SlidesReader from '../src/components/slides/SlidesReader.vue'
+import { parseSlides } from '../src/lib/slides.js'
+import runbookSource from '../terms/2026-fall/courses/ai-agents/weeks/week-01/runbook.md?raw'
+import slidesSource from '../terms/2026-fall/courses/ai-agents/weeks/week-01/slides.md?raw'
+
+let wrapper
+afterEach(() => {
+  wrapper?.unmount()
+  wrapper = null
+  vi.unstubAllGlobals()
+  document.body.innerHTML = ''
+})
+
+describe('runbook disclosure', () => {
+  it('opens multiple cards independently and collapses all', async () => {
+    wrapper = mount(RunbookReader, { props: { source: runbookSource, file: 'runbook.md' } })
+    const triggers = wrapper.findAll('.segment-trigger')
+    expect(triggers).toHaveLength(8)
+    await triggers[0].trigger('click')
+    await triggers[4].trigger('click')
+    expect(wrapper.find('#segment-1-notes').isVisible()).toBe(true)
+    expect(wrapper.find('#segment-5-notes').isVisible()).toBe(true)
+    await wrapper.find('.collapse-all').trigger('click')
+    expect(wrapper.findAll('.segment-trigger').every((trigger) => trigger.attributes('aria-expanded') === 'false')).toBe(true)
+    expect(wrapper.find('.collapse-all').attributes('disabled')).toBeDefined()
+  })
+
+  it('copies fenced teaching material without executing it', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    vi.stubGlobal('navigator', { clipboard: { writeText } })
+    wrapper = mount(SegmentNotes, { props: { source: '```bash\ncode .\n```' } })
+    await wrapper.find('[data-copy-code]').trigger('click')
+    await flushPromises()
+    expect(writeText).toHaveBeenCalledWith('code .\n')
+  })
+})
+
+describe('slides reader', () => {
+  it('uses explicit controls and keyboard events to request page changes', async () => {
+    const deck = parseSlides(slidesSource)
+    wrapper = mount(SlidesReader, { attachTo: document.body, props: { deck, page: 1 } })
+    await wrapper.find('.slide-controls button:last-child').trigger('click')
+    expect(wrapper.emitted('change').at(-1)).toEqual([2])
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }))
+    expect(wrapper.emitted('change').at(-1)).toEqual([17])
+  })
+
+  it('copies the complete prompt from a prompt page', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    vi.stubGlobal('navigator', { clipboard: { writeText } })
+    const deck = parseSlides(slidesSource)
+    wrapper = mount(SlidesReader, { props: { deck, page: 13 } })
+    await wrapper.find('.prompt-heading button').trigger('click')
+    await flushPromises()
+    expect(writeText.mock.calls[0][0]).toContain('证据不足不得宣布 READY-WSL')
+  })
+})

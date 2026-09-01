@@ -1,0 +1,11 @@
+{
+  "id": "week-01",
+  "label": "W1 · 新的职责",
+  "title": "面对 AI Agent，我们应该做什么准备？",
+  "summary": "从结果责任出发，搭起 WSL 与 VS Code 工作台，并留下可接续的状态。",
+  "order": 1,
+  "resources": {
+    "runbook": "runbook.md",
+    "slides": "slides.md"
+  }
+}
