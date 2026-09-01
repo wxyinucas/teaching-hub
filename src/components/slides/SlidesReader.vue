@@ -7,6 +7,10 @@ const props = defineProps({
 })
 const emit = defineEmits(['change'])
 const feedback = ref('')
+const reader = ref(null)
+const fullscreenSupported = ref(false)
+const isFullscreen = ref(false)
+const fullscreenFeedback = ref('')
 let feedbackTimer
 
 const slide = computed(() => props.deck.slides[props.page - 1])
@@ -46,15 +50,35 @@ async function copyPrompt() {
   feedbackTimer = setTimeout(() => { feedback.value = '' }, 2400)
 }
 
-onMounted(() => window.addEventListener('keydown', handleKey))
+function syncFullscreen() {
+  isFullscreen.value = document.fullscreenElement === reader.value
+}
+
+async function toggleFullscreen() {
+  fullscreenFeedback.value = ''
+  try {
+    if (document.fullscreenElement) await document.exitFullscreen()
+    else await reader.value.requestFullscreen()
+  } catch {
+    fullscreenFeedback.value = '浏览器未允许进入全屏，请使用浏览器菜单重试。'
+  }
+}
+
+onMounted(() => {
+  fullscreenSupported.value = Boolean(reader.value?.requestFullscreen && document.exitFullscreen)
+  syncFullscreen()
+  window.addEventListener('keydown', handleKey)
+  document.addEventListener('fullscreenchange', syncFullscreen)
+})
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleKey)
+  document.removeEventListener('fullscreenchange', syncFullscreen)
   clearTimeout(feedbackTimer)
 })
 </script>
 
 <template>
-  <section class="slides-reader" aria-label="静态课堂课件">
+  <section ref="reader" class="slides-reader" aria-label="静态课堂课件">
     <div class="slide-stage">
       <article v-if="slide.layout === 'cover'" class="slide-canvas slide-cover">
         <div class="slide-title-block">
@@ -110,9 +134,17 @@ onBeforeUnmount(() => {
     </div>
 
     <nav class="slide-controls" aria-label="课件翻页">
-      <button type="button" :disabled="!canPrevious" @click="go(page - 1)"><span aria-hidden="true">←</span> 上一页</button>
-      <span><strong>{{ page }}</strong> / {{ deck.count }}</span>
-      <button type="button" :disabled="!canNext" @click="go(page + 1)">下一页 <span aria-hidden="true">→</span></button>
+      <button class="slide-previous" type="button" :disabled="!canPrevious" @click="go(page - 1)"><span aria-hidden="true">←</span> 上一页</button>
+      <span class="slide-progress"><strong>{{ page }}</strong> / {{ deck.count }}</span>
+      <button
+        v-if="fullscreenSupported"
+        class="slide-fullscreen"
+        type="button"
+        :aria-pressed="isFullscreen"
+        @click="toggleFullscreen"
+      >{{ isFullscreen ? '退出全屏' : '全屏' }}</button>
+      <button class="slide-next" type="button" :disabled="!canNext" @click="go(page + 1)">下一页 <span aria-hidden="true">→</span></button>
+      <span class="sr-only" role="status" aria-live="polite">{{ fullscreenFeedback }}</span>
     </nav>
     <p class="slide-key-hint">方向键或 Page Up / Page Down 翻页，Home / End 跳到首尾。</p>
   </section>

@@ -8,12 +8,49 @@ import runbookSource from '../terms/2026-fall/courses/ai-agents/weeks/week-01/ru
 import slidesSource from '../terms/2026-fall/courses/ai-agents/weeks/week-01/slides.md?raw'
 
 let wrapper
+let restoreFullscreen
 afterEach(() => {
   wrapper?.unmount()
   wrapper = null
+  restoreFullscreen?.()
+  restoreFullscreen = null
+  vi.restoreAllMocks()
   vi.unstubAllGlobals()
   document.body.innerHTML = ''
 })
+
+function installFullscreenMock() {
+  const requestDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'requestFullscreen')
+  const exitDescriptor = Object.getOwnPropertyDescriptor(document, 'exitFullscreen')
+  const elementDescriptor = Object.getOwnPropertyDescriptor(document, 'fullscreenElement')
+  let fullscreenElement = null
+
+  const requestFullscreen = vi.fn(function requestFullscreen() {
+    fullscreenElement = this
+    document.dispatchEvent(new Event('fullscreenchange'))
+    return Promise.resolve()
+  })
+  const exitFullscreen = vi.fn(() => {
+    fullscreenElement = null
+    document.dispatchEvent(new Event('fullscreenchange'))
+    return Promise.resolve()
+  })
+
+  Object.defineProperty(HTMLElement.prototype, 'requestFullscreen', { configurable: true, value: requestFullscreen })
+  Object.defineProperty(document, 'exitFullscreen', { configurable: true, value: exitFullscreen })
+  Object.defineProperty(document, 'fullscreenElement', { configurable: true, get: () => fullscreenElement })
+
+  restoreFullscreen = () => {
+    if (requestDescriptor) Object.defineProperty(HTMLElement.prototype, 'requestFullscreen', requestDescriptor)
+    else delete HTMLElement.prototype.requestFullscreen
+    if (exitDescriptor) Object.defineProperty(document, 'exitFullscreen', exitDescriptor)
+    else delete document.exitFullscreen
+    if (elementDescriptor) Object.defineProperty(document, 'fullscreenElement', elementDescriptor)
+    else delete document.fullscreenElement
+  }
+
+  return { requestFullscreen, exitFullscreen }
+}
 
 describe('runbook disclosure', () => {
   it('opens multiple cards independently and collapses all', async () => {
@@ -43,10 +80,37 @@ describe('slides reader', () => {
   it('uses explicit controls and keyboard events to request page changes', async () => {
     const deck = parseSlides(slidesSource)
     wrapper = mount(SlidesReader, { attachTo: document.body, props: { deck, page: 1 } })
-    await wrapper.find('.slide-controls button:last-child').trigger('click')
+    await wrapper.find('.slide-next').trigger('click')
     expect(wrapper.emitted('change').at(-1)).toEqual([2])
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }))
     expect(wrapper.emitted('change').at(-1)).toEqual([17])
+  })
+
+  it('enters and exits fullscreen while preserving the slide reader', async () => {
+    const { requestFullscreen, exitFullscreen } = installFullscreenMock()
+    const deck = parseSlides(slidesSource)
+    wrapper = mount(SlidesReader, { attachTo: document.body, props: { deck, page: 1 } })
+    await flushPromises()
+    const fullscreen = wrapper.find('.slide-fullscreen')
+
+    expect(fullscreen.attributes('aria-pressed')).toBe('false')
+    await fullscreen.trigger('click')
+    await flushPromises()
+    expect(requestFullscreen).toHaveBeenCalledOnce()
+    expect(fullscreen.text()).toBe('退出全屏')
+    expect(fullscreen.attributes('aria-pressed')).toBe('true')
+
+    await fullscreen.trigger('click')
+    await flushPromises()
+    expect(exitFullscreen).toHaveBeenCalledOnce()
+    expect(fullscreen.text()).toBe('全屏')
+    expect(fullscreen.attributes('aria-pressed')).toBe('false')
+  })
+
+  it('omits the fullscreen control when the browser does not support it', () => {
+    const deck = parseSlides(slidesSource)
+    wrapper = mount(SlidesReader, { props: { deck, page: 1 } })
+    expect(wrapper.find('.slide-fullscreen').exists()).toBe(false)
   })
 
   it('copies the complete prompt from a prompt page', async () => {
