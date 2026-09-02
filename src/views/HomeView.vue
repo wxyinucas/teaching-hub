@@ -29,7 +29,8 @@ watchEffect(() => { document.title = 'Teaching Hub · 课程目录' })
           <div class="course-card-top"><h3>{{ course.title }}</h3><span aria-hidden="true">↗</span></div>
           <p>{{ course.description }}</p>
           <div class="course-card-bottom">
-            <span>{{ course.weeks.length ? `${course.weeks.length} 周已登记` : '等待首周内容' }}</span>
+            <span v-if="course.weekMap?.length">{{ course.calendar.length }} 周课程</span>
+            <span v-else-if="course.weeks.length">{{ course.weeks.length }} 周内容</span>
             <span>进入课程 →</span>
           </div>
         </RouterLink>

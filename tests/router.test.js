@@ -39,10 +39,15 @@ describe('teaching hub navigation', () => {
     await openPage('/')
     expect(document.title).toBe('Teaching Hub · 课程目录')
     expect(wrapper.findAll('.course-card')).toHaveLength(2)
+    expect(wrapper.findAll('.course-card')[0].text()).toContain('16 周课程')
+    expect(wrapper.findAll('.course-card')[1].text()).not.toContain('等待首周内容')
     await wrapper.findAll('.course-card')[0].trigger('click')
     await settle()
     expect(router.currentRoute.value.path).toBe(coursePath)
+    expect(wrapper.findAll('.week-card')).toHaveLength(16)
     expect(wrapper.findAll('.resource-link')).toHaveLength(3)
+    expect(wrapper.findAll('.week-card')[1].find('a').exists()).toBe(false)
+    expect(wrapper.text()).not.toContain('尚未开放')
     await wrapper.find('.resource-runbook').trigger('click')
     await settle()
     expect(router.currentRoute.value.path).toBe(`${weekPath}/runbook`)
@@ -81,7 +86,12 @@ describe('teaching hub navigation', () => {
     expect(wrapper.findAll('.segment-trigger')).toHaveLength(9)
   })
 
-  it.each(['/unknown', '/terms/missing/courses/ai-agents', `${coursePath}/weeks/missing/runbook`])(
+  it.each([
+    '/unknown',
+    '/terms/missing/courses/ai-agents',
+    `${coursePath}/weeks/missing/runbook`,
+    `${coursePath}/weeks/week-02/runbook`,
+  ])(
     'offers recovery for an unknown address: %s', async (path) => {
       await openPage(path)
       expect(wrapper.find('h1').text()).toBe('未找到课程或材料')

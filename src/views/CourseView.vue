@@ -8,7 +8,7 @@ const props = defineProps({ termId: String, courseId: String })
 const context = computed(() => findCourse(props.termId, props.courseId))
 
 function ready(week, kind) {
-  return hasContent(week.resources[kind])
+  return hasContent(week.week?.resources[kind])
 }
 
 watchEffect(() => {
@@ -31,15 +31,18 @@ watchEffect(() => {
       <p class="directory-intro">{{ context.course.description }}</p>
     </header>
 
-    <div class="directory-section-heading"><h2>教学周</h2><span>{{ context.course.weeks.length }} 周已登记</span></div>
-    <div v-if="context.course.weeks.length" class="week-list">
-      <article v-for="week in context.course.weeks" :key="week.id" class="week-card">
+    <div class="directory-section-heading">
+      <h2>教学周</h2>
+      <span v-if="context.course.calendar.length">{{ context.course.calendar.length }} 周</span>
+    </div>
+    <div v-if="context.course.calendar.length" class="week-list">
+      <article v-for="week in context.course.calendar" :key="week.id" class="week-card">
         <div class="week-copy">
           <span class="week-kicker">{{ week.label }}</span>
           <h3>{{ week.title }}</h3>
-          <p>{{ week.summary }}</p>
+          <p v-if="week.summary">{{ week.summary }}</p>
         </div>
-        <div class="week-actions" aria-label="本周材料">
+        <div v-if="week.week" class="week-actions" aria-label="本周材料">
           <RouterLink
             v-if="ready(week, 'runbook')"
             class="resource-link resource-runbook"

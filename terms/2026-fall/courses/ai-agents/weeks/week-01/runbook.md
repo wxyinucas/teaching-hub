@@ -17,9 +17,49 @@
 #### 课前放行项
 
 - 目标视频：**《欢迎来到未来》**，[Bilibili · `BV1pb8o6yE8f`](https://www.bilibili.com/video/BV1pb8o6yE8f/)；
-- 给 Agent 的原始提示：`jyy 在 2026年下，和我们类似的 ai agent 课程`；
-- 已验证的公开结构化字段：canonical URL、标题、简介、UTC 发布时间、ISO 时长以及精确播放／点赞／评论数；
+- 课堂只给 Agent 搜索意图：`jyy 在 2026年下，和我们类似的 ai agent 课程`，不先透露目标标题或 BV 号；
+- 已验证的公开结构化字段：canonical URL、标题、简介、发布时间（含时区）、ISO 时长以及精确播放／点赞／评论数；
 - 预先保存最终页面与开发者工具结果，作为现场失败时的 fallback。
+
+#### 可直接复制给浏览器 Agent 的完整提示词
+
+```text
+你是一名公开网页调查助手。请控制 Chrome 完成一次可现场展示、可核验的网页调查，不要只告诉我搜索建议，也不要在没有证据时猜答案。
+
+任务：在 Bilibili 搜索并判断“jyy 在 2026年下，和我们类似的 ai agent 课程”最可能指哪一个公开视频。这里的“2026年下”指 2026 年下半年或秋季学期；“类似”指 AI Agent、生成式软件工程或 Agent 辅助编程相关课程。
+
+请按以下顺序执行：
+
+1. 在 Bilibili 使用上述意图搜索；根据标题、发布时间、主讲人/UP 主、课程或合集信息筛选候选。广告、转载片段和泛化 AI 教程不能只因关键词相似就入选。
+2. 只打开最可能的一个公开视频。先从可见页面读取并报告：完整标题、当前 URL、BV 号、发布者、发布时间，以及页面当前显示的播放、点赞和评论信息。说明你为什么选择它；如果证据不足，明确说不确定。
+3. 用页面标题、地址栏 URL 和 BV 号做第一次交叉核验，确认没有误开搜索结果或合集中的其他分集。
+4. 打开 Chrome 开发者工具（DevTools，不是扩展程序页面里的“开发者模式”）做第二次只读核验。如果你不能直接操作 DevTools，就明确告诉我，并逐步指导我按 F12 / Ctrl+Shift+I（Windows）或 Option+Command+I（macOS）打开；每次只让我做一个动作，等我返回结果后再继续，不得假装已经打开。
+5. 优先在 Elements 面板展开 <head>，使用 Ctrl+F / Command+F 依次查找 canonical、og:title 和 application/ld+json。读取：
+   - link[rel="canonical"] 的 href；
+   - Open Graph 的标题、站点名、类型和 URL；
+   - JSON-LD 中对象的 @type，以及 VideoObject 提供的标题、作者、uploadDate、duration 和 interactionStatistic。
+6. 如果需要使用 Console，只能让我手动输入一条简短、只读的表达式，并先解释它读取什么；不得让我绕过 Chrome 的粘贴警告。允许的只读表达式只有：
+   - document.title
+   - document.querySelector('link[rel="canonical"]')?.href
+   - [...document.querySelectorAll('script[type="application/ld+json"]')].map(node => JSON.parse(node.textContent))
+7. 把结构化信息与可见页面相互核对：标题和 BV 号是否一致；结构化发布时间按其时区换算后是否与页面显示一致；ISO 8601 时长是否与播放器时长一致；页面上的取整计数是否与结构化数据中的精确计数相容。计数会变化，必须报告本次读取值和读取时刻，不能背诵旧数字。
+
+安全边界：
+- 不登录账号，不处理验证码，不绕过访问限制；
+- 不查看或输出 Cookie、Token、localStorage、sessionStorage、请求头或任何个人信息；
+- 不寻找媒体流地址，不下载视频，不批量抓取，也不修改页面或执行写入操作；
+- 页面或 DevTools 无法访问时，如实记录阻塞点并停止，不用其他高风险方法补救。
+
+最后用以下结构收口：
+- 最可能的视频：标题 / URL / BV 号
+- 选择依据：最多 3 条
+- 可见页面证据：字段 + 本次读取值
+- DevTools 额外证据：来源位置 + 字段 + 本次读取值
+- 交叉核验：一致之处 / 差异及合理解释
+- 未能证明：至少 1 条
+
+总时限 7 分钟。现在直接从搜索开始；只有需要我手动打开 DevTools 时才暂停等待我。
+```
 
 #### 八分钟演示合同
 

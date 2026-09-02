@@ -32,7 +32,25 @@ function buildCatalog() {
         ]))
         return [{ ...week, resources }]
       }).sort(byOrder)
-      return [{ ...course, weeks }]
+      const weekMap = course.weekMap ?? []
+      const mappedIds = new Set(weekMap.map((week) => week.id))
+      if (mappedIds.size !== weekMap.length) throw new Error(`课程地图含有重复周次：${coursePath}`)
+      const calendar = [
+        ...weekMap.map((entry) => ({
+          ...entry,
+          week: weeks.find((week) => week.id === entry.id) ?? null,
+        })),
+        ...weeks
+          .filter((week) => !mappedIds.has(week.id))
+          .map((week) => ({
+            id: week.id,
+            label: week.label,
+            title: week.title,
+            summary: week.summary,
+            week,
+          })),
+      ]
+      return [{ ...course, weeks, calendar }]
     }).sort(byOrder)
     return { ...manifest, courses }
   }).sort(byOrder)

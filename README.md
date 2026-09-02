@@ -36,7 +36,7 @@ terms/
 
 同一学期的模板集中维护；课程内容按周组成严格的备课与放行单位。50 分钟课时只存在于台本和课件内部，不继续增加目录层级。
 
-`term.json`、`course.json` 与 `week.json` 会被网站自动发现；新增课程或教学周不需要修改 Vue 路由。`week.json` 只登记已经存在的正式资源，不登记 `draft.md`，也不预填未来周次。
+`term.json`、`course.json` 与 `week.json` 会被网站自动发现；新增课程或教学周不需要修改 Vue 路由。课程可以在 `course.json.weekMap` 中登记完整课程地图，而不创建空周目录；只有实际存在的 `week.json` 才建立可进入的正式教学周并登记资源。`draft.md` 始终不公开。
 
 ## 本地运行
 

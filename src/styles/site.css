@@ -32,6 +32,7 @@
 .course-card p { margin: 14px 0 24px; color: var(--ink-muted); font-size: 13px; line-height: 1.8; }
 .course-card-bottom { display: flex; justify-content: space-between; gap: 12px; margin-top: auto; font-size: 11px; color: var(--purple); }
 .course-card-bottom > :first-child { color: var(--ink-muted); }
+.course-card-bottom > :last-child { margin-left: auto; }
 .breadcrumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding-top: 20px; color: var(--ink-muted); font-size: 11px; line-height: 1.7; }
 .breadcrumbs a { text-decoration: none; }
 .breadcrumbs a:hover { text-decoration: underline; }
