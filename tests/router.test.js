@@ -45,8 +45,8 @@ describe('teaching hub navigation', () => {
     await settle()
     expect(router.currentRoute.value.path).toBe(coursePath)
     expect(wrapper.findAll('.week-card')).toHaveLength(16)
-    expect(wrapper.findAll('.resource-link')).toHaveLength(3)
-    expect(wrapper.findAll('.week-card')[1].find('a').exists()).toBe(false)
+    expect(wrapper.findAll('.resource-link')).toHaveLength(9)
+    expect(wrapper.findAll('.week-card')[3].find('a').exists()).toBe(false)
     expect(wrapper.text()).not.toContain('尚未开放')
     await wrapper.find('.resource-runbook').trigger('click')
     await settle()
@@ -79,6 +79,23 @@ describe('teaching hub navigation', () => {
     expect(wrapper.find('.week-card').exists()).toBe(false)
   })
 
+  it.each([
+    ['week-02', 'W2 学生行动指南', 12],
+    ['week-03', 'W3 学生行动指南', 9],
+  ])('opens the runbook, slides and guide for %s', async (weekId, guideTitle, segmentCount) => {
+    const path = `${coursePath}/weeks/${weekId}`
+    await openPage(`${path}/runbook`)
+    expect(wrapper.findAll('.segment-trigger')).toHaveLength(segmentCount)
+    await wrapper.findAll('.resource-tabs a')[1].trigger('click')
+    await settle()
+    expect(router.currentRoute.value.path).toBe(`${path}/slides/1`)
+    expect(wrapper.find('.slide-cover').exists()).toBe(true)
+    await wrapper.findAll('.resource-tabs a')[2].trigger('click')
+    await settle()
+    expect(router.currentRoute.value.path).toBe(`${path}/guide`)
+    expect(wrapper.find('.guide-reader').text()).toContain(guideTitle)
+  })
+
   it('boots from a GitHub-Pages-friendly hash deep link', async () => {
     window.history.replaceState({}, '', `/#${weekPath}/runbook`)
     await openPage(undefined, createWebHashHistory('/'))
@@ -90,7 +107,7 @@ describe('teaching hub navigation', () => {
     '/unknown',
     '/terms/missing/courses/ai-agents',
     `${coursePath}/weeks/missing/runbook`,
-    `${coursePath}/weeks/week-02/runbook`,
+    `${coursePath}/weeks/week-04/runbook`,
   ])(
     'offers recovery for an unknown address: %s', async (path) => {
       await openPage(path)

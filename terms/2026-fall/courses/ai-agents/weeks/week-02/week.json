@@ -1,0 +1,12 @@
+{
+  "id": "week-02",
+  "label": "W2 · 正确地跑起来",
+  "title": "怎样证明项目是在正确位置和环境中运行的？",
+  "summary": "从指定入口取得项目，恢复锁定环境并运行给定测试，留下可复现或可接续的状态。",
+  "order": 2,
+  "resources": {
+    "runbook": "runbook.md",
+    "slides": "slides.md",
+    "guide": "guide.md"
+  }
+}

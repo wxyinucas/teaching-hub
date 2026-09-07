@@ -8,7 +8,7 @@
 - **Slides（课件）**：静态课堂舞台；一次只显示一页，只负责必须共同观看的内容。
 - **Guide（学生指南）**：学生能够独立照做、核验和接续的行动依据。
 
-首个学期为 `2026-fall`，当前课程包括 AI Agents 与高等数学（上）。AI Agents 已迁移 W1，高等数学暂时只建立课程入口。
+首个学期为 `2026-fall`，当前课程包括 AI Agents 与高等数学（上）。AI Agents 的 W1 已形成基线，W2、W3 已进入首版迭代；高等数学暂时只建立课程入口。
 
 ## 内容目录
 
@@ -23,12 +23,10 @@ terms/
         ├── ai-agents/
         │   ├── course.json
         │   ├── course-design/
-        │   └── weeks/week-01/
-        │       ├── week.json
-        │       ├── draft.md
-        │       ├── runbook.md
-        │       ├── slides.md
-        │       └── guide.md
+        │   └── weeks/
+        │       ├── week-01/
+        │       ├── week-02/
+        │       └── week-03/
         └── calculus-i/
             ├── course.json
             └── weeks/

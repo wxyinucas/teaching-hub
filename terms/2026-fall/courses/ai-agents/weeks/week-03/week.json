@@ -1,0 +1,12 @@
+{
+  "id": "week-03",
+  "label": "W3 · 受控修改",
+  "title": "Agent 修改以后，我们凭什么决定保留？",
+  "summary": "完成一次受控修改、diff、测试与提交闭环，并用 fixture 观察程序如何接触平台形状。",
+  "order": 3,
+  "resources": {
+    "runbook": "runbook.md",
+    "slides": "slides.md",
+    "guide": "guide.md"
+  }
+}
