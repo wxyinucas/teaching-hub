@@ -79,7 +79,7 @@ Notebook 只能作为选做探索材料，提交前清空无关输出；它不�
 4. 普通周：推送到自己的 `origin/main`；push 后由 LMS、表单或只写外部索引的 bot 登记完整 SHA 与 manifest 摘要，不修改该 commit。
 5. `students/INDEX.md` 只保存稳定的 fork 链接和里程碑，不承担普通周 SHA 登记。
 6. 里程碑周 W3、W6、W9、W14：PR 回 upstream，使同学能够集中参考稳定版本。W14 PR 是 release candidate；若 correction 要改变被答辩版本，必须在预读截止前以小型 delta PR 合入 upstream 并重跑累计测试。最终登记 SHA 必须是 upstream 可达 commit，W15 才能对它创建 tag；截止后的 correction 只作解释，不改变 release。
-7. 第 1 周尚未掌握 Git，可先使用本地模板；第 2 周第一次提交时补入 `week01/`。
+7. W2 的网页 fork 与签名修改只是独立热身，不计入这份跨周仓库；W3 从教师提供的新入口正式建立个人 fork，再补入 `week01/` 与后续责任记录。
 8. `common/` 在学期内尽量只做向后兼容的增加；发生破坏性修复时升级 `VERSION`，并在任务书中说明受影响周次。
 
 这里冻结的是学习与评审单位。将来若 GitHub 自动化足够稳定，可以自动合并无冲突的周 PR，但不能让 PR 管理吞掉教师的教学时间。

@@ -38,7 +38,7 @@ describe('term-first content catalog', () => {
   })
 
   it.each([
-    ['week-02', 'W2', 'READY-RUN'],
+    ['week-02', 'W2', '看到的同学代号'],
     ['week-03', 'W3', 'ACCEPT'],
   ])('loads a complete first-draft bundle for %s', async (weekId, code, guideAnchor) => {
     const context = findWeek('2026-fall', 'ai-agents', weekId)

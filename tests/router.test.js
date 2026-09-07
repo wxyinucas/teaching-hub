@@ -80,7 +80,7 @@ describe('teaching hub navigation', () => {
   })
 
   it.each([
-    ['week-02', 'W2 学生行动指南', 12],
+    ['week-02', 'W2 学生行动指南', 17],
     ['week-03', 'W3 学生行动指南', 9],
   ])('opens the runbook, slides and guide for %s', async (weekId, guideTitle, segmentCount) => {
     const path = `${coursePath}/weeks/${weekId}`
