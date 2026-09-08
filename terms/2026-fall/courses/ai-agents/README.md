@@ -4,8 +4,11 @@
 
 - `course-design/`：课程定位、16 周蓝图、学生证据契约与平台决策。
 - [课程练习仓库](https://github.com/wxyinucas/ai-agents)：独立发布可 fork 的课堂代码；W2 热身位于 `warmups/week-02/course-check/`，不作为后续项目基础。
+- [正式项目仓库](https://github.com/wxyinucas/ai-agents-project)：W3 从自然语言契约与公开测试起步。`course/` 保存教师任务，`common/` 保存公共能力，`students/sXX/system/` 是每名学生唯一持续演化的系统，`students/sXX/weeks/` 只追加周记录。
 - `weeks/`：按周冻结 `week.json`、`draft.md`、`runbook.md`、`slides.md` 与 `guide.md`；不再建立职责含混的 `resources/`。
 
 `course.json.weekMap` 展示完整 16 周课程地图；地图条目不承担开放状态，也不登记资源。W1 已形成当前基线，W2、W3 已建立首版材料包并进入迭代；其余周次不预先生成空目录。
 
 学生证据随任务阶段递进：W1 是环境状态与命令输出；项目出现后加入可复现命令、测试、diff 与 Git 记录；再逐步接入隐藏测试、CI、数据契约、平台对账、release 与答辩。每一层只在课程真正需要它时引入。
+
+版本路线保持单一：普通周只更新个人 fork 的 `origin/main`；W6、W9、W14 将本人目录 PR 到教师 `upstream/main`，使用普通 merge 保留学生原提交，合入并通过累计检查后由教师用 tag 冻结班级里程碑。课程不使用 `dev-week-*` 分支。

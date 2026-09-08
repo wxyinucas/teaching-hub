@@ -3,54 +3,37 @@
 > 状态：冻结。  
 > 关键解释：**按周保存责任与证据，不按周复制整套系统代码。**
 
-学生确实按 `weekXX/` 提交、汇报和追踪；但可运行代码只保留一份持续演化的 `system/`。仓库内保存系统摘要，push 后由仓库外的提交登记记录完整 commit SHA。这样既保留完整学习轨迹，也不会在第 10 周出现十份相似代码而无人知道哪份正在运行。
+学生确实按 `students/sXX/weeks/week-XX/` 提交、汇报和追踪；但可运行代码只保留在同一个 `students/sXX/system/`。仓库内保存系统摘要，push 后由仓库外的提交登记记录完整 commit SHA。这样既保留完整学习轨迹，也不会在第 10 周出现十份相似代码而无人知道哪份正在运行。
+
+从 W3 起冻结顶层“道路”和所有权边界，学期内不移动已有区域；但不预先冻结 `system/`、`common/` 或未来周任务的内部实现。后续主要做兼容性增加，而不是搬家。W3 的教师任务、fixture、公开测试和初始化脚本位于 `course/week-03/`；学生让本地 Agent 只在自己的 `system/` 中生成第一份 `pyproject.toml`、`uv.lock` 和源码，先审查再决定是否保留。展示讨论结束后发布的教师参考实现是 W4 的可恢复基线，不倒推学生 W3 的独立决定。
 
 ## 1. 课程仓库最小结构
 
 ```text
 .
-├── pyproject.toml                  # 教师维护：统一项目环境
-├── uv.lock                        # 教师维护：全班锁定依赖
-├── common/                        # 教师维护的公共代码库
-│   ├── VERSION
-│   ├── README.md
-│   ├── src/course_common/
-│   │   ├── contracts.py           # 数据、决策、订单与证据契约
-│   │   ├── replay.py
-│   │   ├── risk.py
-│   │   ├── clock.py
-│   │   ├── evidence.py            # 证据生成与脱敏
-│   │   └── brokers/
-│   │       ├── base.py
-│   │       ├── fake.py
-│   │       └── longbridge.py      # 只读/计划接口；不加载凭证或提交订单
-│   ├── fixtures/                  # 只含小型人工/合成数据
-│   └── tests/
-├── course/                        # 教师维护的课程基础设施
-│   ├── templates/
-│   ├── schemas/
-│   ├── public_tests/
-│   └── scripts/
+├── course/                        # 教师任务、模板、公开测试与脚本
+│   └── week-03/
+│       ├── PROJECT_BRIEF.txt
+│       ├── data/
+│       ├── tests/
+│       ├── report-template.md
+│       └── init-student.sh
+├── common/                        # 教师公共能力；按课程进度兼容性增加
 ├── students/
-│   ├── INDEX.md                   # 公开代号、fork 与里程碑索引
+│   ├── README.md                  # 公开代号、目录边界与初始化说明
 │   └── s07/                       # 课程公开代号，不用完整学号/姓名
-│       ├── README.md              # 当前入口、状态、最新里程碑
 │       ├── system/                # 唯一一份持续增长的学生系统
-│       │   ├── strategy.py
-│       │   ├── settings.public.toml
-│       │   ├── tests/
-│       │   └── fixtures/          # 学生自建的小型可控测试数据
-│       ├── week01/
-│       │   ├── report.md
-│       │   └── evidence/
-│       │       └── manifest.json
-│       ├── week02/
-│       ├── ...
-│       └── TRACKING.md            # 由 manifest 自动汇总，不重复手写
-└── .github/
-    ├── workflows/pr-check.yml
-    └── CODEOWNERS
+│       │   ├── pyproject.toml      # W3 生成并验收
+│       │   ├── uv.lock
+│       │   └── ...                # 内部布局随真实功能逐步形成
+│       └── weeks/
+│           └── week-03/
+│               └── report.md      # 当周责任与证据，不复制源码
+├── README.md                       # 教师维护的仓库总说明
+└── .gitignore
 ```
+
+`course/week-XX/` 可以按周增加，`common/` 可以逐步增加公共契约、适配器、风控与回放能力，`students/sXX/weeks/week-XX/` 可以逐周增加记录；这些都是兼容性扩展。已有学生代码不得因周次变化从一个目录搬到另一个目录。
 
 真正发生外部副作用的 `course-paper` 提交器**不在学生可写 working tree 中**。它以教师签名/固定摘要的版本安装在项目之外，或运行在教师控制环境；自行携带并重新执行白名单、时段、余额、暴露、次数与幂等策略，只读取标准化 `order-plan`。学生仓库中的 `common/`、版本号、Git clean 或自检结果都不能成为它的信任根。
 
@@ -62,10 +45,10 @@ Notebook 只能作为选做探索材料，提交前清空无关输出；它不�
 
 | 区域 | 维护者 | 学生应当做什么 | 学生不应当做什么 |
 | --- | --- | --- | --- |
-| `common/**` | 教师 | 调用、阅读、沿一个具体案例追踪；发现问题时提交 `common-proposal.md` | 在个人周任务中偷偷修改、复制或绕过公共风控 |
-| `course/**`、根依赖、workflow | 教师 | 使用给定命令与模板 | 修改测试入口、依赖锁或 CI 权限以获得通过 |
-| 自己的 `system/**` | 学生 | 持续增量修改；维护自编测试和公开配置 | 放入凭证、原始账户响应或不可说明的大型生成物 |
-| 自己的当周 `weekXX/**` | 学生 | 新建报告与自动证据，给出发布决定 | 用新报告改写先前的事前判断 |
+| 根 `README.md`、`course/**`、根 `.gitignore`、`students/README.md` | 教师 | 阅读任务，运行指定脚本、fixture 与公开测试 | 修改保护文件以获得绿色结果 |
+| `common/**` | 教师 | 调用、阅读、沿一个具体案例追踪；发现问题时提出可审查建议 | 在个人周任务中偷偷修改、复制或绕过公共风控 |
+| 自己的 `students/sXX/system/**` | 学生（可由 Agent 执行） | 持续增量修改；维护自编测试和公开配置 | 放入凭证、原始账户响应或不可说明的大型生成物 |
+| 自己的 `students/sXX/weeks/week-XX/**` | 学生本人 | 新建报告与自动证据，给出发布决定 | 让 Agent 代写责任判断，或用新报告改写先前的事前判断 |
 | 已冻结的旧周目录 | 追加式记录 | 发现错误时新增 `correction-01.md` | 静默重写原始判断和证据 |
 | 其他学生目录 | 其他学生 | 阅读、提问、复现公开结果 | 修改、将其当作自己的运行依赖 |
 
@@ -73,16 +56,20 @@ Notebook 只能作为选做探索材料，提交前清空无关输出；它不�
 
 ## 3. 跨周增长与冻结规则
 
-1. `system/` 是唯一当前版本；每周只增加一个可观察的行为。
-2. `weekXX/` 是当周不可变的责任记录，不是代码副本。
-3. 每周 `manifest.json` 保存 `common/VERSION` 和 `system/` 摘要，但不写入包含它自身的 commit SHA；否则会产生无法求解的自引用。
-4. 普通周：推送到自己的 `origin/main`；push 后由 LMS、表单或只写外部索引的 bot 登记完整 SHA 与 manifest 摘要，不修改该 commit。
-5. `students/INDEX.md` 只保存稳定的 fork 链接和里程碑，不承担普通周 SHA 登记。
-6. 里程碑周 W3、W6、W9、W14：PR 回 upstream，使同学能够集中参考稳定版本。W14 PR 是 release candidate；若 correction 要改变被答辩版本，必须在预读截止前以小型 delta PR 合入 upstream 并重跑累计测试。最终登记 SHA 必须是 upstream 可达 commit，W15 才能对它创建 tag；截止后的 correction 只作解释，不改变 release。
-7. W2 的网页 fork 与签名修改只是独立热身，不计入这份跨周仓库；W3 从教师提供的新入口正式建立个人 fork，再补入 `week01/` 与后续责任记录。
-8. `common/` 在学期内尽量只做向后兼容的增加；发生破坏性修复时升级 `VERSION`，并在任务书中说明受影响周次。
+1. `students/sXX/system/` 是该生唯一当前版本；每周只增加一个可观察行为，不按周复制系统。
+2. `students/sXX/weeks/week-XX/` 是当周不可变的责任记录，不是代码副本。
+3. 从任务书首次引入 `manifest.json` 的周次起，它保存 `common/VERSION` 和 `system/` 摘要，但不写入包含它自身的 commit SHA；否则会产生无法求解的自引用。W3 只生成 `report.md`，不要求 manifest。
+4. 普通周只在个人 fork 的 `origin/main` 持续开发；push 后由 LMS、表单或只写外部索引的 bot 登记完整 SHA；已经生成 manifest 的周次同时登记其摘要，不修改该 commit。
+5. W3 只在本地运行教师区的公开测试，只把 `ACCEPT` 版本 push 到个人 `origin/main`；不建立 CI，不配置第二远端，不向教师仓库提交 PR。参考实现只在第三课时展示讨论结束后发布。
+6. W6、W9、W14 是集中汇总里程碑：学生只把自己的 `students/sXX/**` PR 到教师 `upstream/main`，教师在检查并合入全班结果后分别创建 `checkpoint-w06`、`checkpoint-w09`、`rc-w14` tag。
+7. 里程碑 PR 使用普通 merge，保留学生原提交作为教师主线的祖先；不使用 squash merge 或 rebase merge。全班合入并通过累计检查之后，教师才创建对应 tag。
+8. 课程不创建或使用 `dev-week-*` 分支。周次是同一系统的时间检查点，用报告与 tag 表达；分支不承担周次归档。
+9. 学生平时只需维护个人 `main`。教师区或公共区有新版本时，另行提供统一的 fork 同步步骤；学生不得靠手工复制文件或让 Agent 猜测 merge 来同步。
+10. W14 PR 是 release candidate；若 correction 要改变被答辩版本，必须在预读截止前以小型 delta PR 合入教师仓库并重跑累计测试。最终登记 SHA 必须是教师仓库可达 commit；截止后的 correction 只作解释，不改变 release。
+11. W2 的网页 fork 与签名修改只是独立热身，不计入这份跨周仓库；W3 从教师提供的新入口正式建立个人 fork，并从展示讨论后才公布的参考实现获得可恢复基线。
+12. `common/` 在学期内尽量只做向后兼容的增加；发生破坏性修复时升级 `VERSION`，并在任务书中说明受影响周次。
 
-这里冻结的是学习与评审单位。将来若 GitHub 自动化足够稳定，可以自动合并无冲突的周 PR，但不能让 PR 管理吞掉教师的教学时间。
+这里冻结的是学习与评审单位。将来若 GitHub 自动化足够稳定，可以自动合并无冲突的里程碑 PR，但不能让 PR 管理吞掉教师的教学时间。
 
 ## 4. 每周短报告模板
 
@@ -128,7 +115,7 @@ Notebook 只能作为选做探索材料，提交前清空无关输出；它不�
 
 ## 5. 自动证据 manifest
 
-`evidence/manifest.json` 由课程命令生成，学生不手填测试通过状态。最小结构为：
+W3 不生成 manifest。从任务书首次引入该机制的周次起，`evidence/manifest.json` 由课程命令生成，学生不手填测试通过状态。最小结构为：
 
 ```json
 {
@@ -155,7 +142,7 @@ Notebook 只能作为选做探索材料，提交前清空无关输出；它不�
 - `release_decision`: `accept | hold | blocked`，描述学生是否愿意发布当前版本；
 - `execution_mode`: `none | fake | replay | longbridge_readonly | longbridge_paper`。
 
-二者不能合并：任务可能已经完整执行，但证据不足，因而是 `complete + hold`。所有 `artifact` 路径相对于当前 `weekXX/` 解析，禁止逃逸到学生目录之外。
+二者不能合并：任务可能已经完整执行，但证据不足，因而是 `complete + hold`。所有 `artifact` 路径相对于当前 `students/sXX/weeks/week-XX/` 解析，禁止逃逸到本人学生目录之外。
 
 根据周次逐步增加但不改变含义的字段包括：数据来源类型与指纹、`as_of`、测试命令与退出码、风险结论、脱敏事件关联码、运行模式和生成时间。仓库外提交登记的最小记录为 `student_id + week + full_commit_sha + manifest_digest + received_at`，它才固定截止时间版本，不能只依赖可被 force-push 的 fork 分支。
 
@@ -223,7 +210,7 @@ W14 release candidate 不是沿用 W6/W9 的绿灯：W15 课前登记的**最终
 
 ## 8. Longbridge 凭证与事件证据
 
-具体平台安全链见[《Longbridge 课程接入决策》](./Longbridge课程接入决策-v1.0.md)。仓库侧冻结以下规则：
+具体平台安全链见[《Longbridge 课程接入决策》](./longbridge-decision.md)。仓库侧冻结以下规则：
 
 - 凭证由 Agent 无权读取的 OS 用户、受限服务或等价隔离边界持有；“只放在项目之外”本身不够，不放项目 `.env`，也不长期全局导出给所有 shell/Agent；
 - 策略和测试阶段无凭证，只产生 `order-plan`；
@@ -237,13 +224,13 @@ W14 release candidate 不是沿用 W6/W9 的绿灯：W15 课前登记的**最终
 
 25 人、无助教时，不能每周人工通读全部代码和完整报告。第一版采用：
 
-- 每周所有人：自动检查目录、隐私、manifest 和测试；
+- 每周所有人：执行当周已经引入的目录、隐私与测试检查；引入 manifest 后再检查 manifest；
 - 每周教师：查看班级状态仪表盘，重点阅读 `BLOCKED/HOLD` 与失败聚类；轮换精读约 5 份报告；
 - 小组互查：5 人一组，每周用固定问题核对一份同伴报告；
-- W3：自动检查全部里程碑 PR，教师只抽样和处理失败聚类；
+- W3：学生在本地运行 5 个公开测试和正反例，两人互查 diff 与一个测试解释，教师抽样 `ACCEPT/HOLD`；本周无 CI 和里程碑 PR；
 - W6/W9/W14：教师集中查看全部里程碑证据卡与 PR；
 - W15：核验冻结 tag、correction 和复现结果，并在课前预读 25 份最终证据包/短视频；
 - W6/W9/W14：小组互答 + 教师抽查；确保每人在 W14 前至少被教师单独追问一次；
 - W15～16：每人最终个人答辩。
 
-建议的首轮容量预算：普通周自动仪表盘与抽样约 45～60 分钟；W3 自动全检 + 教师抽样约 60～90 分钟；W6/W9/W14 每次全量里程碑约 2～3 小时；W15 预读和冻结核验另计约 2～3 小时。若自动检查尚未建成，先减少报告字段或里程碑次数，不能默默把 400 份人工评阅塞给一位教师。
+建议的首轮容量预算：普通周自动仪表盘与抽样约 45～60 分钟；W3 使用本地公开测试、同伴互查和教师抽样，不另建自动全检；W6/W9/W14 每次全量里程碑约 2～3 小时；W15 预读和冻结核验另计约 2～3 小时。若自动检查尚未建成，先减少报告字段或里程碑次数，不能默默把 400 份人工评阅塞给一位教师。
