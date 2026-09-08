@@ -11,7 +11,7 @@ watchEffect(() => { document.title = 'Teaching Hub · 课程目录' })
     <header class="directory-heading home-heading">
       <p class="eyebrow">按学期组织，按周完成</p>
       <h1>课程工作台</h1>
-      <p class="directory-intro">台本负责课前放行与临场决策，Slides 只承担课堂舞台。两者共享同一个教学周，但各自保持边界。</p>
+      <p class="directory-intro">台本负责课前放行与临场决策；派生材料的受众与用途由课程契约定义。所有材料共享同一个教学周，并各自保持边界。</p>
     </header>
 
     <section v-for="term in catalog.terms" :key="term.id" class="term-group" :aria-labelledby="`term-${term.id}`">

@@ -73,10 +73,13 @@ describe('teaching hub navigation', () => {
     expect(router.currentRoute.value.path).toBe(`${weekPath}/slides/17`)
   })
 
-  it('shows the calculus course without inventing empty weeks', async () => {
+  it('shows the calculus map without inventing prepared weeks', async () => {
     await openPage('/terms/2026-fall/courses/calculus-i')
-    expect(wrapper.find('.empty-course').text()).toContain('还没有登记教学周')
-    expect(wrapper.find('.week-card').exists()).toBe(false)
+    expect(wrapper.findAll('.week-card')).toHaveLength(16)
+    expect(wrapper.findAll('.week-card')[0].text()).toContain('从函数到极限')
+    expect(wrapper.findAll('.week-card')[15].text()).toContain('高阶线性方程')
+    expect(wrapper.find('.resource-link').exists()).toBe(false)
+    expect(wrapper.find('.empty-course').exists()).toBe(false)
   })
 
   it.each([

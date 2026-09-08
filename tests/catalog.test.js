@@ -19,8 +19,14 @@ describe('term-first content catalog', () => {
     expect(aiAgents.calendar[1].week?.id).toBe('week-02')
     expect(aiAgents.calendar[2].week?.id).toBe('week-03')
     expect(aiAgents.calendar[3].week).toBeNull()
-    expect(term.courses[1].weeks).toEqual([])
-    expect(term.courses[1].calendar).toEqual([])
+    const calculus = term.courses[1]
+    expect(calculus.weeks).toEqual([])
+    expect(calculus.calendar.map((week) => week.id)).toEqual(
+      Array.from({ length: 16 }, (_, index) => `week-${String(index + 1).padStart(2, '0')}`),
+    )
+    expect(calculus.calendar[0].title).toBe('从函数到极限：研究对象与逼近语言')
+    expect(calculus.calendar[15].title).toBe('高阶线性方程及全课程收束')
+    expect(calculus.calendar.every((week) => week.week === null)).toBe(true)
   })
 
   it('resolves all three declared W1 resources within its course and term', async () => {

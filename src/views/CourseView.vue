@@ -52,21 +52,21 @@ watchEffect(() => {
             v-if="ready(week, 'slides')"
             class="resource-link resource-slides"
             :to="{ name: 'slides', params: { termId, courseId, weekId: week.id, page: 1 } }"
-          ><span>Slides</span><small>静态课堂舞台</small></RouterLink>
+          ><span>Slides</span><small>按课程约定使用</small></RouterLink>
           <RouterLink
             v-if="ready(week, 'guide')"
             class="resource-link resource-guide"
             :to="{ name: 'guide', params: { termId, courseId, weekId: week.id } }"
-          ><span>学生指南</span><small>操作与验收</small></RouterLink>
+          ><span>学生指南</span><small>独立执行与接续</small></RouterLink>
         </div>
       </article>
     </div>
     <div v-else class="empty-course">
       <span aria-hidden="true">○</span>
       <h2>还没有登记教学周</h2>
-      <p>课程入口已经建立；第一份台本或 Slides 准备好后，再加入对应的 week 目录。</p>
+      <p>课程入口已经建立；第一份正式周材料准备好后，再加入对应的 week 目录。</p>
     </div>
-    <p class="directory-footnote">周是严格的备课与放行单位；50 分钟课时只在周内作为软检查点。</p>
+    <p class="directory-footnote">网站按教学周组织；备课与放行单位由课程契约定义。</p>
   </section>
   <NotFoundView v-else />
 </template>
