@@ -19,8 +19,8 @@
     {
       "id": "week-03",
       "label": "W3",
-      "title": "Agent 成为受控修改者，系统第一次观察外部形状",
-      "summary": "完成 Agent 修改、检查 diff、测试、提交的责任闭环，并产生一份标明运行模式的观察摘要。"
+      "title": "把契约变成自己的可验证系统",
+      "summary": "初始化个人持续项目，让本地 Agent 只在自己的 system 中实现任务，并用教师区的公开测试、实际运行与 diff 作出 ACCEPT/HOLD。"
     },
     {
       "id": "week-04",

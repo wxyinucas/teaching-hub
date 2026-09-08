@@ -1,139 +1,278 @@
 <!-- layout: cover -->
-# W3：受控修改
-> Agent 改完项目，我们凭什么保留这次修改？
+# W3：从一句需求到一个项目
+> 本地 Agent 怎样进入我们的工作流？
 
 AI Agents · 王晓宇 · 中国海洋大学 · 2026 秋
 
 ---
-<!-- section: 第一课时：建立起点，看懂受控修改 -->
+<!-- section: 第一课时：读懂工作台与项目合同 -->
 
 ---
 <!-- layout: question -->
-# Agent 说“完成了”，现在能提交吗？
-> 先看实际修改与证据，再决定是否保留
+# Agent 能写完整个项目，我们还需要做什么？
+> 给出边界，检查证据，并决定是否保留
 
 ---
 <!-- layout: columns -->
-# 教师项目、本地项目与个人 fork
+# VS Code：五个固定工作位置
 
 <!-- column -->
-## upstream
-**课程来源**
+## 看见项目
+**文件资源管理器 · 编辑器**
 
-教师维护的项目
-
-<!-- column -->
-## local
-**工作现场**
-
-Agent 在这里修改
+看结构，读任务、测试与代码
 
 <!-- column -->
-## origin
-**个人版本**
+## 运行项目
+**集成终端**
 
-本人检查后 push
+确认目录，运行真实命令
+
+<!-- column -->
+## 作出决定
+**差异视图 · Cline 面板**
+
+看实际改动，决定是否授权
 
 ---
-<!-- layout: question -->
-# Agent 能响应，就已经可以修改了吗？
-> 先确认目录、任务范围与停止条件
-
----
-# 一次修改的责任链
+<!-- layout: columns -->
+# 同一个窗口，背后是四层
 
 ```text
-任务与范围 → Agent 计划 → 实际 diff → 给定测试 → 人的决定 → Git 版本
+IDE → Agent 插件 → API 服务商 → 模型
+```
+
+<!-- column -->
+## 本周主线
+**VS Code + Cline**
+
+一套全班共同工作流
+
+<!-- column -->
+## GUI 形态
+**Codex**
+
+选学：独立图形界面
+
+<!-- column -->
+## TUI 形态
+**Claude Code**
+
+选学：终端中的 Agent
+
+<!-- footer -->
+工作位置、行动代理、连接入口与生成模型，不是同一件事。
+
+---
+<!-- layout: columns -->
+# 能调用，不等于可以授权
+
+<!-- column -->
+## 权限
+**每次先问清动作**
+
+- 读哪些文件？
+- 改哪些文件？
+- 运行什么命令？
+- 为什么需要联网？
+
+<!-- column -->
+## 密钥
+**只进服务商设置**
+
+不进对话、终端命令、项目文件、截图或 Git 提交。
+
+<!-- footer -->
+越出工作区、修改教师起点、读取凭证或执行不可逆命令：停下。
+
+---
+<!-- layout: columns -->
+# 一座仓库，三种责任
+
+<!-- column -->
+## 教师给合同
+**`course/week-03/`**
+
+```text
+PROJECT_BRIEF.txt
+data/
+tests/
+report-template.md
+init-student.sh
+```
+
+<!-- column -->
+## 学生养系统
+**`students/sXX/`**
+
+```text
+system/                # 唯一代码
+weeks/
+└── week-03/report.md  # 本周记录
+```
+
+<!-- footer -->
+`common/` 由教师维护；Agent 只修改本人 `system/`。
+
+---
+# 测试：保存下来、反复执行的小实验
+
+```text
+项目声明与锁文件
+样例数据
+另一组正常数据
+缺少必要字段
+文件不存在
+```
+
+同一条命令，重复检查同一份合同：
+
+```bash
+cd students/s07/system
+uv run --locked pytest -q ../../../course/week-03/tests
 ```
 
 ---
-<!-- layout: question -->
-# 测试绿了，为什么仍然可能拒绝？
-> 它也许修改了范围之外的文件
+<!-- section: 第二课时：让 Agent 受控生成项目 -->
 
 ---
-# 第一课时收口
+<!-- layout: question -->
+# 先把“我的位置”钉死
+> 从仓库根初始化一次，再从仓库根打开 VS Code
 
-```text
-本次唯一目标：
-允许 Agent 修改：
-我会运行的测试：
-我只有在什么条件下才接受：
+```bash
+bash course/week-03/init-student.sh s07
+code .
 ```
 
----
-<!-- section: 第二课时：做成一次责任闭环 -->
+```text
+system=students/s07/system
+report=students/s07/weeks/week-03/report.md
+```
+
+`s07` 只是示例，必须换成教师分配的本人 `sNN`。
 
 ---
 <!-- layout: prompt -->
-# 给 Agent 的第一条任务
+# 第一步：只读自解释
 
-请先阅读 W3 任务卡和当前项目，复述目标、允许修改的文件和验收命令。等我确认后完成这个小修改，只改允许范围。
+只读取当前工作区，不修改文件，也不运行命令。我的公开代号是 `s07`。
 
-完成后不要提交，先告诉我改了什么，展示 diff，并运行任务卡指定的测试。需要越界就停下问我。
+请区分 `course`、`common` 与 `students`，确认你只能修改 `students/s07/system`；再根据 `course/week-03` 中的 brief 和公开测试复述目标、成功输出、两类失败、保护范围与验收命令。等待我确认。
 
 ---
-# Agent 停下以后，人接管检查
+<!-- layout: prompt -->
+# 第二步：确认后再生成
 
-```bash
+你的复述准确，可以开始。
+
+请严格按 `course/week-03/PROJECT_BRIEF.txt`，只在 `students/s07/system` 中补成最小 uv Python 项目。不要修改教师区、公共区、本人周报告或其他学生目录；不要联网实现功能，不要读取凭证，不要增加未来功能，也不要执行 `git add/commit/push`。
+
+从本人 `system/` 运行教师指定的公开测试与正反例。完成后停下，报告实际改动、真实结果和仍不能证明的事情；若必须越界，先停止并询问我。
+
+---
+<!-- layout: question -->
+# Agent 说“完成了”，第二课时就结束
+> 保存现场；不追绿，不提交，不提前作出 ACCEPT
+
+```text
 git status --short
-git diff --name-only
-git diff
-uv run pytest
+Agent 是否只改了我的 system：
+实际新增了什么：
+状态：READY-REVIEW / BLOCKED-AGENT
 ```
 
-先看全部变动，再判断测试支持了什么。
+---
+<!-- section: 第三课时：用证据决定是否保留 -->
 
 ---
 <!-- layout: columns -->
-# 第二课时结束前，作出真实决定
+# 三类证据，缺一不可
+
+<!-- column -->
+## 公开测试
+**合同的重复检查**
+
+```text
+5 passed
+```
+
+`../../../course/week-03/tests`
+
+<!-- column -->
+## 正常输入
+**程序报告事实**
+
+```text
+rows=4
+DATA_CHECK=PASS
+```
+
+<!-- column -->
+## 失败输入
+**程序明确拒绝**
+
+```text
+DATA_CHECK=FAIL
+FAILURE_EXIT=1
+```
+
+---
+<!-- layout: columns -->
+# 看完所有改动，再解释一个测试
+
+<!-- column -->
+## 实际改了什么
+**新文件不会自动出现在 `git diff`**
+
+先看 `git status`，再在 SCM 逐个打开新文件；或：
+
+```bash
+git add --intent-to-add .
+git diff HEAD --name-status
+git diff HEAD
+git diff HEAD -- README.md course common \
+  .gitignore students/README.md
+```
+
+<!-- column -->
+## 证据说明什么
+**也要说它不能证明什么**
+
+```text
+输入或起点
+预期结果
+实际结果
+判断边界
+```
+
+---
+<!-- layout: columns -->
+# 展示之后，先作出自己的决定
 
 <!-- column -->
 ## ACCEPT
-**证据足够**
+**范围与证据都足够**
 
-检查后 commit / push
+只提交 `students/sXX/**`，push `origin/main`
 
 <!-- column -->
 ## HOLD
-**暂不接受**
+**仍有越界或证据缺口**
 
-范围或证据仍需核对
+保留现场，不用绿色结果掩盖问题
 
-<!-- column -->
-## BLOCKED
-**链条中断**
-
-保存错误与下一步
+<!-- footer -->
+展示：任务边界 → 关键 diff → 一个测试 → 正常／失败运行 → 我的决定
 
 ---
-<!-- section: 第三课时：说清一次接受决定 -->
-
----
-# 第一次平台形状观察
+<!-- layout: question -->
+# 什么时候才能看参考实现？
+> 展示与判断结束以后；答案不能替代自己的证据
 
 ```text
-execution_mode=fixture
+ACCEPT → 在同一份 system 上继续进入 W4
+HOLD / BLOCKED-AGENT → 保留首次尝试，使用教师恢复基线
 ```
 
-fixture 可以检查格式与处理链，但不代表真实平台连接。
-
----
-# 展示只回答五件事
-
-1. 我交给 Agent 的任务；
-2. Agent 实际修改了什么；
-3. 我接受、拒绝或修正了什么；
-4. 哪些证据支持我的决定；
-5. 这些证据仍不能证明什么。
-
----
-# W3 门槛 0
-
-- 从 W2 的可复现基线开始；
-- 完成一次受控 Agent 修改；
-- 检查关键 diff，解释至少一个测试；
-- commit 并 push 自己接受的版本；
-- 生成明确标注 fixture 的观察摘要。
-
-> Agent 的“完成”不是交付终点；人的决定才是。
+教师版本只是满足合同的一种实现；周次只追加记录，不复制源码。

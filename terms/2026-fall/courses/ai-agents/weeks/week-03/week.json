@@ -1,8 +1,8 @@
 {
   "id": "week-03",
-  "label": "W3 · 受控修改",
-  "title": "Agent 修改以后，我们凭什么决定保留？",
-  "summary": "完成一次受控修改、diff、测试与提交闭环，并用 fixture 观察程序如何接触平台形状。",
+  "label": "W3 · 本地 Agent",
+  "title": "把契约变成自己的可验证系统",
+  "summary": "初始化个人持续项目，让本地 Agent 只在自己的 system 中实现任务，并用教师区的公开测试、实际运行与 diff 作出 ACCEPT/HOLD。",
   "order": 3,
   "resources": {
     "runbook": "runbook.md",

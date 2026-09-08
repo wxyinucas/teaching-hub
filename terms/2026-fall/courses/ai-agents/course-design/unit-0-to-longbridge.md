@@ -7,9 +7,9 @@
 
 到 W4 结束，学生至少能够：
 
-> 从正确目录取得并恢复课程项目 → 用 `uv` 运行 → 让本地 Agent 做受控修改 → 检查 diff 和测试 → commit/push → 运行教师提供的 Longbridge/fixture 观察任务 → 解释数据来源、运行模式与证据边界
+> 从正确目录取得项目 → 初始化自己的 `students/sXX/` → 让本地 Agent 只在个人 `system/` 中把自然语言契约变成最小项目 → 从教师区运行公开测试和正反例 → 检查全部新文件与 diff → 作出 `ACCEPT / HOLD` 并只保存自己接受的版本 → 在 W4 继续演化同一份系统
 
-W1～W3 是第 0 单元。W3 配置 Agent 后立即运行第一个平台形状任务；W4 才把“学生个人的真实 Longbridge 读取”作为正式主任务。这样真实账号审批不会卡住第 0 单元，Agent 配置也不会变成脱离应用的孤立教学。
+W1～W3 是第 0 单元。W3 不再延续 W2 的一次性热身，而是从独立的正式仓库建立将持续到 W16 的项目起点：`course/` 是教师任务区，`common/` 是教师公共区，`students/sXX/system/` 是个人唯一持续系统，`students/sXX/weeks/` 只追加责任记录。W4 才引入 Longbridge 与同构 fallback；因此平台账号、数据接口与 CI 都不会卡住本地 Agent 工作台的门槛 0。
 
 ## 2. 每节课共用的任务卡
 
@@ -102,63 +102,39 @@ W1 的唯一实施依据是 [`weeks/week-01/`](../weeks/week-01/) 中的五文�
 
 W2 课后开放 Longbridge paper 注册状态登记：只记录 `未选择 / 申请中 / READY / BLOCKED-REGION / BLOCKED-IDENTITY / BLOCKED-NET / 选择 REPLAY`，不收集账号、身份材料、截图或 token。它为 W4 分流服务，不构成成绩门槛。
 
-## 5. W3｜本地 Agent 责任闭环与第一次平台形状任务
+## 5. W3｜把自然语言契约变成可验证项目
 
-### 课时 1：Agent 的工作目录、权限和 GitHub 关系
+> W3 从全新的正式仓库开始，与 W2 的签名实验解耦。分钟级实施以 [`weeks/week-03/runbook.md`](../weeks/week-03/runbook.md) 为唯一依据。
 
-**唯一可观察目标**：Agent 只能在指定课程项目内工作；学生的 fork/origin 与教师 upstream 已辨认。
+### 课时 1：读懂工作台与项目合同
 
-| 时间 | 活动 |
-| --- | --- |
-| 0～8 分 | Agent、GitHub 和 W2 补测状态检查；不在大屏暴露任何个人登录信息 |
-| 8～18 分 | 演示工作目录、允许读写范围、命令审批、密钥边界与停止条件 |
-| 18～32 分 | 从 W3 的新入口建立个人 fork，配置 `upstream` 与 push 认证；执行一次同步与 push |
-| 32～43 分 | 学生让 Agent 只读项目并复述任务/边界，不立刻修改 |
-| 43～50 分 | 检查 Agent 计划会改哪里、会运行什么；不合格计划先修改提示 |
+- 用文件资源管理器、编辑器、集成终端、源代码管理／diff 和 Cline 对话面板统一全班描述屏幕的方式；
+- 区分 VS Code（IDE）、Cline（Agent 插件）、API 服务商和模型四层；Codex GUI 与 Claude Code TUI 只作选学认知；
+- 冻结读文件、写文件、运行命令、联网与密钥的授权边界；
+- 用 `course / common / students` 说明教师合同、公共能力、个人系统与周记录的所有权边界；
+- 把 `course/week-03/PROJECT_BRIEF.txt`、多组小型 CSV 和 5 个公开测试读成一份验收合同，不讲实现。
 
-### 课时 2：修改、审查、测试、提交
+### 课时 2：先只读复述，再受控生成
 
-**唯一可观察目标**：完成一次 Agent 产物的验收，而不是只取得成品。
+- 学生 fork 正式仓库，使用 HTTPS clone 自己的 fork；从仓库根运行 `bash course/week-03/init-student.sh sXX`，看到 `STUDENT_INIT=PASS` 后仍从根目录执行 `code .`；
+- 只检查个人 `origin`、本地 commit 身份和干净起点；本周不增加第二远端，不提交教师仓库 PR；
+- Cline 安装或登录到硬停点仍失败者记为 `BLOCKED-AGENT`，跟随教师或同伴继续审查链，不冒充本人完成；
+- Prompt 1 只读并复述合同与三区边界；学生核对正确后才用 Prompt 2，允许 Agent 只在本人 `students/sXX/system/` 中生成最小 uv 项目。本课时结束前硬停，不作 `ACCEPT`、不 commit/push。
 
-| 时间 | 活动 |
-| --- | --- |
-| 0～8 分 | 展示任务规格和给定测试，不讲实现 |
-| 8～25 分 | Agent 完成一个极小行为修改；学生观察过程 |
-| 25～35 分 | 学生检查关键 diff，确认没有越界文件和依赖变化 |
-| 35～43 分 | 运行原测试和一个陌生小测试；不通过则回到规格/实现 |
-| 43～50 分 | commit/push，并写一句收尾复核与 `ACCEPT/HOLD` |
+### 课时 3：先展示证据，再决定是否保留
 
-预制快进故障包括：Agent 改错目录、顺手升级依赖、删除失败测试、只在当前机器硬编码路径、测试绿但规格错误。快组处理其中之一，不提前做下周内容。
+- 先从仓库根检查 staged 内容，再对完整工作区使用 `git add --intent-to-add .` 让所有新文件进入 diff；核对每项变化都位于本人 `students/sXX/**`，并确认根 `README.md`、`course/**`、`common/**`、根 `.gitignore`、`students/README.md` 和其他学生目录没有变化；
+- 再进入本人 `system/`，用 `uv run --locked pytest -q ../../../course/week-03/tests` 独立运行 5 个公开测试，并运行一组正常样例和一组预期失败样例；
+- 每人解释一个公开测试的输入、预期、实际结果及证据边界，然后作出 `ACCEPT / HOLD`；
+- 学生本人填写 `students/sXX/weeks/week-03/report.md`；只有 `ACCEPT` 才精确暂存本人目录、检查 staged diff、commit 并 push 个人 `origin/main`。展示讨论结束后，教师才公布参考实现与 W4 恢复基线。
 
-### 课时 3：配置完就进入实践
+### 门槛 0 与本周边界
 
-**唯一可观察目标**：从同一命令得到一份明确标注 `longbridge_readonly` 或 `fixture` 的数据观察摘要。
+学生不需要独立编写全部代码，但必须能够：
 
-| 时间 | 活动 |
-| --- | --- |
-| 0～8 分 | 教师用自己的 paper 身份演示一次真实只读历史 K 线；不显示凭证和原始账户信息 |
-| 8～15 分 | 追踪 `source → adapter → normalized rows → checks → summary` |
-| 15～35 分 | 全员运行预制 `observe`；个人授权与隔离取数负向测试均通过者可用行情路线，其余使用 fixture |
-| 35～43 分 | 学生互换摘要，判断对方是否如实标注运行模式、查询截止时间与数据来源 |
-| 43～50 分 | 生成 W3 manifest，说明真实读取和 fixture 分别能证明什么 |
+> 辨认正确工作区与本人目录 → 解读 Agent 权限 → 核对契约 → 确认 Agent 只改个人 `system/` → 检查全部新文件与 diff → 从个人系统调用教师测试和正反例 → 解释一个测试 → 为 `ACCEPT / HOLD` 负责
 
-这节课不教授 SDK，也不要求学生自行拼装请求。目标是让他们在 Agent 配置完成的同一天看见：程序已经在处理一个现实平台的问题，而后续课程要逐步接管证据与责任。
-
-### 门槛 0
-
-学生必须能够现场或补测完成：
-
-> 正确目录 → 锁定环境 → 给定测试 → Agent 受控修改 → diff → 再测试 → commit/push
-
-并解释 Agent 权限、至少一个测试及观察任务的运行模式。平台账号不是门槛 0 的条件。
-
-### 本周教师材料
-
-- 一个只有单一可改行为的练习任务和参考/故障实现；
-- Agent 权限任务卡、diff 审查卡和 GitHub fork/origin/upstream 图；
-- `observe` 命令、合成 Longbridge 形状 fixture、脱敏摘要生成器；
-- 教师真实读取的本地录屏与静态截图，避免现场网络失败；
-- 门槛 0 自动检查和 3 分钟口头追问清单。
+本周不引入 CI、Longbridge、隐藏测试、第二远端、教师仓库 PR 或 `dev-week-*` 分支。教师需准备一份经同一 starter 独立生成、再经人审查并通过 5 个公开测试的参考实现；第三课时讨论结束前必须保持隐藏。普通周继续 push 个人 `origin/main`，到 W6/W9/W14 才把本人目录 PR 汇入教师 `upstream/main`，并由教师以 tag 冻结里程碑。
 
 ## 6. W4｜学生自己的首次 Longbridge 只读实践
 
@@ -263,4 +239,4 @@ W2 课后开放 Longbridge paper 注册状态登记：只记录 `未选择 / 申
 5. GitHub Pages 上的可搜索文字版；
 6. PDF/离线包作为教室网络失败时的备份。
 
-学生产物仍以仓库中的 `system/ + weekXX/report.md + manifest.json` 为真源；不要求每人维护一套网站，也不把 Jupyter 当作必须掌握的提交界面。
+学生产物仍以仓库中的 `students/sXX/system/ + students/sXX/weeks/week-XX/report.md` 为真源；从任务书首次引入 manifest 的周次起，再把当周 `manifest.json` 纳入真源。不要求每人维护一套网站，也不把 Jupyter 当作必须掌握的提交界面。
