@@ -34,6 +34,8 @@
 .slide-content-body th, .slide-content-body td { padding: 1.1cqw 1.7cqw; border-bottom: 1px solid var(--border); }
 .slide-content-body table thead:not(:has(th:not(:empty))) + tbody tr:first-child td { border-top: 1px solid var(--border); }
 .slide-content-body th:first-child, .slide-content-body td:first-child { color: var(--purple); border-right: .16cqw solid var(--purple); }
+.slide-content.has-footer { display: flex; flex-direction: column; justify-content: space-between; }
+.slide-content.has-footer .slide-content-body { flex: 1; height: auto; }
 .slide-cover { display: flex; flex-direction: column; justify-content: center; padding: 6.2cqw; }
 .slide-title-block { display: flex; min-height: 56%; flex-direction: column; justify-content: center; align-items: center; padding: 4.2cqw 6cqw; border-radius: 1.1cqw; background: linear-gradient(135deg, var(--purple-dark), #5d2b88); color: white; text-align: center; box-shadow: 0 1.2cqw 2.5cqw rgba(41, 19, 68, .24); }
 .slide-overline { margin-bottom: 1.2cqw; font-family: Baskerville, Georgia, serif; font-size: clamp(13px, 1.05cqw, 18px); letter-spacing: .18em; opacity: .7; text-transform: uppercase; }

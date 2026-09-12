@@ -3,21 +3,31 @@ import { parseSlides } from '../src/lib/slides.js'
 import source from '../terms/2026-fall/courses/ai-agents/weeks/week-01/slides.md?raw'
 
 describe('static slides Markdown', () => {
-  it('maps W1 to the frozen 17-page deck and four explicit layouts', () => {
+  it('maps W1 to the 17-page deck and its explicit layouts', () => {
     const deck = parseSlides(source)
     expect(deck.count).toBe(17)
     expect(deck.sections).toEqual([
-      '第一课时：为什么最后由我签字？',
+      '第一课时：当 Agent 能够执行，人还负责什么？',
       '第二课时：把工作台搭起来',
       '第三课时：用证据完成交付',
     ])
     const counts = deck.slides.reduce((result, slide) => ({ ...result, [slide.layout]: (result[slide.layout] ?? 0) + 1 }), {})
-    expect(counts).toEqual({ cover: 1, section: 3, question: 2, columns: 6, content: 3, prompt: 2 })
+    expect(counts).toEqual({ cover: 1, section: 3, prompt: 3, content: 3, columns: 6, question: 1 })
   })
 
   it('builds section agendas and preserves the complete copyable prompts', () => {
     const deck = parseSlides(source)
     expect(deck.slides[1]).toMatchObject({ layout: 'section', sectionIndex: 0 })
+    expect(deck.slides[2].copyText).toContain('Chrome 无痕窗口')
+    expect(deck.slides[3].html).toContain('任务完成：充分使用工具')
+    expect(deck.slides[3].footerHtml).toContain('哪些反馈对我的成长真正重要')
+    expect(deck.slides.slice(4, 7).every((slide) => slide.layout === 'columns' && slide.footerHtml)).toBe(true)
+    expect(deck.slides[7]).toMatchObject({
+      layout: 'columns',
+      title: '我们这次打开哪一层？',
+      footerHtml: '',
+    })
+    expect(deck.slides[8].footerHtml).toContain('诚实面对不可控的部分')
     expect(deck.slides[12].copyText).toContain('cat /etc/os-release')
     expect(deck.slides[15].copyText).toContain('证据不足不得宣布 READY-CODE')
   })
@@ -26,6 +36,15 @@ describe('static slides Markdown', () => {
     const deck = parseSlides('# 表格\n\n|---:|:---|\n\n```text\n---\n```\n\n---\n# 第二页')
     expect(deck.count).toBe(2)
     expect(deck.slides[0].html).toContain('---')
+  })
+
+  it('separates a content footer and rejects duplicate footers', () => {
+    const deck = parseSlides('# 纵向列表\n\n- 第一项\n- 第二项\n\n<!-- footer -->\n一句落点')
+    expect(deck.slides[0]).toMatchObject({ layout: 'content' })
+    expect(deck.slides[0].html).toContain('第一项')
+    expect(deck.slides[0].html).not.toContain('一句落点')
+    expect(deck.slides[0].footerHtml).toContain('一句落点')
+    expect(() => parseSlides('# 重复\n\n<!-- footer -->\n一次\n<!-- footer -->\n两次')).toThrow('只能有一个 footer')
   })
 
   it('escapes raw HTML and rejects unknown layouts or invalid column counts', () => {

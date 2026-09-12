@@ -144,6 +144,22 @@ describe('slides reader', () => {
     expect(wrapper.find('.slide-fullscreen').exists()).toBe(false)
   })
 
+  it('renders a vertical content list with a separate closing line', () => {
+    const deck = parseSlides(slidesSource)
+    wrapper = mount(SlidesReader, { props: { deck, page: 4 } })
+    expect(wrapper.find('.slide-content.has-footer').exists()).toBe(true)
+    expect(wrapper.findAll('.slide-content-body li')).toHaveLength(3)
+    expect(wrapper.find('.slide-footer').text()).toContain('哪些反馈对我的成长真正重要')
+  })
+
+  it('keeps an ordinary content page footer-free', () => {
+    const deck = parseSlides('# 普通页面\n\n- 一项内容')
+    wrapper = mount(SlidesReader, { props: { deck, page: 1 } })
+    expect(wrapper.find('.slide-content').exists()).toBe(true)
+    expect(wrapper.find('.slide-content.has-footer').exists()).toBe(false)
+    expect(wrapper.find('.slide-footer').exists()).toBe(false)
+  })
+
   it('copies the complete prompt from a prompt page', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     vi.stubGlobal('navigator', { clipboard: { writeText } })

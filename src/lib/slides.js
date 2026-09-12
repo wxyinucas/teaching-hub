@@ -84,6 +84,21 @@ function readColumns(raw) {
   }
 }
 
+function readContent(raw, index, sectionIndex) {
+  const footerParts = raw.split(/<!--\s*footer\s*-->/i)
+  if (footerParts.length > 2) throw new Error('一页课件只能有一个 footer。')
+  const clean = stripDirectives(footerParts[0])
+  const { title, body } = readTitle(clean)
+  return {
+    number: index + 1,
+    layout: 'content',
+    sectionIndex,
+    title,
+    html: renderSlideMarkdown(body),
+    footerHtml: footerParts[1] ? renderSlideMarkdown(stripDirectives(footerParts[1])) : '',
+  }
+}
+
 export function parseSlides(source) {
   const rawPages = splitPages(source)
   if (!rawPages.length) throw new Error('课件至少需要一页。')
@@ -103,6 +118,7 @@ export function parseSlides(source) {
     if (layout === 'columns') {
       return { number: index + 1, layout, sectionIndex, ...readColumns(raw) }
     }
+    if (layout === 'content') return readContent(raw, index, sectionIndex)
 
     const clean = stripDirectives(raw)
     const { title, body: afterTitle } = readTitle(clean)

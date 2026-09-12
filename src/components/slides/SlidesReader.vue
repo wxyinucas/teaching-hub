@@ -127,9 +127,10 @@ onBeforeUnmount(() => {
         <p class="copy-feedback" role="status" aria-live="polite">{{ feedback }}</p>
       </article>
 
-      <article v-else class="slide-canvas slide-content">
+      <article v-else class="slide-canvas slide-content" :class="{ 'has-footer': slide.footerHtml }">
         <header class="slide-heading"><h1>{{ slide.title }}</h1></header>
         <div class="slide-content-body" v-html="slide.html"></div>
+        <footer v-if="slide.footerHtml" class="slide-footer" v-html="slide.footerHtml"></footer>
       </article>
     </div>
 
