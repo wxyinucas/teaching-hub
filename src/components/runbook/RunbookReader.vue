@@ -13,8 +13,17 @@ const parsed = computed(() => {
   catch (error) { return { runbook: null, error: error.message } }
 })
 const runbook = computed(() => parsed.value.runbook)
+const sectionUnit = computed(() => (
+  runbook.value?.sections.every((section) => /次课$/.test(section.label)) ? '次课' : '个教学区段'
+))
 const openSegments = ref(new Set())
 const triggers = new Map()
+
+function durationLabel(section) {
+  return section.duration > 50 && section.duration % 50 === 0
+    ? `${section.duration / 50} × 50 min`
+    : `${section.duration} min`
+}
 
 function toggleSegment(id) {
   if (openSegments.value.has(id)) openSegments.value.delete(id)
@@ -52,10 +61,10 @@ watchEffect(() => {
   <section v-if="runbook" class="runbook-reader">
     <section class="lesson-heading" aria-labelledby="lesson-title">
       <div class="lesson-title-row"><span class="week-tag">{{ runbook.code }}</span><h1 id="lesson-title">{{ runbook.title }}</h1></div>
-      <p class="lesson-meta">{{ runbook.subtitle }}<span class="meta-separator">·</span>{{ runbook.sections.length }} 课时 / {{ runbook.duration }} 分钟<span class="meta-note">不含课间</span></p>
+      <p class="lesson-meta">{{ runbook.subtitle }}<span class="meta-separator">·</span>{{ runbook.sections.length }} {{ sectionUnit }} / {{ runbook.segmentCount }} 个教学动作段 / {{ runbook.duration }} 分钟<span class="meta-note">不含课间</span></p>
     </section>
 
-    <dl class="anchors" aria-label="本次课的方向">
+    <dl class="anchors" aria-label="台本的方向">
       <div v-for="(anchor, index) in runbook.overview" :key="anchor.label" class="anchor" :class="{ 'anchor-close': index === runbook.overview.length - 1 }">
         <dt>{{ anchor.label }}</dt><dd>{{ anchor.text }}</dd>
       </div>
@@ -64,34 +73,45 @@ watchEffect(() => {
     <div class="workspace">
       <section id="lesson-route" class="route" aria-labelledby="route-title">
         <div class="route-toolbar">
-          <h2 id="route-title">课堂路线 <span>{{ runbook.segmentCount }} 个推进段</span></h2>
+          <h2 id="route-title">课堂路线 <span>{{ runbook.segmentCount }} 个教学动作段</span></h2>
           <button class="collapse-all" :disabled="openSegments.size === 0" @click="collapseAll">全部收起 <span aria-hidden="true">↑</span></button>
         </div>
 
-        <section v-for="section in runbook.sections" :key="section.id" class="period" :aria-labelledby="section.id">
+        <section v-for="section in runbook.sections" :key="section.id" class="period" :class="{ 'is-dense': section.segments.length >= 6 }" :aria-labelledby="section.id">
           <header class="period-header">
             <div><span class="period-label">{{ section.label }}</span><h3 :id="section.id">{{ section.title }}</h3></div>
-            <span class="period-duration">{{ section.duration }} min</span>
+            <span class="period-duration">{{ durationLabel(section) }}</span>
           </header>
-          <article v-for="segment in section.segments" :key="segment.id" class="segment" :class="{ 'is-open': openSegments.has(segment.id) }" @keydown.esc="closeOnEscape($event, segment.id)">
-            <button
-              :id="`${segment.id}-trigger`"
-              :ref="(element) => element ? triggers.set(segment.id, element) : triggers.delete(segment.id)"
-              class="segment-trigger"
-              :aria-expanded="openSegments.has(segment.id)"
-              :aria-controls="`${segment.id}-notes`"
-              @click="toggleSegment(segment.id)"
+          <template v-for="segment in section.segments" :key="segment.id">
+            <div
+              v-if="segment.periodBoundaryBefore"
+              class="period-boundary"
+              role="separator"
+              :aria-label="`第 ${segment.periodNumber} 课时从第 ${segment.start} 分钟开始`"
             >
-              <span class="segment-time">{{ segment.time }}<small>min</small></span>
-              <span class="segment-overview"><span class="segment-title">{{ segment.title }}</span><span v-if="segment.summary" class="segment-summary">{{ segment.summary }}</span></span>
-              <span class="disclosure-icon" aria-hidden="true">{{ openSegments.has(segment.id) ? '−' : '+' }}</span>
-            </button>
-            <div v-show="openSegments.has(segment.id)" :id="`${segment.id}-notes`" class="segment-notes" role="region" :aria-labelledby="`${segment.id}-trigger`">
-              <div class="notes-heading"><span>教师提示</span><span>卡片内按 Esc 收起</span></div>
-              <SegmentNotes :source="segment.notes" />
-              <button class="close-inline" @click="closeSegment(segment.id, true)">收起本段 ↑</button>
+              <span>第 {{ segment.periodNumber }} 课时</span>
+              <span>{{ segment.start }}–{{ Math.min(segment.start + 50, section.duration) }} min</span>
             </div>
-          </article>
+            <article class="segment" :class="{ 'is-open': openSegments.has(segment.id) }" @keydown.esc="closeOnEscape($event, segment.id)">
+              <button
+                :id="`${segment.id}-trigger`"
+                :ref="(element) => element ? triggers.set(segment.id, element) : triggers.delete(segment.id)"
+                class="segment-trigger"
+                :aria-expanded="openSegments.has(segment.id)"
+                :aria-controls="`${segment.id}-notes`"
+                @click="toggleSegment(segment.id)"
+              >
+                <span class="segment-time">{{ segment.time }}<small>min</small></span>
+                <span class="segment-overview"><span class="segment-title">{{ segment.title }}</span><span v-if="segment.summary" class="segment-summary">{{ segment.summary }}</span></span>
+                <span class="disclosure-icon" aria-hidden="true">{{ openSegments.has(segment.id) ? '−' : '+' }}</span>
+              </button>
+              <div v-show="openSegments.has(segment.id)" :id="`${segment.id}-notes`" class="segment-notes" role="region" :aria-labelledby="`${segment.id}-trigger`">
+                <div class="notes-heading"><span>教师提示</span><span>卡片内按 Esc 收起</span></div>
+                <SegmentNotes :source="segment.notes" />
+                <button class="close-inline" @click="closeSegment(segment.id, true)">收起本段 ↑</button>
+              </div>
+            </article>
+          </template>
         </section>
       </section>
 
@@ -103,8 +123,8 @@ watchEffect(() => {
             <dd>{{ control.text }}</dd>
           </div>
         </dl>
-        <div class="usage-note"><span aria-hidden="true">＋</span><p>先看整次课的路线。<br />需要时，点开一段查细节。</p></div>
-        <p class="machine-note">此页留在 MacBook 上。<br />学校电脑展示 Slides 与操作演示。<br />这里的点击不会控制另一台电脑。</p>
+        <div class="usage-note"><span aria-hidden="true">＋</span><p>先看完整备课单位的路线。<br />需要时，点开一段查细节。</p></div>
+        <p class="machine-note">台本用于教师备课与临场决策。<br />Slides 与其他材料是否展示，按课程约定执行。</p>
       </aside>
     </div>
     <footer class="page-footer"><span>总览里做取舍，展开后查细节。</span><span>{{ runbook.code }} · 内容与版式分开维护</span></footer>

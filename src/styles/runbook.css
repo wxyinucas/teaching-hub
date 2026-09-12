@@ -24,8 +24,13 @@
 .period-label { font-size: 11px; color: var(--purple-border); }
 .period-header h3 { margin: 0; color: var(--surface); font-size: 14px; font-weight: 650; }
 .period-duration { color: var(--purple-border); font-size: 11px; font-variant-numeric: tabular-nums; }
+.period-boundary { display: flex; align-items: center; justify-content: space-between; padding: 7px 16px; border-top: 2px solid var(--purple-border); border-bottom: 1px solid var(--border); background: var(--purple-light); color: var(--purple-dark); font-size: 10px; font-weight: 650; letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+.period-boundary span:last-child { color: var(--ink-muted); font-weight: 400; letter-spacing: 0; }
 .segment + .segment { border-top: 1px solid var(--border); }
 .segment-trigger { display: grid; grid-template-columns: 61px minmax(0, 1fr) 20px; gap: 12px; width: 100%; border: 0; background: transparent; padding: 13px 16px; text-align: left; align-items: center; }
+.period.is-dense .segment-trigger { padding-top: 10px; padding-bottom: 10px; }
+.period.is-dense .segment-overview { gap: 3px; }
+.period.is-dense .segment-summary { line-height: 1.45; }
 .segment-trigger:hover { background: var(--surface-muted); }
 .segment-trigger:focus-visible { outline-offset: -3px; }
 .segment-time { font-size: 12px; font-weight: 650; color: var(--purple); font-variant-numeric: tabular-nums; align-self: start; padding-top: 2px; white-space: nowrap; }
@@ -92,6 +97,7 @@
   .segment-notes { margin: 0 14px; }
   .notes-content { font-size: 13px; }
   .period-header { padding: 10px 12px; }
+  .period-boundary { padding: 7px 12px; }
   .period-header > div { gap: 8px; }
   .meta-note { display: none; }
 }

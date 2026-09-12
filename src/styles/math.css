@@ -1,0 +1,19 @@
+.notes-content .katex-display,
+.slide-canvas .katex-display {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: .2em 0;
+}
+
+.notes-content .katex {
+  font-size: 1.05em;
+}
+
+.slide-canvas .katex {
+  font-size: 1.08em;
+}
+
+.slide-canvas .katex-display {
+  margin: 1.1em 0;
+}

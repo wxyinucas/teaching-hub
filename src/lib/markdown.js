@@ -1,7 +1,18 @@
 import MarkdownIt from 'markdown-it'
+import { katex } from '@mdit/plugin-katex'
 
-const markdown = new MarkdownIt({ html: false, linkify: false, typographer: false })
-const slideMarkdown = new MarkdownIt({ html: false, linkify: false, typographer: false })
+function createMarkdown() {
+  return new MarkdownIt({ html: false, linkify: false, typographer: false }).use(katex, {
+    delimiters: 'dollars',
+    maxExpand: 1000,
+    maxSize: 20,
+    throwOnError: false,
+    trust: false,
+  })
+}
+
+const markdown = createMarkdown()
+const slideMarkdown = createMarkdown()
 
 function externalLink(tokens, index, options, env, renderer) {
   tokens[index].attrSet('target', '_blank')
