@@ -10,7 +10,7 @@
 - **Slides（可选可视化材料）**：具体用于课堂展示还是教师演练，由课程契约说明。
 - **Guide（可选学生指南）**：学生需要独立执行、核验和接续时才建立。
 
-首个学期为 `2026-fall`，当前课程包括 AI Agents 与高等数学（上）。AI Agents 的 W1 已形成基线，W2、W3 已进入首版迭代；高等数学已建立 16 周课程地图，尚未开放正式周材料。
+首个学期为 `2026-fall`，当前课程包括 AI Agents 与高等数学（上）。AI Agents 的 W1 已形成基线，W2、W3 已进入首版迭代；高等数学已建立 16 周课程地图，W1 已进入首版台本迭代。
 
 ## 内容目录
 
@@ -58,7 +58,7 @@ npm run check
 
 ## 内容契约
 
-台本遵循课程契约，并在结构兼容时复制 [`terms/2026-fall/templates/runbook-template.md`](terms/2026-fall/templates/runbook-template.md) 填写。二级标题划分周内执行区段，三级标题划分推进段；总览保留根问题、最低出口与硬收口，展开区域再写讲述提示、活动、转场和 Plan B。
+台本遵循课程契约，并在结构兼容时复制 [`terms/2026-fall/templates/runbook-template.md`](terms/2026-fall/templates/runbook-template.md) 填写。二级标题划分周内执行区段，三级标题划分推进段；推进段的数量与长度由课程契约决定，排课中的课时边界不必成为内容卡片。总览保留根问题、最低出口与硬收口，展开区域再写讲述提示、活动、转场和 Plan B。
 
 课件复制 [`terms/2026-fall/templates/slides-template.md`](terms/2026-fall/templates/slides-template.md) 填写。单独一行 `---` 分页；默认是普通内容页，显式布局只有：
 
