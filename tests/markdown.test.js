@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { renderNotes } from '../src/lib/markdown.js'
+import { renderNotes, renderSlideMarkdown } from '../src/lib/markdown.js'
 
 describe('teacher notes rendering', () => {
   it('keeps the exact command text available for copying', () => {
@@ -24,5 +24,42 @@ describe('teacher notes rendering', () => {
 
   it('does not render javascript URLs as links', () => {
     expect(renderNotes('[bad](javascript:alert(1))').html).not.toContain('href="javascript:')
+  })
+
+  it('renders inline and display TeX in teacher notes', () => {
+    const { html } = renderNotes('行内 $x^2$。\n\n$$\n\\lim_{x \\to 0}\\frac{\\sin x}{x}=1\n$$')
+    expect(html).toContain('class="katex"')
+    expect(html).toContain('class="katex-display"')
+    expect(html).toContain('aria-hidden="true"')
+  })
+
+  it('renders TeX in slide markdown and leaves fenced source literal', () => {
+    expect(renderSlideMarkdown("变化率为 $f'(x)$。")).toContain('class="katex"')
+    const notes = renderNotes('~~~text\n$x^2$\n~~~')
+    expect(notes.codes).toEqual(['$x^2$\n'])
+    expect(notes.html).not.toContain('class="katex"')
+  })
+
+  it('leaves inline code literal', () => {
+    const { html } = renderNotes('命令中的 `$HOME` 不是公式。')
+    expect(html).toContain('<code>$HOME</code>')
+    expect(html).not.toContain('class="katex"')
+  })
+
+  it('keeps escaped dollar signs out of math rendering', () => {
+    const { html } = renderNotes('字面金额写作 \\$5。')
+    expect(html).toContain('$5')
+    expect(html).not.toContain('class="katex"')
+  })
+
+  it('does not allow trusted links through TeX', () => {
+    const { html } = renderNotes('$\\href{javascript:alert(1)}{bad}$')
+    expect(html).not.toContain('href="javascript:')
+  })
+
+  it('keeps malformed TeX visible without breaking the page', () => {
+    const { html } = renderNotes('前文 $\\frac{1}$ 后文')
+    expect(html).toContain('katex-error')
+    expect(html).toContain('后文')
   })
 })

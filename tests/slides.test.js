@@ -33,4 +33,12 @@ describe('static slides Markdown', () => {
     expect(() => parseSlides('<!-- layout: magic -->\n# 页面')).toThrow('不支持的课件布局')
     expect(() => parseSlides('<!-- layout: columns -->\n# 页面\n<!-- column -->\n## 只有一栏')).toThrow('两栏或三栏')
   })
+
+  it('renders TeX in slide bodies while preserving prompt source for copying', () => {
+    const deck = parseSlides('<!-- layout: prompt -->\n# 公式任务\n\n写出 $f\'(x)$，并解释：\n\n$$\n\\int_0^1 x^2\\,dx\n$$')
+    expect(deck.slides[0].html).toContain('class="katex"')
+    expect(deck.slides[0].html).toContain('class="katex-display"')
+    expect(deck.slides[0].copyText).toContain("$f'(x)$")
+    expect(deck.slides[0].copyText).toContain('$$\n\\int_0^1 x^2\\,dx\n$$')
+  })
 })

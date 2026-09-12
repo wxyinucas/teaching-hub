@@ -56,7 +56,8 @@ describe('runbook disclosure', () => {
   it('opens multiple cards independently and collapses all', async () => {
     wrapper = mount(RunbookReader, { props: { source: runbookSource, file: 'runbook.md' } })
     const triggers = wrapper.findAll('.segment-trigger')
-    expect(triggers).toHaveLength(9)
+    expect(triggers).toHaveLength(15)
+    expect(wrapper.find('.period-boundary').exists()).toBe(false)
     await triggers[0].trigger('click')
     await triggers[4].trigger('click')
     expect(wrapper.find('#segment-1-notes').isVisible()).toBe(true)
@@ -66,6 +67,29 @@ describe('runbook disclosure', () => {
     expect(wrapper.find('.collapse-all').attributes('disabled')).toBeDefined()
   })
 
+  it('shows a non-interactive boundary between two 50-minute periods', () => {
+    const source = [
+      '# W1｜双课时台本',
+      '',
+      '## 第一次课 · 两节连上',
+      '',
+      '### 0-20 | 第一段',
+      '### 20-50 | 第二段',
+      '### 50-75 | 第三段',
+      '### 75-100 | 第四段',
+    ].join('\n')
+    wrapper = mount(RunbookReader, { props: { source, file: 'runbook.md' } })
+
+    expect(wrapper.findAll('.segment-trigger')).toHaveLength(4)
+    expect(wrapper.findAll('.period-boundary')).toHaveLength(1)
+    const boundary = wrapper.find('.period-boundary')
+    expect(boundary.attributes('role')).toBe('separator')
+    expect(boundary.attributes('aria-label')).toBe('第 2 课时从第 50 分钟开始')
+    expect(boundary.text()).toContain('第 2 课时')
+    expect(boundary.text()).toContain('50–100 min')
+    expect(boundary.element.tagName).toBe('DIV')
+  })
+
   it('copies fenced teaching material without executing it', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     vi.stubGlobal('navigator', { clipboard: { writeText } })
@@ -73,6 +97,13 @@ describe('runbook disclosure', () => {
     await wrapper.find('[data-copy-code]').trigger('click')
     await flushPromises()
     expect(writeText).toHaveBeenCalledWith('code .\n')
+  })
+
+  it('mounts accessible inline and display mathematics in note bodies', () => {
+    wrapper = mount(SegmentNotes, { props: { source: '行内 $x^2$。\n\n$$\\int_0^1 x\\,dx$$' } })
+    expect(wrapper.find('.katex').exists()).toBe(true)
+    expect(wrapper.find('.katex-display').exists()).toBe(true)
+    expect(wrapper.find('math').exists()).toBe(true)
   })
 })
 

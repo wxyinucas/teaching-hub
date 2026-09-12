@@ -6,6 +6,8 @@ import { createTeachingRouter } from '../src/router.js'
 
 const coursePath = '/terms/2026-fall/courses/ai-agents'
 const weekPath = `${coursePath}/weeks/week-01`
+const calculusCoursePath = '/terms/2026-fall/courses/calculus-i'
+const calculusWeekPath = `${calculusCoursePath}/weeks/week-01`
 let wrapper
 let router
 
@@ -45,13 +47,15 @@ describe('teaching hub navigation', () => {
     await settle()
     expect(router.currentRoute.value.path).toBe(coursePath)
     expect(wrapper.findAll('.week-card')).toHaveLength(16)
-    expect(wrapper.findAll('.resource-link')).toHaveLength(9)
-    expect(wrapper.findAll('.week-card')[3].find('a').exists()).toBe(false)
+    expect(wrapper.findAll('.resource-link')).toHaveLength(12)
+    expect(wrapper.findAll('.week-card')[3].find('a').exists()).toBe(true)
+    expect(wrapper.findAll('.week-card')[4].find('a').exists()).toBe(false)
     expect(wrapper.text()).not.toContain('尚未开放')
     await wrapper.find('.resource-runbook').trigger('click')
     await settle()
     expect(router.currentRoute.value.path).toBe(`${weekPath}/runbook`)
-    expect(wrapper.findAll('.segment-trigger')).toHaveLength(9)
+    expect(wrapper.findAll('.segment-trigger')).toHaveLength(15)
+    expect(wrapper.find('.period-boundary').exists()).toBe(false)
     await wrapper.findAll('.resource-tabs a')[1].trigger('click')
     await settle()
     expect(router.currentRoute.value.path).toBe(`${weekPath}/slides/1`)
@@ -73,18 +77,30 @@ describe('teaching hub navigation', () => {
     expect(router.currentRoute.value.path).toBe(`${weekPath}/slides/17`)
   })
 
-  it('shows the calculus map without inventing prepared weeks', async () => {
-    await openPage('/terms/2026-fall/courses/calculus-i')
+  it('shows the calculus map with only the prepared W1 runbook available', async () => {
+    await openPage(calculusCoursePath)
     expect(wrapper.findAll('.week-card')).toHaveLength(16)
-    expect(wrapper.findAll('.week-card')[0].text()).toContain('从函数到极限')
+    expect(wrapper.findAll('.week-card')[0].text()).toContain('精确描述“趋近”')
     expect(wrapper.findAll('.week-card')[15].text()).toContain('高阶线性方程')
-    expect(wrapper.find('.resource-link').exists()).toBe(false)
+    expect(wrapper.findAll('.resource-link')).toHaveLength(1)
+    expect(wrapper.find('.resource-runbook').exists()).toBe(true)
     expect(wrapper.find('.empty-course').exists()).toBe(false)
+    await wrapper.find('.resource-runbook').trigger('click')
+    await settle()
+    expect(router.currentRoute.value.path).toBe(`${calculusWeekPath}/runbook`)
+    expect(wrapper.findAll('.period')).toHaveLength(3)
+    expect(wrapper.findAll('.segment-trigger')).toHaveLength(26)
+    expect(wrapper.findAll('.period').map((period) => period.findAll('.segment-trigger').length)).toEqual([10, 8, 8])
+    expect(wrapper.findAll('.period-boundary')).toHaveLength(3)
+    expect(wrapper.find('.lesson-meta').text()).toContain('3 次课 / 26 个教学动作段 / 300 分钟')
+    expect(wrapper.findAll('.resource-tabs a')).toHaveLength(1)
+    expect(wrapper.find('.katex').exists()).toBe(true)
   })
 
   it.each([
     ['week-02', 'W2 学生行动指南', 17],
     ['week-03', 'W3 学生行动指南', 12],
+    ['week-04', 'W4 学生行动指南', 12],
   ])('opens the runbook, slides and guide for %s', async (weekId, guideTitle, segmentCount) => {
     const path = `${coursePath}/weeks/${weekId}`
     await openPage(`${path}/runbook`)
@@ -103,14 +119,14 @@ describe('teaching hub navigation', () => {
     window.history.replaceState({}, '', `/#${weekPath}/runbook`)
     await openPage(undefined, createWebHashHistory('/'))
     expect(router.currentRoute.value.path).toBe(`${weekPath}/runbook`)
-    expect(wrapper.findAll('.segment-trigger')).toHaveLength(9)
+    expect(wrapper.findAll('.segment-trigger')).toHaveLength(15)
   })
 
   it.each([
     '/unknown',
     '/terms/missing/courses/ai-agents',
     `${coursePath}/weeks/missing/runbook`,
-    `${coursePath}/weeks/week-04/runbook`,
+    `${coursePath}/weeks/week-05/runbook`,
   ])(
     'offers recovery for an unknown address: %s', async (path) => {
       await openPage(path)
