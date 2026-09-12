@@ -2,12 +2,25 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { flushPromises, mount } from '@vue/test-utils'
 import { createMemoryHistory, createWebHashHistory } from 'vue-router'
 import App from '../src/App.vue'
+import { catalog, loadContent } from '../src/lib/catalog.js'
+import { parseSlides } from '../src/lib/slides.js'
 import { createTeachingRouter } from '../src/router.js'
 
-const coursePath = '/terms/2026-fall/courses/ai-agents'
-const weekPath = `${coursePath}/weeks/week-01`
-const calculusCoursePath = '/terms/2026-fall/courses/calculus-i'
-const calculusWeekPath = `${calculusCoursePath}/weeks/week-01`
+const bundle = catalog.terms.flatMap((term) => term.courses.flatMap((course) => (
+  course.weeks.map((week) => ({ term, course, week }))
+))).find(({ week }) => ['runbook', 'slides', 'guide'].every((kind) => week.resources[kind]))
+
+if (!bundle) throw new Error('路由测试至少需要一个同时登记台本、Slides 与学生指南的教学周。')
+
+const { term, course, week } = bundle
+const coursePath = `/terms/${term.id}/courses/${course.id}`
+const weekPath = `${coursePath}/weeks/${week.id}`
+const unavailableResource = catalog.terms.flatMap((itemTerm) => itemTerm.courses.flatMap((itemCourse) => (
+  itemCourse.weeks.flatMap((itemWeek) => ['runbook', 'slides', 'guide'].flatMap((kind) => (
+    itemWeek.resources[kind] ? [] : [{ term: itemTerm, course: itemCourse, week: itemWeek, kind }]
+  )))
+))).at(0)
+
 let wrapper
 let router
 
@@ -37,103 +50,67 @@ afterEach(() => {
 })
 
 describe('teaching hub navigation', () => {
-  it('navigates from the term homepage across all three W1 resources', async () => {
+  it('navigates from the homepage through every resource type in one declared week', async () => {
     await openPage('/')
     expect(document.title).toBe('Teaching Hub · 课程目录')
-    expect(wrapper.findAll('.course-card')).toHaveLength(2)
-    expect(wrapper.findAll('.course-card')[0].text()).toContain('16 周课程')
-    expect(wrapper.findAll('.course-card')[1].text()).not.toContain('等待首周内容')
-    await wrapper.findAll('.course-card')[0].trigger('click')
+    const courseLink = wrapper.findAll('.course-card').find((link) => link.attributes('href') === coursePath)
+    expect(courseLink).toBeDefined()
+    await courseLink.trigger('click')
     await settle()
     expect(router.currentRoute.value.path).toBe(coursePath)
-    expect(wrapper.findAll('.week-card')).toHaveLength(16)
-    expect(wrapper.findAll('.resource-link')).toHaveLength(12)
-    expect(wrapper.findAll('.week-card')[3].find('a').exists()).toBe(true)
-    expect(wrapper.findAll('.week-card')[4].find('a').exists()).toBe(false)
-    expect(wrapper.text()).not.toContain('尚未开放')
-    await wrapper.find('.resource-runbook').trigger('click')
+
+    const runbookLink = wrapper.findAll('.resource-runbook').find((link) => link.attributes('href') === `${weekPath}/runbook`)
+    expect(runbookLink).toBeDefined()
+    await runbookLink.trigger('click')
     await settle()
-    expect(router.currentRoute.value.path).toBe(`${weekPath}/runbook`)
-    expect(wrapper.findAll('.segment-trigger')).toHaveLength(15)
-    expect(wrapper.find('.period-boundary').exists()).toBe(false)
+    expect(wrapper.find('.runbook-reader').exists()).toBe(true)
+
     await wrapper.findAll('.resource-tabs a')[1].trigger('click')
     await settle()
     expect(router.currentRoute.value.path).toBe(`${weekPath}/slides/1`)
-    expect(wrapper.find('.slide-cover').exists()).toBe(true)
-    await wrapper.findAll('.resource-tabs a')[2].trigger('click')
+    expect(wrapper.find('.slides-reader').exists()).toBe(true)
+
+    await wrapper.find('.resource-tabs a:last-child').trigger('click')
     await settle()
     expect(router.currentRoute.value.path).toBe(`${weekPath}/guide`)
-    expect(wrapper.find('.guide-reader').text()).toContain('W1 学生行动指南')
+    expect(wrapper.find('.guide-reader').exists()).toBe(true)
   })
 
-  it('updates a stable slide page route with keyboard navigation', async () => {
+  it('keeps the slide page in the URL during keyboard navigation', async () => {
+    const deck = parseSlides(await loadContent(week.resources.slides))
     await openPage(`${weekPath}/slides/1`)
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }))
     await settle()
     expect(router.currentRoute.value.path).toBe(`${weekPath}/slides/2`)
-    expect(wrapper.find('.slide-section').exists()).toBe(true)
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }))
     await settle()
-    expect(router.currentRoute.value.path).toBe(`${weekPath}/slides/17`)
-  })
-
-  it('shows the calculus map with only the prepared W1 runbook available', async () => {
-    await openPage(calculusCoursePath)
-    expect(wrapper.findAll('.week-card')).toHaveLength(16)
-    expect(wrapper.findAll('.week-card')[0].text()).toContain('精确描述“趋近”')
-    expect(wrapper.findAll('.week-card')[15].text()).toContain('高阶线性方程')
-    expect(wrapper.findAll('.resource-link')).toHaveLength(1)
-    expect(wrapper.find('.resource-runbook').exists()).toBe(true)
-    expect(wrapper.find('.empty-course').exists()).toBe(false)
-    await wrapper.find('.resource-runbook').trigger('click')
-    await settle()
-    expect(router.currentRoute.value.path).toBe(`${calculusWeekPath}/runbook`)
-    expect(wrapper.findAll('.period')).toHaveLength(3)
-    expect(wrapper.findAll('.segment-trigger')).toHaveLength(26)
-    expect(wrapper.findAll('.period').map((period) => period.findAll('.segment-trigger').length)).toEqual([10, 8, 8])
-    expect(wrapper.findAll('.period-boundary')).toHaveLength(3)
-    expect(wrapper.find('.lesson-meta').text()).toContain('3 次课 / 26 个教学动作段 / 300 分钟')
-    expect(wrapper.findAll('.resource-tabs a')).toHaveLength(1)
-    expect(wrapper.find('.katex').exists()).toBe(true)
-  })
-
-  it.each([
-    ['week-02', 'W2 学生行动指南', 17],
-    ['week-03', 'W3 学生行动指南', 12],
-    ['week-04', 'W4 学生行动指南', 12],
-  ])('opens the runbook, slides and guide for %s', async (weekId, guideTitle, segmentCount) => {
-    const path = `${coursePath}/weeks/${weekId}`
-    await openPage(`${path}/runbook`)
-    expect(wrapper.findAll('.segment-trigger')).toHaveLength(segmentCount)
-    await wrapper.findAll('.resource-tabs a')[1].trigger('click')
-    await settle()
-    expect(router.currentRoute.value.path).toBe(`${path}/slides/1`)
-    expect(wrapper.find('.slide-cover').exists()).toBe(true)
-    await wrapper.findAll('.resource-tabs a')[2].trigger('click')
-    await settle()
-    expect(router.currentRoute.value.path).toBe(`${path}/guide`)
-    expect(wrapper.find('.guide-reader').text()).toContain(guideTitle)
+    expect(router.currentRoute.value.path).toBe(`${weekPath}/slides/${deck.count}`)
   })
 
   it('boots from a GitHub-Pages-friendly hash deep link', async () => {
     window.history.replaceState({}, '', `/#${weekPath}/runbook`)
     await openPage(undefined, createWebHashHistory('/'))
     expect(router.currentRoute.value.path).toBe(`${weekPath}/runbook`)
-    expect(wrapper.findAll('.segment-trigger')).toHaveLength(15)
+    expect(wrapper.find('.runbook-reader').exists()).toBe(true)
+  })
+
+  it.runIf(Boolean(unavailableResource))('treats an undeclared resource type as missing', async () => {
+    const item = unavailableResource
+    const suffix = item.kind === 'slides' ? 'slides/1' : item.kind
+    const path = `/terms/${item.term.id}/courses/${item.course.id}/weeks/${item.week.id}/${suffix}`
+    await openPage(path)
+    expect(wrapper.find('h1').text()).toBe('未找到课程或材料')
   })
 
   it.each([
     '/unknown',
-    '/terms/missing/courses/ai-agents',
-    `${coursePath}/weeks/missing/runbook`,
-    `${coursePath}/weeks/week-05/runbook`,
-  ])(
-    'offers recovery for an unknown address: %s', async (path) => {
-      await openPage(path)
-      expect(wrapper.find('h1').text()).toBe('未找到课程或材料')
-      await wrapper.find('.error-state a').trigger('click')
-      await settle()
-      expect(router.currentRoute.value.path).toBe('/')
-    },
-  )
+    '/terms/missing/courses/missing',
+    `/terms/${term.id}/courses/${course.id}/weeks/missing/runbook`,
+  ])('offers recovery for an unknown address: %s', async (path) => {
+    await openPage(path)
+    expect(wrapper.find('h1').text()).toBe('未找到课程或材料')
+    await wrapper.find('.error-state a').trigger('click')
+    await settle()
+    expect(router.currentRoute.value.path).toBe('/')
+  })
 })

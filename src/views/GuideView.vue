@@ -35,7 +35,7 @@ watch(sourcePath, async (path, _previous, onCleanup) => {
 </script>
 
 <template>
-  <div v-if="context" class="guide-page">
+  <div v-if="context && sourcePath" class="guide-page">
     <nav class="breadcrumbs" aria-label="当前位置">
       <RouterLink to="/">首页</RouterLink><span aria-hidden="true">/</span>
       <RouterLink :to="{ name: 'course', params: { termId, courseId } }">{{ context.course.title }}</RouterLink><span aria-hidden="true">/</span>

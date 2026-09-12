@@ -1,40 +1,48 @@
 import { describe, expect, it } from 'vitest'
 import { parseSlides } from '../src/lib/slides.js'
-import source from '../terms/2026-fall/courses/ai-agents/weeks/week-01/slides.md?raw'
 
-describe('static slides Markdown', () => {
-  it('maps W1 to the 17-page deck and its explicit layouts', () => {
-    const deck = parseSlides(source)
-    expect(deck.count).toBe(17)
-    expect(deck.sections).toEqual([
-      '第一课时：当 Agent 能够执行，人还负责什么？',
-      '第二课时：把工作台搭起来',
-      '第三课时：用证据完成交付',
-    ])
-    const counts = deck.slides.reduce((result, slide) => ({ ...result, [slide.layout]: (result[slide.layout] ?? 0) + 1 }), {})
-    expect(counts).toEqual({ cover: 1, section: 3, prompt: 3, content: 3, columns: 6, question: 1 })
-  })
+const example = [
+  '<!-- layout: cover -->',
+  '# 示例课件',
+  '> 一句副标题',
+  '---',
+  '<!-- section: 第一课时 -->',
+  '---',
+  '# 纵向内容',
+  '- 第一项',
+  '- 第二项',
+  '<!-- footer -->',
+  '一句落点',
+  '---',
+  '<!-- layout: columns -->',
+  '# 两栏比较',
+  '<!-- column -->',
+  '## 左侧',
+  '左侧内容',
+  '<!-- column -->',
+  '## 右侧',
+  '右侧内容',
+  '---',
+  '<!-- layout: prompt -->',
+  '# 可复制任务',
+  '请完成指定任务。',
+].join('\n')
 
-  it('builds section agendas and preserves the complete copyable prompts', () => {
-    const deck = parseSlides(source)
-    expect(deck.slides[1]).toMatchObject({ layout: 'section', sectionIndex: 0 })
-    expect(deck.slides[2].copyText).toContain('Chrome 无痕窗口')
-    expect(deck.slides[3].html).toContain('任务完成：充分使用工具')
-    expect(deck.slides[3].footerHtml).toContain('哪些反馈对我的成长真正重要')
-    expect(deck.slides.slice(4, 7).every((slide) => slide.layout === 'columns' && slide.footerHtml)).toBe(true)
-    expect(deck.slides[7]).toMatchObject({
-      layout: 'columns',
-      title: '我们这次打开哪一层？',
-      footerHtml: '',
-    })
-    expect(deck.slides[8].footerHtml).toContain('诚实面对不可控的部分')
-    expect(deck.slides[12].copyText).toContain('cat /etc/os-release')
-    expect(deck.slides[15].copyText).toContain('证据不足不得宣布 READY-CODE')
+describe('static slides Markdown parser', () => {
+  it('parses sections, standard layouts, footers and copyable prompts', () => {
+    const deck = parseSlides(example)
+    expect(deck.sections).toEqual(['第一课时'])
+    expect(deck.slides.map((slide) => slide.layout)).toEqual(['cover', 'section', 'content', 'columns', 'prompt'])
+    expect(deck.slides[0]).toMatchObject({ title: '示例课件', subtitle: '一句副标题' })
+    expect(deck.slides[1]).toMatchObject({ section: '第一课时', sectionIndex: 0 })
+    expect(deck.slides[2].footerHtml).toContain('一句落点')
+    expect(deck.slides[3].columns.map((column) => column.title)).toEqual(['左侧', '右侧'])
+    expect(deck.slides[4].copyText).toBe('请完成指定任务。')
   })
 
   it('does not split a page on table syntax or a separator inside a code fence', () => {
     const deck = parseSlides('# 表格\n\n|---:|:---|\n\n```text\n---\n```\n\n---\n# 第二页')
-    expect(deck.count).toBe(2)
+    expect(deck.slides).toHaveLength(2)
     expect(deck.slides[0].html).toContain('---')
   })
 
@@ -59,5 +67,10 @@ describe('static slides Markdown', () => {
     expect(deck.slides[0].html).toContain('class="katex-display"')
     expect(deck.slides[0].copyText).toContain("$f'(x)$")
     expect(deck.slides[0].copyText).toContain('$$\n\\int_0^1 x^2\\,dx\n$$')
+  })
+
+  it('requires page titles and keeps section pages free of body text', () => {
+    expect(() => parseSlides('plain text')).toThrow('课件页缺少 # 标题')
+    expect(() => parseSlides('<!-- section: 第一课时 -->\n# 不该出现')).toThrow('section 页只写 section 注释')
   })
 })

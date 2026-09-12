@@ -56,14 +56,14 @@ watch([deck, () => props.page], ([value]) => {
 }, { flush: 'post' })
 
 watchEffect(() => {
-  document.title = context.value
+  document.title = context.value && sourcePath.value
     ? `${context.value.week.label} · Slides ${currentPage.value} · Teaching Hub`
     : '未找到课件 · Teaching Hub'
 })
 </script>
 
 <template>
-  <div v-if="context" class="slides-page">
+  <div v-if="context && sourcePath" class="slides-page">
     <div class="slides-page-topbar">
       <nav class="breadcrumbs" aria-label="当前位置">
         <RouterLink to="/">首页</RouterLink><span aria-hidden="true">/</span>
