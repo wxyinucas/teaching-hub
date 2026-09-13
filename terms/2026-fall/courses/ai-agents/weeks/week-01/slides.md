@@ -148,7 +148,8 @@ AI Agents · 王晓宇 · 中国海洋大学 · 2026 秋
 1. WSL 2 + Ubuntu；
 2. Windows 版 VS Code + Microsoft WSL 扩展；
 3. 课程目录 `~/course/w01`；
-4. 从该目录执行 `code .`
+4. 从该目录执行 `code .`；
+5. 在 Windows 文件资源管理器中找到同一目录。
 
 > **本周检查点**　过程：`READY-WSL`　成功出口：`READY-CODE`
 
@@ -181,16 +182,44 @@ Ubuntu 能正常启动，PowerShell 显示版本为 2，并保留 WSL 核验输�
 留下完整错误、已检查项和下一步，使下次可以接着完成。
 
 <!-- footer -->
-最后 10 分钟停止开新问题；尚未完成，也必须留下能够继续的状态。
+最后停止开新问题；尚未完成，也必须留下能够继续的状态。
 
 ---
-<!-- section: 第三课时：用证据完成交付 -->
+<!-- section: 第三课时：让三个入口指向同一目录 -->
+
+---
+<!-- layout: columns -->
+# 学生目标：三个入口，同一个目录
+
+<!-- column -->
+## 1｜WSL
+
+`~/course/w01`
+
+`code .`
+
+<!-- column -->
+## 2｜VS Code
+
+`WSL: Ubuntu`
+
+项目区 · 集成终端
+
+<!-- column -->
+## 3｜Windows
+
+从项目区定位
+
+文件资源管理器
+
+<!-- footer -->
+三处都能找到同一个 `COURSE_MARKER.txt`，才算 `READY-CODE`。
 
 ---
 <!-- layout: prompt -->
 # 让 Chatbox 帮我达到 READY-CODE
 
-你是我的 VS Code + WSL 连接教练。请先核验 READY-WSL，再带我达到 READY-CODE：从 WSL 的课程目录运行 `code .`；VS Code 连接到 WSL；集成终端显示 Linux 且位于同一目录；保存连接状态和终端输出。
+你是我的 VS Code + WSL 连接教练。请带我达到 READY-CODE：从 WSL 的课程目录运行 `code .`；确认 VS Code 连接到 WSL；再从 VS Code 项目区定位到 Windows 文件资源管理器中的同一 WSL 目录。三个入口都要看见同一个 `COURSE_MARKER.txt`。若我尚未达到 READY-WSL，就从真实卡点继续；已完成的核验不要形式化地重做。
 
 先询问我的当前目录、VS Code 状态、屏幕/完整报错和课程资料；课程资料优先，有冲突先说明。每次只给一个动作，标明执行窗口、目的和预期现象；等我返回真实结果后再继续，不得假设成功。
 
@@ -206,7 +235,7 @@ Ubuntu 能正常启动，PowerShell 显示版本为 2，并保留 WSL 核验输�
 ## READY-CODE
 **完成**
 
-环境、目录、编辑器和课程标记一致，并留下可复核证据。
+WSL、VS Code 与 Windows 文件资源管理器指向同一目录，并留下真实证据。
 
 <!-- column -->
 ## BLOCKED-*

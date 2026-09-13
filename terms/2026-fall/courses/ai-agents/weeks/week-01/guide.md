@@ -1,4 +1,4 @@
-# W1 学生行动指南：WSL → VS Code → `code .`
+# W1 学生行动指南：WSL → VS Code → Windows 文件资源管理器
 
 > 本指南是 W1 操作与验收的参考标准。完成时形成并保存 `READY-*`，受阻时保存可接续的 `BLOCKED-*`。
 
@@ -34,7 +34,7 @@ wsl --install
 ## 如何使用本页
 
 - 课前：可以先试一次 WSL；成功不是到课门槛，遇阻也不要求独立修好。
-- 课中：第二课时查阅 WSL 安装与核验细节；第三课时查阅 VS Code 接入与 `code .` 的操作细节。
+- 课中：第二课时查阅 WSL 安装与核验细节；第三课时前 15 分钟先观看演示，随后使用操作清单或 Chatbox 提示词自行推进。
 - 收口：完成时保存核验输出；不能继续时保存最后一个成功动作、完整错误和下一步。
 
 `BLOCKED-*` 可以使本次课堂正常收口（也就是带着明确结果的结束），但不等于已经通关。W1 不要求理解所有命令；先沿固定路线得到可核验状态，W2 再正式学习路径。
@@ -102,39 +102,49 @@ WSL 核验：pwd / whoami / cat /etc/os-release 均可运行，输出已保留
 
 ## 第三课时｜达到 `READY-CODE`
 
-### 1. 安装 Windows 版 VS Code 与 WSL 扩展
+本课的目标不是“打开了 VS Code”，而是证明下面三个入口指向同一个 WSL 工作目录：
 
-1. 在 Windows 安装 VS Code；多数个人电脑使用官方 **User Setup**；
-2. 若安装器出现附加任务，勾选 **Add to PATH**；
-3. 打开 VS Code，在 Extensions 中安装 Microsoft 发布的 **WSL** 扩展；
-4. 安装后关闭并重新打开 PowerShell / Ubuntu 终端。
+> `WSL ~/course/w01` → `code .` → `VS Code · WSL: Ubuntu` → 从项目区定位 → Windows 文件资源管理器
 
-不要在 Ubuntu 内再安装一份桌面版 VS Code。
+三个入口都能找到同一个 `COURSE_MARKER.txt`，才算达到 `READY-CODE`。如果上一课时仍有卡点，就从真实节点继续；不需要为了“重新确认”而从头执行已经成功的步骤。
 
-### 2. 从固定课程目录打开 VS Code
+教师会用 macOS 的 Terminal、VS Code 与 Finder 演示同一种目录关系。这只帮助你看懂目标；你的实际操作与证据仍来自 Windows／WSL，不要照抄 macOS 命令。
 
-下面命令运行在 **Ubuntu / WSL Bash**，不是 PowerShell：
+### 课堂节奏
+
+- **前 15 分钟｜先停手观看。** 看清三个入口为什么应当指向同一个目录，以及一次完整操作怎样首尾相接；此时不用跟着逐步点击。
+- **15–40 分钟｜带着目标自行推进。** 任选下面的操作清单或 `READY-CODE` Chatbox 提示词作为主路线；按自己的真实进度向前走，不必等待全班同步。上一课时仍有卡点时，就从保存的节点继续。
+- **40 分钟以后｜停止开启新问题。** 已完成者保存 `READY-CODE` 证据；未完成者保存 `BLOCKED-*`。教师的演示与截图不能代替你自己的结果。
+
+### 操作清单｜按顺序完成
+
+- **1｜准备连接工具。** 在 Windows 安装或打开 VS Code；多数个人电脑使用官方 **User Setup**。若安装器出现附加任务，勾选 **Add to PATH**。随后在 Extensions 中安装 Microsoft 发布的 **WSL** 扩展，并重新打开 PowerShell／Ubuntu 终端。不要在 Ubuntu 内再安装一份桌面版 VS Code。
+
+- **2｜在 WSL 建立课程目录。** 下面命令运行在 **Ubuntu／WSL Bash**，不是 PowerShell：
 
 ```bash
 mkdir -p ~/course/w01
 cd ~/course/w01
 printf 'AI-COURSE-W01\n' > COURSE_MARKER.txt
 pwd
+```
+
+- **3｜从 WSL 打开 VS Code。** 确认 `pwd` 指向 `~/course/w01`，再在同一个 WSL 终端运行：
+
+```bash
 code .
 ```
 
-首次执行 `code .` 时，VS Code 会下载并启动 VS Code Server，可能需要等待。成功后检查：
+  首次执行时，VS Code 会下载并启动 VS Code Server，可能需要等待。不要把正常下载立即判断为失败。
 
-- VS Code 左下角显示 `WSL: Ubuntu`；
-- VS Code 打开了 `COURSE_MARKER.txt`；
-- 在 VS Code 的 Terminal → New Terminal 中执行下方核验命令。
+- **4｜核对 VS Code。** 左下角显示 `WSL: Ubuntu`，项目区能够看到 `COURSE_MARKER.txt`；随后打开 Terminal → New Terminal，运行：
 
 ```bash
 printf 'SYSTEM=%s\nFOLDER=%s\nEDITOR=%s\n' "$(uname -s)" "${PWD/#$HOME/~}" "$TERM_PROGRAM"
 cat COURSE_MARKER.txt
 ```
 
-预期结果包含：
+  预期结果包含：
 
 ```text
 SYSTEM=Linux
@@ -143,20 +153,24 @@ EDITOR=vscode
 AI-COURSE-W01
 ```
 
-### 3. 保存 W1 最终状态
+- **5｜从 VS Code 反向找到同一目录。** 在 VS Code 项目区右键 `COURSE_MARKER.txt` 或其所在文件夹，按课堂 Windows 实机画面选择“在文件资源管理器中显示”／`Reveal in File Explorer`；在打开的 Windows 文件资源管理器中确认仍能看到 `COURSE_MARKER.txt`。不要求记住 `\\wsl.localhost\...` 的完整地址。
 
-成功时把核验结果保存在自己下次能够找到的位置；不集中提交。记录中不要包含密码、完整主机名或无关个人信息。
+- **6｜保存 W1 最终状态。** 成功时把下面的真实结果保存在自己下次能够找到的位置；不集中提交。记录中不要包含密码、完整主机名或无关个人信息。
 
 ```text
 状态：READY-CODE
 PowerShell：Ubuntu 存在 / VERSION 2
-VS Code 左下角：WSL: Ubuntu
+WSL：~/course/w01 / COURSE_MARKER.txt
+VS Code：WSL: Ubuntu / COURSE_MARKER.txt
+Windows 文件资源管理器：已定位同一目录与文件
 SYSTEM=Linux
 FOLDER=~/course/w01
 EDITOR=vscode
-课程标记：AI-COURSE-W01
+课程标记：AI-COURSE-W01（三处一致）
 我尚未理解、准备在 W2 继续学习的一点：
 ```
+
+- **不能完成时：保存真实卡点。** 使用文末 `BLOCKED-*` 模板，不把教师画面或“跟着看完”写成本人证据。
 
 W1 不安装 Python、Git、`uv`，也不执行 `apt upgrade`。
 
@@ -194,7 +208,7 @@ W1 不安装 Python、Git、`uv`，也不执行 `apt upgrade`。
 ```text
 你是我的 VS Code + WSL 连接教练。我没有编程经验，也可能分不清 Windows PowerShell、Ubuntu / WSL Bash 和 VS Code 集成终端；不要假设我已经打开了正确的窗口。
 
-请先用真实输出核验 READY-WSL，再带我达到 READY-CODE：从 WSL 的课程目录运行 code .；VS Code 连接到 WSL；集成终端显示 Linux 且位于同一目录；保存连接状态和终端输出。
+请带我达到 READY-CODE：从 WSL 的课程目录运行 code .；VS Code 连接到 WSL；集成终端显示 Linux 且位于同一目录；再从 VS Code 项目区定位到 Windows 文件资源管理器中的同一 WSL 目录。三个入口都必须看到同一个 COURSE_MARKER.txt。若我尚未达到 READY-WSL，就从真实卡点继续；已经完成的核验不要形式化地重做。
 
 先让我描述当前窗口、提示符、VS Code 左下角连接状态、当前目录和完整报错；必要时让我提供遮去个人信息的截图。每次只给一个动作，写清在哪个应用和终端执行、如何确认窗口正确、目的、预期现象，以及我要回复的真实结果。等我返回后再继续，不得假设成功，也不要一次给出整串命令。
 
@@ -250,7 +264,7 @@ BLOCKED-OTHER   标准路线暂时不能解释
 - [VS Code 与 WSL](https://code.visualstudio.com/docs/remote/wsl)
 - [Microsoft WSL 扩展](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl)
 
-中文辅助教程复核于 2026-09-02：
+中文辅助教程复核于 2026-09-13：
 
-- [Bilibili｜从 0 开始安装 WSL](https://www.bilibili.com/video/BV18VGPzVEzo/)：约 8 分钟，适合先看一遍安装与 Ubuntu 初始化。视频后半包含换源、`apt upgrade` 和 root 密码等额外配置；W1 不要求这些操作，不要机械照抄。
-- [小红书｜WSL 安装图文补充](https://www.xiaohongshu.com/explore/6a54eddf0000000015026687)：只作为可选图文参考，页面可能要求登录；公开访问在复核时暂时不可用，因此不能作为唯一入口。
+- [Bilibili｜Windows 11 快速安装 Linux 子系统（WSL2）](https://www.bilibili.com/video/BV1Jh4y1c7FS/)：全长约 3 分钟；`00:40–03:00` 展示 PowerShell、`wsl --install`、重启和 Ubuntu 用户初始化。视频中的窗口标题未清楚显示“管理员”，实际执行时必须使用管理员 PowerShell；完成后仍按本 Guide 核验证据。
+- [YouTube｜Installing Windows Subsystem for Linux (WSL)](https://www.youtube.com/watch?v=FAJXzSvl6-w)：全长约 1 分 35 秒，仅适合作为极简回看；视频没有清楚展示管理员 PowerShell 和实际重启，不能代替课堂主视频、官方说明或本 Guide 的核验步骤。

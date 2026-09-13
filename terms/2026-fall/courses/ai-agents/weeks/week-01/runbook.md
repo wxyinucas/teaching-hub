@@ -146,37 +146,38 @@
 
 ## 第二课时 · 把 WSL 变成可核验状态
 
-### 0-8 | 先认窗口，再动系统
+### 0-8 | 确认窗口，现场启动安装
 
-> 先说清在哪个窗口、要做什么，再执行命令；认不清就先停。
+> 先认清管理员 PowerShell；命令提交后，只依据学校电脑的真实返回判断。
 
 #### 课前提醒
 
-- [ ] 在学校电脑准备普通 PowerShell、管理员 PowerShell、Ubuntu／WSL 三个画面，以及一份完成重启与 Ubuntu 初始化的演示环境。
-- [ ] 确认 Windows 10 2004（Build 19041）以上或 Windows 11、管理员权限和重启条件；学校电脑不满足时只演示预存环境。
+- [ ] 课前在教室 Windows 电脑实测：确认系统版本、管理员权限、普通 PowerShell 与管理员 PowerShell 的打开方式，以及当前 WSL 状态；记录真实结果，不预设课堂上一定安装成功。
+- [ ] 准备普通 PowerShell、管理员 PowerShell、Ubuntu／WSL 三种窗口的真实画面；学校电脑未安装 Ubuntu 时，使用录屏中的画面补充。
 - [ ] 不临时修改系统设置，不借用他人账号，不运行来源不明的修复脚本。
 
-- 展示：`wsl --install` 只在 Windows 管理员 PowerShell 执行；Linux 命令只在 Ubuntu／WSL 执行；VS Code 留到第三课时。
-- 让学生做：保存手头工作，确认自己的 Windows 版本、管理员权限和是否能够重启；暂不执行安装命令。
-- 检查：学生能指出自己当前打开的窗口，以及下一条命令准备在哪里运行。
-- 分流：无管理员权限记 `BLOCKED-PERM`；系统版本或重启条件不满足记 `BLOCKED-OS`。
-
-### 8-15 | 一次看完唯一安装路线
-
-> 主线只有安装、重启后进入 Ubuntu，再分别核验 Windows 与 Linux 两侧。
-
-#### 课前提醒
-
-- [ ] 打开 [Microsoft WSL 安装说明](https://learn.microsoft.com/zh-cn/windows/wsl/install)；准备安装前和重启后两个状态，避免全班等待下载与重启。
-- [ ] 本段不进入 BIOS，不关闭安全功能，不删除发行版，不运行“一键修复”；第 15 分钟把操作交给学生。
-
-- 展示：在 Windows 管理员 PowerShell 中运行或展示：
+- 展示：对照普通 PowerShell、管理员 PowerShell 和 Ubuntu／WSL；说明 `wsl --install` 只在 Windows 管理员 PowerShell 中执行，Linux 命令只在 Ubuntu／WSL 中执行。
+- 展示：在学校电脑的管理员 PowerShell 中实际运行一次：
 
 ```powershell
 wsl --install
 ```
 
-- 展示：切到准备好的重启后状态，首次打开 Ubuntu 并创建 Linux 用户；说明密码输入时不显示字符是正常现象。
+- 检查：这是哪个窗口？命令是否已经提交？系统实际返回了什么？
+
+### 8-15 | 跨过等待，看完安装全程
+
+> 现场结果不必成功；先用短录屏看见安装、重启、初始化与核验的完整地图。
+
+#### 课前提醒
+
+- [ ] 打开 [Microsoft WSL 安装说明](https://learn.microsoft.com/zh-cn/windows/wsl/install)，作为唯一安装路线的权威依据。
+- [ ] 打开 [Bilibili · Windows 11 快速安装 Linux 子系统（WSL2）](https://www.bilibili.com/video/BV1Jh4y1c7FS/) 并定位到约 `00:40`；课前确认能够流畅播放。
+- [ ] 准备完成安装的演示环境或真实截图，用于核验录屏没有覆盖的 Windows 与 Linux 两侧输出。
+- [ ] 本段不处理个别故障，不进入 BIOS，不关闭安全功能，不删除发行版，不运行“一键修复”；第 15 分钟把操作交给学生。
+
+- 播放：从约 `00:40` 播放到 `03:00`，只指出四个节点：管理员 PowerShell、`wsl --install`、重启、Ubuntu 首次启动与用户创建；补充说明视频中的窗口标题未清楚显示“管理员”，课堂操作必须使用管理员 PowerShell。
+- 展示：切到准备好的安装完成状态；说明密码输入时不显示字符是正常现象。
 - 展示：在普通 PowerShell 核验发行版和 WSL 版本：
 
 ```powershell
@@ -244,107 +245,86 @@ WSL 核验：pwd / whoami / cat /etc/os-release 均可运行，输出已保留
 
 - 让学生做：停止开启新问题，把其中一种状态保存在自己下次能够找到的位置。
 - 检查：`BLOCKED-*` 必须足以让下一次从当前节点继续。
-- 预告：第三课时从保存的状态开始，把 WSL 中的固定目录交给 VS Code。
+- 预告：第三课时用 `code .` 把 WSL 课程目录交给 VS Code，再从 VS Code 反向找到 Windows 中的同一目录。
 
-## 第三课时 · 用证据完成工作台交付
+## 第三课时 · 让三个入口指向同一目录
 
-### 0-8 | 从上一课时的真实状态开始
+### 0-5 | 看清终点与两套路线
 
-> 只有真实达到 `READY-WSL`，今天才可能把个人结果签成 `READY-CODE`。
+> 教师用 macOS 稳定示范关系，学生用 Windows／WSL 产生本人证据；两条路线服务于同一个目标。
 
-#### 课前提醒
+#### 课前分界
 
-- [ ] 准备可用的 WSL、Windows 版 VS Code、Microsoft WSL 扩展和已经完成首次连接的教师演示环境。
-- [ ] 第 8 分钟仍未达到 `READY-WSL` 者停止个人支线，跟随教师演示并继续记录真实卡点；不得把跟随演示记作本人完成。
+##### Windows｜课前完整跑一遍学生路线
 
-- 展示：`READY-WSL → Windows 版 VS Code → WSL 扩展 → 课程目录 → code . → 四项证据`。
-- 让学生做：找到上一课时记录；`READY-WSL` 者重新确认 Ubuntu 可启动，`BLOCKED-*` 者只从记录的节点继续。
-- 检查：受阻者不从头重做；个人状态继续保留为 `BLOCKED-*`。
+- [ ] 在教室或其他真实 Windows + WSL 2 电脑上，按 Guide 第三课时操作清单完整跑一遍；不要求重新安装已经存在的软件，但每个关键界面都要实际到达。
+- [ ] 核验 Windows 版 VS Code、Microsoft WSL 扩展、从 WSL 课程目录执行 `code .`、左下角的 `WSL: Ubuntu`、项目区的 `COURSE_MARKER.txt`。
+- [ ] 从 VS Code 项目区反向定位到 Windows 文件资源管理器，记录右键菜单的真实名称和行为；不在课堂上猜菜单名称。
+- [ ] 保存三张真实画面：WSL 中的目录与标记、VS Code 中的同一标记、Windows 文件资源管理器中的同一目录。Windows 路线保证学生指南真实可行，课堂上可以展示，但不承担主要现场演示。
 
-### 8-18 | 安装或核验 Windows 版 VS Code
+##### macOS｜课上演示相同的组织关系
 
-> VS Code 装在 Windows，WSL 扩展负责连接；不要在 Ubuntu 中再装一份桌面版。
-
-#### 课前提醒
-
-- [ ] 打开 Windows 版 VS Code 官方安装入口和 Microsoft WSL 扩展页面；教师机提前完成首次连接。
-- [ ] 下载长期无进展记 `BLOCKED-NET`，磁盘不足记 `BLOCKED-DISK`；不使用第三方安装包或来源不明的修复脚本。
-- [ ] 第 18 分钟进入固定目录演示；仍在下载者继续等待，但不阻塞全班主线。
-
-- 展示：指出 Windows 版 VS Code、Extensions 面板、扩展发布者 Microsoft 和安装后重新打开终端的动作。
-- 让学生做：未安装者使用官方 User Setup 安装，按需勾选 Add to PATH，再安装 Microsoft WSL 扩展；已安装者只核验。
-- 检查：确认打开的是 Windows 侧 VS Code，扩展名称与发布者正确；桌面上存在图标不等于 WSL 已接通。
-
-### 18-28 | 从唯一课程目录执行 `code .`
-
-> `code .` 把编辑器打开在刚刚由终端确认过的那个 WSL 目录中。
-
-#### 课前提醒
-
-- [ ] 在教师 WSL 中提前执行过一次 `code .`，避免首次下载 VS Code Server 被误判为失败。
-- [ ] `code` 找不到时只核对 Windows 版 VS Code、Add to PATH、WSL 扩展并重开终端。
-- [ ] 本段不展开完整路径知识；第 28 分钟把同一路线交给学生，不转向 Python、Git、`uv` 或其他工具。
-
-- 展示：在 Ubuntu／WSL 终端逐条运行：
+- [ ] 确认 MacBook 中 Terminal、VS Code 与 Finder 可用；`command -v code` 有输出。若没有，提前在 VS Code 命令面板执行 `Shell Command: Install 'code' command in PATH`。
+- [ ] 在 MacBook 完整演练以下路线：
 
 ```bash
-mkdir -p ~/course/w01
-cd ~/course/w01
-printf 'AI-COURSE-W01\n' > COURSE_MARKER.txt
+mkdir -p ~/course/w01-demo
+cd ~/course/w01-demo
+printf 'AI-COURSE-W01-DEMO\n' > COURSE_MARKER.txt
+pwd
 code .
 ```
 
-- 展示：指出 VS Code 左下角的 `WSL: Ubuntu`、资源管理器中的 `COURSE_MARKER.txt` 和同一窗口内的集成终端。
-- 问后自答：命令从哪里运行？`.` 指向哪里？打开后看哪三处？答案固定为 WSL 终端、当前目录、连接状态／文件／集成终端。
-
-### 28-40 | 完成连接并核对四项证据
-
-> 编辑器能够打开还不够；系统、目录、编辑器和课程标记必须彼此一致。
-
-#### 课前提醒
-
-- [ ] 排障只查误用 PowerShell、目录不一致、`code` 不可用、VS Code Server 网络失败；没有新增信息时不重复同一操作。
-- [ ] 若进度快，关闭窗口后从 WSL 再次执行 `code .` 并独立复核；不增加新工具。
-- [ ] 第 40 分钟停止新连接、新下载和新的个别排障。
-
-- 让学生做：在 Ubuntu／WSL 中建立 `~/course/w01`、写入课程标记并执行 `code .`；首次连接时等待 VS Code Server 完成。
-- 让学生做：在新打开的 VS Code 集成终端运行：
+- [ ] VS Code 打开后，在其集成终端运行 `pwd`、`cat COURSE_MARKER.txt`，再运行：
 
 ```bash
-printf 'SYSTEM=%s\nFOLDER=%s\nEDITOR=%s\n' "$(uname -s)" "${PWD/#$HOME/~}" "$TERM_PROGRAM"
-cat COURSE_MARKER.txt
+open -a Finder .
 ```
 
-- 检查只看：`SYSTEM=Linux`、`FOLDER=~/course/w01`、`EDITOR=vscode`、`AI-COURSE-W01`，并确认左下角显示 WSL／Ubuntu。
+- [ ] 固定对应关系：macOS Terminal ↔ WSL，Finder ↔ Windows 文件资源管理器；macOS 路线保证课堂演示稳定可复用，不要求学生复制 macOS 命令。
 
-### 40-50 | 保存 `READY-CODE` 或可接续卡点
+#### 上课
 
-> 今天的交付不是一个打开的窗口，而是一份别人和未来的自己都能复核的状态。
+- 投影唯一目标页：WSL 中的 `~/course/w01`，经 `code .` 交给 VS Code，再从 VS Code 项目区反向定位到 Windows 文件资源管理器；三处都能找到 `COURSE_MARKER.txt`。
+- 说明两套路线：教师用 macOS Terminal → VS Code → Finder 演示关系；学生按 Guide 完成 WSL → VS Code → Windows 文件资源管理器。
+- 展示三张 Windows 实机画面，只标出学生稍后要找到的界面，不在此处重新演示安装。
+- 转场：接下来 10 分钟完整看一次关系；第 15 分钟开始，各自带着这个目标推进。
 
-#### 课前提醒
+### 5-15 | 用 macOS 完整示范一次
 
-- [ ] 第 40 分钟投影两种出口模板，不再添加命令或继续无边界排障。
-- [ ] 记录中不放密码、密钥、token、完整主机名或无关个人信息；只统计大致人数，不集中收取记录。
+> 示范只回答一个问题：终端、编辑器和文件管理器怎样指向同一个目录？
 
-- 展示：完成者保存以下记录。
+- 先让学生停手观看；这一遍不中断跟做，不解释安装分支，不处理现场排障。
+- 切换到 MacBook Terminal：进入预备好的 `~/course/w01-demo`，运行 `pwd`，并显示 `COURSE_MARKER.txt`。
+- 执行 `code .`；VS Code 打开后，在项目区与集成终端再次确认同一目录和同一标记。
+- 在 VS Code 集成终端执行 `open -a Finder .`；Finder 打开后，再次指出同一个 `COURSE_MARKER.txt`。
+- 回到学生目标页，完成固定映射：Terminal ↔ WSL，Finder ↔ Windows 文件资源管理器；macOS 命令不要求学生复制。
+- 第 15 分钟必须结束演示；不追加功能，不现场排查 macOS，不进入 Python、Git 或 `uv`。
 
-```text
-状态：READY-CODE
-PowerShell：Ubuntu 存在 / VERSION 2
-VS Code 左下角：WSL: Ubuntu
-SYSTEM=Linux
-FOLDER=~/course/w01
-EDITOR=vscode
-课程标记：AI-COURSE-W01
-我准备在 W2 继续理解的一点：
-```
+### 15-40 | 带着目标自行探索
 
-- 展示：未完成者继续使用 `BLOCKED-*` 模板，写清最后成功点、完整错误、已检查项和下一步。
-- 让学生做：把本人设备的真实结果保存在下次能找到的位置；教师示例和“跟着看完”不能写成本人证据。
+> 全班不追求同一步骤、同一进度；每个人只依据自己机器的真实状态继续推进。
+
+- 展示一次可复制的 `READY-CODE` Prompt，随后停在“学生目标：三个入口，同一个目录”；所有具体步骤只查 Guide。
+- 宣布两种起点：已经 `READY-WSL` 者从操作清单第一项开始；仍受阻者从自己的真实节点继续，不形式化地重做已经成功的核验。
+- 学生任选 Guide 手动路线或 Chatbox 路线；两条路线不重复完成，也不等待全班同步。
+- 巡视只问：现在要到达哪个目标？机器实际显示什么？下一步依据是什么？不替学生连续点击。
+- 同一问题阻塞 5 人以上才暂停全班，用 Windows 实机画面统一指出一次；个别问题继续保存真实卡点。
+- 完成者关闭 VS Code，再从 WSL 的课程目录执行一次 `code .`，独立确认三个入口仍指向同一目录；不增加新工具。
+- 第 35 分钟提示还剩 5 分钟，不再开启新的安装路线或大范围排障；第 40 分钟所有人停止操作。
+
+### 40-50 | 停止排障，保存真实状态
+
+> 全体只保存 `READY-CODE` 或可接续的 `BLOCKED-*`；这十分钟不再教学。
+
+- 第 40 分钟展示 Slides 的两种出口，投影 Guide 的最后两项；不再添加命令或继续无边界排障。
+- 提醒：只有学生本人 Windows／WSL 的结果可以写入 `READY-CODE`；教师的 macOS 演示和 Windows 截图都不能替代本人证据。
+- 完成者保存三处一致的证据；未完成者保存最后成功点、完整错误、已经检查的内容和下一步。
+- 记录中不放密码、密钥、token、完整主机名或无关个人信息；只统计大致人数，不集中收取记录。
 - 预告：W2 从这些状态继续学习路径、环境和版本控制。
 
 ## 临场取舍
 
-- 慢了：第一课时把自动驾驶压成一个问题、把量化压成一句话，但保留 Computer Use 展示、黑白箱视角和人的责任；第二、三课时保留唯一演示路线、学生真实操作和末 10 分钟状态保存。
-- 快了：第一课时再补一个“调用／进入实现”的黑白箱视角切换例；第二课时提前核验 VS Code 与 WSL 扩展；第三课时关闭后重新执行 `code .`。始终不扩展到 Python、Git 或 `uv`。
-- 坏了：浏览器演示切换三张预存画面；系统安装或网络整体受阻时停止真实路线，使用教师演示环境讲完链条，每名学生仍保存自己的 `BLOCKED-*`，不得把示例写成本人完成。
+- 慢了：第一课时把自动驾驶压成一个问题、把量化压成一句话，但保留 Computer Use 展示、黑白箱视角和人的责任；第二课时保留唯一安装路线；第三课时把 macOS 示范压到 `code .` 与 `open -a Finder .` 两个动作，但不压缩学生探索和末 10 分钟状态保存。
+- 快了：第一课时再补一个“调用／进入实现”的黑白箱视角切换例；第二课时提前核验 VS Code 与 WSL 扩展；第三课时完成者关闭 VS Code 后，再从 WSL 独立执行一次 `code .`。始终不扩展到 Python、Git 或 `uv`。
+- 坏了：浏览器演示切换三张预存画面；Windows 安装或网络整体受阻时，教师仍可用 macOS 完成“终端—编辑器—文件管理器”的关系演示，每名学生保存自己的 `BLOCKED-*`，不得把教师示例写成本人完成。
