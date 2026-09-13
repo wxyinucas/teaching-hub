@@ -1,0 +1,28 @@
+version = 1
+revision = 3
+requires-python = "==3.12.*"
+
+[[package]]
+name = "longbridge"
+version = "4.5.0"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ce/82/dae173c54f56346deba7a265150b7a6ba3870632bf9cf1e77a1caf994b5e/longbridge-4.5.0-cp312-cp312-macosx_10_12_x86_64.whl", hash = "sha256:726b07e04a4dd197a0412c503264afb57137eedbf0aa63fe74b3b819490ef8bd", size = 11863617, upload-time = "2026-08-14T08:48:54.376Z" },
+    { url = "https://files.pythonhosted.org/packages/e6/1b/72965bbc4f5243e361dae575868abcb3a676b8b00bb8fa7ad7ad8b5eec25/longbridge-4.5.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:42e8e45be7c6a832e269d353298c8102f88b212c53b83ff28d15f5e189058e90", size = 11327664, upload-time = "2026-08-14T08:48:56.532Z" },
+    { url = "https://files.pythonhosted.org/packages/79/82/7309b6fee3d695f3280ae2f998b073f8af63e385a1d01cc10c81f2277376/longbridge-4.5.0-cp312-cp312-manylinux_2_39_aarch64.whl", hash = "sha256:c0d43f4dbfd24db43e8883e3cfbe29cafb6aedca2c8d877419128e6be429770f", size = 11825759, upload-time = "2026-08-14T08:48:58.562Z" },
+    { url = "https://files.pythonhosted.org/packages/8b/c2/cfa9ce9fa1b83277a34cd61bae669dc87daefcbfea81da0663c14d196d97/longbridge-4.5.0-cp312-cp312-manylinux_2_39_x86_64.whl", hash = "sha256:5387db07db2d29dd52ff6abcd5e888f1442cd0581ad38dc5e51182a0a9cd8daa", size = 12004832, upload-time = "2026-08-14T08:49:00.551Z" },
+    { url = "https://files.pythonhosted.org/packages/78/d7/0a55142b622a036c12e7353c58b1fadeba351fe2e6c32233207be59f255f/longbridge-4.5.0-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:59c3fb3069ba56f6cc69fbf4a7164097b50906c2d24bd41fd3635d1e1cae188c", size = 11993630, upload-time = "2026-08-14T08:49:02.757Z" },
+    { url = "https://files.pythonhosted.org/packages/96/b6/048091a455a2c7eca6ade5bd67b31cf6039c5a23b1d106ab5a551ae6f925/longbridge-4.5.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:63d8c5454cf6a13474ce352add337797b0b9cabddcaf51b26586b51c6df6ec32", size = 12269279, upload-time = "2026-08-14T08:49:04.807Z" },
+    { url = "https://files.pythonhosted.org/packages/fa/67/505b4fe2130087389983c754aded12a517e89b10e5d5da37b93451841ea1/longbridge-4.5.0-cp312-cp312-win_amd64.whl", hash = "sha256:2ecee6445155137f1d173dddad7825f87c385dd452d97cf5e8908bb22e12ae91", size = 12899132, upload-time = "2026-08-14T08:49:06.959Z" },
+]
+
+[[package]]
+name = "longbridge-gate-a"
+version = "0.2.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "longbridge" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "longbridge", specifier = ">=4.5,<5" }]
