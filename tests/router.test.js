@@ -25,6 +25,16 @@ const demoBundle = catalog.terms.flatMap((itemTerm) => itemTerm.courses.flatMap(
     term: itemTerm, course: itemCourse, week: itemWeek, demo,
   })))
 ))).at(0)
+const topicBundle = catalog.terms.flatMap((itemTerm) => itemTerm.courses.flatMap((itemCourse) => (
+  itemCourse.topics.flatMap((topic) => (
+    topic.resources.runbook ? [{ term: itemTerm, course: itemCourse, topic }] : []
+  ))
+))).at(0)
+const topicDemoBundle = catalog.terms.flatMap((itemTerm) => itemTerm.courses.flatMap((itemCourse) => (
+  itemCourse.topics.flatMap((topic) => (topic.demos ?? []).map((demo) => ({
+    term: itemTerm, course: itemCourse, topic, demo,
+  })))
+))).at(0)
 
 let wrapper
 let router
@@ -58,17 +68,23 @@ describe('teaching hub navigation', () => {
   it('navigates from the homepage through every resource type in one declared week', async () => {
     await openPage('/')
     expect(document.title).toBe('Teaching Hub · 课程目录')
+    expect(wrapper.find('.site-note').text()).toBe('2026 秋 · 课程准备')
     const courseLink = wrapper.findAll('.course-card').find((link) => link.attributes('href') === coursePath)
     expect(courseLink).toBeDefined()
     await courseLink.trigger('click')
     await settle()
     expect(router.currentRoute.value.path).toBe(coursePath)
+    expect(wrapper.find('.site-note').text()).toBe('2026 秋 · 按周准备')
+    expect(wrapper.find('.directory-section-heading h2').text()).toBe('教学周')
+    expect(wrapper.find('.week-card').exists()).toBe(true)
+    expect(wrapper.find('.topic-card').exists()).toBe(false)
 
     const runbookLink = wrapper.findAll('.resource-runbook').find((link) => link.attributes('href') === `${weekPath}/runbook`)
     expect(runbookLink).toBeDefined()
     await runbookLink.trigger('click')
     await settle()
     expect(wrapper.find('.runbook-reader').exists()).toBe(true)
+    expect(wrapper.find('.runbook-reader').classes()).toEqual(['runbook-reader'])
 
     await wrapper.findAll('.resource-tabs a')[1].trigger('click')
     await settle()
@@ -92,6 +108,43 @@ describe('teaching hub navigation', () => {
     expect(router.currentRoute.value.path).toBe(`${weekPath}/slides/${deck.count}`)
   })
 
+  it('shows an opted-in topic map and opens its runbook', async () => {
+    expect(topicBundle).toBeDefined()
+    const item = topicBundle
+    const itemCoursePath = `/terms/${item.term.id}/courses/${item.course.id}`
+    const itemTopicPath = `${itemCoursePath}/topics/${item.topic.id}`
+    await openPage(itemCoursePath)
+
+    expect(wrapper.find('.directory-section-heading h2').text()).toBe('专题地图')
+    expect(wrapper.find('.site-note').text()).toBe('2026 秋 · 按专题准备')
+    expect(wrapper.findAll('.topic-card')).toHaveLength(item.course.topicMap.length)
+    expect(wrapper.find('.topic-meta').text()).toMatch(/^约 \d+ 次课$/)
+    const runbookLink = wrapper.findAll('.resource-runbook')
+      .find((link) => link.attributes('href') === `${itemTopicPath}/runbook`)
+    expect(runbookLink).toBeDefined()
+
+    await runbookLink.trigger('click')
+    await settle()
+    expect(router.currentRoute.value.path).toBe(`${itemTopicPath}/runbook`)
+    expect(wrapper.find('.runbook-reader--calculus-topic').exists()).toBe(true)
+    expect(wrapper.find('.resource-tabs').attributes('aria-label')).toBe('本专题材料')
+  })
+
+  it('registers every topic resource route without changing week route names', async () => {
+    expect(topicBundle).toBeDefined()
+    const item = topicBundle
+    await openPage('/')
+    const params = { termId: item.term.id, courseId: item.course.id, topicId: item.topic.id }
+    const base = `/terms/${item.term.id}/courses/${item.course.id}/topics/${item.topic.id}`
+
+    expect(router.resolve({ name: 'topic-runbook', params }).path).toBe(`${base}/runbook`)
+    expect(router.resolve({ name: 'topic-slides', params: { ...params, page: 2 } }).path).toBe(`${base}/slides/2`)
+    expect(router.resolve({ name: 'topic-guide', params }).path).toBe(`${base}/guide`)
+    expect(router.resolve({ name: 'topic-demo', params: { ...params, demoId: 'example' } }).path).toBe(`${base}/demos/example`)
+    expect(router.resolve({ name: 'runbook', params: { termId: term.id, courseId: course.id, weekId: week.id } }).path)
+      .toBe(`${weekPath}/runbook`)
+  })
+
   it('boots from a GitHub-Pages-friendly hash deep link', async () => {
     window.history.replaceState({}, '', `/#${weekPath}/runbook`)
     await openPage(undefined, createWebHashHistory('/'))
@@ -112,12 +165,26 @@ describe('teaching hub navigation', () => {
     expect(wrapper.find('.sequence-limit-demo').exists()).toBe(true)
   })
 
+  it.runIf(Boolean(topicDemoBundle))('opens a declared topic demo from the course page', async () => {
+    const item = topicDemoBundle
+    const itemCoursePath = `/terms/${item.term.id}/courses/${item.course.id}`
+    const demoPath = `${itemCoursePath}/topics/${item.topic.id}/demos/${item.demo.id}`
+    await openPage(itemCoursePath)
+    const demoLink = wrapper.findAll('.resource-demo').find((link) => link.attributes('href') === demoPath)
+    expect(demoLink).toBeDefined()
+    await demoLink.trigger('click')
+    await settle()
+    expect(router.currentRoute.value.path).toBe(demoPath)
+    expect(wrapper.find('.sequence-limit-demo').exists()).toBe(true)
+  })
+
   it.runIf(Boolean(unavailableResource))('treats an undeclared resource type as missing', async () => {
     const item = unavailableResource
     const suffix = item.kind === 'slides' ? 'slides/1' : item.kind
     const path = `/terms/${item.term.id}/courses/${item.course.id}/weeks/${item.week.id}/${suffix}`
     await openPage(path)
     expect(wrapper.find('h1').text()).toBe('未找到课程或材料')
+    expect(wrapper.find('.error-state').text()).toContain('教学周、专题或资源')
   })
 
   it.each([
@@ -125,6 +192,7 @@ describe('teaching hub navigation', () => {
     '/terms/missing/courses/missing',
     `/terms/${term.id}/courses/${course.id}/weeks/missing/runbook`,
     `/terms/${term.id}/courses/${course.id}/weeks/${week.id}/demos/missing`,
+    '/terms/2026-fall/courses/calculus-i/topics/missing/runbook',
   ])('offers recovery for an unknown address: %s', async (path) => {
     await openPage(path)
     expect(wrapper.find('h1').text()).toBe('未找到课程或材料')

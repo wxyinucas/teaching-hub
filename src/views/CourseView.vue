@@ -6,9 +6,28 @@ import NotFoundView from './NotFoundView.vue'
 
 const props = defineProps({ termId: String, courseId: String })
 const context = computed(() => findCourse(props.termId, props.courseId))
+const isTopicCourse = computed(() => context.value?.course.organization === 'topics')
+const entries = computed(() => (
+  isTopicCourse.value ? context.value?.course.topicMap ?? [] : context.value?.course.calendar ?? []
+))
 
-function ready(week, kind) {
-  return hasContent(week.week?.resources[kind])
+function record(entry) {
+  return isTopicCourse.value ? entry.topic : entry.week
+}
+
+function ready(entry, kind) {
+  return hasContent(record(entry)?.resources[kind])
+}
+
+function resourceLocation(entry, kind, extraParams = {}) {
+  const unit = isTopicCourse.value ? 'topic' : 'week'
+  const params = {
+    termId: props.termId,
+    courseId: props.courseId,
+    [`${unit}Id`]: entry.id,
+    ...extraParams,
+  }
+  return { name: `${isTopicCourse.value ? 'topic-' : ''}${kind}`, params }
 }
 
 watchEffect(() => {
@@ -32,47 +51,54 @@ watchEffect(() => {
     </header>
 
     <div class="directory-section-heading">
-      <h2>教学周</h2>
-      <span v-if="context.course.calendar.length">{{ context.course.calendar.length }} 周</span>
+      <h2>{{ isTopicCourse ? '专题地图' : '教学周' }}</h2>
+      <span v-if="entries.length">{{ entries.length }} {{ isTopicCourse ? '个专题' : '周' }}</span>
     </div>
-    <div v-if="context.course.calendar.length" class="week-list">
-      <article v-for="week in context.course.calendar" :key="week.id" class="week-card">
-        <div class="week-copy">
-          <span class="week-kicker">{{ week.label }}</span>
-          <h3>{{ week.title }}</h3>
-          <p v-if="week.summary">{{ week.summary }}</p>
+    <div v-if="entries.length" :class="isTopicCourse ? 'topic-list' : 'week-list'">
+      <article v-for="entry in entries" :key="entry.id" :class="isTopicCourse ? 'topic-card' : 'week-card'">
+        <div :class="isTopicCourse ? 'topic-copy' : 'week-copy'">
+          <span :class="isTopicCourse ? 'topic-kicker' : 'week-kicker'">{{ entry.label }}</span>
+          <h3>{{ entry.title }}</h3>
+          <p v-if="entry.summary">{{ entry.summary }}</p>
+          <p v-if="isTopicCourse && entry.lessonCount" class="topic-meta">约 {{ entry.lessonCount }} 次课</p>
         </div>
-        <div v-if="week.week" class="week-actions" aria-label="本周材料">
+        <div
+          v-if="record(entry)"
+          :class="isTopicCourse ? 'topic-actions' : 'week-actions'"
+          :aria-label="isTopicCourse ? '本专题材料' : '本周材料'"
+        >
           <RouterLink
-            v-if="ready(week, 'runbook')"
+            v-if="ready(entry, 'runbook')"
             class="resource-link resource-runbook"
-            :to="{ name: 'runbook', params: { termId, courseId, weekId: week.id } }"
+            :to="resourceLocation(entry, 'runbook')"
           ><span>台本</span><small>课前与课中</small></RouterLink>
           <RouterLink
-            v-if="ready(week, 'slides')"
+            v-if="ready(entry, 'slides')"
             class="resource-link resource-slides"
-            :to="{ name: 'slides', params: { termId, courseId, weekId: week.id, page: 1 } }"
+            :to="resourceLocation(entry, 'slides', { page: 1 })"
           ><span>Slides</span><small>按课程约定使用</small></RouterLink>
           <RouterLink
-            v-if="ready(week, 'guide')"
+            v-if="ready(entry, 'guide')"
             class="resource-link resource-guide"
-            :to="{ name: 'guide', params: { termId, courseId, weekId: week.id } }"
+            :to="resourceLocation(entry, 'guide')"
           ><span>学生指南</span><small>独立执行与接续</small></RouterLink>
           <RouterLink
-            v-for="demo in week.week.demos ?? []"
+            v-for="demo in record(entry).demos ?? []"
             :key="demo.id"
             class="resource-link resource-demo"
-            :to="{ name: 'demo', params: { termId, courseId, weekId: week.id, demoId: demo.id } }"
+            :to="resourceLocation(entry, 'demo', { demoId: demo.id })"
           ><span>演示</span><small>{{ demo.title }}</small></RouterLink>
         </div>
       </article>
     </div>
     <div v-else class="empty-course">
       <span aria-hidden="true">○</span>
-      <h2>还没有登记教学周</h2>
-      <p>课程入口已经建立；第一份正式周材料准备好后，再加入对应的 week 目录。</p>
+      <h2>还没有登记{{ isTopicCourse ? '专题' : '教学周' }}</h2>
+      <p v-if="isTopicCourse">课程入口已经建立；第一个专题准备好后，再加入对应的 topic 目录。</p>
+      <p v-else>课程入口已经建立；第一份正式周材料准备好后，再加入对应的 week 目录。</p>
     </div>
-    <p class="directory-footnote">网站按教学周组织；备课与放行单位由课程契约定义。</p>
+    <p v-if="isTopicCourse" class="directory-footnote">网站按专题组织；每次课的日期与材料写在对应专题内。</p>
+    <p v-else class="directory-footnote">网站按教学周组织；备课与放行单位由课程契约定义。</p>
   </section>
   <NotFoundView v-else />
 </template>

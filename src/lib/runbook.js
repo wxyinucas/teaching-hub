@@ -91,7 +91,7 @@ export function parseRunbook(source) {
 
   lessonHeadings.forEach((heading, index) => {
     const end = lessonHeadings[index + 1]?.start ?? lines.length
-    if (heading.text === '本次课' || heading.text === '本周') {
+    if (['本次课', '本周', '本专题', '专题概览'].includes(heading.text)) {
       overview = readCallouts(lines.slice(heading.end, end))
       return
     }

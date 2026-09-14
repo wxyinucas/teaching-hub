@@ -1,104 +1,146 @@
 {
   "id": "calculus-i",
   "title": "高等数学（上）",
-  "description": "以周为备课与放行单位，用 16 周主线组织极限、导数、积分与微分方程。",
+  "description": "以小专题组织极限、导数、积分与微分方程；每个专题共享台本、Slides、Guide 与交互 Demo。",
   "order": 2,
-  "weekMap": [
+  "organization": "topics",
+  "runbookLayout": "calculus-topic",
+  "topicMap": [
     {
-      "id": "week-01",
-      "label": "W1",
+      "id": "topic-01-describing-approach",
+      "label": "T01",
       "title": "精确描述“趋近”",
-      "summary": "唤醒必要的函数语言，建立数列极限、函数极限及其联系。"
+      "summary": "从必要的函数语言出发，建立数列与函数极限的描述方式、单侧趋近及两类极限的联系。",
+      "lessonCount": 3,
+      "order": 1
     },
     {
-      "id": "week-02",
-      "label": "W2",
+      "id": "topic-02-limit-existence-and-calculation",
+      "label": "T02",
       "title": "极限何时成立、怎样计算",
-      "summary": "组织极限性质、运算法则、存在准则以及无穷小与无穷大的方法体系。"
+      "summary": "组织极限的性质、运算法则、夹逼与单调有界准则，并建立两个重要极限。",
+      "lessonCount": 3,
+      "order": 2
     },
     {
-      "id": "week-03",
-      "label": "W3",
-      "title": "从局部极限到连续与区间保证",
-      "summary": "连接连续、间断、连续运算与闭区间上的整体性质。"
+      "id": "topic-03-infinitesimals-and-continuity",
+      "label": "T03",
+      "title": "从无穷小到连续",
+      "summary": "连接无穷小与无穷大、阶的比较、连续与间断以及闭区间上的整体保证。",
+      "lessonCount": 3,
+      "order": 3
     },
     {
-      "id": "week-04",
-      "label": "W4",
+      "id": "topic-04-derivative-as-change",
+      "label": "T04",
       "title": "用导数描述瞬时变化",
-      "summary": "建立导数概念、几何意义及基本求导体系。"
+      "summary": "建立导数定义、几何意义以及可导与连续之间的关系。",
+      "lessonCount": 2,
+      "order": 4
     },
     {
-      "id": "week-05",
-      "label": "W5",
+      "id": "topic-05-differentiation-system",
+      "label": "T05",
+      "title": "建立求导运算系统",
+      "summary": "组织四则、反函数、复合函数与初等函数的求导规则。",
+      "lessonCount": 2,
+      "order": 5
+    },
+    {
+      "id": "topic-06-extended-derivatives-and-differentials",
+      "label": "T06",
       "title": "扩展导数并建立局部线性化",
-      "summary": "把导数扩展到高阶、隐式关系与微分。"
+      "summary": "处理高阶导数、隐函数、参数方程与极坐标求导，并从导数进入微分。",
+      "lessonCount": 2,
+      "order": 6
     },
     {
-      "id": "week-06",
-      "label": "W6",
-      "title": "从局部导数推断整体行为",
-      "summary": "以微分中值定理连接局部变化与区间结论。"
+      "id": "topic-07-local-to-global-and-approximation",
+      "label": "T07",
+      "title": "从局部变化得到区间结论",
+      "summary": "以中值定理、洛必达法则和泰勒公式连接局部信息、整体结论与近似。",
+      "lessonCount": 4,
+      "order": 7
     },
     {
-      "id": "week-07",
-      "label": "W7",
-      "title": "近似与函数形态判断",
-      "summary": "围绕泰勒公式、单调性与凹凸性组织函数分析。"
+      "id": "topic-08-function-shape-and-optimization",
+      "label": "T08",
+      "title": "描绘函数形态并解决优化问题",
+      "summary": "结合单调、凹凸、极值、最值、函数图形与曲率形成完整的函数分析路线。",
+      "lessonCount": 5,
+      "order": 8
     },
     {
-      "id": "week-08",
-      "label": "W8",
-      "title": "优化与曲线的整体描述",
-      "summary": "连接极值、最值、函数图形与曲率。"
-    },
-    {
-      "id": "week-09",
-      "label": "W9",
+      "id": "topic-09-antiderivatives-and-substitution",
+      "label": "T09",
       "title": "把求导反过来",
-      "summary": "从原函数进入不定积分，并建立换元思路。"
+      "summary": "从原函数进入不定积分，并建立两类换元积分的基本思路。",
+      "lessonCount": 3,
+      "order": 9
     },
     {
-      "id": "week-10",
-      "label": "W10",
-      "title": "从不定积分方法走向定积分",
-      "summary": "完成分部积分与代表性特殊类型，并在第三次课进入定积分概念。"
+      "id": "topic-10-integration-techniques",
+      "label": "T10",
+      "title": "组织不定积分方法",
+      "summary": "掌握分部积分，并处理具有代表性的特殊函数积分。",
+      "lessonCount": 2,
+      "order": 10
     },
     {
-      "id": "week-11",
-      "label": "W11",
-      "title": "建立定积分的计算体系",
-      "summary": "组织定积分性质、微积分基本公式以及换元与分部积分。"
+      "id": "topic-11-definite-integral-and-ftc",
+      "label": "T11",
+      "title": "用累积定义定积分",
+      "summary": "建立定积分概念与性质，并以积分上限函数连接微积分基本公式。",
+      "lessonCount": 2,
+      "order": 11
     },
     {
-      "id": "week-12",
-      "label": "W12",
-      "title": "用定积分建模并处理无限边界",
-      "summary": "连接几何应用、代表性物理模型与广义积分，并完成第五章收束。"
+      "id": "topic-12-definite-integral-methods-and-models",
+      "label": "T12",
+      "title": "计算定积分并建立模型",
+      "summary": "组织定积分的换元与分部积分，并用代表性几何和物理问题建立模型。",
+      "lessonCount": 3,
+      "order": 12
     },
     {
-      "id": "week-13",
-      "label": "W13",
-      "title": "从变化规律建立一阶微分方程",
-      "summary": "从基本概念进入可分离变量方程与齐次方程。"
+      "id": "topic-13-improper-integrals",
+      "label": "T13",
+      "title": "越过有限边界",
+      "summary": "用极限统一无穷区间与无界函数的广义积分，并收束积分主线。",
+      "lessonCount": 2,
+      "order": 13
     },
     {
-      "id": "week-14",
-      "label": "W14",
-      "title": "处理一阶方程与可降阶方程",
-      "summary": "组织一阶线性方程、伯努利方程、变量替换与可降阶高阶方程。"
+      "id": "topic-14-separable-and-homogeneous-equations",
+      "label": "T14",
+      "title": "从变化规律建立一阶方程",
+      "summary": "从微分方程的基本概念进入可分离变量方程与齐次方程。",
+      "lessonCount": 2,
+      "order": 14
     },
     {
-      "id": "week-15",
-      "label": "W15",
-      "title": "完成线性微分方程并建立缓冲",
-      "summary": "第一次课完成二阶常系数方程，第二次课用于章内整合或上游机动，第三次课进入课程缓冲。"
+      "id": "topic-15-first-order-equation-methods",
+      "label": "T15",
+      "title": "组织一阶方程的解法",
+      "summary": "处理一阶线性方程、伯努利方程以及变量替换的灵活使用。",
+      "lessonCount": 2,
+      "order": 15
     },
     {
-      "id": "week-16",
-      "label": "W16",
-      "title": "全课程总复习",
-      "summary": "不引入新内容，围绕极限与微分、积分、微分方程组织综合复习。"
+      "id": "topic-16-higher-order-linear-equations",
+      "label": "T16",
+      "title": "处理高阶线性微分方程",
+      "summary": "连接可降阶方程、高阶线性结构与二阶常系数方程，并保留一次章内整合容量。",
+      "lessonCount": 4,
+      "order": 16
+    },
+    {
+      "id": "topic-17-course-review",
+      "label": "T17",
+      "title": "全课程整合与总复习",
+      "summary": "首个课次保留为硬机动，其后至少三次综合复习，不引入新内容。",
+      "lessonCount": 4,
+      "order": 17
     }
   ]
 }

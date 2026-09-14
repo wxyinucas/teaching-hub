@@ -50,6 +50,23 @@ describe('Markdown runbook parser', () => {
     expect(runbook.duration).toBe(100)
   })
 
+  it('uses 本专题 as an overview heading for topic-organized courses', () => {
+    const runbook = parseRunbook([
+      '# T01｜专题台本',
+      '## 本专题',
+      '- 根问题：怎样描述趋近？',
+      '- 最低出口：读懂量词次序。',
+      '## 第一次课',
+      '### 0-50 | 建立直觉',
+    ].join('\n'))
+
+    expect(runbook.overview).toEqual([
+      { label: '根问题', text: '怎样描述趋近？' },
+      { label: '最低出口', text: '读懂量词次序。' },
+    ])
+    expect(runbook.sections).toHaveLength(1)
+  })
+
   it('ignores detail headings and headings inside code fences', () => {
     const source = [
       '# 台本',

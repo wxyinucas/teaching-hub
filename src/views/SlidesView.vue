@@ -1,18 +1,36 @@
 <script setup>
 import { computed, ref, watch, watchEffect } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import { findWeek, loadContent } from '../lib/catalog.js'
+import { findTopic, findWeek, loadContent } from '../lib/catalog.js'
 import { parseSlides } from '../lib/slides.js'
 import SlidesReader from '../components/slides/SlidesReader.vue'
 import NotFoundView from './NotFoundView.vue'
 
-const props = defineProps({ termId: String, courseId: String, weekId: String, page: String })
+const props = defineProps({ termId: String, courseId: String, weekId: String, topicId: String, page: String })
 const router = useRouter()
-const context = computed(() => findWeek(props.termId, props.courseId, props.weekId))
-const sourcePath = computed(() => context.value?.week.resources.slides)
+const isTopic = computed(() => Boolean(props.topicId))
+const context = computed(() => (
+  isTopic.value
+    ? findTopic(props.termId, props.courseId, props.topicId)
+    : findWeek(props.termId, props.courseId, props.weekId)
+))
+const unit = computed(() => context.value?.[isTopic.value ? 'topic' : 'week'])
+const sourcePath = computed(() => unit.value?.resources.slides)
 const source = ref(null)
 const loading = ref(false)
 const loadError = ref('')
+
+function resourceLocation(kind, extraParams = {}) {
+  return {
+    name: `${isTopic.value ? 'topic-' : ''}${kind}`,
+    params: {
+      termId: props.termId,
+      courseId: props.courseId,
+      [isTopic.value ? 'topicId' : 'weekId']: isTopic.value ? props.topicId : props.weekId,
+      ...extraParams,
+    },
+  }
+}
 
 const parsed = computed(() => {
   if (source.value === null) return { deck: null, error: '' }
@@ -27,10 +45,7 @@ const currentPage = computed(() => {
 })
 
 function routeToPage(page) {
-  router.replace({
-    name: 'slides',
-    params: { termId: props.termId, courseId: props.courseId, weekId: props.weekId, page },
-  })
+  router.replace(resourceLocation('slides', { page }))
 }
 
 watch(sourcePath, async (path, _previous, onCleanup) => {
@@ -57,7 +72,7 @@ watch([deck, () => props.page], ([value]) => {
 
 watchEffect(() => {
   document.title = context.value && sourcePath.value
-    ? `${context.value.week.label} · Slides ${currentPage.value} · Teaching Hub`
+    ? `${unit.value.label} · Slides ${currentPage.value} · Teaching Hub`
     : '未找到课件 · Teaching Hub'
 })
 </script>
@@ -68,12 +83,12 @@ watchEffect(() => {
       <nav class="breadcrumbs" aria-label="当前位置">
         <RouterLink to="/">首页</RouterLink><span aria-hidden="true">/</span>
         <RouterLink :to="{ name: 'course', params: { termId, courseId } }">{{ context.course.title }}</RouterLink><span aria-hidden="true">/</span>
-        <span>{{ context.week.label }}</span><span aria-hidden="true">/</span><span aria-current="page">Slides</span>
+        <span>{{ unit.label }}</span><span aria-hidden="true">/</span><span aria-current="page">Slides</span>
       </nav>
-      <nav class="resource-tabs" aria-label="本周材料">
-        <RouterLink v-if="context.week.resources.runbook" :to="{ name: 'runbook', params: { termId, courseId, weekId } }">台本</RouterLink>
-        <RouterLink :to="{ name: 'slides', params: { termId, courseId, weekId, page: currentPage } }">Slides</RouterLink>
-        <RouterLink v-if="context.week.resources.guide" :to="{ name: 'guide', params: { termId, courseId, weekId } }">学生指南</RouterLink>
+      <nav class="resource-tabs" :aria-label="isTopic ? '本专题材料' : '本周材料'">
+        <RouterLink v-if="unit.resources.runbook" :to="resourceLocation('runbook')">台本</RouterLink>
+        <RouterLink :to="resourceLocation('slides', { page: currentPage })">Slides</RouterLink>
+        <RouterLink v-if="unit.resources.guide" :to="resourceLocation('guide')">学生指南</RouterLink>
       </nav>
     </div>
     <p v-if="loading" class="reader-loading" role="status">正在打开课件…</p>

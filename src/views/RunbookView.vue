@@ -1,16 +1,34 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { RouterLink } from 'vue-router'
-import { findWeek, loadContent } from '../lib/catalog.js'
+import { findTopic, findWeek, loadContent } from '../lib/catalog.js'
 import RunbookReader from '../components/runbook/RunbookReader.vue'
 import NotFoundView from './NotFoundView.vue'
 
-const props = defineProps({ termId: String, courseId: String, weekId: String })
-const context = computed(() => findWeek(props.termId, props.courseId, props.weekId))
-const sourcePath = computed(() => context.value?.week.resources.runbook)
+const props = defineProps({ termId: String, courseId: String, weekId: String, topicId: String })
+const isTopic = computed(() => Boolean(props.topicId))
+const context = computed(() => (
+  isTopic.value
+    ? findTopic(props.termId, props.courseId, props.topicId)
+    : findWeek(props.termId, props.courseId, props.weekId)
+))
+const unit = computed(() => context.value?.[isTopic.value ? 'topic' : 'week'])
+const sourcePath = computed(() => unit.value?.resources.runbook)
 const source = ref(null)
 const loading = ref(false)
 const error = ref('')
+
+function resourceLocation(kind, extraParams = {}) {
+  return {
+    name: `${isTopic.value ? 'topic-' : ''}${kind}`,
+    params: {
+      termId: props.termId,
+      courseId: props.courseId,
+      [isTopic.value ? 'topicId' : 'weekId']: isTopic.value ? props.topicId : props.weekId,
+      ...extraParams,
+    },
+  }
+}
 
 watch(sourcePath, async (path, _previous, onCleanup) => {
   let active = true
@@ -19,7 +37,7 @@ watch(sourcePath, async (path, _previous, onCleanup) => {
   error.value = ''
   if (!path) return
   loading.value = true
-  document.title = `${context.value.week.label} · 台本 · Teaching Hub`
+  document.title = `${unit.value.label} · 台本 · Teaching Hub`
   try {
     const text = await loadContent(path)
     if (active) source.value = text
@@ -39,16 +57,21 @@ watch(sourcePath, async (path, _previous, onCleanup) => {
     <nav class="breadcrumbs" aria-label="当前位置">
       <RouterLink to="/">首页</RouterLink><span aria-hidden="true">/</span>
       <RouterLink :to="{ name: 'course', params: { termId, courseId } }">{{ context.course.title }}</RouterLink><span aria-hidden="true">/</span>
-      <span>{{ context.week.label }}</span><span aria-hidden="true">/</span><span aria-current="page">台本</span>
+      <span>{{ unit.label }}</span><span aria-hidden="true">/</span><span aria-current="page">台本</span>
     </nav>
-    <nav class="resource-tabs" aria-label="本周材料">
-      <RouterLink :to="{ name: 'runbook', params: { termId, courseId, weekId } }">台本</RouterLink>
-      <RouterLink v-if="context.week.resources.slides" :to="{ name: 'slides', params: { termId, courseId, weekId, page: 1 } }">Slides</RouterLink>
-      <RouterLink v-if="context.week.resources.guide" :to="{ name: 'guide', params: { termId, courseId, weekId } }">学生指南</RouterLink>
+    <nav class="resource-tabs" :aria-label="isTopic ? '本专题材料' : '本周材料'">
+      <RouterLink :to="resourceLocation('runbook')">台本</RouterLink>
+      <RouterLink v-if="unit.resources.slides" :to="resourceLocation('slides', { page: 1 })">Slides</RouterLink>
+      <RouterLink v-if="unit.resources.guide" :to="resourceLocation('guide')">学生指南</RouterLink>
     </nav>
     <p v-if="loading" class="reader-loading" role="status">正在打开台本…</p>
     <section v-else-if="error" class="error-state" role="alert"><h1>台本暂时无法读取</h1><p>{{ error }}</p></section>
-    <RunbookReader v-else-if="source !== null" :source="source" :file="sourcePath" />
+    <RunbookReader
+      v-else-if="source !== null"
+      :source="source"
+      :file="sourcePath"
+      :variant="context.course.runbookLayout ?? ''"
+    />
   </div>
   <NotFoundView v-else />
 </template>

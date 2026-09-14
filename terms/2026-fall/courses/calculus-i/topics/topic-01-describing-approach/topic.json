@@ -1,8 +1,9 @@
 {
-  "id": "week-01",
-  "label": "W1 · 精确描述“趋近”",
-  "title": "极限怎样描述“越来越接近”？",
+  "id": "topic-01-describing-approach",
+  "label": "T01",
+  "title": "精确描述“趋近”",
   "summary": "从必要的函数语言出发，建立 ε–N 与 ε–δ 的量词结构，比较不同趋近方式，并统一数列极限与函数极限的描述。",
+  "lessonCount": 3,
   "order": 1,
   "resources": {
     "runbook": "runbook.md"

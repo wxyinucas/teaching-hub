@@ -9,9 +9,9 @@ watchEffect(() => { document.title = 'Teaching Hub · 课程目录' })
 <template>
   <section class="library-page">
     <header class="directory-heading home-heading">
-      <p class="eyebrow">按学期组织，按周完成</p>
+      <p class="eyebrow">按学期组织，按课程约定推进</p>
       <h1>课程工作台</h1>
-      <p class="directory-intro">台本负责课前放行与临场决策；派生材料的受众与用途由课程契约定义。所有材料共享同一个教学周，并各自保持边界。</p>
+      <p class="directory-intro">台本负责课前放行与临场决策；派生材料的受众与用途由课程契约定义。所有材料共享课程约定的组织单位，并各自保持边界。</p>
     </header>
 
     <section v-for="term in catalog.terms" :key="term.id" class="term-group" :aria-labelledby="`term-${term.id}`">
@@ -29,7 +29,8 @@ watchEffect(() => { document.title = 'Teaching Hub · 课程目录' })
           <div class="course-card-top"><h3>{{ course.title }}</h3><span aria-hidden="true">↗</span></div>
           <p>{{ course.description }}</p>
           <div class="course-card-bottom">
-            <span v-if="course.weekMap?.length">{{ course.calendar.length }} 周课程</span>
+            <span v-if="course.organization === 'topics' && course.topicMap.length">{{ course.topicMap.length }} 个专题</span>
+            <span v-else-if="course.weekMap?.length">{{ course.calendar.length }} 周课程</span>
             <span v-else-if="course.weeks.length">{{ course.weeks.length }} 周内容</span>
             <span>进入课程 →</span>
           </div>

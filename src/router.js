@@ -29,6 +29,22 @@ export function createTeachingRouter(history = createWebHashHistory(import.meta.
         path: '/terms/:termId/courses/:courseId/weeks/:weekId/demos/:demoId',
         name: 'demo', component: DemoView, props: true,
       },
+      {
+        path: '/terms/:termId/courses/:courseId/topics/:topicId/runbook',
+        name: 'topic-runbook', component: RunbookView, props: true,
+      },
+      {
+        path: '/terms/:termId/courses/:courseId/topics/:topicId/slides/:page?',
+        name: 'topic-slides', component: SlidesView, props: true,
+      },
+      {
+        path: '/terms/:termId/courses/:courseId/topics/:topicId/guide',
+        name: 'topic-guide', component: GuideView, props: true,
+      },
+      {
+        path: '/terms/:termId/courses/:courseId/topics/:topicId/demos/:demoId',
+        name: 'topic-demo', component: DemoView, props: true,
+      },
       { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundView },
     ],
     scrollBehavior: (_to, _from, savedPosition) => savedPosition ?? { top: 0, left: 0 },

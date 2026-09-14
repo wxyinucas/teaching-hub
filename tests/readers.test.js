@@ -84,6 +84,8 @@ describe('runbook disclosure', () => {
     wrapper = mount(RunbookReader, { props: { source: runbookSource, file: 'runbook.md' } })
     const triggers = wrapper.findAll('.segment-trigger')
     expect(triggers).toHaveLength(2)
+    expect(wrapper.find('.route-toolbar').text()).toContain('2 个教学动作段')
+    expect(wrapper.find('.runbook-reader').classes()).toEqual(['runbook-reader'])
     await triggers[0].trigger('click')
     await triggers[1].trigger('click')
     expect(wrapper.find('#segment-1-notes').isVisible()).toBe(true)
@@ -110,6 +112,30 @@ describe('runbook disclosure', () => {
     expect(boundary.attributes('aria-label')).toBe('第 2 课时从第 50 分钟开始')
     expect(boundary.text()).toContain('50–100 min')
     expect(boundary.element.tagName).toBe('DIV')
+  })
+
+  it('applies a course layout variant without changing the default reader', () => {
+    const source = [
+      '# T01｜专题台本',
+      '## 第一次课',
+      '### 0-50 | 第一课时',
+      '#### 从直觉进入定义',
+      '- 画出误差带。',
+      '### 50-100 | 第二课时',
+      '#### 用定义完成证明',
+      '- 写清量词次序。',
+    ].join('\n')
+    wrapper = mount(RunbookReader, {
+      props: { source, file: 'runbook.md', variant: 'calculus-topic' },
+    })
+
+    expect(wrapper.find('.runbook-reader--calculus-topic').exists()).toBe(true)
+    expect(wrapper.find('.route-toolbar').text()).toContain('2 个课时卡片')
+    expect(wrapper.find('.lesson-meta').text()).toContain('2 个课时卡片')
+    expect(wrapper.findAll('.notes-content h4').map((heading) => heading.text())).toEqual([
+      '从直觉进入定义',
+      '用定义完成证明',
+    ])
   })
 
   it('copies fenced teaching material without executing it', async () => {

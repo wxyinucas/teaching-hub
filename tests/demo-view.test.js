@@ -3,9 +3,12 @@ import { mount, RouterLinkStub } from '@vue/test-utils'
 import { catalog } from '../src/lib/catalog.js'
 import DemoView from '../src/views/DemoView.vue'
 
-const demoBundle = catalog.terms.flatMap((term) => term.courses.flatMap((course) => (
-  course.weeks.flatMap((week) => (week.demos ?? []).map((demo) => ({ term, course, week, demo })))
-))).at(0)
+const demoBundle = catalog.terms.flatMap((term) => term.courses.flatMap((course) => [
+  ...course.weeks.flatMap((week) => (
+    week.demos ?? []).map((demo) => ({ term, course, week, topic: null, demo }))),
+  ...course.topics.flatMap((topic) => (
+    topic.demos ?? []).map((demo) => ({ term, course, week: null, topic, demo }))),
+])).at(0)
 
 if (!demoBundle) throw new Error('DemoView 测试至少需要一个已登记的演示。')
 
@@ -64,7 +67,8 @@ function mountDemo() {
     props: {
       termId: demoBundle.term.id,
       courseId: demoBundle.course.id,
-      weekId: demoBundle.week.id,
+      weekId: demoBundle.week?.id,
+      topicId: demoBundle.topic?.id,
       demoId: demoBundle.demo.id,
     },
     global: { stubs: { RouterLink: RouterLinkStub } },

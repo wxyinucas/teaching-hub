@@ -6,6 +6,7 @@ import { parseRunbook } from '../../lib/runbook.js'
 const props = defineProps({
   source: { type: String, required: true },
   file: { type: String, required: true },
+  variant: { type: String, default: '' },
 })
 
 const parsed = computed(() => {
@@ -13,6 +14,12 @@ const parsed = computed(() => {
   catch (error) { return { runbook: null, error: error.message } }
 })
 const runbook = computed(() => parsed.value.runbook)
+const variantClass = computed(() => {
+  const name = props.variant.trim().replace(/[^a-zA-Z0-9_-]+/g, '-')
+  return name ? `runbook-reader--${name}` : ''
+})
+const usesPeriodCards = computed(() => props.variant === 'calculus-topic')
+const segmentUnit = computed(() => (usesPeriodCards.value ? '个课时卡片' : '个教学动作段'))
 const sectionUnit = computed(() => (
   runbook.value?.sections.every((section) => /次课$/.test(section.label)) ? '次课' : '个教学区段'
 ))
@@ -58,10 +65,10 @@ watchEffect(() => {
 </script>
 
 <template>
-  <section v-if="runbook" class="runbook-reader">
+  <section v-if="runbook" class="runbook-reader" :class="variantClass">
     <section class="lesson-heading" aria-labelledby="lesson-title">
       <div class="lesson-title-row"><span class="week-tag">{{ runbook.code }}</span><h1 id="lesson-title">{{ runbook.title }}</h1></div>
-      <p class="lesson-meta">{{ runbook.subtitle }}<span class="meta-separator">·</span>{{ runbook.sections.length }} {{ sectionUnit }} / {{ runbook.segmentCount }} 个教学动作段 / {{ runbook.duration }} 分钟<span class="meta-note">不含课间</span></p>
+      <p class="lesson-meta">{{ runbook.subtitle }}<span class="meta-separator">·</span>{{ runbook.sections.length }} {{ sectionUnit }} / {{ runbook.segmentCount }} {{ segmentUnit }} / {{ runbook.duration }} 分钟<span class="meta-note">不含课间</span></p>
     </section>
 
     <dl class="anchors" aria-label="台本的方向">
@@ -73,7 +80,7 @@ watchEffect(() => {
     <div class="workspace">
       <section id="lesson-route" class="route" aria-labelledby="route-title">
         <div class="route-toolbar">
-          <h2 id="route-title">课堂路线 <span>{{ runbook.segmentCount }} 个教学动作段</span></h2>
+          <h2 id="route-title">课堂路线 <span>{{ runbook.segmentCount }} {{ segmentUnit }}</span></h2>
           <button class="collapse-all" :disabled="openSegments.size === 0" @click="collapseAll">全部收起 <span aria-hidden="true">↑</span></button>
         </div>
 
@@ -123,7 +130,7 @@ watchEffect(() => {
             <dd>{{ control.text }}</dd>
           </div>
         </dl>
-        <div class="usage-note"><span aria-hidden="true">＋</span><p>先看完整备课单位的路线。<br />需要时，点开一段查细节。</p></div>
+        <div class="usage-note"><span aria-hidden="true">＋</span><p>先看完整备课单位的路线。<br />需要时，点开{{ usesPeriodCards ? '一个课时' : '一段' }}查细节。</p></div>
         <p class="machine-note">台本用于教师备课与临场决策。<br />Slides 与其他材料是否展示，按课程约定执行。</p>
       </aside>
     </div>
