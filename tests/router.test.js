@@ -20,6 +20,11 @@ const unavailableResource = catalog.terms.flatMap((itemTerm) => itemTerm.courses
     itemWeek.resources[kind] ? [] : [{ term: itemTerm, course: itemCourse, week: itemWeek, kind }]
   )))
 ))).at(0)
+const demoBundle = catalog.terms.flatMap((itemTerm) => itemTerm.courses.flatMap((itemCourse) => (
+  itemCourse.weeks.flatMap((itemWeek) => (itemWeek.demos ?? []).map((demo) => ({
+    term: itemTerm, course: itemCourse, week: itemWeek, demo,
+  })))
+))).at(0)
 
 let wrapper
 let router
@@ -94,6 +99,19 @@ describe('teaching hub navigation', () => {
     expect(wrapper.find('.runbook-reader').exists()).toBe(true)
   })
 
+  it.runIf(Boolean(demoBundle))('opens a declared week demo from the course page', async () => {
+    const item = demoBundle
+    const itemCoursePath = `/terms/${item.term.id}/courses/${item.course.id}`
+    const demoPath = `${itemCoursePath}/weeks/${item.week.id}/demos/${item.demo.id}`
+    await openPage(itemCoursePath)
+    const demoLink = wrapper.findAll('.resource-demo').find((link) => link.attributes('href') === demoPath)
+    expect(demoLink).toBeDefined()
+    await demoLink.trigger('click')
+    await settle()
+    expect(router.currentRoute.value.path).toBe(demoPath)
+    expect(wrapper.find('.sequence-limit-demo').exists()).toBe(true)
+  })
+
   it.runIf(Boolean(unavailableResource))('treats an undeclared resource type as missing', async () => {
     const item = unavailableResource
     const suffix = item.kind === 'slides' ? 'slides/1' : item.kind
@@ -106,6 +124,7 @@ describe('teaching hub navigation', () => {
     '/unknown',
     '/terms/missing/courses/missing',
     `/terms/${term.id}/courses/${course.id}/weeks/missing/runbook`,
+    `/terms/${term.id}/courses/${course.id}/weeks/${week.id}/demos/missing`,
   ])('offers recovery for an unknown address: %s', async (path) => {
     await openPage(path)
     expect(wrapper.find('h1').text()).toBe('未找到课程或材料')

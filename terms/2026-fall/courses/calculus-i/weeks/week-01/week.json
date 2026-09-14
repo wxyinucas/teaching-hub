@@ -6,5 +6,12 @@
   "order": 1,
   "resources": {
     "runbook": "runbook.md"
-  }
+  },
+  "demos": [
+    {
+      "id": "sequence-limit",
+      "title": "数列极限：ε 与 N",
+      "summary": "调整 ε，观察数列从哪一项起进入给定范围。"
+    }
+  ]
 }

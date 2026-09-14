@@ -7,5 +7,6 @@ import './styles/site.css'
 import './styles/runbook.css'
 import './styles/slides.css'
 import './styles/math.css'
+import './styles/demo.css'
 
 createApp(App).use(createTeachingRouter()).mount('#app')

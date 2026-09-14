@@ -49,6 +49,8 @@
 .resource-slides { background: var(--purple-dark); border-color: var(--purple-dark); }
 .resource-slides span, .resource-slides small { color: white; }
 .resource-slides small { opacity: .72; }
+.resource-demo { background: var(--surface); border-color: var(--purple); }
+.resource-demo span { color: var(--purple); }
 .directory-footnote, .directory-empty { color: var(--ink-muted); font-size: 12px; line-height: 1.8; margin-top: 20px; }
 .empty-course { padding: 54px 24px; text-align: center; border: 1px dashed var(--purple-border); border-radius: 8px; background: var(--surface); }
 .empty-course > span { color: var(--purple); font-size: 28px; }

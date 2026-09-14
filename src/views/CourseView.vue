@@ -58,6 +58,12 @@ watchEffect(() => {
             class="resource-link resource-guide"
             :to="{ name: 'guide', params: { termId, courseId, weekId: week.id } }"
           ><span>学生指南</span><small>独立执行与接续</small></RouterLink>
+          <RouterLink
+            v-for="demo in week.week.demos ?? []"
+            :key="demo.id"
+            class="resource-link resource-demo"
+            :to="{ name: 'demo', params: { termId, courseId, weekId: week.id, demoId: demo.id } }"
+          ><span>演示</span><small>{{ demo.title }}</small></RouterLink>
         </div>
       </article>
     </div>
