@@ -22,6 +22,13 @@ describe('teacher notes rendering', () => {
     expect(html).toContain('rel="noopener noreferrer"')
   })
 
+  it('assigns parser-provided IDs to H4 headings in order', () => {
+    const { html } = renderNotes('> #### 引用标题\n\n#### 第一处\n\n正文\n\n#### 第二处', ['detail-1', 'detail-2'])
+    expect(html).toContain('<h4>引用标题</h4>')
+    expect(html).toContain('<h4 id="detail-1">第一处</h4>')
+    expect(html).toContain('<h4 id="detail-2">第二处</h4>')
+  })
+
   it('does not render javascript URLs as links', () => {
     expect(renderNotes('[bad](javascript:alert(1))').html).not.toContain('href="javascript:')
   })

@@ -2,8 +2,11 @@
 import { computed, onBeforeUnmount, ref } from 'vue'
 import { renderNotes } from '../../lib/markdown.js'
 
-const props = defineProps({ source: { type: String, default: '' } })
-const rendered = computed(() => renderNotes(props.source))
+const props = defineProps({
+  source: { type: String, default: '' },
+  outline: { type: Array, default: () => [] },
+})
+const rendered = computed(() => renderNotes(props.source, props.outline.map((item) => item.id)))
 const feedback = ref('')
 const timers = new Set()
 

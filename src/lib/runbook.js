@@ -12,7 +12,7 @@ function readCallouts(lines) {
   })
 }
 
-function readSegment(heading, lines, end, number) {
+function readSegment(heading, lines, end, number, detailHeadings = []) {
   const match = heading.text.match(/^(\d+)\s*[-–—]\s*(\d+)\s*[|｜]\s*(.+)$/)
   if (!match || Number(match[1]) >= Number(match[2])) {
     throw new Error(`“${heading.text}”的标题请写成“0-10 | 推进什么”，结束时间需晚于开始时间。`)
@@ -22,8 +22,9 @@ function readSegment(heading, lines, end, number) {
   const summary = body[0]?.match(/^>\s?(.*)$/)
   if (summary) body.shift()
 
+  const id = `segment-${number}`
   return {
-    id: `segment-${number}`,
+    id,
     number,
     start: Number(match[1]),
     end: Number(match[2]),
@@ -31,6 +32,9 @@ function readSegment(heading, lines, end, number) {
     title: match[3].trim(),
     summary: summary?.[1].trim() ?? '',
     notes: body.join('\n').trim(),
+    outline: detailHeadings
+      .filter((item) => item.start >= heading.end && item.start < end)
+      .map((item, index) => ({ id: `${id}-detail-${index + 1}`, text: item.text })),
   }
 }
 
@@ -72,8 +76,10 @@ export function parseRunbook(source) {
     // accidentally becoming lessons or segments.
     if (token.type !== 'heading_open' || token.level !== 0) return []
     const level = Number(token.tag.slice(1))
-    if (level > 3) return []
-    return [{ level, text: tokens[index + 1].content.trim(), start: token.map[0], end: token.map[1] }]
+    if (level > 4) return []
+    const inline = tokens[index + 1]
+    const text = inline.children?.map((child) => child.content).join('').trim() || inline.content.trim()
+    return [{ level, text, start: token.map[0], end: token.map[1] }]
   })
   const title = headings.find((heading) => heading.level === 1)
   if (!title) throw new Error('请先用一个 # 标题写下台本名称。')
@@ -100,8 +106,9 @@ export function parseRunbook(source) {
       return
     }
     const sectionHeadings = headings.filter((item) => item.level === 3 && item.start > heading.start && item.start < end)
+    const detailHeadings = headings.filter((item) => item.level === 4 && item.start > heading.start && item.start < end)
     const segments = validateTimeline(heading.text, sectionHeadings.map((item, itemIndex) => readSegment(
-      item, lines, sectionHeadings[itemIndex + 1]?.start ?? end, ++segmentNumber,
+      item, lines, sectionHeadings[itemIndex + 1]?.start ?? end, ++segmentNumber, detailHeadings,
     )))
     if (!segments.length) throw new Error(`“${heading.text}”下还没有推进段，请用 ### 添加一段。`)
     const [label, ...nameParts] = heading.text.split('·')

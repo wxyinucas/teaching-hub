@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { parseRunbook } from '../src/lib/runbook.js'
+import { resolveRunbookNavigation } from '../src/lib/runbookNavigation.js'
 
 const example = [
   '# WXX｜示例台本',
@@ -84,6 +85,32 @@ describe('Markdown runbook parser', () => {
     expect(runbook.sections[0].segments[0].notes).toContain('### 0-10 | 不是推进段')
   })
 
+  it('builds a stable outline from real top-level H4 headings', () => {
+    const source = [
+      '# T01｜目录',
+      '## 第一次课',
+      '### 0-50 | 第一课时',
+      '#### 课前检查',
+      '##### 不进入目录',
+      '> #### 引用里的伪标题',
+      '```markdown',
+      '#### 围栏里的伪标题',
+      '```',
+      '#### 课前检查',
+      '### 50-100 | 第二课时',
+      '#### 收束',
+    ].join('\n')
+    const runbook = parseRunbook(source)
+
+    expect(runbook.sections[0].segments[0].outline).toEqual([
+      { id: 'segment-1-detail-1', text: '课前检查' },
+      { id: 'segment-1-detail-2', text: '课前检查' },
+    ])
+    expect(runbook.sections[0].segments[1].outline).toEqual([
+      { id: 'segment-2-detail-1', text: '收束' },
+    ])
+  })
+
   it('allows a segment with no summary or extra notes', () => {
     const runbook = parseRunbook('# W2｜简单台本\n\n## 课堂\n\n### 0-50 | 一个目标\n')
     expect(runbook.sections[0].segments[0]).toMatchObject({ summary: '', notes: '' })
@@ -124,5 +151,38 @@ describe('Markdown runbook parser', () => {
     expect(() => parseRunbook('## 课堂\n\n### 0-50 | 内容')).toThrow('请先用一个 # 标题')
     expect(() => parseRunbook('# 只有标题')).toThrow('请用 ## 添加教学区段')
     expect(() => parseRunbook('# 台本\n\n## 课堂')).toThrow('还没有推进段')
+  })
+})
+
+describe('runbook reading position', () => {
+  const items = [
+    { id: 'segment-1', top: -400, bottom: 70 },
+    { id: 'segment-2', top: 220, bottom: 900 },
+    { id: 'segment-3', top: 940, bottom: 1500 },
+  ]
+
+  it('shows only the current half-period away from a boundary', () => {
+    expect(resolveRunbookNavigation(items, 800, 120)).toEqual({
+      currentId: 'segment-1',
+      visibleIds: ['segment-1'],
+    })
+  })
+
+  it('shows both adjacent half-periods near their boundary', () => {
+    expect(resolveRunbookNavigation(items, 800, 130)).toEqual({
+      currentId: 'segment-1',
+      visibleIds: ['segment-1', 'segment-2'],
+    })
+    expect(resolveRunbookNavigation(items, 800, 250)).toEqual({
+      currentId: 'segment-2',
+      visibleIds: ['segment-1', 'segment-2'],
+    })
+  })
+
+  it('falls back to the first half-period before layout is measured', () => {
+    expect(resolveRunbookNavigation([
+      { id: 'segment-1', top: 0, bottom: 0 },
+      { id: 'segment-2', top: 0, bottom: 0 },
+    ], 800)).toEqual({ currentId: 'segment-1', visibleIds: ['segment-1'] })
   })
 })

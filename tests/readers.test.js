@@ -36,11 +36,14 @@ const slidesSource = [
 
 let wrapper
 let restoreFullscreen
+let restoreScrollIntoView
 afterEach(() => {
   wrapper?.unmount()
   wrapper = null
   restoreFullscreen?.()
   restoreFullscreen = null
+  restoreScrollIntoView?.()
+  restoreScrollIntoView = null
   vi.restoreAllMocks()
   vi.unstubAllGlobals()
   document.body.innerHTML = ''
@@ -117,25 +120,109 @@ describe('runbook disclosure', () => {
   it('applies a course layout variant without changing the default reader', () => {
     const source = [
       '# T01｜专题台本',
-      '## 第一次课',
+      '> 高数测试',
+      '## 第一次课 · 建立定义',
       '### 0-50 | 第一课时',
       '#### 从直觉进入定义',
       '- 画出误差带。',
       '### 50-100 | 第二课时',
       '#### 用定义完成证明',
       '- 写清量词次序。',
+      '## 第二次课 · 比较定义',
+      '### 0-50 | 第三课时',
+      '#### 比较两种定义',
+      '- 找到共同结构。',
     ].join('\n')
     wrapper = mount(RunbookReader, {
       props: { source, file: 'runbook.md', variant: 'calculus-topic' },
     })
 
     expect(wrapper.find('.runbook-reader--calculus-topic').exists()).toBe(true)
-    expect(wrapper.find('.route-toolbar').text()).toContain('2 个课时卡片')
-    expect(wrapper.find('.lesson-meta').text()).toContain('2 个课时卡片')
+    expect(wrapper.find('.route-toolbar').text()).toContain('3 个课时卡片')
+    expect(wrapper.find('.lesson-meta').text()).toBe('高数测试')
+    expect(wrapper.findAll('.topic-lesson-index button')).toHaveLength(2)
+    expect(wrapper.findAll('.topic-segment-toc')).toHaveLength(1)
+    expect(wrapper.find('.topic-segment-toc').text()).toContain('第一次课 · 0–50')
+    expect(wrapper.find('.topic-segment-toc').text()).toContain('从直觉进入定义')
+    expect(wrapper.find('.anchors').exists()).toBe(false)
+    expect(wrapper.find('[aria-labelledby="controls-title"]').exists()).toBe(false)
     expect(wrapper.findAll('.notes-content h4').map((heading) => heading.text())).toEqual([
       '从直觉进入定义',
       '用定义完成证明',
+      '比较两种定义',
     ])
+    expect(wrapper.find('.notes-content h4').attributes('id')).toBe('segment-1-detail-1')
+  })
+
+  it('uses the topic directory to open, navigate and close one half-period without closing another', async () => {
+    const scrollIntoView = vi.fn()
+    const scrollDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollIntoView')
+    Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
+      configurable: true,
+      value: scrollIntoView,
+    })
+    restoreScrollIntoView = () => {
+      if (scrollDescriptor) Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', scrollDescriptor)
+      else delete HTMLElement.prototype.scrollIntoView
+    }
+    const source = [
+      '# T01｜专题台本',
+      '## 第一次课 · 建立定义',
+      '### 0-50 | 第一课时',
+      '#### 第一处',
+      '- 内容。',
+      '### 50-100 | 第二课时',
+      '#### 第二处',
+      '- 内容。',
+      '## 第二次课 · 比较定义',
+      '### 0-50 | 第三课时',
+      '#### 第三处',
+      '- 内容。',
+    ].join('\n')
+    wrapper = mount(RunbookReader, {
+      props: { source, file: 'runbook.md', variant: 'calculus-topic' },
+    })
+    await flushPromises()
+
+    const triggers = wrapper.findAll('.segment-trigger')
+    await triggers[0].trigger('click')
+    await triggers[1].trigger('click')
+    expect(triggers[0].attributes('aria-expanded')).toBe('true')
+    expect(triggers[1].attributes('aria-expanded')).toBe('true')
+
+    const remoteToggle = wrapper.find('.topic-segment-toggle')
+    expect(remoteToggle.text()).toBe('收起左侧')
+    await remoteToggle.trigger('click')
+    expect(triggers[0].attributes('aria-expanded')).toBe('false')
+    expect(triggers[1].attributes('aria-expanded')).toBe('true')
+    expect(remoteToggle.text()).toBe('展开左侧')
+    expect(scrollIntoView).toHaveBeenCalled()
+
+    await wrapper.find('.topic-outline button').trigger('click')
+    await flushPromises()
+    expect(triggers[0].attributes('aria-expanded')).toBe('true')
+    expect(scrollIntoView).toHaveBeenLastCalledWith({ behavior: 'auto', block: 'start' })
+
+    await wrapper.findAll('.topic-lesson-index button')[1].trigger('click')
+    expect(wrapper.findAll('.topic-lesson-index button')[1].attributes('aria-current')).toBe('location')
+    expect(triggers[1].attributes('aria-expanded')).toBe('true')
+  })
+
+  it('keeps the original overview and controls outside the calculus layout', () => {
+    const source = [
+      '# W1｜普通台本',
+      '## 本次课',
+      '- 根问题：今天做什么？',
+      '## 第一课时',
+      '### 0-50 | 内容',
+      '## 临场取舍',
+      '- 默认：沿主线推进。',
+    ].join('\n')
+    wrapper = mount(RunbookReader, { props: { source, file: 'runbook.md' } })
+
+    expect(wrapper.find('.anchors').text()).toContain('今天做什么？')
+    expect(wrapper.find('.side-notes').text()).toContain('临场取舍')
+    expect(wrapper.find('.topic-side-nav').exists()).toBe(false)
   })
 
   it('copies fenced teaching material without executing it', async () => {
