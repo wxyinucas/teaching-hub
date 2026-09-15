@@ -26,8 +26,8 @@
       "id": "topic-03-infinitesimals-and-continuity",
       "label": "T03",
       "title": "从无穷小到连续",
-      "summary": "连接无穷小与无穷大、阶的比较、连续与间断以及闭区间上的整体保证。",
-      "lessonCount": 3,
+      "summary": "连接无穷小与无穷大、阶的比较、连续与间断以及闭区间上的整体保证，并完成第一章整合。",
+      "lessonCount": 4,
       "order": 3
     },
     {
@@ -50,7 +50,7 @@
       "id": "topic-06-extended-derivatives-and-differentials",
       "label": "T06",
       "title": "扩展导数并建立局部线性化",
-      "summary": "处理高阶导数、隐函数、参数方程与极坐标求导，并从导数进入微分。",
+      "summary": "处理高阶导数、隐函数与参数方程求导，并从导数进入微分；极坐标求导作为节内机动内容。",
       "lessonCount": 2,
       "order": 6
     },
@@ -91,7 +91,7 @@
       "label": "T11",
       "title": "用累积定义定积分",
       "summary": "建立定积分概念与性质，并以积分上限函数连接微积分基本公式。",
-      "lessonCount": 2,
+      "lessonCount": 3,
       "order": 11
     },
     {
@@ -99,15 +99,15 @@
       "label": "T12",
       "title": "计算定积分并建立模型",
       "summary": "组织定积分的换元与分部积分，并用代表性几何和物理问题建立模型。",
-      "lessonCount": 3,
+      "lessonCount": 4,
       "order": 12
     },
     {
       "id": "topic-13-improper-integrals",
       "label": "T13",
       "title": "越过有限边界",
-      "summary": "用极限统一无穷区间与无界函数的广义积分，并收束积分主线。",
-      "lessonCount": 2,
+      "summary": "用极限统一无穷区间与无界函数的广义积分，并完成第五章整合与积分主线收束。",
+      "lessonCount": 1,
       "order": 13
     },
     {
@@ -115,22 +115,22 @@
       "label": "T14",
       "title": "从变化规律建立一阶方程",
       "summary": "从微分方程的基本概念进入可分离变量方程与齐次方程。",
-      "lessonCount": 2,
+      "lessonCount": 1,
       "order": 14
     },
     {
       "id": "topic-15-first-order-equation-methods",
       "label": "T15",
       "title": "组织一阶方程的解法",
-      "summary": "处理一阶线性方程、伯努利方程以及变量替换的灵活使用。",
-      "lessonCount": 2,
+      "summary": "处理一阶线性方程；伯努利方程与变量替换作为节内机动内容。",
+      "lessonCount": 1,
       "order": 15
     },
     {
       "id": "topic-16-higher-order-linear-equations",
       "label": "T16",
       "title": "处理高阶线性微分方程",
-      "summary": "连接可降阶方程、高阶线性结构与二阶常系数方程，并保留一次章内整合容量。",
+      "summary": "连接可降阶方程、高阶线性结构与二阶常系数方程，并在最后一次课完成第六章整合。",
       "lessonCount": 4,
       "order": 16
     },
