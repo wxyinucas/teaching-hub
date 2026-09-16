@@ -42,7 +42,11 @@ watchEffect(() => {
 </script>
 
 <template>
-  <section v-if="context" class="directory-page">
+  <section
+    v-if="context"
+    class="directory-page"
+    :class="{ 'directory-page--surface-study': courseId === 'calculus-i' }"
+  >
     <nav class="breadcrumbs" aria-label="当前位置">
       <RouterLink to="/">首页</RouterLink><span aria-hidden="true">/</span>
       <span>{{ context.term.title }}</span><span aria-hidden="true">/</span>

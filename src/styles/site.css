@@ -76,6 +76,12 @@
 .error-state h1 { margin: 0; font-size: 23px; }
 .page-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--border); margin-top: 30px; padding-top: 16px; font-size: 10px; color: var(--ink-subtle); }
 
+/* 高数课程页暂用选定的暗色表面，确认后再收束为全局 token。 */
+:root[data-theme="dark"] .directory-page--surface-study .topic-card {
+  border-color: #665178;
+  background: #292630;
+}
+
 @media (max-width: 900px) {
   .course-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .site-shell { padding: 20px 24px 26px; }
