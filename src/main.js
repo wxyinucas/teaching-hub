@@ -8,5 +8,6 @@ import './styles/runbook.css'
 import './styles/slides.css'
 import './styles/math.css'
 import './styles/demo.css'
+import './styles/exams.css'
 
 createApp(App).use(createTeachingRouter()).mount('#app')

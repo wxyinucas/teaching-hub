@@ -19,6 +19,10 @@ function ready(entry, kind) {
   return hasContent(record(entry)?.resources[kind])
 }
 
+function examLinkCaption(entry) {
+  return record(entry)?.examTitle ?? '按年份浏览'
+}
+
 function resourceLocation(entry, kind, extraParams = {}) {
   const unit = isTopicCourse.value ? 'topic' : 'week'
   const params = {
@@ -60,7 +64,10 @@ watchEffect(() => {
           <span :class="isTopicCourse ? 'topic-kicker' : 'week-kicker'">{{ entry.label }}</span>
           <h3>{{ entry.title }}</h3>
           <p v-if="entry.summary">{{ entry.summary }}</p>
-          <p v-if="isTopicCourse && entry.lessonCount" class="topic-meta">约 {{ entry.lessonCount }} 次课</p>
+          <p v-if="isTopicCourse && (entry.lessonCount || entry.completedBy)" class="topic-meta">
+            <span v-if="entry.lessonCount">约 {{ entry.lessonCount }} 次课</span>
+            <span v-if="entry.completedBy"> · 最晚完成 <time :datetime="entry.completedBy">{{ entry.completedBy }}</time></span>
+          </p>
         </div>
         <div
           v-if="record(entry)"
@@ -82,6 +89,11 @@ watchEffect(() => {
             class="resource-link resource-guide"
             :to="resourceLocation(entry, 'guide')"
           ><span>学生指南</span><small>独立执行与接续</small></RouterLink>
+          <RouterLink
+            v-if="isTopicCourse && ready(entry, 'exams')"
+            class="resource-link resource-exams"
+            :to="resourceLocation(entry, 'exams')"
+          ><span>真题</span><small>{{ examLinkCaption(entry) }}</small></RouterLink>
           <RouterLink
             v-for="demo in record(entry).demos ?? []"
             :key="demo.id"

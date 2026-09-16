@@ -5,6 +5,7 @@ import RunbookView from './views/RunbookView.vue'
 import SlidesView from './views/SlidesView.vue'
 import GuideView from './views/GuideView.vue'
 import DemoView from './views/DemoView.vue'
+import ExamsView from './views/ExamsView.vue'
 import NotFoundView from './views/NotFoundView.vue'
 
 export function createTeachingRouter(history = createWebHashHistory(import.meta.env.BASE_URL)) {
@@ -40,6 +41,10 @@ export function createTeachingRouter(history = createWebHashHistory(import.meta.
       {
         path: '/terms/:termId/courses/:courseId/topics/:topicId/guide',
         name: 'topic-guide', component: GuideView, props: true,
+      },
+      {
+        path: '/terms/:termId/courses/:courseId/topics/:topicId/exams',
+        name: 'topic-exams', component: ExamsView, props: true,
       },
       {
         path: '/terms/:termId/courses/:courseId/topics/:topicId/demos/:demoId',

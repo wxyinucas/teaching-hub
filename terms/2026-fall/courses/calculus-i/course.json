@@ -7,140 +7,103 @@
   "runbookLayout": "calculus-topic",
   "topicMap": [
     {
-      "id": "topic-01-describing-approach",
-      "label": "T01",
-      "title": "精确描述“趋近”",
-      "summary": "从必要的函数语言出发，建立数列与函数极限的描述方式、单侧趋近及两类极限的联系。",
-      "lessonCount": 3,
+      "id": "topic-00-entering-calculus",
+      "label": "T00",
+      "title": "Lesson 0：进入高等数学",
+      "summary": "从大学学习方式、高等数学的主线和必要的函数知识进入课程，并以数列极限完成第一次 ε–N 相遇。",
+      "lessonCount": 1,
+      "completedBy": "2026-09-20",
       "order": 1
     },
     {
-      "id": "topic-02-limit-existence-and-calculation",
-      "label": "T02",
-      "title": "极限何时成立、怎样计算",
-      "summary": "组织极限的性质、运算法则、夹逼与单调有界准则，并建立两个重要极限。",
-      "lessonCount": 3,
+      "id": "topic-01-describing-approach",
+      "label": "T01",
+      "title": "极限的正式定义",
+      "summary": "建立数列极限与函数极限的正式定义，并说明两类极限之间的关系。",
+      "lessonCount": 2,
+      "completedBy": "2026-09-27",
       "order": 2
     },
     {
-      "id": "topic-03-infinitesimals-and-continuity",
-      "label": "T03",
-      "title": "从无穷小到连续",
-      "summary": "连接无穷小与无穷大、阶的比较、连续与间断以及闭区间上的整体保证，并完成第一章整合。",
+      "id": "topic-02-limit-properties-existence-operations",
+      "label": "T02",
+      "title": "极限的性质、存在与运算",
+      "summary": "组织极限的性质、存在准则与运算法则，并处理无穷小量与无穷大量。",
       "lessonCount": 4,
+      "completedBy": "2026-10-18",
       "order": 3
     },
     {
-      "id": "topic-04-derivative-as-change",
-      "label": "T04",
-      "title": "用导数描述瞬时变化",
-      "summary": "建立导数定义、几何意义以及可导与连续之间的关系。",
-      "lessonCount": 2,
+      "id": "topic-03-continuity",
+      "label": "T03",
+      "title": "函数的连续性",
+      "summary": "建立连续性的概念、运算与性质，处理间断和闭区间上的连续函数，并完成第一章整合。",
+      "lessonCount": 3,
+      "completedBy": "2026-10-25",
       "order": 4
     },
     {
-      "id": "topic-05-differentiation-system",
-      "label": "T05",
-      "title": "建立求导运算系统",
-      "summary": "组织四则、反函数、复合函数与初等函数的求导规则。",
-      "lessonCount": 2,
+      "id": "topic-04-derivatives-and-differentials",
+      "label": "T04",
+      "title": "导数、求导与微分",
+      "summary": "建立导数概念与求导系统，处理高阶导数、隐函数求导与微分，并完成第二章整合。",
+      "lessonCount": 6,
+      "completedBy": "2026-11-08",
       "order": 5
     },
     {
-      "id": "topic-06-extended-derivatives-and-differentials",
-      "label": "T06",
-      "title": "扩展导数并建立局部线性化",
-      "summary": "处理高阶导数、隐函数与参数方程求导，并从导数进入微分；极坐标求导作为节内机动内容。",
-      "lessonCount": 2,
+      "id": "topic-05-mvt-lhopital-taylor",
+      "label": "T05",
+      "title": "中值定理、洛必达与泰勒",
+      "summary": "连接微分中值定理、洛必达法则与泰勒公式，并在期中节点前完成相应范围。",
+      "lessonCount": 4,
+      "completedBy": "2026-11-15",
       "order": 6
     },
     {
-      "id": "topic-07-local-to-global-and-approximation",
-      "label": "T07",
-      "title": "从局部变化得到区间结论",
-      "summary": "以中值定理、洛必达法则和泰勒公式连接局部信息、整体结论与近似。",
-      "lessonCount": 4,
+      "id": "topic-06-derivative-applications",
+      "label": "T06",
+      "title": "中值定理与导数的应用",
+      "summary": "用导数分析单调、凹凸、极值与最值，并处理函数图形、曲率和第三章整合。",
+      "lessonCount": 5,
+      "completedBy": "2026-11-29",
       "order": 7
     },
     {
-      "id": "topic-08-function-shape-and-optimization",
-      "label": "T08",
-      "title": "描绘函数形态并解决优化问题",
-      "summary": "结合单调、凹凸、极值、最值、函数图形与曲率形成完整的函数分析路线。",
+      "id": "topic-07-indefinite-integrals",
+      "label": "T07",
+      "title": "不定积分",
+      "summary": "建立不定积分的概念与性质，组织换元、分部及代表性的特殊积分，并完成第四章整合。",
       "lessonCount": 5,
+      "completedBy": "2026-12-06",
       "order": 8
     },
     {
-      "id": "topic-09-antiderivatives-and-substitution",
-      "label": "T09",
-      "title": "把求导反过来",
-      "summary": "从原函数进入不定积分，并建立两类换元积分的基本思路。",
-      "lessonCount": 3,
+      "id": "topic-08-definite-integrals-and-applications",
+      "label": "T08",
+      "title": "定积分及其应用",
+      "summary": "连接定积分概念、微积分基本公式与计算方法，并处理几何、物理应用和广义积分。",
+      "lessonCount": 8,
+      "completedBy": "2026-12-27",
       "order": 9
     },
     {
-      "id": "topic-10-integration-techniques",
-      "label": "T10",
-      "title": "组织不定积分方法",
-      "summary": "掌握分部积分，并处理具有代表性的特殊函数积分。",
-      "lessonCount": 2,
+      "id": "topic-09-differential-equations",
+      "label": "T09",
+      "title": "微分方程",
+      "summary": "从基本概念进入一阶方程、可降阶方程与二阶常系数方程，并完成第六章整合。",
+      "lessonCount": 6,
+      "completedBy": "2027-01-10",
       "order": 10
     },
     {
-      "id": "topic-11-definite-integral-and-ftc",
-      "label": "T11",
-      "title": "用累积定义定积分",
-      "summary": "建立定积分概念与性质，并以积分上限函数连接微积分基本公式。",
-      "lessonCount": 3,
-      "order": 11
-    },
-    {
-      "id": "topic-12-definite-integral-methods-and-models",
-      "label": "T12",
-      "title": "计算定积分并建立模型",
-      "summary": "组织定积分的换元与分部积分，并用代表性几何和物理问题建立模型。",
-      "lessonCount": 4,
-      "order": 12
-    },
-    {
-      "id": "topic-13-improper-integrals",
-      "label": "T13",
-      "title": "越过有限边界",
-      "summary": "用极限统一无穷区间与无界函数的广义积分，并完成第五章整合与积分主线收束。",
-      "lessonCount": 1,
-      "order": 13
-    },
-    {
-      "id": "topic-14-separable-and-homogeneous-equations",
-      "label": "T14",
-      "title": "从变化规律建立一阶方程",
-      "summary": "从微分方程的基本概念进入可分离变量方程与齐次方程。",
-      "lessonCount": 1,
-      "order": 14
-    },
-    {
-      "id": "topic-15-first-order-equation-methods",
-      "label": "T15",
-      "title": "组织一阶方程的解法",
-      "summary": "处理一阶线性方程；伯努利方程与变量替换作为节内机动内容。",
-      "lessonCount": 1,
-      "order": 15
-    },
-    {
-      "id": "topic-16-higher-order-linear-equations",
-      "label": "T16",
-      "title": "处理高阶线性微分方程",
-      "summary": "连接可降阶方程、高阶线性结构与二阶常系数方程，并在最后一次课完成第六章整合。",
-      "lessonCount": 4,
-      "order": 16
-    },
-    {
-      "id": "topic-17-course-review",
-      "label": "T17",
+      "id": "topic-10-course-review",
+      "label": "T10",
       "title": "全课程整合与总复习",
-      "summary": "首个课次保留为硬机动，其后至少三次综合复习，不引入新内容。",
+      "summary": "首个课次保留为硬机动，其后至少三次综合复习；第 4 次容量以教学组补齐日历缺少的 2 课时为前提。",
       "lessonCount": 4,
-      "order": 17
+      "completedBy": "2027-01-17",
+      "order": 11
     }
   ]
 }

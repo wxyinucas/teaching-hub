@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { catalog, findCourse, findTopic, findWeek, hasContent, loadContent } from '../src/lib/catalog.js'
+import { parseExamCollection } from '../src/lib/exams.js'
 import { parseRunbook } from '../src/lib/runbook.js'
 import { parseSlides } from '../src/lib/slides.js'
 
@@ -7,6 +8,7 @@ const parsers = {
   runbook: parseRunbook,
   slides: parseSlides,
   guide: (source) => source.trim(),
+  exams: parseExamCollection,
 }
 
 describe('term-first content catalog', () => {
@@ -89,18 +91,64 @@ describe('term-first content catalog', () => {
     })
   })
 
-  it('keeps every calculus T01 meeting at exactly two 50-minute cards', async () => {
-    const context = findTopic('2026-fall', 'calculus-i', 'topic-01-describing-approach')
-    expect(context).not.toBeNull()
-    const source = await loadContent(context.topic.resources.runbook)
-    const runbook = parseRunbook(source)
+  it('keeps the calculus topic schedule complete and ordered', () => {
+    const course = findCourse('2026-fall', 'calculus-i')?.course
+    expect(course).toBeDefined()
+    expect(course.topicMap).toHaveLength(11)
+    expect(course.topicMap.reduce((sum, topic) => sum + topic.lessonCount, 0)).toBe(48)
+    expect(course.topicMap.at(-1)).toMatchObject({ label: 'T10', lessonCount: 4 })
 
-    expect(runbook.sections.length).toBeGreaterThan(0)
-    runbook.sections.forEach((section) => {
-      expect(section.segments.map(({ start, end }) => [start, end])).toEqual([
-        [0, 50],
-        [50, 100],
-      ])
-    })
+    const deadlines = course.topicMap.map((topic) => topic.completedBy)
+    deadlines.forEach((deadline) => expect(deadline).toMatch(/^\d{4}-\d{2}-\d{2}$/))
+    expect(deadlines).toEqual([...deadlines].sort())
+  })
+
+  it('keeps the split calculus T00 and T01 meetings at exactly two 50-minute cards', async () => {
+    const expectedMeetings = new Map([
+      ['topic-00-entering-calculus', 1],
+      ['topic-01-describing-approach', 2],
+    ])
+
+    for (const [topicId, meetingCount] of expectedMeetings) {
+      const context = findTopic('2026-fall', 'calculus-i', topicId)
+      expect(context).not.toBeNull()
+      const source = await loadContent(context.topic.resources.runbook)
+      const runbook = parseRunbook(source)
+
+      expect(runbook.sections).toHaveLength(meetingCount)
+      runbook.sections.forEach((section) => {
+        expect(section.segments.map(({ start, end }) => [start, end])).toEqual([
+          [0, 50],
+          [50, 100],
+        ])
+      })
+    }
+
+    const t00 = findTopic('2026-fall', 'calculus-i', 'topic-00-entering-calculus')?.topic
+    const t01 = findTopic('2026-fall', 'calculus-i', 'topic-01-describing-approach')?.topic
+    expect(t00?.demos.map((demo) => demo.id)).toEqual(['sequence-limit'])
+    expect(t01?.demos ?? []).toEqual([])
+    expect(t00?.resources.exams).toBeUndefined()
+    expect(t01?.examPreview).toBeUndefined()
+    expect(t01?.resources.exams).toBeUndefined()
+  })
+
+  it('publishes calculus exams only through non-empty topic collections', async () => {
+    const course = findCourse('2026-fall', 'calculus-i')?.course
+    expect(course).toBeDefined()
+
+    const examTopics = course.topics.filter((topic) => topic.resources.exams)
+
+    expect(examTopics.map((topic) => topic.label)).toEqual([
+      'T02', 'T03', 'T04', 'T05', 'T06', 'T07', 'T08', 'T09', 'T10',
+    ])
+    expect(new Set(examTopics.map((topic) => topic.resources.exams)).size).toBe(examTopics.length)
+    expect(course.topics.find((topic) => topic.label === 'T00')?.resources.exams).toBeUndefined()
+    expect(course.topics.find((topic) => topic.label === 'T01')?.resources.exams).toBeUndefined()
+
+    for (const topic of examTopics) {
+      const collection = parseExamCollection(await loadContent(topic.resources.exams))
+      expect(collection.questionCount).toBeGreaterThan(0)
+    }
   })
 })

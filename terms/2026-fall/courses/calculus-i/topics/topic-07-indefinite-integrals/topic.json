@@ -1,0 +1,14 @@
+{
+  "id": "topic-07-indefinite-integrals",
+  "label": "T07",
+  "title": "不定积分",
+  "summary": "建立不定积分的概念与性质，组织换元、分部及代表性的特殊积分，并完成第四章整合。",
+  "lessonCount": 5,
+  "order": 8,
+  "resources": {
+    "exams": {
+      "scope": "course",
+      "file": "exams/topics/topic-07-indefinite-integrals.tex"
+    }
+  }
+}

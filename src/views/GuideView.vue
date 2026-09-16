@@ -63,6 +63,7 @@ watch(sourcePath, async (path, _previous, onCleanup) => {
       <RouterLink v-if="unit.resources.runbook" :to="resourceLocation('runbook')">台本</RouterLink>
       <RouterLink v-if="unit.resources.slides" :to="resourceLocation('slides', { page: 1 })">Slides</RouterLink>
       <RouterLink :to="resourceLocation('guide')">学生指南</RouterLink>
+      <RouterLink v-if="isTopic && unit.resources.exams" :to="resourceLocation('exams')">真题</RouterLink>
     </nav>
     <p v-if="loading" class="reader-loading" role="status">正在打开学生指南…</p>
     <section v-else-if="error" class="error-state" role="alert"><h1>学生指南暂时无法读取</h1><p>{{ error }}</p></section>

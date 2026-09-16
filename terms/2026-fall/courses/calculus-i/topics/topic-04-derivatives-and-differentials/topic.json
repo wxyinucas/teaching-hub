@@ -1,0 +1,14 @@
+{
+  "id": "topic-04-derivatives-and-differentials",
+  "label": "T04",
+  "title": "导数、求导与微分",
+  "summary": "建立导数概念与求导系统，处理高阶导数、隐函数求导与微分，并完成第二章整合。",
+  "lessonCount": 6,
+  "order": 5,
+  "resources": {
+    "exams": {
+      "scope": "course",
+      "file": "exams/topics/topic-04-derivatives-and-differentials.tex"
+    }
+  }
+}

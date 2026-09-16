@@ -1,0 +1,14 @@
+{
+  "id": "topic-05-mvt-lhopital-taylor",
+  "label": "T05",
+  "title": "中值定理、洛必达与泰勒",
+  "summary": "连接微分中值定理、洛必达法则与泰勒公式，并在期中节点前完成相应范围。",
+  "lessonCount": 4,
+  "order": 6,
+  "resources": {
+    "exams": {
+      "scope": "course",
+      "file": "exams/topics/topic-05-mvt-lhopital-taylor.tex"
+    }
+  }
+}

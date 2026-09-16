@@ -1,0 +1,14 @@
+{
+  "id": "topic-02-limit-properties-existence-operations",
+  "label": "T02",
+  "title": "极限的性质、存在与运算",
+  "summary": "组织极限的性质、存在准则与运算法则，并处理无穷小量与无穷大量。",
+  "lessonCount": 4,
+  "order": 3,
+  "resources": {
+    "exams": {
+      "scope": "course",
+      "file": "exams/topics/topic-02-limit-properties-existence-operations.tex"
+    }
+  }
+}

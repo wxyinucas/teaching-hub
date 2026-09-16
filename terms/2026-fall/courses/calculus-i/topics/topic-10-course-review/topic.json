@@ -1,0 +1,16 @@
+{
+  "id": "topic-10-course-review",
+  "label": "T10",
+  "title": "全课程整合与总复习",
+  "summary": "首个课次保留为硬机动，其后至少三次综合复习；第 4 次容量以教学组补齐日历缺少的 2 课时为前提。",
+  "lessonCount": 4,
+  "order": 11,
+  "examTitle": "基础知识",
+  "examDescription": "收录不归入单一内容专题的基础与跨专题题目，并按年份顺序排列。",
+  "resources": {
+    "exams": {
+      "scope": "course",
+      "file": "exams/topics/fundamental.tex"
+    }
+  }
+}

@@ -89,6 +89,7 @@ watchEffect(() => {
         <RouterLink v-if="unit.resources.runbook" :to="resourceLocation('runbook')">台本</RouterLink>
         <RouterLink :to="resourceLocation('slides', { page: currentPage })">Slides</RouterLink>
         <RouterLink v-if="unit.resources.guide" :to="resourceLocation('guide')">学生指南</RouterLink>
+        <RouterLink v-if="isTopic && unit.resources.exams" :to="resourceLocation('exams')">真题</RouterLink>
       </nav>
     </div>
     <p v-if="loading" class="reader-loading" role="status">正在打开课件…</p>

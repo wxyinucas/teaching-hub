@@ -15,16 +15,6 @@ if (!bundle) throw new Error('路由测试至少需要一个同时登记台本�
 const { term, course, week } = bundle
 const coursePath = `/terms/${term.id}/courses/${course.id}`
 const weekPath = `${coursePath}/weeks/${week.id}`
-const unavailableResource = catalog.terms.flatMap((itemTerm) => itemTerm.courses.flatMap((itemCourse) => (
-  itemCourse.weeks.flatMap((itemWeek) => ['runbook', 'slides', 'guide'].flatMap((kind) => (
-    itemWeek.resources[kind] ? [] : [{ term: itemTerm, course: itemCourse, week: itemWeek, kind }]
-  )))
-))).at(0)
-const demoBundle = catalog.terms.flatMap((itemTerm) => itemTerm.courses.flatMap((itemCourse) => (
-  itemCourse.weeks.flatMap((itemWeek) => (itemWeek.demos ?? []).map((demo) => ({
-    term: itemTerm, course: itemCourse, week: itemWeek, demo,
-  })))
-))).at(0)
 const topicBundle = catalog.terms.flatMap((itemTerm) => itemTerm.courses.flatMap((itemCourse) => (
   itemCourse.topics.flatMap((topic) => (
     topic.resources.runbook ? [{ term: itemTerm, course: itemCourse, topic }] : []
@@ -35,9 +25,19 @@ const topicDemoBundle = catalog.terms.flatMap((itemTerm) => itemTerm.courses.fla
     term: itemTerm, course: itemCourse, topic, demo,
   })))
 ))).at(0)
+const calculusExamContext = catalog.terms.flatMap((itemTerm) => itemTerm.courses
+  .filter((itemCourse) => itemCourse.id === 'calculus-i')
+  .map((itemCourse) => ({ term: itemTerm, course: itemCourse }))).at(0)
+const calculusExamBundles = calculusExamContext?.course.topics.flatMap((topic) => (
+  topic.resources.exams ? [{ ...calculusExamContext, topic }] : []
+)) ?? []
+const t02ExamBundle = calculusExamBundles.find(({ topic }) => topic.label === 'T02')
+const t10ExamBundle = calculusExamBundles.find(({ topic }) => topic.label === 'T10')
 
 let wrapper
 let router
+let scrollIntoViewDescriptor
+let scrollIntoViewMock
 
 async function settle() {
   await flushPromises()
@@ -53,13 +53,23 @@ async function openPage(path, history = createMemoryHistory()) {
   await settle()
 }
 
-beforeEach(() => { vi.spyOn(window, 'scrollTo').mockImplementation(() => {}) })
+beforeEach(() => {
+  vi.spyOn(window, 'scrollTo').mockImplementation(() => {})
+  scrollIntoViewDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollIntoView')
+  scrollIntoViewMock = vi.fn()
+  Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
+    configurable: true,
+    value: scrollIntoViewMock,
+  })
+})
 afterEach(() => {
   wrapper?.unmount()
   router?.options.history.destroy()
   wrapper = null
   router = null
   vi.restoreAllMocks()
+  if (scrollIntoViewDescriptor) Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', scrollIntoViewDescriptor)
+  else delete HTMLElement.prototype.scrollIntoView
   document.body.innerHTML = ''
   window.history.replaceState({}, '', '/')
 })
@@ -118,7 +128,7 @@ describe('teaching hub navigation', () => {
     expect(wrapper.find('.directory-section-heading h2').text()).toBe('专题地图')
     expect(wrapper.find('.site-note').text()).toBe('2026 秋 · 按专题准备')
     expect(wrapper.findAll('.topic-card')).toHaveLength(item.course.topicMap.length)
-    expect(wrapper.find('.topic-meta').text()).toMatch(/^约 \d+ 次课$/)
+    expect(wrapper.find('.topic-meta').text()).toMatch(/^约 \d+ 次课 · 最晚完成 \d{4}-\d{2}-\d{2}$/)
     const runbookLink = wrapper.findAll('.resource-runbook')
       .find((link) => link.attributes('href') === `${itemTopicPath}/runbook`)
     expect(runbookLink).toBeDefined()
@@ -140,6 +150,7 @@ describe('teaching hub navigation', () => {
     expect(router.resolve({ name: 'topic-runbook', params }).path).toBe(`${base}/runbook`)
     expect(router.resolve({ name: 'topic-slides', params: { ...params, page: 2 } }).path).toBe(`${base}/slides/2`)
     expect(router.resolve({ name: 'topic-guide', params }).path).toBe(`${base}/guide`)
+    expect(router.resolve({ name: 'topic-exams', params }).path).toBe(`${base}/exams`)
     expect(router.resolve({ name: 'topic-demo', params: { ...params, demoId: 'example' } }).path).toBe(`${base}/demos/example`)
     expect(router.resolve({ name: 'runbook', params: { termId: term.id, courseId: course.id, weekId: week.id } }).path)
       .toBe(`${weekPath}/runbook`)
@@ -152,20 +163,8 @@ describe('teaching hub navigation', () => {
     expect(wrapper.find('.runbook-reader').exists()).toBe(true)
   })
 
-  it.runIf(Boolean(demoBundle))('opens a declared week demo from the course page', async () => {
-    const item = demoBundle
-    const itemCoursePath = `/terms/${item.term.id}/courses/${item.course.id}`
-    const demoPath = `${itemCoursePath}/weeks/${item.week.id}/demos/${item.demo.id}`
-    await openPage(itemCoursePath)
-    const demoLink = wrapper.findAll('.resource-demo').find((link) => link.attributes('href') === demoPath)
-    expect(demoLink).toBeDefined()
-    await demoLink.trigger('click')
-    await settle()
-    expect(router.currentRoute.value.path).toBe(demoPath)
-    expect(wrapper.find('.sequence-limit-demo').exists()).toBe(true)
-  })
-
-  it.runIf(Boolean(topicDemoBundle))('opens a declared topic demo from the course page', async () => {
+  it('opens a declared topic demo from the course page', async () => {
+    expect(topicDemoBundle).toBeDefined()
     const item = topicDemoBundle
     const itemCoursePath = `/terms/${item.term.id}/courses/${item.course.id}`
     const demoPath = `${itemCoursePath}/topics/${item.topic.id}/demos/${item.demo.id}`
@@ -178,13 +177,57 @@ describe('teaching hub navigation', () => {
     expect(wrapper.find('.sequence-limit-demo').exists()).toBe(true)
   })
 
-  it.runIf(Boolean(unavailableResource))('treats an undeclared resource type as missing', async () => {
-    const item = unavailableResource
-    const suffix = item.kind === 'slides' ? 'slides/1' : item.kind
-    const path = `/terms/${item.term.id}/courses/${item.course.id}/weeks/${item.week.id}/${suffix}`
-    await openPage(path)
-    expect(wrapper.find('h1').text()).toBe('未找到课程或材料')
-    expect(wrapper.find('.error-state').text()).toContain('教学周、专题或资源')
+  it('lists only non-empty calculus exam entries and opens the T02 collection', async () => {
+    expect(t02ExamBundle).toBeDefined()
+    const item = t02ExamBundle
+    const itemCoursePath = `/terms/${item.term.id}/courses/${item.course.id}`
+    const examPath = `${itemCoursePath}/topics/${item.topic.id}/exams`
+    await openPage(itemCoursePath)
+
+    const examLinks = wrapper.findAll('.resource-exams')
+    expect(examLinks).toHaveLength(9)
+    expect(examLinks.map((link) => link.attributes('href'))).toEqual(calculusExamBundles.map(({ topic }) => (
+      `${itemCoursePath}/topics/${topic.id}/exams`
+    )))
+    const examLink = examLinks.find((link) => link.attributes('href') === examPath)
+    expect(examLink).toBeDefined()
+    expect(examLink.find('small').text()).toBe('按年份浏览')
+    await examLink.trigger('click')
+    await settle()
+
+    expect(router.currentRoute.value.path).toBe(examPath)
+    expect(wrapper.find('.exam-reader').exists()).toBe(true)
+    expect(wrapper.find('.exam-heading').exists()).toBe(true)
+    expect(wrapper.find('.exam-empty').exists()).toBe(false)
+    expect(wrapper.find('.exam-year').exists()).toBe(true)
+    expect(wrapper.find('.exam-question').exists()).toBe(true)
+    expect(wrapper.find('.exam-question .exam-source').text()).toBe('选择题｜1')
+    expect(wrapper.find('.exam-question').attributes('aria-label')).toBe('2020 年选择题第 1 题，3 分')
+    expect(wrapper.find('.resource-tabs a.router-link-exact-active').text()).toBe('真题')
+
+    scrollIntoViewMock.mockClear()
+    await wrapper.find('.exam-year-index button').trigger('click')
+    expect(scrollIntoViewMock).toHaveBeenCalledWith({ block: 'start' })
+    expect(router.currentRoute.value.path).toBe(examPath)
+  })
+
+  it('opens the fundamental collection from the T10 review topic', async () => {
+    expect(t10ExamBundle).toBeDefined()
+    const item = t10ExamBundle
+    const itemCoursePath = `/terms/${item.term.id}/courses/${item.course.id}`
+    const examPath = `${itemCoursePath}/topics/${item.topic.id}/exams`
+    await openPage(itemCoursePath)
+
+    const examLink = wrapper.findAll('.resource-exams').find((link) => link.attributes('href') === examPath)
+    expect(examLink).toBeDefined()
+    expect(examLink.find('small').text()).toBe('基础知识')
+    await examLink.trigger('click')
+    await settle()
+
+    expect(router.currentRoute.value.path).toBe(examPath)
+    expect(wrapper.find('.exam-heading h1').text()).toBe('基础知识')
+    expect(wrapper.find('.exam-question').exists()).toBe(true)
+    expect(wrapper.find('.exam-empty').exists()).toBe(false)
   })
 
   it.each([
@@ -193,6 +236,8 @@ describe('teaching hub navigation', () => {
     `/terms/${term.id}/courses/${course.id}/weeks/missing/runbook`,
     `/terms/${term.id}/courses/${course.id}/weeks/${week.id}/demos/missing`,
     '/terms/2026-fall/courses/calculus-i/topics/missing/runbook',
+    '/terms/2026-fall/courses/calculus-i/topics/topic-00-entering-calculus/exams',
+    '/terms/2026-fall/courses/calculus-i/topics/topic-01-describing-approach/exams',
   ])('offers recovery for an unknown address: %s', async (path) => {
     await openPage(path)
     expect(wrapper.find('h1').text()).toBe('未找到课程或材料')

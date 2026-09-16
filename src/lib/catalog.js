@@ -5,6 +5,7 @@ const topicFiles = import.meta.glob('../../terms/*/courses/*/topics/*/topic.json
 const sources = import.meta.glob([
   '../../terms/*/courses/*/weeks/*/*.md',
   '../../terms/*/courses/*/topics/*/*.md',
+  '../../terms/*/courses/*/exams/topics/*.tex',
   '!../../terms/*/courses/*/weeks/*/draft.md',
   '!../../terms/*/courses/*/topics/*/draft.md',
 ], { query: '?raw', import: 'default' })
@@ -12,6 +13,12 @@ const sources = import.meta.glob([
 const byOrder = (left, right) => (left.order ?? 999) - (right.order ?? 999) || left.id.localeCompare(right.id)
 
 function contentPath(termId, courseId, collection, itemId, file) {
+  if (file && typeof file === 'object') {
+    if (file.scope !== 'course' || typeof file.file !== 'string' || !file.file || file.file.startsWith('/') || /(^|\/)\.\.(\/|$)/.test(file.file)) {
+      throw new Error(`课程级资源声明无效：${termId}/courses/${courseId}/${collection}/${itemId}`)
+    }
+    return `${termId}/courses/${courseId}/${file.file}`
+  }
   return `${termId}/courses/${courseId}/${collection}/${itemId}/${file}`
 }
 

@@ -1,0 +1,18 @@
+{
+  "id": "topic-00-entering-calculus",
+  "label": "T00",
+  "title": "Lesson 0：进入高等数学",
+  "summary": "从大学学习方式、高等数学的主线和必要的函数知识进入课程，并以数列极限完成第一次 ε–N 相遇。",
+  "lessonCount": 1,
+  "order": 1,
+  "resources": {
+    "runbook": "runbook.md"
+  },
+  "demos": [
+    {
+      "id": "sequence-limit",
+      "title": "数列极限：ε 与 N",
+      "summary": "调整 ε，观察数列从哪一项起进入给定范围。"
+    }
+  ]
+}
