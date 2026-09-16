@@ -1,10 +1,19 @@
 <script setup>
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { findCourse } from './lib/catalog.js'
+import {
+  applyTheme,
+  getInitialTheme,
+  listenForSystemTheme,
+  readStoredTheme,
+  storeTheme,
+} from './lib/theme.js'
 
 const route = useRoute()
 const content = ref(null)
+const theme = ref(getInitialTheme())
+let stopSystemTheme = () => {}
 const activeCourse = computed(() => (
   route.params.termId && route.params.courseId
     ? findCourse(route.params.termId, route.params.courseId)?.course
@@ -25,6 +34,25 @@ function skipToContent() {
   content.value?.scrollIntoView?.({ block: 'start' })
 }
 
+function toggleTheme() {
+  stopSystemTheme()
+  stopSystemTheme = () => {}
+  const nextTheme = theme.value === 'dark' ? 'light' : 'dark'
+  theme.value = applyTheme(nextTheme)
+  storeTheme(theme.value)
+}
+
+onMounted(() => {
+  theme.value = applyTheme(theme.value)
+  if (!readStoredTheme()) {
+    stopSystemTheme = listenForSystemTheme((nextTheme) => {
+      theme.value = applyTheme(nextTheme)
+    })
+  }
+})
+
+onBeforeUnmount(() => stopSystemTheme())
+
 watch(() => route.path, async () => {
   await nextTick()
   focusContent()
@@ -43,6 +71,16 @@ watch(() => route.path, async () => {
         <RouterLink to="/">课程</RouterLink>
       </nav>
       <span class="site-note">{{ organizationNote }}</span>
+      <button
+        class="theme-toggle"
+        type="button"
+        :aria-label="theme === 'dark' ? '切换到浅色模式' : '切换到深色模式'"
+        :aria-pressed="theme === 'dark'"
+        @click="toggleTheme"
+      >
+        <span class="theme-toggle-symbol" aria-hidden="true"></span>
+        <span>{{ theme === 'dark' ? '浅色' : '深色' }}</span>
+      </button>
     </header>
     <main id="page-content" ref="content" class="site-main" tabindex="-1">
       <RouterView v-slot="{ Component }">

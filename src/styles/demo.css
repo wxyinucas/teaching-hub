@@ -1,5 +1,5 @@
 .demo-reader { margin-top: 28px; }
-.demo-reader::backdrop { background: #17121d; }
+.demo-reader::backdrop { background: #0e0c11; }
 .demo-reader-toolbar { display: flex; justify-content: flex-end; width: min(100%, 1180px); margin: 0 auto 10px; }
 .demo-fullscreen { padding: 8px 13px; border: 1px solid var(--border); border-radius: 5px; background: var(--surface); color: var(--purple-dark); font-size: 12px; }
 .demo-reader .sequence-limit-demo { margin-top: 0; }
@@ -41,8 +41,8 @@
 .quantifier-steps button span { font-size: 11px; }
 .quantifier-steps button.is-complete { border-color: var(--purple-border); background: var(--purple-light); color: var(--purple); }
 .quantifier-steps button.is-complete strong { color: var(--purple-dark); }
-.quantifier-steps button.is-active { border-color: var(--purple); background: var(--purple); color: white; }
-.quantifier-steps button.is-active strong { color: white; }
+.quantifier-steps button.is-active { border-color: var(--accent-solid); background: var(--accent-solid); color: var(--on-accent); }
+.quantifier-steps button.is-active strong { color: var(--on-accent); }
 .quantifier-steps button:disabled { opacity: .42; }
 
 .sequence-plot { width: 100%; }
@@ -102,4 +102,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sequence-point { transition: none; }
+}
+
+@media print {
+  .demo-reader-toolbar { display: none; }
+  .quantifier-steps button.is-active { border-color: var(--border); background: var(--surface); color: var(--ink); }
+  .quantifier-steps button.is-active strong { color: var(--ink); }
 }

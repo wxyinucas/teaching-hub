@@ -1,10 +1,24 @@
 .slides-page-topbar { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
 .slides-page-topbar .resource-tabs { flex-shrink: 0; }
 .slides-reader { padding-top: 18px; }
-.slides-reader::backdrop { background: #17121d; }
+.slides-reader::backdrop { background: #0e0c11; }
 .slide-stage { width: min(100%, 1200px); margin: 0 auto; }
 .slide-canvas {
+  /* Slides 是独立的投影文稿画布，不随站点外壳反色。 */
+  --purple: #5e33bf;
+  --purple-dark: #291344;
+  --purple-deep: #180c28;
+  --purple-light: #f1ecfa;
+  --purple-border: #d9cbed;
+  --ink: #191919;
+  --ink-muted: #626066;
+  --ink-subtle: #76727c;
+  --border: #dddce1;
+  --surface: #fff;
+  --surface-muted: #f2f2f4;
+  --shadow: 0 18px 45px rgba(25, 16, 39, .16);
   container-type: inline-size;
+  color-scheme: light;
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -12,7 +26,7 @@
   padding: 5.2cqw 6.2cqw;
   border: 1px solid #d5d2d9;
   border-radius: 7px;
-  background: white;
+  background: var(--surface);
   box-shadow: var(--shadow);
   color: #17151a;
   font-family: Baskerville, "Kaiti SC", STKaiti, KaiTi, Georgia, serif;
@@ -79,7 +93,7 @@
 .prompt-copy p:last-child { margin-bottom: 0; }
 .copy-feedback { position: absolute; right: 5.2cqw; bottom: 2.3cqw; margin: 0; color: var(--purple); font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; font-size: clamp(12px, .9cqw, 16px); }
 .slide-controls { display: grid; grid-template-columns: 1fr auto auto 1fr; align-items: center; gap: 14px; margin: 16px auto 0; width: min(100%, 1200px); }
-.slide-controls button { justify-self: start; padding: 8px 13px; border: 1px solid var(--border); border-radius: 5px; background: white; color: var(--purple-dark); font-size: 12px; }
+.slide-controls button { justify-self: start; padding: 8px 13px; border: 1px solid var(--border); border-radius: 5px; background: var(--surface); color: var(--purple-dark); font-size: 12px; }
 .slide-controls .slide-previous { grid-column: 1; }
 .slide-controls .slide-progress { grid-column: 2; }
 .slide-controls .slide-fullscreen { grid-column: 3; justify-self: center; }
@@ -97,7 +111,7 @@
   height: 100vh;
   overflow: hidden;
   padding: 0;
-  background: #17121d;
+  background: var(--backdrop);
 }
 .slides-reader:fullscreen .slide-stage {
   align-self: center;
@@ -110,10 +124,10 @@
   margin: 0 auto;
   padding: 8px 18px 10px;
 }
-.slides-reader:fullscreen .slide-controls button { border-color: #6f5c7d; background: #241b2b; color: white; }
+.slides-reader:fullscreen .slide-controls button { border-color: #6f5c7d; background: #241b2b; color: #fff; }
 .slides-reader:fullscreen .slide-controls button:disabled { color: #9d92a4; }
 .slides-reader:fullscreen .slide-progress { color: #c8bdcf; }
-.slides-reader:fullscreen .slide-controls strong { color: white; }
+.slides-reader:fullscreen .slide-controls strong { color: #fff; }
 .slides-reader:fullscreen .slide-key-hint { display: none; }
 
 @media (max-width: 680px) {
@@ -121,4 +135,9 @@
   .slide-canvas { border-radius: 4px; }
   .slide-controls { margin-top: 11px; }
   .slide-key-hint { display: none; }
+}
+
+@media print {
+  .slide-controls, .slide-key-hint { display: none; }
+  .slide-canvas { border: 0; box-shadow: none; }
 }

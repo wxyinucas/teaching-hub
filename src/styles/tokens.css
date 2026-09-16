@@ -2,14 +2,19 @@
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   color: var(--ink);
   background: var(--paper);
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --purple: #5e33bf;
-  --purple-dark: #291344;
-  --purple-deep: #180c28;
-  --purple-light: #f1ecfa;
-  --purple-border: #d9cbed;
+
+  --accent: #5e33bf;
+  --accent-text: #291344;
+  --accent-soft: #f1ecfa;
+  --accent-border: #d9cbed;
+  --accent-solid: #291344;
+  --accent-solid-strong: #180c28;
+  --on-accent: #fff;
+  --on-accent-muted: #d9cbed;
   --ink: #191919;
   --ink-muted: #626066;
   --ink-subtle: #76727c;
@@ -18,13 +23,66 @@
   --surface: #fff;
   --surface-muted: #f2f2f4;
   --shadow: 0 18px 45px rgba(25, 16, 39, .12);
+  --backdrop: #17121d;
+
+  /* 兼容既有样式；新增样式应优先使用上方的语义角色。 */
+  --purple: var(--accent);
+  --purple-dark: var(--accent-text);
+  --purple-deep: var(--accent-solid-strong);
+  --purple-light: var(--accent-soft);
+  --purple-border: var(--accent-border);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --accent: #b89ce8;
+  --accent-text: #ede4ff;
+  --accent-soft: #3b304c;
+  --accent-border: #7f6b96;
+  --accent-solid: #4a2b70;
+  --accent-solid-strong: #2a183d;
+  --on-accent: #fff;
+  --on-accent-muted: #d8c7ea;
+  --ink: #f4f0f8;
+  --ink-muted: #b8b0c0;
+  --ink-subtle: #9f96a8;
+  --border: #6f6677;
+  --paper: #17151b;
+  --surface: #211e27;
+  --surface-muted: #302a38;
+  --shadow: 0 18px 45px rgba(0, 0, 0, .38);
+  --backdrop: #0e0c11;
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 320px; }
+body { min-width: 320px; min-height: 100vh; margin: 0; background: var(--paper); color: var(--ink); }
+#app { min-height: 100vh; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { color: inherit; font: inherit; cursor: pointer; }
 button:disabled { cursor: default; }
 button:focus-visible, a:focus-visible { outline: 2px solid var(--purple); outline-offset: 4px; }
 a { color: var(--purple); text-underline-offset: 3px; }
 code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+
+@media print {
+  :root,
+  :root[data-theme="dark"] {
+    color-scheme: light;
+    --accent: #5e33bf;
+    --accent-text: #291344;
+    --accent-soft: #f1ecfa;
+    --accent-border: #d9cbed;
+    --accent-solid: #291344;
+    --accent-solid-strong: #180c28;
+    --on-accent: #fff;
+    --on-accent-muted: #d9cbed;
+    --ink: #191919;
+    --ink-muted: #626066;
+    --ink-subtle: #76727c;
+    --border: #dddce1;
+    --paper: #fff;
+    --surface: #fff;
+    --surface-muted: #f2f2f4;
+    --shadow: none;
+  }
+}

@@ -4,7 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="王晓宇的课程台本、课堂课件与备课资料。" />
-    <meta name="theme-color" content="#291344" />
+    <meta name="theme-color" content="#f7f7f8" />
+    <script>
+      (() => {
+        const key = 'teaching-hub:theme'
+        let saved = null
+        try { saved = localStorage.getItem(key) } catch {}
+        let prefersDark = false
+        try { prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false } catch {}
+        const theme = saved === 'light' || saved === 'dark' ? saved : (prefersDark ? 'dark' : 'light')
+        document.documentElement.dataset.theme = theme
+        document.querySelector('meta[name="theme-color"]')
+          ?.setAttribute('content', theme === 'dark' ? '#17151b' : '#f7f7f8')
+      })()
+    </script>
     <link rel="icon" href="data:," />
     <title>Teaching Hub</title>
   </head>
