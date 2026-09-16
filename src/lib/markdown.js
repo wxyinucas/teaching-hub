@@ -23,6 +23,24 @@ function externalLink(tokens, index, options, env, renderer) {
 markdown.renderer.rules.link_open = externalLink
 slideMarkdown.renderer.rules.link_open = externalLink
 
+function isStandaloneEmphasis(token) {
+  const children = token?.children ?? []
+  if (children.length < 3 || children[0].type !== 'em_open' || children.at(-1).type !== 'em_close') return false
+
+  let depth = 0
+  return children.every((child, index) => {
+    if (child.type === 'em_open') depth += 1
+    if (child.type === 'em_close') depth -= 1
+    return depth >= 0 && (depth > 0 || index === children.length - 1)
+  }) && depth === 0
+}
+
+markdown.renderer.rules.paragraph_open = (tokens, index, options, env, renderer) => {
+  const token = tokens[index]
+  if (token.level === 0 && isStandaloneEmphasis(tokens[index + 1])) token.attrJoin('class', 'notes-emphasis')
+  return renderer.renderToken(tokens, index, options)
+}
+
 markdown.renderer.rules.heading_open = (tokens, index, options, env, renderer) => {
   const token = tokens[index]
   if (token.tag === 'h4' && token.level === 0) {

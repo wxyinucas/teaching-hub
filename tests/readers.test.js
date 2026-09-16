@@ -46,6 +46,7 @@ afterEach(() => {
   restoreScrollIntoView = null
   vi.restoreAllMocks()
   vi.unstubAllGlobals()
+  window.sessionStorage.clear()
   document.body.innerHTML = ''
 })
 
@@ -96,6 +97,39 @@ describe('runbook disclosure', () => {
     await wrapper.find('.collapse-all').trigger('click')
     expect(triggers.every((trigger) => trigger.attributes('aria-expanded') === 'false')).toBe(true)
     expect(wrapper.find('.collapse-all').attributes('disabled')).toBeDefined()
+
+    wrapper.unmount()
+    wrapper = mount(RunbookReader, { props: { source: runbookSource, file: 'runbook.md' } })
+    await flushPromises()
+    expect(wrapper.findAll('.segment-trigger').every(
+      (trigger) => trigger.attributes('aria-expanded') === 'false',
+    )).toBe(true)
+  })
+
+  it('keeps open cards across content updates and drops cards that no longer exist', async () => {
+    wrapper = mount(RunbookReader, { props: { source: runbookSource, file: 'runbook.md' } })
+    await wrapper.findAll('.segment-trigger')[0].trigger('click')
+
+    await wrapper.setProps({ source: runbookSource.replace('教师提示一。', '教师提示一，已更新。') })
+    await flushPromises()
+    expect(wrapper.findAll('.segment-trigger')[0].attributes('aria-expanded')).toBe('true')
+
+    const updatedSource = wrapper.props('source')
+    wrapper.unmount()
+    wrapper = mount(RunbookReader, { props: { source: updatedSource, file: 'runbook.md' } })
+    await flushPromises()
+    expect(wrapper.findAll('.segment-trigger')[0].attributes('aria-expanded')).toBe('true')
+
+    await wrapper.findAll('.segment-trigger')[0].trigger('click')
+    await wrapper.findAll('.segment-trigger')[1].trigger('click')
+    await wrapper.setProps({ source: runbookSource.split('### 20-50')[0].trim() })
+    await flushPromises()
+    expect(wrapper.find('.collapse-all').attributes('disabled')).toBeDefined()
+
+    wrapper.unmount()
+    wrapper = mount(RunbookReader, { props: { source: runbookSource, file: 'another-runbook.md' } })
+    await flushPromises()
+    expect(wrapper.findAll('.segment-trigger')[0].attributes('aria-expanded')).toBe('false')
   })
 
   it('shows a non-interactive boundary between two 50-minute periods', () => {
@@ -152,6 +186,28 @@ describe('runbook disclosure', () => {
       '比较两种定义',
     ])
     expect(wrapper.find('.notes-content h4').attributes('id')).toBe('segment-1-detail-1')
+  })
+
+  it('renders a topic roadmap as nested bullets with mathematics', () => {
+    const source = [
+      '# T01｜专题台本',
+      '## 本专题',
+      '- 根问题：怎样描述趋近？',
+      '- **Road map：定义与存在**',
+      '  - 描述接近',
+      '    - 定义：数列极限（$\\varepsilon$–$N$）',
+      '## 第一次课',
+      '### 0-50 | 第一课时',
+    ].join('\n')
+    wrapper = mount(RunbookReader, {
+      props: { source, file: 'topic-01/runbook.md', variant: 'calculus-topic' },
+    })
+
+    const roadmap = wrapper.find('.topic-roadmap')
+    expect(roadmap.find('h2').text()).toBe('Road map · 定义与存在')
+    expect(roadmap.find('.notes-content > ul > li > ul > li').text()).toContain('数列极限')
+    expect(roadmap.find('.katex').exists()).toBe(true)
+    expect(wrapper.find('.anchors').exists()).toBe(false)
   })
 
   it('uses the topic directory to open, navigate and close one half-period without closing another', async () => {

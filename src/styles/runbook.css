@@ -10,6 +10,13 @@
 .anchor dt { color: var(--purple); font-size: 11px; font-weight: 650; letter-spacing: .08em; margin-bottom: 7px; }
 .anchor dd { margin: 0; font-size: 13px; line-height: 1.7; }
 .anchor-close { background: var(--purple-light); border-color: var(--purple-border); }
+.topic-roadmap { box-sizing: border-box; max-width: 920px; margin: 0 0 22px; padding: 20px 24px; border: 1px solid var(--border); border-top: 2px solid var(--purple); border-radius: 7px; background: var(--surface); }
+.topic-roadmap h2 { margin: 0 0 16px; padding-bottom: 13px; border-bottom: 1px solid var(--border); color: var(--purple-dark); font-size: 15px; font-weight: 650; }
+.topic-roadmap .notes-content { font-size: 14px; line-height: 1.75; }
+.topic-roadmap .notes-content > ul { margin: 0; padding-left: 1.2em; }
+.topic-roadmap .notes-content > ul > li { margin: 0; padding-left: 3px; font-size: 15px; font-weight: 650; }
+.topic-roadmap .notes-content > ul > li + li { margin-top: 19px; padding-top: 17px; border-top: 1px solid var(--border); }
+.topic-roadmap .notes-content > ul > li > ul { margin: 8px 0 0; padding-left: 1.45em; color: var(--ink-muted); font-size: 14px; font-weight: 400; }
 .workspace { display: grid; grid-template-columns: minmax(0, 1fr) 258px; gap: 30px; align-items: start; }
 .route { min-width: 0; scroll-margin-top: 20px; }
 .route-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -49,11 +56,15 @@
 .notes-content > :first-child { margin-top: 0; }
 .notes-content p { margin: 10px 0; }
 .notes-content h1, .notes-content h2, .notes-content h3, .notes-content h4, .notes-content h5 { font-size: 13px; font-weight: 650; margin: 20px 0 8px; color: var(--purple-dark); letter-spacing: 0; }
-.runbook-reader--calculus-topic .notes-content h4 { margin: 24px 0 11px; padding: 7px 10px; border: 1px solid var(--purple-border); border-radius: 4px; background: transparent; color: var(--purple-dark); font-size: 14px; line-height: 1.5; }
+.runbook-reader--calculus-topic .notes-content h4 { margin: 24px 0 11px; padding: 8px 10px; border: 1px solid var(--purple-border); border-radius: 4px; background: transparent; color: var(--purple-dark); font-size: 16px; line-height: 1.45; }
 .runbook-reader--calculus-topic .notes-content > h4:first-child { margin-top: 3px; }
+.runbook-reader--calculus-topic .notes-content h4:has(+ blockquote) { margin-bottom: 0; padding-bottom: 3px; border-bottom: 0; border-radius: 4px 4px 0 0; }
+.runbook-reader--calculus-topic .notes-content h4 + blockquote { margin: 0 0 11px; padding: 0 10px 8px; border: 1px solid var(--purple-border); border-top: 0; border-radius: 0 0 4px 4px; background: transparent; color: var(--ink-muted); font-size: 13px; line-height: 1.65; }
 .notes-content ul, .notes-content ol { padding-left: 1.45em; margin: 8px 0 14px; }
 .notes-content li { padding-left: 3px; margin: 4px 0; }
 .notes-content li::marker { color: var(--purple); }
+.segment-notes .notes-content > p.notes-emphasis { margin: 15px 0; }
+.segment-notes .notes-content > p.notes-emphasis > em { display: inline-block; max-width: calc(100% - 24px); padding: 8px 12px; border-radius: 5px; background: color-mix(in srgb, var(--purple) 24%, var(--surface)); color: var(--purple-dark); font-style: normal; font-weight: 550; line-height: 1.75; }
 .notes-content blockquote { margin: 14px 0; padding: 8px 14px; background: var(--purple-light); border-left: 2px solid var(--purple); color: var(--purple-dark); }
 .notes-content blockquote p { margin: 0; }
 .notes-content code { background: var(--surface-muted); border-radius: 3px; padding: .12em .3em; font-size: .88em; }

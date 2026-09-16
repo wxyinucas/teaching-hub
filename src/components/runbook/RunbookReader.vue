@@ -35,6 +35,7 @@ const segmentElements = new Map()
 let navigationFrame = null
 let navigationUsesTimeout = false
 let navigationResizeObserver = null
+const openStatePrefix = 'teaching-hub:runbook-open:'
 
 const currentSectionId = computed(() => (
   activeSectionId.value || runbook.value?.sections[0]?.id || ''
@@ -53,19 +54,65 @@ function durationLabel(section) {
     : `${section.duration} min`
 }
 
+function segmentEntries(book = runbook.value) {
+  return book?.sections.flatMap((section) => section.segments.map((segment) => ({
+    id: segment.id,
+    key: `${section.label}::${segment.start}-${segment.end}`,
+  }))) ?? []
+}
+
+function openStateKey(file = props.file) {
+  return `${openStatePrefix}${file}`
+}
+
+function readOpenSegmentKeys(file = props.file) {
+  if (typeof window === 'undefined') return new Set()
+  try {
+    const stored = window.sessionStorage.getItem(openStateKey(file))
+    const keys = stored ? JSON.parse(stored) : []
+    return new Set(Array.isArray(keys) ? keys.filter((key) => typeof key === 'string') : [])
+  } catch {
+    return new Set()
+  }
+}
+
+function persistOpenSegments(book = runbook.value) {
+  if (!book || typeof window === 'undefined') return
+  const keyById = new Map(segmentEntries(book).map((entry) => [entry.id, entry.key]))
+  const keys = [...openSegments.value].map((id) => keyById.get(id)).filter(Boolean)
+  try {
+    if (keys.length) window.sessionStorage.setItem(openStateKey(), JSON.stringify(keys))
+    else window.sessionStorage.removeItem(openStateKey())
+  } catch {
+    // The reader still works when browser storage is unavailable.
+  }
+}
+
+function restoreOpenSegments(book = runbook.value) {
+  if (!book) return
+  const idByKey = new Map(segmentEntries(book).map((entry) => [entry.key, entry.id]))
+  openSegments.value = new Set(
+    [...readOpenSegmentKeys()].map((key) => idByKey.get(key)).filter(Boolean),
+  )
+  persistOpenSegments(book)
+}
+
 function toggleSegment(id) {
   if (openSegments.value.has(id)) openSegments.value.delete(id)
   else openSegments.value.add(id)
+  persistOpenSegments()
   nextTick(scheduleNavigationUpdate)
 }
 
 function collapseAll() {
   openSegments.value = new Set()
+  persistOpenSegments()
   nextTick(scheduleNavigationUpdate)
 }
 
 async function closeSegment(id, restoreFocus = false) {
   const wasOpen = openSegments.value.delete(id)
+  if (wasOpen) persistOpenSegments()
   if (wasOpen && restoreFocus) {
     await nextTick()
     triggers.get(id)?.focus()
@@ -110,7 +157,10 @@ function goToSegment(id) {
 }
 
 async function goToOutline(segmentId, outlineId) {
-  if (!openSegments.value.has(segmentId)) openSegments.value.add(segmentId)
+  if (!openSegments.value.has(segmentId)) {
+    openSegments.value.add(segmentId)
+    persistOpenSegments()
+  }
   await nextTick()
   scrollToElement(readerElement.value?.querySelector(`[id="${outlineId}"]`))
   scheduleNavigationUpdate()
@@ -122,6 +172,7 @@ async function toggleSegmentFromNavigation(id) {
     scrollToElement(triggers.get(id))
     openSegments.value.delete(id)
   } else openSegments.value.add(id)
+  persistOpenSegments()
   await nextTick()
   scrollToElement(triggers.get(id))
   activeSegmentId.value = id
@@ -164,6 +215,7 @@ function scheduleNavigationUpdate() {
 }
 
 onMounted(() => {
+  restoreOpenSegments()
   if (!usesPeriodCards.value) return
   window.addEventListener('scroll', scheduleNavigationUpdate, { passive: true })
   window.addEventListener('resize', scheduleNavigationUpdate)
@@ -185,8 +237,8 @@ onBeforeUnmount(() => {
   }
 })
 
-watch(() => props.source, async () => {
-  openSegments.value = new Set()
+watch([() => props.source, () => props.file], async () => {
+  restoreOpenSegments()
   activeSectionId.value = ''
   activeSegmentId.value = ''
   visibleSegmentIds.value = []
@@ -215,6 +267,11 @@ watchEffect(() => {
         <dt>{{ anchor.label }}</dt><dd>{{ anchor.text }}</dd>
       </div>
     </dl>
+
+    <section v-if="usesPeriodCards && runbook.roadmap" class="topic-roadmap" aria-labelledby="topic-roadmap-title">
+      <h2 id="topic-roadmap-title">Road map<span v-if="runbook.roadmap.title"> · {{ runbook.roadmap.title }}</span></h2>
+      <SegmentNotes :source="runbook.roadmap.source" />
+    </section>
 
     <div class="workspace">
       <section id="lesson-route" class="route" aria-labelledby="route-title">

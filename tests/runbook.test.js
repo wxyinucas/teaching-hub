@@ -68,6 +68,26 @@ describe('Markdown runbook parser', () => {
     expect(runbook.sections).toHaveLength(1)
   })
 
+  it('keeps an indented topic roadmap separate from overview anchors', () => {
+    const runbook = parseRunbook([
+      '# T01｜专题台本',
+      '## 本专题',
+      '- 根问题：怎样描述趋近？',
+      '- **Road map：定义与存在**',
+      '  - 描述接近',
+      '    - 定义：数列极限（$\\varepsilon$–$N$）',
+      '    - 算法：由误差倒推 $N$（需例题）',
+      '## 第一次课',
+      '### 0-50 | 建立直觉',
+    ].join('\n'))
+
+    expect(runbook.overview).toEqual([{ label: '根问题', text: '怎样描述趋近？' }])
+    expect(runbook.roadmap).toEqual({
+      title: '定义与存在',
+      source: '- 描述接近\n  - 定义：数列极限（$\\varepsilon$–$N$）\n  - 算法：由误差倒推 $N$（需例题）',
+    })
+  })
+
   it('ignores detail headings and headings inside code fences', () => {
     const source = [
       '# 台本',

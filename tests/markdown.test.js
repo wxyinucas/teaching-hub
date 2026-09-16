@@ -22,6 +22,21 @@ describe('teacher notes rendering', () => {
     expect(html).toContain('rel="noopener noreferrer"')
   })
 
+  it('turns only a standalone italic paragraph into an emphasis block', () => {
+    const { html } = renderNotes([
+      '*必须当堂明确这条结论。*',
+      '',
+      '正文中的 *普通斜体* 保持行内。',
+      '',
+      '*第一处* *第二处*',
+      '',
+      '> *引用中的斜体*',
+    ].join('\n'))
+    expect(html).toContain('<p class="notes-emphasis"><em>必须当堂明确这条结论。</em></p>')
+    expect(html).toContain('<p>正文中的 <em>普通斜体</em> 保持行内。</p>')
+    expect(html.match(/notes-emphasis/g)).toHaveLength(1)
+  })
+
   it('assigns parser-provided IDs to H4 headings in order', () => {
     const { html } = renderNotes('> #### 引用标题\n\n#### 第一处\n\n正文\n\n#### 第二处', ['detail-1', 'detail-2'])
     expect(html).toContain('<h4>引用标题</h4>')

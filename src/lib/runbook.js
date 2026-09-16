@@ -7,9 +7,23 @@ const PERIOD_DURATION = 50
 // Markdown: no fixed number of slots and no mandatory detail fields.
 function readCallouts(lines) {
   return lines.flatMap((line) => {
-    const match = line.match(/^\s*-\s+([^：:]+)[：:]\s*(.+)$/)
+    const match = line.match(/^-\s+([^：:]+)[：:]\s*(.+)$/)
     return match ? [{ label: match[1].trim(), text: match[2].trim() }] : []
   })
+}
+
+function readOverview(lines) {
+  const start = lines.findIndex((line) => /^- \*\*Road map[：:]/.test(line))
+  if (start < 0) return { anchors: readCallouts(lines), roadmap: null }
+
+  const title = lines[start].match(/^- \*\*Road map[：:]\s*(.+)\*\*\s*$/)?.[1]?.trim() ?? ''
+  let end = start + 1
+  while (end < lines.length && (!lines[end].trim() || /^[ \t]/.test(lines[end]))) end += 1
+  const source = lines.slice(start + 1, end).map((line) => line.replace(/^  /, '')).join('\n').trim()
+  return {
+    anchors: readCallouts([...lines.slice(0, start), ...lines.slice(end)]),
+    roadmap: source ? { title, source } : null,
+  }
 }
 
 function readSegment(heading, lines, end, number, detailHeadings = []) {
@@ -91,6 +105,7 @@ export function parseRunbook(source) {
   const firstSection = lessonHeadings[0]?.start ?? lines.length
   const subtitle = lines.slice(title.end, firstSection).find((line) => /^>/.test(line))?.replace(/^>\s?/, '') ?? ''
   let overview = []
+  let roadmap = null
   let controls = []
   const sections = []
   let segmentNumber = 0
@@ -98,7 +113,9 @@ export function parseRunbook(source) {
   lessonHeadings.forEach((heading, index) => {
     const end = lessonHeadings[index + 1]?.start ?? lines.length
     if (['本次课', '本周', '本专题', '专题概览'].includes(heading.text)) {
-      overview = readCallouts(lines.slice(heading.end, end))
+      const summary = readOverview(lines.slice(heading.end, end))
+      overview = summary.anchors
+      roadmap = summary.roadmap
       return
     }
     if (heading.text === '临场取舍') {
@@ -123,7 +140,7 @@ export function parseRunbook(source) {
 
   if (!sections.length) throw new Error('请用 ## 添加教学区段，再用 ### 添加推进段。')
   return {
-    code, title: name, subtitle, overview, controls, sections,
+    code, title: name, subtitle, overview, roadmap, controls, sections,
     segmentCount: segmentNumber,
     duration: sections.reduce((total, section) => total + section.duration, 0),
   }
