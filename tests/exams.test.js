@@ -123,15 +123,14 @@ describe('calculus exam collections', () => {
   it('keeps all 2020–2025 questions uniquely assigned to one current topic', () => {
     const expectedCounts = {
       'fundamental.tex': 10,
-      'topic-01-describing-approach.tex': 0,
-      'topic-02-limit-properties-existence-operations.tex': 8,
-      'topic-03-continuity.tex': 2,
-      'topic-04-derivatives-and-differentials.tex': 19,
-      'topic-05-mvt-lhopital-taylor.tex': 16,
-      'topic-06-derivative-applications.tex': 15,
-      'topic-07-indefinite-integrals.tex': 8,
-      'topic-08-definite-integrals-and-applications.tex': 20,
-      'topic-09-differential-equations.tex': 2,
+      'topic-01-limits.tex': 8,
+      'topic-02-continuity.tex': 2,
+      'topic-03-derivatives-and-differentials.tex': 19,
+      'topic-04-mvt-lhopital-taylor.tex': 16,
+      'topic-05-derivative-applications.tex': 15,
+      'topic-06-indefinite-integrals.tex': 8,
+      'topic-07-definite-integrals-and-applications.tex': 20,
+      'topic-08-differential-equations.tex': 2,
     }
     const seenQuestions = new Set()
     const seenSourceIds = new Set()

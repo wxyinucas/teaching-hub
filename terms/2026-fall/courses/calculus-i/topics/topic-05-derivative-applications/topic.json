@@ -1,14 +1,14 @@
 {
-  "id": "topic-06-derivative-applications",
-  "label": "T06",
-  "title": "中值定理与导数的应用",
+  "id": "topic-05-derivative-applications",
+  "label": "T05",
+  "title": "导数的应用",
   "summary": "用导数分析单调、凹凸、极值与最值，并处理函数图形、曲率和第三章整合。",
   "lessonCount": 5,
-  "order": 7,
+  "order": 6,
   "resources": {
     "exams": {
       "scope": "course",
-      "file": "exams/topics/topic-06-derivative-applications.tex"
+      "file": "exams/topics/topic-05-derivative-applications.tex"
     }
   }
 }

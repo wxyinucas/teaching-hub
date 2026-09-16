@@ -1,14 +1,14 @@
 {
-  "id": "topic-09-differential-equations",
-  "label": "T09",
+  "id": "topic-08-differential-equations",
+  "label": "T08",
   "title": "微分方程",
   "summary": "从基本概念进入一阶方程、可降阶方程与二阶常系数方程，并完成第六章整合。",
   "lessonCount": 6,
-  "order": 10,
+  "order": 9,
   "resources": {
     "exams": {
       "scope": "course",
-      "file": "exams/topics/topic-09-differential-equations.tex"
+      "file": "exams/topics/topic-08-differential-equations.tex"
     }
   }
 }

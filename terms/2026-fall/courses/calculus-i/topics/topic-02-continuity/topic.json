@@ -1,14 +1,14 @@
 {
-  "id": "topic-03-continuity",
-  "label": "T03",
+  "id": "topic-02-continuity",
+  "label": "T02",
   "title": "函数的连续性",
   "summary": "建立连续性的概念、运算与性质，处理间断和闭区间上的连续函数，并完成第一章整合。",
   "lessonCount": 3,
-  "order": 4,
+  "order": 3,
   "resources": {
     "exams": {
       "scope": "course",
-      "file": "exams/topics/topic-03-continuity.tex"
+      "file": "exams/topics/topic-02-continuity.tex"
     }
   }
 }

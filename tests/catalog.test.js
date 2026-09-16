@@ -94,19 +94,23 @@ describe('term-first content catalog', () => {
   it('keeps the calculus topic schedule complete and ordered', () => {
     const course = findCourse('2026-fall', 'calculus-i')?.course
     expect(course).toBeDefined()
-    expect(course.topicMap).toHaveLength(11)
+    expect(course.topicMap).toHaveLength(10)
     expect(course.topicMap.reduce((sum, topic) => sum + topic.lessonCount, 0)).toBe(48)
-    expect(course.topicMap.at(-1)).toMatchObject({ label: 'T10', lessonCount: 4 })
+    expect(course.topicMap.map((topic) => topic.label)).toEqual([
+      'T00', 'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07', 'T08', 'T09',
+    ])
+    expect(course.topicMap[1]).toMatchObject({ id: 'topic-01-limits', lessonCount: 6, completedBy: '2026-10-18' })
+    expect(course.topicMap.at(-1)).toMatchObject({ label: 'T09', lessonCount: 4 })
 
     const deadlines = course.topicMap.map((topic) => topic.completedBy)
     deadlines.forEach((deadline) => expect(deadline).toMatch(/^\d{4}-\d{2}-\d{2}$/))
     expect(deadlines).toEqual([...deadlines].sort())
   })
 
-  it('keeps the split calculus T00 and T01 meetings at exactly two 50-minute cards', async () => {
+  it('keeps the calculus T00 and merged T01 meetings at exactly two 50-minute cards', async () => {
     const expectedMeetings = new Map([
       ['topic-00-entering-calculus', 1],
-      ['topic-01-describing-approach', 2],
+      ['topic-01-limits', 6],
     ])
 
     for (const [topicId, meetingCount] of expectedMeetings) {
@@ -125,12 +129,12 @@ describe('term-first content catalog', () => {
     }
 
     const t00 = findTopic('2026-fall', 'calculus-i', 'topic-00-entering-calculus')?.topic
-    const t01 = findTopic('2026-fall', 'calculus-i', 'topic-01-describing-approach')?.topic
+    const t01 = findTopic('2026-fall', 'calculus-i', 'topic-01-limits')?.topic
     expect(t00?.demos.map((demo) => demo.id)).toEqual(['sequence-limit'])
     expect(t01?.demos ?? []).toEqual([])
     expect(t00?.resources.exams).toBeUndefined()
     expect(t01?.examPreview).toBeUndefined()
-    expect(t01?.resources.exams).toBeUndefined()
+    expect(t01?.resources.exams).toBe('2026-fall/courses/calculus-i/exams/topics/topic-01-limits.tex')
   })
 
   it('publishes calculus exams only through non-empty topic collections', async () => {
@@ -140,11 +144,10 @@ describe('term-first content catalog', () => {
     const examTopics = course.topics.filter((topic) => topic.resources.exams)
 
     expect(examTopics.map((topic) => topic.label)).toEqual([
-      'T02', 'T03', 'T04', 'T05', 'T06', 'T07', 'T08', 'T09', 'T10',
+      'T01', 'T02', 'T03', 'T04', 'T05', 'T06', 'T07', 'T08', 'T09',
     ])
     expect(new Set(examTopics.map((topic) => topic.resources.exams)).size).toBe(examTopics.length)
     expect(course.topics.find((topic) => topic.label === 'T00')?.resources.exams).toBeUndefined()
-    expect(course.topics.find((topic) => topic.label === 'T01')?.resources.exams).toBeUndefined()
 
     for (const topic of examTopics) {
       const collection = parseExamCollection(await loadContent(topic.resources.exams))

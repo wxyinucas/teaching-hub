@@ -1,14 +1,14 @@
 {
-  "id": "topic-08-definite-integrals-and-applications",
-  "label": "T08",
+  "id": "topic-07-definite-integrals-and-applications",
+  "label": "T07",
   "title": "定积分及其应用",
   "summary": "连接定积分概念、微积分基本公式与计算方法，并处理几何、物理应用和广义积分。",
   "lessonCount": 8,
-  "order": 9,
+  "order": 8,
   "resources": {
     "exams": {
       "scope": "course",
-      "file": "exams/topics/topic-08-definite-integrals-and-applications.tex"
+      "file": "exams/topics/topic-07-definite-integrals-and-applications.tex"
     }
   }
 }

@@ -31,8 +31,8 @@ const calculusExamContext = catalog.terms.flatMap((itemTerm) => itemTerm.courses
 const calculusExamBundles = calculusExamContext?.course.topics.flatMap((topic) => (
   topic.resources.exams ? [{ ...calculusExamContext, topic }] : []
 )) ?? []
-const t02ExamBundle = calculusExamBundles.find(({ topic }) => topic.label === 'T02')
-const t10ExamBundle = calculusExamBundles.find(({ topic }) => topic.label === 'T10')
+const mergedLimitExamBundle = calculusExamBundles.find(({ topic }) => topic.label === 'T01')
+const t09ExamBundle = calculusExamBundles.find(({ topic }) => topic.label === 'T09')
 
 let wrapper
 let router
@@ -177,9 +177,9 @@ describe('teaching hub navigation', () => {
     expect(wrapper.find('.sequence-limit-demo').exists()).toBe(true)
   })
 
-  it('lists only non-empty calculus exam entries and opens the T02 collection', async () => {
-    expect(t02ExamBundle).toBeDefined()
-    const item = t02ExamBundle
+  it('lists only non-empty calculus exam entries and opens the merged limit collection', async () => {
+    expect(mergedLimitExamBundle).toBeDefined()
+    const item = mergedLimitExamBundle
     const itemCoursePath = `/terms/${item.term.id}/courses/${item.course.id}`
     const examPath = `${itemCoursePath}/topics/${item.topic.id}/exams`
     await openPage(itemCoursePath)
@@ -211,9 +211,9 @@ describe('teaching hub navigation', () => {
     expect(router.currentRoute.value.path).toBe(examPath)
   })
 
-  it('opens the fundamental collection from the T10 review topic', async () => {
-    expect(t10ExamBundle).toBeDefined()
-    const item = t10ExamBundle
+  it('opens the fundamental collection from the T09 review topic', async () => {
+    expect(t09ExamBundle).toBeDefined()
+    const item = t09ExamBundle
     const itemCoursePath = `/terms/${item.term.id}/courses/${item.course.id}`
     const examPath = `${itemCoursePath}/topics/${item.topic.id}/exams`
     await openPage(itemCoursePath)
@@ -237,7 +237,7 @@ describe('teaching hub navigation', () => {
     `/terms/${term.id}/courses/${course.id}/weeks/${week.id}/demos/missing`,
     '/terms/2026-fall/courses/calculus-i/topics/missing/runbook',
     '/terms/2026-fall/courses/calculus-i/topics/topic-00-entering-calculus/exams',
-    '/terms/2026-fall/courses/calculus-i/topics/topic-01-describing-approach/exams',
+    '/terms/2026-fall/courses/calculus-i/topics/topic-02-limit-properties-existence-operations/exams',
   ])('offers recovery for an unknown address: %s', async (path) => {
     await openPage(path)
     expect(wrapper.find('h1').text()).toBe('未找到课程或材料')
