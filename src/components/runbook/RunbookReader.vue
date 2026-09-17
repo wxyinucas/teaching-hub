@@ -25,6 +25,7 @@ const sectionUnit = computed(() => (
   runbook.value?.sections.every((section) => /次课$/.test(section.label)) ? '次课' : '个教学区段'
 ))
 const openSegments = ref(new Set())
+const roadmapExpanded = ref(true)
 const readerElement = ref(null)
 const activeSectionId = ref('')
 const activeSegmentId = ref('')
@@ -36,6 +37,7 @@ let navigationFrame = null
 let navigationUsesTimeout = false
 let navigationResizeObserver = null
 const openStatePrefix = 'teaching-hub:runbook-open:'
+const roadmapStatePrefix = 'teaching-hub:runbook-roadmap-collapsed:'
 
 const currentSectionId = computed(() => (
   activeSectionId.value || runbook.value?.sections[0]?.id || ''
@@ -63,6 +65,27 @@ function segmentEntries(book = runbook.value) {
 
 function openStateKey(file = props.file) {
   return `${openStatePrefix}${file}`
+}
+
+function readRoadmapExpanded(file = props.file) {
+  if (typeof window === 'undefined') return true
+  try {
+    return window.sessionStorage.getItem(`${roadmapStatePrefix}${file}`) !== '1'
+  } catch {
+    return true
+  }
+}
+
+function toggleRoadmap() {
+  roadmapExpanded.value = !roadmapExpanded.value
+  try {
+    const key = `${roadmapStatePrefix}${props.file}`
+    if (roadmapExpanded.value) window.sessionStorage.removeItem(key)
+    else window.sessionStorage.setItem(key, '1')
+  } catch {
+    // The roadmap remains usable when browser storage is unavailable.
+  }
+  nextTick(scheduleNavigationUpdate)
 }
 
 function readOpenSegmentKeys(file = props.file) {
@@ -216,6 +239,7 @@ function scheduleNavigationUpdate() {
 
 onMounted(() => {
   restoreOpenSegments()
+  roadmapExpanded.value = readRoadmapExpanded()
   if (!usesPeriodCards.value) return
   window.addEventListener('scroll', scheduleNavigationUpdate, { passive: true })
   window.addEventListener('resize', scheduleNavigationUpdate)
@@ -246,6 +270,10 @@ watch([() => props.source, () => props.file], async () => {
   scheduleNavigationUpdate()
 })
 
+watch(() => props.file, () => {
+  roadmapExpanded.value = readRoadmapExpanded()
+})
+
 watchEffect(() => {
   document.title = runbook.value
     ? `${runbook.value.code} · ${runbook.value.title} · Teaching Hub`
@@ -268,9 +296,21 @@ watchEffect(() => {
       </div>
     </dl>
 
-    <section v-if="usesPeriodCards && runbook.roadmap" class="topic-roadmap" aria-labelledby="topic-roadmap-title">
-      <h2 id="topic-roadmap-title">Road map<span v-if="runbook.roadmap.title"> · {{ runbook.roadmap.title }}</span></h2>
-      <SegmentNotes :source="runbook.roadmap.source" />
+    <section v-if="usesPeriodCards && runbook.roadmap" class="topic-roadmap" :class="{ 'is-collapsed': !roadmapExpanded }" aria-labelledby="topic-roadmap-title">
+      <div class="topic-roadmap-header">
+        <h2 id="topic-roadmap-title">Road map<span v-if="runbook.roadmap.title"> · {{ runbook.roadmap.title }}</span></h2>
+        <button
+          type="button"
+          class="topic-roadmap-toggle"
+          :aria-label="`${roadmapExpanded ? '收起' : '展开'} Road map`"
+          :aria-expanded="roadmapExpanded"
+          aria-controls="topic-roadmap-content"
+          @click="toggleRoadmap"
+        >{{ roadmapExpanded ? '收起' : '展开' }} <span aria-hidden="true">{{ roadmapExpanded ? '↑' : '↓' }}</span></button>
+      </div>
+      <div id="topic-roadmap-content" v-show="roadmapExpanded" class="topic-roadmap-content" role="region" aria-labelledby="topic-roadmap-title">
+        <SegmentNotes :source="runbook.roadmap.source" />
+      </div>
     </section>
 
     <div class="workspace">

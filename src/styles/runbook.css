@@ -11,7 +11,12 @@
 .anchor dd { margin: 0; font-size: 13px; line-height: 1.7; }
 .anchor-close { background: var(--purple-light); border-color: var(--purple-border); }
 .topic-roadmap { box-sizing: border-box; max-width: 920px; margin: 0 0 22px; padding: 20px 24px; border: 1px solid var(--border); border-top: 2px solid var(--purple); border-radius: 7px; background: var(--surface); }
-.topic-roadmap h2 { margin: 0 0 16px; padding-bottom: 13px; border-bottom: 1px solid var(--border); color: var(--purple-dark); font-size: 15px; font-weight: 650; }
+.topic-roadmap-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; padding-bottom: 13px; border-bottom: 1px solid var(--border); }
+.topic-roadmap.is-collapsed .topic-roadmap-header { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
+.topic-roadmap h2 { margin: 0; color: var(--purple-dark); font-size: 15px; font-weight: 650; }
+.topic-roadmap-toggle { flex-shrink: 0; border: 0; padding: 4px 0 4px 8px; background: none; color: var(--purple); font-size: 12px; }
+.topic-roadmap-toggle:hover { color: var(--purple-dark); }
+.topic-roadmap-toggle span { margin-left: 4px; }
 .topic-roadmap .notes-content { font-size: 14px; line-height: 1.75; }
 .topic-roadmap .notes-content > ul { margin: 0; padding-left: 1.2em; }
 .topic-roadmap .notes-content > ul > li { margin: 0; padding-left: 3px; font-size: 15px; font-weight: 650; }

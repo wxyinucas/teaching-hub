@@ -210,6 +210,40 @@ describe('runbook disclosure', () => {
     expect(wrapper.find('.anchors').exists()).toBe(false)
   })
 
+  it('keeps the roadmap folded across source updates and remounts, per file', async () => {
+    const source = [
+      '# T01｜专题台本',
+      '## 本专题',
+      '- **Road map：定义与存在**',
+      '  - 描述接近',
+      '    - 定义：数列极限',
+      '## 第一次课',
+      '### 0-50 | 第一课时',
+    ].join('\n')
+    const props = { source, file: 'topic-01/runbook.md', variant: 'calculus-topic' }
+    wrapper = mount(RunbookReader, { props })
+
+    const toggle = wrapper.find('.topic-roadmap-toggle')
+    expect(toggle.attributes('aria-expanded')).toBe('true')
+    expect(wrapper.find('.topic-roadmap-content').isVisible()).toBe(true)
+
+    await toggle.trigger('click')
+    expect(toggle.attributes('aria-expanded')).toBe('false')
+    expect(wrapper.find('.topic-roadmap-content').attributes('style')).toContain('display: none')
+
+    await wrapper.setProps({ source: source.replace('描述接近', '描述趋近') })
+    expect(wrapper.find('.topic-roadmap-toggle').attributes('aria-expanded')).toBe('false')
+
+    wrapper.unmount()
+    wrapper = mount(RunbookReader, { props })
+    await flushPromises()
+    expect(wrapper.find('.topic-roadmap-toggle').attributes('aria-expanded')).toBe('false')
+
+    await wrapper.setProps({ file: 'topic-02/runbook.md' })
+    expect(wrapper.find('.topic-roadmap-toggle').attributes('aria-expanded')).toBe('true')
+    expect(wrapper.find('.topic-roadmap-content').isVisible()).toBe(true)
+  })
+
   it('uses the topic directory to open, navigate and close one half-period without closing another', async () => {
     const scrollIntoView = vi.fn()
     const scrollDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollIntoView')
