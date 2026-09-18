@@ -91,6 +91,28 @@ describe('term-first content catalog', () => {
     })
   })
 
+  it('maps the programming stage separately from the migrated Longbridge week', () => {
+    const course = findCourse('2026-fall', 'ai-agents')?.course
+    expect(course).toBeDefined()
+    expect(course.calendar).toHaveLength(16)
+    expect(course.weekMap.find((entry) => entry.id === 'week-04')?.title).toBe('一段代码怎样运行？')
+    const week04 = findWeek('2026-fall', 'ai-agents', 'week-04')?.week
+    expect(week04?.resources).toEqual({
+      runbook: '2026-fall/courses/ai-agents/weeks/week-04/runbook.md',
+      slides: '2026-fall/courses/ai-agents/weeks/week-04/slides.md',
+      guide: '2026-fall/courses/ai-agents/weeks/week-04/guide.md',
+    })
+
+    const week10 = findWeek('2026-fall', 'ai-agents', 'week-10')?.week
+    expect(week10).toBeDefined()
+    expect(week10.title).toBe('进入模拟环境，取得真实数据')
+    expect(week10.resources).toEqual({
+      runbook: '2026-fall/courses/ai-agents/weeks/week-10/runbook.md',
+      slides: '2026-fall/courses/ai-agents/weeks/week-10/slides.md',
+      guide: '2026-fall/courses/ai-agents/weeks/week-10/guide.md',
+    })
+  })
+
   it('keeps the calculus topic schedule complete and ordered', () => {
     const course = findCourse('2026-fall', 'calculus-i')?.course
     expect(course).toBeDefined()

@@ -1,0 +1,12 @@
+{
+  "id": "week-04",
+  "label": "W4 · 程序怎样运行",
+  "title": "一段代码怎样运行？",
+  "summary": "用 Python、R、Rust、C 对照源码与可执行文件的运行路径，再沿熟悉的命令找到入口并用追踪输出观察执行。",
+  "order": 4,
+  "resources": {
+    "runbook": "runbook.md",
+    "slides": "slides.md",
+    "guide": "guide.md"
+  }
+}
