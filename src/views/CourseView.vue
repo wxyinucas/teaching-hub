@@ -92,7 +92,7 @@ watchEffect(() => {
             v-if="ready(entry, 'guide')"
             class="resource-link resource-guide"
             :to="resourceLocation(entry, 'guide')"
-          ><span>学生指南</span><small>独立执行与接续</small></RouterLink>
+          ><span>学生指南</span><small v-if="!isTopicCourse">独立执行与接续</small></RouterLink>
           <RouterLink
             v-if="isTopicCourse && ready(entry, 'exams')"
             class="resource-link resource-exams"

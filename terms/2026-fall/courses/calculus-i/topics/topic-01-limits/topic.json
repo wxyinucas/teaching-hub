@@ -7,6 +7,8 @@
   "order": 2,
   "resources": {
     "runbook": "runbook.md",
+    "slides": "slides.md",
+    "guide": "guide.md",
     "exams": {
       "scope": "course",
       "file": "exams/topics/topic-01-limits.tex"
