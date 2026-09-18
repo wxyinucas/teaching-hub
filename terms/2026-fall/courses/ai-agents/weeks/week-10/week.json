@@ -1,0 +1,12 @@
+{
+  "id": "week-10",
+  "label": "W10 · 接入模拟环境",
+  "title": "进入模拟环境，取得真实数据",
+  "summary": "完成 Longbridge 注册、只读授权和固定行情调用；记录数据边界并验证撤销与退出。",
+  "order": 10,
+  "resources": {
+    "runbook": "runbook.md",
+    "slides": "slides.md",
+    "guide": "guide.md"
+  }
+}

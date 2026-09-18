@@ -1,4 +1,4 @@
-# W4 学生行动指南：完成一次最小权限的真实 API 调用
+# W10 学生行动指南：完成一次最小权限的真实 API 调用
 
 > 本周使用 Longbridge 模拟账户，让本地 Agent 完成一次真实历史行情调用。你不需要申请真实证券账户、投入资金或学习交易；你需要决定授予什么权限，核对调用证据，并在结束时撤销授权。
 
@@ -111,7 +111,7 @@ ls -l /usr/local/bin/longbridge
 为本次授权使用能辨认的名称，例如：
 
 ```text
-W4 Basic Data s07
+W10 Basic Data s07
 ```
 
 把 `s07` 换成自己的公开代号。生成授权码前逐项确认：
@@ -138,10 +138,10 @@ Agent Auth Code 有效期为 10 分钟，成功兑换后只能使用一次。它
 先在 WSL 中运行下面第一行，终端等待时再点击网页上的复制按钮并粘贴。隐藏输入时屏幕不显示字符，这是正常的：
 
 ```bash
-read -r -s -p "Paste W4 auth code: " W4_AUTH_CODE
+read -r -s -p "Paste W10 auth code: " W10_AUTH_CODE
 echo
-LONGBRIDGE_REGION=global longbridge auth login --auth-code "$W4_AUTH_CODE"
-unset W4_AUTH_CODE
+LONGBRIDGE_REGION=global longbridge auth login --auth-code "$W10_AUTH_CODE"
+unset W10_AUTH_CODE
 ```
 
 成功时应看到类似：
@@ -226,7 +226,7 @@ echo "ASSET_EXIT=$?"
 
 <https://open.longbridge.com/dashboard/authorized-apps>
 
-找到自己命名的 `W4 Basic Data s07`，选择 **Revoke** 并确认。只撤销本次 W4 授权，不操作其他应用。
+找到自己命名的 `W10 Basic Data s07`，选择 **Revoke** 并确认。只撤销本次 W10 授权，不操作其他应用。
 
 撤销后再次运行固定行情命令：
 
@@ -252,20 +252,20 @@ longbridge auth status
 
 两者不是同一个动作。`auth status` 的内容不要投屏、截图或写入报告。本次练习授权到这里完整结束。以后若有新的课程任务，再按新的任务范围重新授权。
 
-## 留下一张不含秘密的 W4 记录
+## 留下一张不含秘密的 W10 记录
 
 在 WSL 中进入自己的课程项目，把 `s07` 换成自己的公开代号，再明确建立周目录和空白文件：
 
 ```bash
 cd ~/course/ai-agents-project
-mkdir -p students/s07/weeks/week-04
-touch students/s07/weeks/week-04/report.md
+mkdir -p students/s07/weeks/week-10
+touch students/s07/weeks/week-10/report.md
 ```
 
-随后在 VS Code Explorer 中打开 `students/s07/weeks/week-04/report.md`，由本人填写。不要让 Agent 代写人的判断。使用下面的固定结构：
+随后在 VS Code Explorer 中打开 `students/s07/weeks/week-10/report.md`，由本人填写。不要让 Agent 代写人的判断。使用下面的固定结构：
 
 ```markdown
-# W4 外部系统接入记录
+# W10 外部系统接入记录
 
 - 我是否亲眼看到 Demo A/C：是 / 否
 - 授权页中我实际选择的权限：
@@ -281,7 +281,7 @@ touch students/s07/weeks/week-04/report.md
 - 如果未完成，下一次只从哪里继续：
 ```
 
-个人完成只能在“亲眼看到 `Demo A/C`”和“本人固定调用成功”都成立时写“是”。只要 `auth login` 成功，或 Authorized Apps 中还存在本次 W4 授权，就必须完成撤销与本地退出后再离场；只生成但没有兑换的一次性代码不等于已经建立授权。
+个人完成只能在“亲眼看到 `Demo A/C`”和“本人固定调用成功”都成立时写“是”。只要 `auth login` 成功，或 Authorized Apps 中还存在本次 W10 授权，就必须完成撤销与本地退出后再离场；只生成但没有兑换的一次性代码不等于已经建立授权。
 
 报告中不要出现邮箱、手机号、姓名、账号编号、授权码、token、完整 JSON、价格、资产、订单、截图或本地凭据路径。提交前搜索并逐行检查；本周课堂不要求为了赶时间 commit 或 push。
 

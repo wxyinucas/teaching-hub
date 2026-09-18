@@ -1,6 +1,6 @@
-# W4｜把 Agent 接入现实系统
+# W10｜进入模拟环境，取得真实数据
 
-> AI Agents · W4 · 3 × 50 min · 约 25 名零编程基础学生 · 无助教
+> AI Agents · W10 · 3 × 50 min · 约 30 名学生 · 无助教
 
 ## 本次课
 
@@ -70,7 +70,7 @@
 > 收口：本次授权只能读基础行情；账户、订单和交易能力全部关闭。
 
 - 课前：确认授权页可打开；准备 Slides“本周只开一扇门”。
-- 让学生做：创建易识别的授权名称，例如 `W4 Basic Data s07`。
+- 让学生做：创建易识别的授权名称，例如 `W10 Basic Data s07`。
 - 保留：`Basic data access`。
 - 关闭：`Watchlist`、`Account & Positions`、`Trade Order Lookup`、`Trade Execution`。
 - 检查：生成授权码前，让学生逐项对照投影；无法确认就不生成。
@@ -84,10 +84,10 @@
 - 先做：停止 Agent 当前动作，在 WSL 中准备好以下命令，再回网页生成一次性代码。
 
 ```bash
-read -r -s -p "Paste W4 auth code: " W4_AUTH_CODE
+read -r -s -p "Paste W10 auth code: " W10_AUTH_CODE
 echo
-LONGBRIDGE_REGION=global longbridge auth login --auth-code "$W4_AUTH_CODE"
-unset W4_AUTH_CODE
+LONGBRIDGE_REGION=global longbridge auth login --auth-code "$W10_AUTH_CODE"
+unset W10_AUTH_CODE
 ```
 
 - 提醒：授权码不截图、不投屏、不进对话、不进文件、不进 Git、不直接写进命令历史。
@@ -149,7 +149,7 @@ echo "ASSET_EXIT=$?"
 > 收口：服务器拒绝旧授权，而且本机 token 已清除，本次授权才真正结束。
 
 - 课前：打开 Authorized Apps；备好固定 K 线命令和 logout 命令。
-- 让学生做：在网页找到 `W4 Basic Data sXX`，执行 Revoke。
+- 让学生做：在网页找到 `W10 Basic Data sXX`，执行 Revoke。
 - 验证远程：再次运行固定 K 线命令，确认服务器拒绝。
 - 清理本地：运行以下命令。
 
@@ -166,13 +166,13 @@ longbridge auth status
 
 > 收口：只留下可公开核验的事实、证据边界和个人完成状态，不留下秘密或完整行情。
 
-- 课前：确认 Guide 中的报告模板可用；准备打开 `students/s07/weeks/week-04/report.md`。
+- 课前：确认 Guide 中的报告模板可用；准备打开 `students/s07/weeks/week-10/report.md`。
 - 让学生写：是否看到 `Demo A/C`、实际权限、固定请求、行数与日期、资产请求结果、Revoke 与 logout 状态。
 - 禁止写入：授权码、token、账户编号、完整响应和价格。
 - 判定核心完成：本人看到 `Demo A/C`，且本人固定调用成功；两项缺一即为“否”。
 - 判定安全离场：建立过授权者已完成网页 Revoke 与本地 logout；这与核心完成分别判断。
 - 补一句：`我检查了______，因此目前只能支持______，仍不能支持______。`
-- 结束：记录最终个人完成人数；展示 W5 预告，不提前开发策略或订单。
+- 结束：记录最终个人完成人数；预告 W11 将把行情交给简单的决策模型，不提前开发策略或订单。
 
 ## 临场取舍
 

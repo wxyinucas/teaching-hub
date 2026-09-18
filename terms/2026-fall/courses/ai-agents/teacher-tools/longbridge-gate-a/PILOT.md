@@ -1,4 +1,6 @@
-# W4 Longbridge pilot record
+# Longbridge pilot record (former W4 plan)
+
+> Historical pilot evidence; not a current W4 assignment or automatic approval for W10.
 
 ## 2026-09-08 · macOS teacher baseline
 

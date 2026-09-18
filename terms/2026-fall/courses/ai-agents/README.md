@@ -7,8 +7,10 @@
 - [正式项目仓库](https://github.com/wxyinucas/ai-agents-project)：W3 从自然语言契约与公开测试起步。`course/` 保存教师任务，`common/` 保存公共能力，`students/sXX/system/` 是每名学生唯一持续演化的系统，`students/sXX/weeks/` 只追加周记录。
 - `weeks/`：按周冻结 `week.json`、`draft.md`、`runbook.md`、`slides.md` 与 `guide.md`；不再建立职责含混的 `resources/`。
 
-`course.json.weekMap` 展示完整 16 周课程地图；地图条目不承担开放状态，也不登记资源。W1 已形成当前基线，W2、W3 已建立首版材料包并进入迭代；其余周次不预先生成空目录。
+当前以[16 周课程蓝图](./course-design/16-week-blueprint.md)为准：W1～W3 建立工作台与 Agent，W4～W9 进行编程入门，W10～W15 完成一次量化实践闭环，W16 核验个人证据。约 30 名学生，其中不少是数学专业研究生；课程仍按无编程基础、无助教设计。原 W4 的 Longbridge 只读授权材料已移至 W10，授课前须按平台现状复测。旧版[蓝图](./course-design/16-week-blueprint-v1.md)仅供追溯。
 
-学生证据随任务阶段递进：W1 是环境状态与命令输出；项目出现后加入可复现命令、测试、diff 与 Git 记录；再逐步接入隐藏测试、CI、数据契约、平台对账、release 与答辩。每一层只在课程真正需要它时引入。
+`course.json.weekMap` 展示完整 16 周课程地图；地图条目不承担开放状态，也不登记资源。W1～W3 已有材料包；W10 保留了从原 W4 平移的授权材料。其余周次不预先生成空目录。
 
-版本路线保持单一：普通周只更新个人 fork 的 `origin/main`；W6、W9、W14 将本人目录 PR 到教师 `upstream/main`，使用普通 merge 保留学生原提交，合入并通过累计检查后由教师用 tag 冻结班级里程碑。课程不使用 `dev-week-*` 分支。
+学生证据随任务阶段递进：W1 是环境状态与命令输出；项目出现后加入可复现命令、测试、diff 与 Git 记录；后续再接入数据契约、平台对账、版本冻结与个人责任核验。每一层只在课程真正需要它时引入。
+
+版本路线保持单一：普通周只更新个人 fork 的 `origin/main`，不使用 `dev-week-*` 分支。旧版 W6、W9、W14 的 PR/tag 周号不沿用；具体汇总节点随各周任务设计确定。
