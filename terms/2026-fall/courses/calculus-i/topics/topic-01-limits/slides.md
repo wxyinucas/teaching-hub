@@ -94,3 +94,169 @@ $$
 
 <!-- footer -->
 远端门槛换成去心邻域；“误差先给—范围后定—全体达标”不变。
+
+---
+# 从去心邻域写出有限点极限
+
+$$
+\forall\varepsilon>0,\ \exists\delta>0,\ \forall x\in D,\qquad
+0<|x-x_0|<\delta\ \Longrightarrow\ |f(x)-A|<\varepsilon.
+$$
+
+- 输入：$x$ 在定义域中靠近 $x_0$，但不取 $x_0$。
+- 输出：$f(x)$ 落在 $A$ 的 $\varepsilon$ 带内。
+- 次序：先给 $\varepsilon$，再选 $\delta$，最后检查范围内所有允许的 $x$。
+
+<!-- footer -->
+$f(x_0)$ 不参与检验；邻域内的函数值可以波动，但必须全部达标。
+
+---
+# 例题：输入靠近时，输出怎样靠近
+
+$$
+\lim_{x\to x_0}x=x_0
+\qquad \delta=\varepsilon
+$$
+
+$$
+\lim_{x\to1}(5x+1)=6,
+\qquad |(5x+1)-6|=5|x-1|,
+\qquad \delta=\frac{\varepsilon}{5}.
+$$
+
+<!-- footer -->
+教材第 20 页例 6、例 7；两题都从输出误差倒推输入距离。
+
+---
+# 课堂练习：观察去心邻域中的表达式
+
+$$
+\lim_{x\to2}\frac{x-2}{x^2-4}\;=?
+$$
+
+$$
+0<|x-2|<1\quad\Longrightarrow\quad
+\frac{x-2}{x^2-4}=\frac1{x+2}.
+$$
+
+- $x=2$ 时原式没有定义。
+- 极限检查的是 $x\ne2$ 且不断靠近 $2$ 的输入。
+
+<!-- footer -->
+教材第 20 页例 8；先观察，再判断，不把点值当作极限。
+
+---
+# 课堂练习：用定义证明平方函数的极限
+
+$$
+\lim_{x\to2}x^2=4,
+\qquad |x^2-4|=|x-2|\,|x+2|.
+$$
+
+$$
+|x-2|<1\quad\Longrightarrow\quad |x+2|<5.
+$$
+
+- 倒推：$\delta=\min\{1,\varepsilon/5\}$。
+- 写回：任给 $\varepsilon>0$ 后选定 $\delta$，再核验所有 $0<|x-2|<\delta$ 的输入。
+
+---
+# 单侧极限的两个输入范围
+
+$$
+\begin{aligned}
+x\to x_0^-&:\quad 0<x_0-x<\delta,\\
+x\to x_0^+&:\quad 0<x-x_0<\delta.
+\end{aligned}
+$$
+
+- 只取定义域 $D$ 中相应一侧的输入。
+- 两侧都要求 $|f(x)-A|<\varepsilon$；$x_0$ 本身仍不参加。
+- $\varepsilon$ 先给，$\delta$ 后定，范围内的每个允许输入都要达标。
+
+---
+# 双侧极限由左右极限共同决定
+
+$$
+\lim_{x\to x_0}f(x)=A
+\quad\Longleftrightarrow\quad
+\lim_{x\to x_0^-}f(x)
+=\lim_{x\to x_0^+}f(x)=A.
+$$
+
+左右两侧都能从定义域取点趋近 $x_0$。
+
+$$
+\delta=\min\{\delta_-,\delta_+\}
+$$
+
+<!-- footer -->
+两侧各自达标，还必须指向同一个 $A$。
+
+---
+# 例题：左右结果不同，双侧极限不存在
+
+$$
+\operatorname{sgn}x=
+\begin{cases}
+1,&x>0,\\
+0,&x=0,\\
+-1,&x<0.
+\end{cases}
+$$
+
+$$
+\lim_{x\to0^-}\operatorname{sgn}x=-1,
+\qquad
+\lim_{x\to0^+}\operatorname{sgn}x=1.
+$$
+
+<!-- footer -->
+教材第 22 页例 9；$f(0)=0$ 不改变双侧极限不存在的结论。
+
+---
+# 课堂练习：左右一致但点值不同
+
+$$
+g(x)=
+\begin{cases}
+x+1,&x<1,\\
+9,&x=1,\\
+3-x,&x>1.
+\end{cases}
+$$
+
+- 分别判断 $x\to1^-$、$x\to1^+$ 与 $x\to1$ 的极限。
+- $g(1)=9$ 会改变这些极限吗？
+
+---
+# 用取点数列刻画函数极限（海涅定理）
+
+设 $x_0$ 是 $D$ 的聚点。对每个取点数列 $(x_n)$：
+
+$$
+x_n\in D\setminus\{x_0\},\quad x_n\to x_0
+\quad\Longrightarrow\quad f(x_n)\to A.
+$$
+
+上述要求对每一列都成立，当且仅当 $\lim_{x\to x_0}f(x)=A$。
+
+<!-- footer -->
+可选例题：符号函数在 $1/n$ 与 $-1/n$ 上分别取值 $1$ 与 $-1$。
+
+---
+# （可选）课堂练习：波动与点值能否阻止极限
+
+$$
+f(x)=
+\begin{cases}
+x\sin(1/x),&x\ne0,\\
+7,&x=0.
+\end{cases}
+$$
+
+- 判断 $x\to0^-$、$x\to0^+$ 与 $x\to0$ 时的极限。
+- 能否直接给出一个 $\delta(\varepsilon)$？
+
+<!-- footer -->
+$|x\sin(1/x)|\le|x|$；点值 $f(0)=7$ 不参与极限判断。
