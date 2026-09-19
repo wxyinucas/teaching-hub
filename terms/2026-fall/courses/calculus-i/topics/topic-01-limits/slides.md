@@ -45,15 +45,24 @@ $$
 可以跳项，不能调序；两条子数列走向不同数值，原数列不收敛。
 
 ---
-# 把数列尾部的门槛换成函数远端的门槛
+# 函数远端的输入范围
 
 $$
-n>N\quad\longrightarrow\quad x>X
+\begin{array}{rcl}
+x\to+\infty:\ x>X
+&& \color{#5e33bf}{\underset{X}{\circ}\;\xrightarrow{\hspace{6em}}\;+\infty}
+\\[1.15em]
+x\to-\infty:\ x<-X
+&& \color{#5e33bf}{-\infty\;\xleftarrow{\hspace{6em}}\;\underset{-X}{\circ}}
+\\[1.15em]
+|x|\to\infty:\ |x|>X
+&& \color{#5e33bf}{-\infty\;\xleftarrow{\hspace{3em}}\;\underset{-X}{\circ}
+\qquad
+\underset{X}{\circ}\;\xrightarrow{\hspace{3em}}\;+\infty}
+\end{array}
 $$
 
-- 数列：检查正整数 $n$；函数：检查定义域 $D$ 内所有允许的实数 $x$。
-- 右端：$x>X$；左端：$x<-X$；双向：$|x|>X$。
-- 双向有限极限等于 $A$，当且仅当左、右远端都趋于 $A$。
+- 数列只检查正整数 $n>N$；函数检查定义域 $D$ 内范围中的全部允许实数 $x$。
 
 <!-- footer -->
 改变的是输入范围；$|f(x)-A|<\varepsilon$ 与“范围内全体达标”不变。
@@ -75,15 +84,35 @@ $$
 - 同一个估计处理 $+\infty$、$-\infty$ 与双向 $\infty$。
 
 ---
-# 写出函数在有限点的极限定义
+# 有限点附近的去心邻域
 
-设 $f:D\to\mathbb R$，$x_0$ 是 $D$ 的聚点。
+$$
+\begin{array}{ccccc}
+x_0-\delta && x_0 && x_0+\delta
+\\[-.25em]
+\color{#5e33bf}{\circ}
+& \color{#5e33bf}{\rule[.35ex]{6em}{.12em}}
+& \color{#5e33bf}{\circ}
+& \color{#5e33bf}{\rule[.35ex]{6em}{.12em}}
+& \color{#5e33bf}{\circ}
+\end{array}
+$$
 
 $$
 0<|x-x_0|<\delta
 \quad\Longleftrightarrow\quad
 x\in(x_0-\delta,x_0)\cup(x_0,x_0+\delta).
 $$
+
+- 三个端点都不包含；真正接受检验的只有范围内属于定义域 $D$ 的点。
+
+<!-- footer -->
+输入离 $x_0$ 足够近，但不取 $x_0$ 本身。
+
+---
+# 写出函数在有限点的极限定义
+
+设 $f:D\to\mathbb R$，$x_0$ 是 $D$ 的聚点。
 
 $$
 \forall\varepsilon>0,\ \exists\delta>0,\ \forall x\in D,\qquad

@@ -126,17 +126,17 @@ describe('teaching hub navigation', () => {
     await openPage(`${path}/1`)
     expect(wrapper.findAll('.slide-lesson-tabs button').map((button) => button.text()))
       .toEqual(['第一次课', '第二次课'])
-    expect(wrapper.find('.slide-progress').text()).toContain('1 / 6')
+    expect(wrapper.find('.slide-progress').text()).toContain('1 / 7')
 
     await wrapper.findAll('.slide-lesson-tabs button')[1].trigger('click')
     await settle()
-    expect(router.currentRoute.value.path).toBe(`${path}/7`)
+    expect(router.currentRoute.value.path).toBe(`${path}/8`)
     expect(wrapper.find('.slide-progress').text()).toContain('1 / 10')
     expect(wrapper.find('.slide-previous').attributes('disabled')).toBeDefined()
 
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }))
     await settle()
-    expect(router.currentRoute.value.path).toBe(`${path}/8`)
+    expect(router.currentRoute.value.path).toBe(`${path}/9`)
     expect(wrapper.find('.slide-progress').text()).toContain('2 / 10')
   })
 

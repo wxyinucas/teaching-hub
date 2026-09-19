@@ -11,7 +11,7 @@ watchEffect(() => { document.title = 'Teaching Hub · 课程目录' })
     <header class="directory-heading home-heading">
       <p class="eyebrow">按学期组织，按课程约定推进</p>
       <h1>课程工作台</h1>
-      <p class="directory-intro">台本负责课前放行与临场决策；派生材料的受众与用途由课程契约定义。所有材料共享课程约定的组织单位，并各自保持边界。</p>
+      <p class="directory-intro">王晓宇，数学科学学院 323 </p>
     </header>
 
     <section v-for="term in catalog.terms" :key="term.id" class="term-group" :aria-labelledby="`term-${term.id}`">
@@ -39,6 +39,6 @@ watchEffect(() => { document.title = 'Teaching Hub · 课程目录' })
     </section>
 
     <p v-if="!catalog.terms.length" class="directory-empty">尚未登记学期。</p>
-    <footer class="page-footer"><span>内容进入 Git，页面由清单自动生成。</span><span>Teaching Hub · 公开但不面向学生宣传</span></footer>
+    <footer class="page-footer"><span>内容进入 Git，页面由清单自动生成。</span><span>王晓宇 · wangxiaoyu210@ouc.edu.cn</span></footer>
   </section>
 </template>
