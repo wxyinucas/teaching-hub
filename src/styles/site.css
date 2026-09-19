@@ -17,6 +17,7 @@
 .skip-link { position: fixed; left: 16px; top: -60px; background: var(--accent-solid); color: var(--on-accent); padding: 10px 16px; z-index: 100; }
 .skip-link:focus { top: 12px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.markdown-strong { margin-inline: .35em; }
 .eyebrow { color: var(--purple); font-size: 12px; letter-spacing: .06em; }
 .directory-heading { padding: 32px 0 30px; }
 .home-heading { max-width: 760px; padding-top: 52px; }
@@ -72,6 +73,18 @@
 .guide-reader .notes-content h3 { margin: 26px 0 10px; color: var(--purple); font-size: 16px; line-height: 1.55; }
 .guide-reader .notes-content a { text-underline-offset: 3px; }
 .guide-reader .code-block { margin: 18px 0; }
+.guide-layout--topic { display: grid; grid-template-columns: minmax(0, 900px) 210px; gap: 24px; align-items: start; justify-content: center; }
+.guide-layout--topic .guide-reader { box-sizing: border-box; min-width: 0; width: 100%; margin: 30px 0 0; }
+.guide-layout--topic .notes-content h2[id], .guide-layout--topic .notes-content h3[id] { scroll-margin-top: 24px; }
+.guide-mini-content { position: sticky; top: 24px; box-sizing: border-box; max-height: calc(100vh - 48px); overflow-y: auto; margin-top: 30px; padding: 14px 12px; border: 1px solid var(--border); border-radius: 7px; background: var(--surface); scrollbar-width: thin; }
+.guide-mini-content h2 { margin: 0 0 9px; padding: 0 4px 9px; border-bottom: 1px solid var(--border); color: var(--purple-dark); font-size: 12px; font-weight: 650; }
+.guide-mini-content ol { margin: 0; padding: 0; list-style: none; }
+.guide-mini-content > ol > li + li { margin-top: 3px; }
+.guide-mini-content button { display: block; width: 100%; padding: 7px 6px; border: 0; border-radius: 4px; background: transparent; color: var(--ink-muted); font-size: 12px; line-height: 1.45; text-align: left; overflow-wrap: anywhere; }
+.guide-mini-content button:hover { background: var(--surface-muted); color: var(--purple-dark); }
+.guide-mini-content button.is-current { background: var(--purple-light); color: var(--purple-dark); font-weight: 650; }
+.guide-mini-content li ol { margin: 3px 0 8px 9px; padding-left: 8px; border-left: 1px solid var(--purple-border); }
+.guide-mini-content li ol button { padding: 5px 6px; font-size: 11px; }
 .error-state { max-width: 720px; margin: 12vh auto; padding: 28px; border: 1px solid var(--border); background: var(--surface); border-radius: 8px; line-height: 1.8; }
 .error-state h1 { margin: 0; font-size: 23px; }
 .page-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--border); margin-top: 30px; padding-top: 16px; font-size: 10px; color: var(--ink-subtle); }
@@ -85,6 +98,9 @@
 @media (max-width: 900px) {
   .course-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .site-shell { padding: 20px 24px 26px; }
+  .guide-layout--topic { display: flex; flex-direction: column; gap: 0; align-items: stretch; }
+  .guide-layout--topic .guide-reader { max-width: 900px; margin: 16px auto 0; }
+  .guide-mini-content { order: -1; position: static; max-height: none; margin-top: 20px; }
 }
 
 @media (max-width: 680px) {
@@ -97,6 +113,7 @@
   .week-actions, .topic-actions { width: 100%; }
   .resource-link { flex: 1; min-width: 0; }
   .guide-reader { margin-top: 20px; padding: 22px 18px; }
+  .guide-layout--topic .guide-reader { margin-top: 12px; }
   .page-footer { flex-direction: column; gap: 6px; }
 }
 
@@ -106,4 +123,6 @@
   .resource-slides, .resource-tabs a.router-link-exact-active { border-color: var(--border); background: var(--surface); }
   .resource-slides span, .resource-slides small, .resource-tabs a.router-link-exact-active { color: var(--ink); opacity: 1; }
   .course-card, .week-card, .topic-card, .guide-reader { box-shadow: none; }
+  .guide-layout--topic { display: block; }
+  .guide-mini-content { display: none; }
 }

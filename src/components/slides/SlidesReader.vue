@@ -4,8 +4,10 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 const props = defineProps({
   deck: { type: Object, required: true },
   page: { type: Number, required: true },
+  lessons: { type: Array, default: () => [] },
+  currentLessonIndex: { type: Number, default: -1 },
 })
-const emit = defineEmits(['change'])
+const emit = defineEmits(['change', 'lesson-change'])
 const feedback = ref('')
 const reader = ref(null)
 const fullscreenSupported = ref(false)
@@ -79,6 +81,16 @@ onBeforeUnmount(() => {
 
 <template>
   <section ref="reader" class="slides-reader" aria-label="静态课堂课件">
+    <nav v-if="lessons.length" class="slide-lesson-tabs" aria-label="课次课件">
+      <button
+        v-for="(lesson, index) in lessons"
+        :key="`${lesson.startPage}-${lesson.label}`"
+        type="button"
+        :class="{ 'is-current': index === currentLessonIndex }"
+        :aria-current="index === currentLessonIndex ? 'page' : undefined"
+        @click="emit('lesson-change', index)"
+      >{{ lesson.label }}</button>
+    </nav>
     <div class="slide-stage">
       <article v-if="slide.layout === 'cover'" class="slide-canvas slide-cover">
         <div class="slide-title-block">
@@ -116,6 +128,11 @@ onBeforeUnmount(() => {
           </section>
         </div>
         <footer v-if="slide.footerHtml" class="slide-footer" v-html="slide.footerHtml"></footer>
+      </article>
+
+      <article v-else-if="slide.layout === 'agenda'" class="slide-canvas slide-agenda">
+        <header class="slide-heading"><h1>{{ slide.title }}</h1></header>
+        <div class="slide-agenda-body" v-html="slide.html"></div>
       </article>
 
       <article v-else-if="slide.layout === 'prompt'" class="slide-canvas slide-prompt">

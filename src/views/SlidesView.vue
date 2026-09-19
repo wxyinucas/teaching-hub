@@ -43,9 +43,33 @@ const currentPage = computed(() => {
   if (!deck.value) return 1
   return Math.min(deck.value.count, Math.max(1, Number.isFinite(requested) ? requested : 1))
 })
+const currentLessonIndex = computed(() => deck.value?.lessons.findIndex(
+  (lesson) => currentPage.value >= lesson.startPage && currentPage.value <= lesson.endPage,
+) ?? -1)
+const currentLesson = computed(() => deck.value?.lessons[currentLessonIndex.value] ?? null)
+const visibleDeck = computed(() => {
+  if (!deck.value) return null
+  if (!currentLesson.value) return deck.value
+  return {
+    slides: deck.value.slides.slice(currentLesson.value.startPage - 1, currentLesson.value.endPage),
+    count: currentLesson.value.count,
+  }
+})
+const visiblePage = computed(() => currentLesson.value
+  ? currentPage.value - currentLesson.value.startPage + 1
+  : currentPage.value)
 
 function routeToPage(page) {
   router.replace(resourceLocation('slides', { page }))
+}
+
+function routeToVisiblePage(page) {
+  routeToPage(currentLesson.value ? currentLesson.value.startPage + page - 1 : page)
+}
+
+function routeToLesson(index) {
+  const lesson = deck.value?.lessons[index]
+  if (lesson) routeToPage(lesson.startPage)
 }
 
 watch(sourcePath, async (path, _previous, onCleanup) => {
@@ -72,7 +96,7 @@ watch([deck, () => props.page], ([value]) => {
 
 watchEffect(() => {
   document.title = context.value && sourcePath.value
-    ? `${unit.value.label} · Slides ${currentPage.value} · Teaching Hub`
+    ? `${unit.value.label} · ${currentLesson.value ? `${currentLesson.value.label} · ` : ''}Slides ${visiblePage.value} · Teaching Hub`
     : '未找到课件 · Teaching Hub'
 })
 </script>
@@ -96,7 +120,15 @@ watchEffect(() => {
     <section v-else-if="loadError || parsed.error" class="error-state" role="alert">
       <h1>课件暂时无法读取</h1><p>{{ loadError || parsed.error }}</p>
     </section>
-    <SlidesReader v-else-if="deck" :deck="deck" :page="currentPage" @change="routeToPage" />
+    <SlidesReader
+      v-else-if="visibleDeck"
+      :deck="visibleDeck"
+      :page="visiblePage"
+      :lessons="deck.lessons"
+      :current-lesson-index="currentLessonIndex"
+      @change="routeToVisiblePage"
+      @lesson-change="routeToLesson"
+    />
   </div>
   <NotFoundView v-else />
 </template>

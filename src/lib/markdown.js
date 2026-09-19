@@ -23,6 +23,14 @@ function externalLink(tokens, index, options, env, renderer) {
 markdown.renderer.rules.link_open = externalLink
 slideMarkdown.renderer.rules.link_open = externalLink
 
+function spacedStrong(tokens, index, options, env, renderer) {
+  tokens[index].attrJoin('class', 'markdown-strong')
+  return renderer.renderToken(tokens, index, options)
+}
+
+markdown.renderer.rules.strong_open = spacedStrong
+slideMarkdown.renderer.rules.strong_open = spacedStrong
+
 function isStandaloneEmphasis(token) {
   const children = token?.children ?? []
   if (children.length < 3 || children[0].type !== 'em_open' || children.at(-1).type !== 'em_close') return false

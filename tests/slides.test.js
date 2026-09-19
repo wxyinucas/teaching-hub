@@ -73,4 +73,35 @@ describe('static slides Markdown parser', () => {
     expect(() => parseSlides('plain text')).toThrow('课件页缺少 # 标题')
     expect(() => parseSlides('<!-- section: 第一课时 -->\n# 不该出现')).toThrow('section 页只写 section 注释')
   })
+
+  it('groups lessons without adding projected pages', () => {
+    const deck = parseSlides([
+      '<!-- lesson: 第一次课 -->', '# 第一页',
+      '---', '# 第二页',
+      '---', '<!-- lesson: 第二次课 -->', '# 第三页',
+    ].join('\n'))
+    expect(deck.count).toBe(3)
+    expect(deck.lessons).toEqual([
+      { label: '第一次课', startPage: 1, endPage: 2, count: 2 },
+      { label: '第二次课', startPage: 3, endPage: 3, count: 1 },
+    ])
+    expect(deck.slides[0].html).not.toContain('lesson')
+    expect(() => parseSlides('# 第一页\n---\n<!-- lesson: 第二次课 -->\n# 第二页'))
+      .toThrow('须从第一页标记 lesson')
+  })
+
+  it('parses an agenda as an ordered list without changing its page count', () => {
+    const deck = parseSlides([
+      '<!-- layout: agenda -->',
+      '# 今天的课程',
+      '',
+      '1. 怎样学高数',
+      '2. 直观理解“极限”',
+      '3. 标记基础知识',
+    ].join('\n'))
+    expect(deck.count).toBe(1)
+    expect(deck.slides[0]).toMatchObject({ layout: 'agenda', title: '今天的课程' })
+    expect(deck.slides[0].html).toContain('<ol>')
+    expect(deck.slides[0].html).toContain('直观理解“极限”')
+  })
 })

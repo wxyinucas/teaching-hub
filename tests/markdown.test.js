@@ -22,6 +22,13 @@ describe('teacher notes rendering', () => {
     expect(html).toContain('rel="noopener noreferrer"')
   })
 
+  it('marks Markdown bold text for visual spacing without inserting text characters', () => {
+    expect(renderNotes('前文**重点**后文').html)
+      .toContain('前文<strong class="markdown-strong">重点</strong>后文')
+    expect(renderSlideMarkdown('前文**重点**后文'))
+      .toContain('前文<strong class="markdown-strong">重点</strong>后文')
+  })
+
   it('turns only a standalone italic paragraph into an emphasis block', () => {
     const { html } = renderNotes([
       '*必须当堂明确这条结论。*',

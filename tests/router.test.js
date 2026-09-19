@@ -105,6 +105,7 @@ describe('teaching hub navigation', () => {
     await settle()
     expect(router.currentRoute.value.path).toBe(`${weekPath}/guide`)
     expect(wrapper.find('.guide-reader').exists()).toBe(true)
+    expect(wrapper.find('.guide-mini-content').exists()).toBe(false)
   })
 
   it('keeps the slide page in the URL during keyboard navigation', async () => {
@@ -116,6 +117,27 @@ describe('teaching hub navigation', () => {
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }))
     await settle()
     expect(router.currentRoute.value.path).toBe(`${weekPath}/slides/${deck.count}`)
+  })
+
+  it('switches topic slide lessons and restarts the displayed page count', async () => {
+    expect(mergedLimitExamBundle).toBeDefined()
+    const { term: itemTerm, course: itemCourse, topic } = mergedLimitExamBundle
+    const path = `/terms/${itemTerm.id}/courses/${itemCourse.id}/topics/${topic.id}/slides`
+    await openPage(`${path}/1`)
+    expect(wrapper.findAll('.slide-lesson-tabs button').map((button) => button.text()))
+      .toEqual(['第一次课', '第二次课'])
+    expect(wrapper.find('.slide-progress').text()).toContain('1 / 6')
+
+    await wrapper.findAll('.slide-lesson-tabs button')[1].trigger('click')
+    await settle()
+    expect(router.currentRoute.value.path).toBe(`${path}/7`)
+    expect(wrapper.find('.slide-progress').text()).toContain('1 / 10')
+    expect(wrapper.find('.slide-previous').attributes('disabled')).toBeDefined()
+
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }))
+    await settle()
+    expect(router.currentRoute.value.path).toBe(`${path}/8`)
+    expect(wrapper.find('.slide-progress').text()).toContain('2 / 10')
   })
 
   it('shows an opted-in topic map and opens its runbook', async () => {
@@ -154,6 +176,27 @@ describe('teaching hub navigation', () => {
     expect(router.resolve({ name: 'topic-demo', params: { ...params, demoId: 'example' } }).path).toBe(`${base}/demos/example`)
     expect(router.resolve({ name: 'runbook', params: { termId: term.id, courseId: course.id, weekId: week.id } }).path)
       .toBe(`${weekPath}/runbook`)
+  })
+
+  it('adds a compact lesson outline to the topic guide without hiding its text', async () => {
+    expect(mergedLimitExamBundle).toBeDefined()
+    const { term: itemTerm, course: itemCourse, topic } = mergedLimitExamBundle
+    const path = `/terms/${itemTerm.id}/courses/${itemCourse.id}/topics/${topic.id}/guide`
+    await openPage(path)
+
+    const sections = wrapper.findAll('.guide-mini-content > ol > li > button')
+    expect(sections.map((button) => button.text())).toEqual([
+      '回看极限：四个视角', '第一次课：题目', '第二次课：题目',
+    ])
+    expect(wrapper.find('.guide-reader .notes-content h2#guide-section-1').text()).toBe('第一次课：题目')
+    expect(wrapper.find('.guide-reader .notes-content h3#guide-subsection-0').exists()).toBe(true)
+    expect(wrapper.findAll('.guide-mini-content li ol button').map((button) => button.text())).toEqual([
+      '数列极限与子数列', '函数在无穷远处的极限',
+      '有限点极限与定义证明', '左右极限、双侧极限与取点数列',
+    ])
+    await sections[1].trigger('click')
+    expect(scrollIntoViewMock).toHaveBeenCalled()
+    expect(wrapper.findAll('.guide-reader .notes-content h3')).toHaveLength(4)
   })
 
   it('boots from a GitHub-Pages-friendly hash deep link', async () => {

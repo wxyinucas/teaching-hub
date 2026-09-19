@@ -6,7 +6,8 @@
   "lessonCount": 1,
   "order": 1,
   "resources": {
-    "runbook": "runbook.md"
+    "runbook": "runbook.md",
+    "slides": "slides.md"
   },
   "demos": [
     {

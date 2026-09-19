@@ -1,7 +1,7 @@
 import { renderSlideMarkdown } from './markdown.js'
 
-const directivePattern = /<!--\s*(layout|section|subsection|column|footer|lead)\s*(?::\s*([^>]*?))?\s*-->/gi
-const allowedLayouts = new Set(['cover', 'question', 'columns', 'prompt', 'content'])
+const directivePattern = /<!--\s*(layout|section|subsection|column|footer|lead|lesson)\s*(?::\s*([^>]*?))?\s*-->/gi
+const allowedLayouts = new Set(['cover', 'question', 'columns', 'prompt', 'agenda', 'content'])
 
 function splitPages(source) {
   const pages = []
@@ -103,6 +103,17 @@ export function parseSlides(source) {
   const rawPages = splitPages(source)
   if (!rawPages.length) throw new Error('课件至少需要一页。')
   const sections = rawPages.map((page) => directive(page, 'section')).filter(Boolean)
+  const lessonStarts = rawPages.flatMap((page, index) => {
+    const label = directive(page, 'lesson')
+    return label ? [{ label, startPage: index + 1 }] : []
+  })
+  if (lessonStarts.length && lessonStarts[0].startPage !== 1) {
+    throw new Error('按课次分类的课件须从第一页标记 lesson。')
+  }
+  const lessons = lessonStarts.map((entry, index) => {
+    const endPage = (lessonStarts[index + 1]?.startPage ?? rawPages.length + 1) - 1
+    return { ...entry, endPage, count: endPage - entry.startPage + 1 }
+  })
   let sectionIndex = -1
 
   const slides = rawPages.map((raw, index) => {
@@ -136,5 +147,5 @@ export function parseSlides(source) {
     }
   })
 
-  return { slides, sections, count: slides.length }
+  return { slides, sections, lessons, count: slides.length }
 }

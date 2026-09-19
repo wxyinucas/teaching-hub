@@ -2,6 +2,10 @@
 .slides-page-topbar .resource-tabs { flex-shrink: 0; }
 .slides-reader { padding-top: 18px; }
 .slides-reader::backdrop { background: #0e0c11; }
+.slide-lesson-tabs { display: flex; gap: 8px; width: min(100%, 1200px); margin: 0 auto 12px; overflow-x: auto; scrollbar-width: thin; }
+.slide-lesson-tabs button { flex: 0 0 auto; padding: 7px 12px; border: 1px solid var(--border); border-radius: 5px; background: var(--surface); color: var(--ink-muted); font-size: 12px; }
+.slide-lesson-tabs button:hover { border-color: var(--purple-border); color: var(--purple-dark); }
+.slide-lesson-tabs button.is-current { border-color: var(--purple-border); background: var(--purple-light); color: var(--purple-dark); font-weight: 650; }
 .slide-stage { width: min(100%, 1200px); margin: 0 auto; }
 .slide-canvas {
   /* Slides 是独立的投影文稿画布，不随站点外壳反色。 */
@@ -60,6 +64,35 @@
 .slide-question { display: grid; place-items: center; }
 .slide-question .slide-title-block { width: 100%; min-height: 62%; }
 .slide-question .slide-title-block h1 { font-size: clamp(32px, 4.25cqw, 66px); }
+.slide-agenda { display: flex; flex-direction: column; }
+.slide-agenda .slide-heading h1 { font-size: clamp(32px, 3.9cqw, 64px); }
+.slide-agenda-body { display: grid; flex: 1; min-height: 0; }
+.slide-agenda-body ol {
+  display: flex;
+  width: 82%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin: 0;
+  padding: .8cqw 0 1.8cqw;
+  list-style: none;
+  counter-reset: slide-agenda;
+}
+.slide-agenda-body li {
+  counter-increment: slide-agenda;
+  display: grid;
+  grid-template-columns: 5.3cqw minmax(0, 1fr);
+  align-items: baseline;
+  color: #49345f;
+  font-size: clamp(30px, 3cqw, 50px);
+  line-height: 1.25;
+}
+.slide-agenda-body li::before {
+  content: counter(slide-agenda, decimal-leading-zero);
+  color: var(--purple);
+  font: 600 clamp(15px, 1.35cqw, 23px)/1 Baskerville, Georgia, serif;
+  letter-spacing: .06em;
+}
 .slide-section header span { color: var(--purple); font: 600 clamp(13px, 1.05cqw, 18px)/1 Baskerville, Georgia, serif; letter-spacing: .17em; }
 .slide-section header h1 { margin: .8cqw 0 3cqw; color: var(--purple-dark); font-size: clamp(32px, 3.8cqw, 64px); }
 .slide-section ol { display: grid; gap: 1.05cqw; margin: 0; padding: 0; list-style: none; }
@@ -113,17 +146,28 @@
   padding: 0;
   background: var(--backdrop);
 }
+.slides-reader:fullscreen:has(.slide-lesson-tabs) { grid-template-rows: auto minmax(0, 1fr) auto; }
+.slides-reader:fullscreen .slide-lesson-tabs {
+  box-sizing: border-box;
+  width: min(100%, calc((100vh - 106px) * 16 / 9));
+  margin: 0 auto;
+  padding: 8px 18px 0;
+}
+.slides-reader:fullscreen .slide-lesson-tabs button { border-color: #6f5c7d; background: #241b2b; color: #c8bdcf; }
+.slides-reader:fullscreen .slide-lesson-tabs button.is-current { border-color: #ad8ad5; background: #4a2e68; color: #fff; }
 .slides-reader:fullscreen .slide-stage {
   align-self: center;
   width: min(100vw, calc((100vh - 58px) * 16 / 9));
   max-width: none;
 }
+.slides-reader:fullscreen:has(.slide-lesson-tabs) .slide-stage { width: min(100vw, calc((100vh - 106px) * 16 / 9)); }
 .slides-reader:fullscreen .slide-canvas { border: 0; border-radius: 0; box-shadow: none; }
 .slides-reader:fullscreen .slide-controls {
   width: min(100%, calc((100vh - 58px) * 16 / 9));
   margin: 0 auto;
   padding: 8px 18px 10px;
 }
+.slides-reader:fullscreen:has(.slide-lesson-tabs) .slide-controls { width: min(100%, calc((100vh - 106px) * 16 / 9)); }
 .slides-reader:fullscreen .slide-controls button { border-color: #6f5c7d; background: #241b2b; color: #fff; }
 .slides-reader:fullscreen .slide-controls button:disabled { color: #9d92a4; }
 .slides-reader:fullscreen .slide-progress { color: #c8bdcf; }
