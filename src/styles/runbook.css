@@ -74,8 +74,8 @@
 .notes-content ul, .notes-content ol { padding-left: 1.45em; margin: 8px 0 14px; }
 .notes-content li { padding-left: 3px; margin: 4px 0; }
 .notes-content li::marker { color: var(--purple); }
-.segment-notes .notes-content > p.notes-emphasis { margin: 15px 0; }
-.segment-notes .notes-content > p.notes-emphasis > em { display: inline-block; max-width: calc(100% - 24px); padding: 8px 12px; border-radius: 5px; background: color-mix(in srgb, var(--purple) 24%, var(--surface)); color: var(--purple-dark); font-style: normal; font-weight: 550; line-height: 1.75; }
+.notes-content > p.notes-emphasis { margin: 14px 0; padding: 7px 10px; border: 1px solid var(--purple-border); border-left: 3px solid var(--purple); border-radius: 5px; background: var(--purple-light); color: var(--purple-dark); font-size: 12px; line-height: 1.45; }
+.notes-content > p.notes-emphasis > em { font-style: normal; font-weight: 550; overflow-wrap: anywhere; }
 .notes-content blockquote { margin: 14px 0; padding: 8px 14px; background: var(--purple-light); border-left: 2px solid var(--purple); color: var(--purple-dark); }
 .notes-content blockquote p { margin: 0; }
 .notes-content code { background: var(--surface-muted); border-radius: 3px; padding: .12em .3em; font-size: .88em; }
