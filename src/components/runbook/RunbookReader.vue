@@ -35,7 +35,7 @@ const sectionUnit = computed(() => (
 ))
 const openSegments = ref(new Set())
 const roadmapExpanded = ref(true)
-const topicNavigationOpen = ref(false)
+const topicNavigationOpen = ref(true)
 const readerElement = ref(null)
 const activeSectionId = ref('')
 const activeSegmentId = ref('')
@@ -186,7 +186,6 @@ function goToSection(id) {
     visibleSegmentIds.value = [firstSegment.id]
   }
   scrollToElement(section?.querySelector('.period-header') ?? section)
-  topicNavigationOpen.value = false
 }
 
 function goToSegment(id) {
@@ -195,7 +194,6 @@ function goToSegment(id) {
   activeSegmentId.value = id
   visibleSegmentIds.value = [id]
   scrollToElement(triggers.get(id))
-  topicNavigationOpen.value = false
 }
 
 async function goToOutline(segmentId, outlineId) {
@@ -205,7 +203,6 @@ async function goToOutline(segmentId, outlineId) {
   }
   await nextTick()
   scrollToElement(readerElement.value?.querySelector(`[id="${outlineId}"]`))
-  topicNavigationOpen.value = false
   scheduleNavigationUpdate()
 }
 
@@ -219,7 +216,6 @@ async function toggleSegmentFromNavigation(id) {
   await nextTick()
   scrollToElement(triggers.get(id))
   activeSegmentId.value = id
-  topicNavigationOpen.value = false
   scheduleNavigationUpdate()
 }
 
@@ -287,7 +283,7 @@ watch([() => props.source, () => props.file], async () => {
   activeSectionId.value = ''
   activeSegmentId.value = ''
   visibleSegmentIds.value = []
-  topicNavigationOpen.value = false
+  topicNavigationOpen.value = true
   await nextTick()
   scheduleNavigationUpdate()
 })
