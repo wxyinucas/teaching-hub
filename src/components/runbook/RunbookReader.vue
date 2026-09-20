@@ -19,13 +19,23 @@ const variantClass = computed(() => {
   const name = props.variant.trim().replace(/[^a-zA-Z0-9_-]+/g, '-')
   return name ? `runbook-reader--${name}` : ''
 })
-const usesPeriodCards = computed(() => props.variant === 'calculus-topic')
+const isCalculusTopic = computed(() => props.variant === 'calculus-topic')
+const usesLessonCards = computed(() => props.variant === 'lesson-cards')
+const usesPeriodCards = computed(() => isCalculusTopic.value || usesLessonCards.value)
+const routeTitle = computed(() => {
+  if (isCalculusTopic.value) return '专题路线'
+  if (usesLessonCards.value) return '本次课路线'
+  return '课堂路线'
+})
+const roadmapTitle = computed(() => (usesLessonCards.value ? '知识地图' : 'Road map'))
+const navigationLabel = computed(() => (usesLessonCards.value ? '本周台本导航' : '专题台本导航'))
 const segmentUnit = computed(() => (usesPeriodCards.value ? '个课时卡片' : '个教学动作段'))
 const sectionUnit = computed(() => (
   runbook.value?.sections.every((section) => /次课$/.test(section.label)) ? '次课' : '个教学区段'
 ))
 const openSegments = ref(new Set())
 const roadmapExpanded = ref(true)
+const topicNavigationOpen = ref(false)
 const readerElement = ref(null)
 const activeSectionId = ref('')
 const activeSegmentId = ref('')
@@ -49,6 +59,9 @@ const navigationSegments = computed(() => {
   const ids = visibleSegmentIds.value.length ? visibleSegmentIds.value : [activeSegmentId.value || fallback]
   return ids.map((id) => entries.find((entry) => entry.segment.id === id)).filter(Boolean)
 })
+const lessonCardEntries = computed(() => (
+  runbook.value?.sections.flatMap((section) => section.segments.map((segment) => ({ section, segment }))) ?? []
+))
 
 function durationLabel(section) {
   return section.duration > 50 && section.duration % 50 === 0
@@ -160,6 +173,10 @@ function scrollToElement(element) {
   element?.scrollIntoView?.({ behavior: 'auto', block: 'start' })
 }
 
+function toggleTopicNavigation() {
+  topicNavigationOpen.value = !topicNavigationOpen.value
+}
+
 function goToSection(id) {
   const section = sectionElements.get(id)
   const firstSegment = runbook.value?.sections.find((item) => item.id === id)?.segments[0]
@@ -169,6 +186,7 @@ function goToSection(id) {
     visibleSegmentIds.value = [firstSegment.id]
   }
   scrollToElement(section?.querySelector('.period-header') ?? section)
+  topicNavigationOpen.value = false
 }
 
 function goToSegment(id) {
@@ -177,6 +195,7 @@ function goToSegment(id) {
   activeSegmentId.value = id
   visibleSegmentIds.value = [id]
   scrollToElement(triggers.get(id))
+  topicNavigationOpen.value = false
 }
 
 async function goToOutline(segmentId, outlineId) {
@@ -186,6 +205,7 @@ async function goToOutline(segmentId, outlineId) {
   }
   await nextTick()
   scrollToElement(readerElement.value?.querySelector(`[id="${outlineId}"]`))
+  topicNavigationOpen.value = false
   scheduleNavigationUpdate()
 }
 
@@ -199,6 +219,7 @@ async function toggleSegmentFromNavigation(id) {
   await nextTick()
   scrollToElement(triggers.get(id))
   activeSegmentId.value = id
+  topicNavigationOpen.value = false
   scheduleNavigationUpdate()
 }
 
@@ -266,6 +287,7 @@ watch([() => props.source, () => props.file], async () => {
   activeSectionId.value = ''
   activeSegmentId.value = ''
   visibleSegmentIds.value = []
+  topicNavigationOpen.value = false
   await nextTick()
   scheduleNavigationUpdate()
 })
@@ -298,11 +320,11 @@ watchEffect(() => {
 
     <section v-if="usesPeriodCards && runbook.roadmap" class="topic-roadmap" :class="{ 'is-collapsed': !roadmapExpanded }" aria-labelledby="topic-roadmap-title">
       <div class="topic-roadmap-header">
-        <h2 id="topic-roadmap-title">Road map<span v-if="runbook.roadmap.title"> · {{ runbook.roadmap.title }}</span></h2>
+        <h2 id="topic-roadmap-title">{{ roadmapTitle }}<span v-if="runbook.roadmap.title"> · {{ runbook.roadmap.title }}</span></h2>
         <button
           type="button"
           class="topic-roadmap-toggle"
-          :aria-label="`${roadmapExpanded ? '收起' : '展开'} Road map`"
+          :aria-label="`${roadmapExpanded ? '收起' : '展开'}${usesLessonCards ? '知识地图' : ' Road map'}`"
           :aria-expanded="roadmapExpanded"
           aria-controls="topic-roadmap-content"
           @click="toggleRoadmap"
@@ -316,7 +338,7 @@ watchEffect(() => {
     <div class="workspace">
       <section id="lesson-route" class="route" aria-labelledby="route-title">
         <div class="route-toolbar">
-          <h2 id="route-title">{{ usesPeriodCards ? '专题路线' : '课堂路线' }} <span>{{ runbook.segmentCount }} {{ segmentUnit }}</span></h2>
+          <h2 id="route-title">{{ routeTitle }} <span>{{ runbook.segmentCount }} {{ segmentUnit }}</span></h2>
           <button class="collapse-all" :disabled="openSegments.size === 0" @click="collapseAll">全部收起 <span aria-hidden="true">↑</span></button>
         </div>
 
@@ -370,8 +392,40 @@ watchEffect(() => {
         </section>
       </section>
 
-      <aside v-if="usesPeriodCards" class="side-notes topic-side-nav" aria-label="专题台本导航">
-        <nav class="topic-lesson-index" aria-label="课次索引">
+      <aside v-if="!usesPeriodCards" class="side-notes" aria-labelledby="controls-title">
+        <h2 id="controls-title">临场取舍</h2>
+        <dl class="controls">
+          <div v-for="(control, index) in runbook.controls" :key="control.label" class="control">
+            <dt><span class="control-index" aria-hidden="true">0{{ index + 1 }}</span>{{ control.label }}</dt>
+            <dd>{{ control.text }}</dd>
+          </div>
+        </dl>
+        <div class="usage-note"><span aria-hidden="true">＋</span><p>先看完整备课单位的路线。<br />需要时，点开{{ usesPeriodCards ? '一个课时' : '一段' }}查细节。</p></div>
+        <p class="machine-note">台本用于教师备课与临场决策。<br />Slides 与其他材料是否展示，按课程约定执行。</p>
+      </aside>
+    </div>
+
+    <div
+      v-if="usesPeriodCards"
+      class="topic-floating-nav"
+      :class="{ 'is-open': topicNavigationOpen }"
+      @keydown.esc.stop="topicNavigationOpen = false"
+    >
+      <button
+        type="button"
+        class="topic-floating-nav-toggle"
+        aria-controls="topic-floating-nav-panel"
+        :aria-expanded="topicNavigationOpen"
+        @click="toggleTopicNavigation"
+      >{{ topicNavigationOpen ? '关闭目录' : '目录' }} <span aria-hidden="true">{{ topicNavigationOpen ? '×' : '☰' }}</span></button>
+
+      <aside
+        id="topic-floating-nav-panel"
+        v-show="topicNavigationOpen"
+        class="side-notes topic-side-nav"
+        :aria-label="navigationLabel"
+      >
+        <nav v-if="isCalculusTopic" class="topic-lesson-index" aria-label="课次索引">
           <span>课次</span>
           <div>
             <button
@@ -382,6 +436,21 @@ watchEffect(() => {
               :aria-current="section.id === currentSectionId ? 'location' : undefined"
               @click="goToSection(section.id)"
             >{{ section.label }}</button>
+          </div>
+        </nav>
+
+        <nav v-else class="topic-lesson-index" aria-label="课时索引">
+          <span>课时</span>
+          <div>
+            <button
+              v-for="entry in lessonCardEntries"
+              :key="entry.segment.id"
+              type="button"
+              :class="{ 'is-current': entry.segment.id === activeSegmentId }"
+              :aria-current="entry.segment.id === activeSegmentId ? 'location' : undefined"
+              :aria-label="`第 ${entry.segment.periodNumber} 课时，${entry.segment.time} 分钟`"
+              @click="goToSegment(entry.segment.id)"
+            >第 {{ entry.segment.periodNumber }} 课时</button>
           </div>
         </nav>
 
@@ -400,13 +469,13 @@ watchEffect(() => {
                 :aria-current="entry.segment.id === activeSegmentId ? 'location' : undefined"
                 @click="goToSegment(entry.segment.id)"
               >
-                <span>{{ entry.section.label }} · {{ entry.segment.time }}</span>
+                <span>{{ isCalculusTopic ? entry.section.label : `第 ${entry.segment.periodNumber} 课时` }} · {{ entry.segment.time }}</span>
                 <strong :id="`${entry.segment.id}-toc-title`">{{ entry.segment.title }}</strong>
               </button>
               <button
                 type="button"
                 class="topic-segment-toggle"
-                :aria-label="`${openSegments.has(entry.segment.id) ? '收起' : '展开'}左侧${entry.section.label}的${entry.segment.time}`"
+                :aria-label="`${openSegments.has(entry.segment.id) ? '收起' : '展开'}左侧${isCalculusTopic ? entry.section.label : `第 ${entry.segment.periodNumber} 课时`}的${entry.segment.time}`"
                 :aria-expanded="openSegments.has(entry.segment.id)"
                 :aria-controls="`${entry.segment.id}-notes`"
                 @click="toggleSegmentFromNavigation(entry.segment.id)"
@@ -419,18 +488,6 @@ watchEffect(() => {
             </ul>
           </section>
         </nav>
-      </aside>
-
-      <aside v-else class="side-notes" aria-labelledby="controls-title">
-        <h2 id="controls-title">临场取舍</h2>
-        <dl class="controls">
-          <div v-for="(control, index) in runbook.controls" :key="control.label" class="control">
-            <dt><span class="control-index" aria-hidden="true">0{{ index + 1 }}</span>{{ control.label }}</dt>
-            <dd>{{ control.text }}</dd>
-          </div>
-        </dl>
-        <div class="usage-note"><span aria-hidden="true">＋</span><p>先看完整备课单位的路线。<br />需要时，点开{{ usesPeriodCards ? '一个课时' : '一段' }}查细节。</p></div>
-        <p class="machine-note">台本用于教师备课与临场决策。<br />Slides 与其他材料是否展示，按课程约定执行。</p>
       </aside>
     </div>
     <footer v-if="!usesPeriodCards" class="page-footer"><span>总览里做取舍，展开后查细节。</span><span>{{ runbook.code }} · 内容与版式分开维护</span></footer>

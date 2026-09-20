@@ -8,7 +8,11 @@ import { createTeachingRouter } from '../src/router.js'
 
 const bundle = catalog.terms.flatMap((term) => term.courses.flatMap((course) => (
   course.weeks.map((week) => ({ term, course, week }))
-))).find(({ week }) => ['runbook', 'slides', 'guide'].every((kind) => week.resources[kind]))
+))).find(({ course, week }) => (
+  course.id === 'ai-agents'
+  && week.id === 'week-01'
+  && ['runbook', 'slides', 'guide'].every((kind) => week.resources[kind])
+))
 
 if (!bundle) throw new Error('路由测试至少需要一个同时登记台本、Slides 与学生指南的教学周。')
 
@@ -75,7 +79,9 @@ afterEach(() => {
 })
 
 describe('teaching hub navigation', () => {
-  it('navigates from the homepage through every resource type in one declared week', async () => {
+  it('navigates through AI W1 resources and applies its unit-level lesson-card layout', async () => {
+    expect(course.runbookLayout).toBeUndefined()
+    expect(week.runbookLayout).toBe('lesson-cards')
     await openPage('/')
     expect(document.title).toBe('Teaching Hub · 课程目录')
     expect(wrapper.find('.site-note').text()).toBe('2026 秋 · 课程准备')
@@ -94,7 +100,8 @@ describe('teaching hub navigation', () => {
     await runbookLink.trigger('click')
     await settle()
     expect(wrapper.find('.runbook-reader').exists()).toBe(true)
-    expect(wrapper.find('.runbook-reader').classes()).toEqual(['runbook-reader'])
+    expect(wrapper.find('.runbook-reader--lesson-cards').exists()).toBe(true)
+    expect(wrapper.find('.route-toolbar h2').text()).toContain('本次课路线')
 
     await wrapper.findAll('.resource-tabs a')[1].trigger('click')
     await settle()
@@ -159,6 +166,8 @@ describe('teaching hub navigation', () => {
     await settle()
     expect(router.currentRoute.value.path).toBe(`${itemTopicPath}/runbook`)
     expect(wrapper.find('.runbook-reader--calculus-topic').exists()).toBe(true)
+    expect(wrapper.find('.runbook-reader--lesson-cards').exists()).toBe(false)
+    expect(wrapper.find('.route-toolbar h2').text()).toContain('专题路线')
     expect(wrapper.find('.resource-tabs').attributes('aria-label')).toBe('本专题材料')
   })
 

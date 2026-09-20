@@ -71,7 +71,7 @@ watch(sourcePath, async (path, _previous, onCleanup) => {
       v-else-if="source !== null"
       :source="source"
       :file="sourcePath"
-      :variant="context.course.runbookLayout ?? ''"
+      :variant="unit.runbookLayout ?? context.course.runbookLayout ?? ''"
     />
   </div>
   <NotFoundView v-else />

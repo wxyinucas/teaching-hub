@@ -172,7 +172,7 @@ describe('runbook disclosure', () => {
     })
 
     expect(wrapper.find('.runbook-reader--calculus-topic').exists()).toBe(true)
-    expect(wrapper.find('.route-toolbar').text()).toContain('3 个课时卡片')
+    expect(wrapper.find('.route-toolbar h2').text()).toBe('专题路线 3 个课时卡片')
     expect(wrapper.find('.lesson-meta').text()).toBe('高数测试')
     expect(wrapper.findAll('.topic-lesson-index button')).toHaveLength(2)
     expect(wrapper.findAll('.topic-segment-toc')).toHaveLength(1)
@@ -186,6 +186,48 @@ describe('runbook disclosure', () => {
       '比较两种定义',
     ])
     expect(wrapper.find('.notes-content h4').attributes('id')).toBe('segment-1-detail-1')
+  })
+
+  it('renders the lesson-cards layout as one knowledge map and three period cards', () => {
+    const source = [
+      '# W1｜预备课',
+      '> 三节连上',
+      '## 知识地图',
+      '- **Road map：为后续课程打开入口**',
+      '  - 认识新的合作关系',
+      '  - 搭起本地工作台',
+      '## 本次课 · 从人的责任到可接续的工作台',
+      '### 0-50 | 第一课时',
+      '> 看见 Agent 的行动能力。',
+      '#### 看见 Agent 在执行工作',
+      '### 50-100 | 第二课时',
+      '> 把 WSL 变成可核验状态。',
+      '#### 课前检查',
+      '### 100-150 | 第三课时',
+      '> 让三个入口指向同一目录。',
+      '#### 本次课回顾',
+      '## 临场取舍',
+      '- 默认：沿主线推进。',
+    ].join('\n')
+    wrapper = mount(RunbookReader, {
+      props: { source, file: 'week-01/runbook.md', variant: 'lesson-cards' },
+    })
+
+    expect(wrapper.find('.runbook-reader--lesson-cards').exists()).toBe(true)
+    expect(wrapper.find('.topic-roadmap h2').text()).toBe('知识地图 · 为后续课程打开入口')
+    expect(wrapper.find('.route-toolbar h2').text()).toBe('本次课路线 3 个课时卡片')
+    expect(wrapper.findAll('.period-boundary')).toHaveLength(2)
+    expect(wrapper.find('.topic-side-nav').attributes('aria-label')).toBe('本周台本导航')
+    expect(wrapper.find('.topic-lesson-index').attributes('aria-label')).toBe('课时索引')
+    expect(wrapper.findAll('.topic-lesson-index button')).toHaveLength(3)
+    expect(wrapper.findAll('.topic-lesson-index button').map((button) => button.text())).toEqual([
+      '第 1 课时', '第 2 课时', '第 3 课时',
+    ])
+    expect(wrapper.find('.anchors').exists()).toBe(false)
+    expect(wrapper.find('[aria-labelledby="controls-title"]').exists()).toBe(false)
+    expect(wrapper.findAll('.notes-content h4').map((heading) => heading.text())).toEqual([
+      '看见 Agent 在执行工作', '课前检查', '本次课回顾',
+    ])
   })
 
   it('renders a topic roadmap as nested bullets with mathematics', () => {
@@ -280,6 +322,13 @@ describe('runbook disclosure', () => {
     expect(triggers[0].attributes('aria-expanded')).toBe('true')
     expect(triggers[1].attributes('aria-expanded')).toBe('true')
 
+    const navigationToggle = wrapper.find('.topic-floating-nav-toggle')
+    expect(navigationToggle.attributes('aria-expanded')).toBe('false')
+    expect(wrapper.find('.topic-side-nav').attributes('style')).toContain('display: none')
+    await navigationToggle.trigger('click')
+    expect(navigationToggle.attributes('aria-expanded')).toBe('true')
+    expect(wrapper.find('.topic-side-nav').attributes('style') ?? '').not.toContain('display: none')
+
     const remoteToggle = wrapper.find('.topic-segment-toggle')
     expect(remoteToggle.text()).toBe('收起左侧')
     await remoteToggle.trigger('click')
@@ -287,15 +336,20 @@ describe('runbook disclosure', () => {
     expect(triggers[1].attributes('aria-expanded')).toBe('true')
     expect(remoteToggle.text()).toBe('展开左侧')
     expect(scrollIntoView).toHaveBeenCalled()
+    expect(wrapper.find('.topic-side-nav').attributes('style')).toContain('display: none')
 
+    await navigationToggle.trigger('click')
     await wrapper.find('.topic-outline button').trigger('click')
     await flushPromises()
     expect(triggers[0].attributes('aria-expanded')).toBe('true')
     expect(scrollIntoView).toHaveBeenLastCalledWith({ behavior: 'auto', block: 'start' })
+    expect(wrapper.find('.topic-side-nav').attributes('style')).toContain('display: none')
 
+    await navigationToggle.trigger('click')
     await wrapper.findAll('.topic-lesson-index button')[1].trigger('click')
     expect(wrapper.findAll('.topic-lesson-index button')[1].attributes('aria-current')).toBe('location')
     expect(triggers[1].attributes('aria-expanded')).toBe('true')
+    expect(wrapper.find('.topic-side-nav').attributes('style')).toContain('display: none')
   })
 
   it('keeps the original overview and controls outside the calculus layout', () => {

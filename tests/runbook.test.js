@@ -88,6 +88,47 @@ describe('Markdown runbook parser', () => {
     })
   })
 
+  it('parses a lesson-card knowledge map and three continuous 50-minute periods', () => {
+    const runbook = parseRunbook([
+      '# W1｜预备课',
+      '## 知识地图',
+      '- **Road map：进入后续课程**',
+      '  - 认识新的合作关系',
+      '  - 搭起本地工作台',
+      '## 本次课 · 从人的责任到可接续的工作台',
+      '### 0-50 | 第一课时',
+      '> 看见 Agent 的行动能力。',
+      '#### 看见 Agent 在执行工作',
+      '### 50-100 | 第二课时',
+      '> 把 WSL 变成可核验状态。',
+      '#### 课前检查',
+      '### 100-150 | 第三课时',
+      '> 让三个入口指向同一目录。',
+      '#### 目标',
+      '#### 本次课回顾',
+    ].join('\n'))
+
+    expect(runbook.overview).toEqual([])
+    expect(runbook.roadmap).toEqual({
+      title: '进入后续课程',
+      source: '- 认识新的合作关系\n- 搭起本地工作台',
+    })
+    expect(runbook.sections).toHaveLength(1)
+    expect(runbook.sections[0].segments.map(({ start, end }) => [start, end])).toEqual([
+      [0, 50],
+      [50, 100],
+      [100, 150],
+    ])
+    expect(runbook.sections[0].segments.map((segment) => segment.periodBoundaryBefore)).toEqual([
+      false, true, true,
+    ])
+    expect(runbook.sections[0].segments[2].outline).toEqual([
+      { id: 'segment-3-detail-1', text: '目标' },
+      { id: 'segment-3-detail-2', text: '本次课回顾' },
+    ])
+    expect(runbook.duration).toBe(150)
+  })
+
   it('ignores detail headings and headings inside code fences', () => {
     const source = [
       '# 台本',

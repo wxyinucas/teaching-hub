@@ -112,7 +112,7 @@ export function parseRunbook(source) {
 
   lessonHeadings.forEach((heading, index) => {
     const end = lessonHeadings[index + 1]?.start ?? lines.length
-    if (['本次课', '本周', '本专题', '专题概览'].includes(heading.text)) {
+    if (['本次课', '本周', '本专题', '专题概览', '知识地图'].includes(heading.text)) {
       const summary = readOverview(lines.slice(heading.end, end))
       overview = summary.anchors
       roadmap = summary.roadmap
