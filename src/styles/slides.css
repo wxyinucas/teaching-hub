@@ -125,6 +125,36 @@
 .prompt-copy p { margin: 0 0 1.05cqw; }
 .prompt-copy p:last-child { margin-bottom: 0; }
 .copy-feedback { position: absolute; right: 5.2cqw; bottom: 2.3cqw; margin: 0; color: var(--purple); font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; font-size: clamp(12px, .9cqw, 16px); }
+
+/* W1 在教室投影上使用更大的字阶；每个显式字号均比默认值增加 2px。 */
+.slides-reader--projector-large .slide-canvas { font-size: clamp(18px, calc(1.65cqw + 2px), 32px); }
+.slides-reader--projector-large .slide-canvas code { font-size: calc(.88em + 2px); }
+.slides-reader--projector-large .slide-heading h1 { font-size: clamp(28px, calc(3.35cqw + 2px), 58px); }
+.slides-reader--projector-large .slide-content-body { font-size: clamp(24px, calc(2.05cqw + 2px), 38px); }
+.slides-reader--projector-large .slide-content-body table { font-size: clamp(26px, calc(2.25cqw + 2px), 42px); }
+.slides-reader--projector-large .slide-overline { font-size: clamp(15px, calc(1.05cqw + 2px), 20px); }
+.slides-reader--projector-large .slide-title-block h1 { font-size: clamp(34px, calc(4.45cqw + 2px), 70px); }
+.slides-reader--projector-large .slide-title-block p { font-size: clamp(24px, calc(2.15cqw + 2px), 40px); }
+.slides-reader--projector-large .slide-cover-meta { font-size: clamp(18px, calc(1.35cqw + 2px), 26px); }
+.slides-reader--projector-large .slide-question .slide-title-block h1 { font-size: clamp(34px, calc(4.25cqw + 2px), 68px); }
+.slides-reader--projector-large .slide-agenda .slide-heading h1 { font-size: clamp(34px, calc(3.9cqw + 2px), 66px); }
+.slides-reader--projector-large .slide-agenda-body li { font-size: clamp(32px, calc(3cqw + 2px), 52px); }
+.slides-reader--projector-large .slide-agenda-body li::before { font-size: clamp(17px, calc(1.35cqw + 2px), 25px); }
+.slides-reader--projector-large .slide-section header span { font-size: clamp(15px, calc(1.05cqw + 2px), 20px); }
+.slides-reader--projector-large .slide-section header h1 { font-size: clamp(34px, calc(3.8cqw + 2px), 66px); }
+.slides-reader--projector-large .slide-section li span { font-size: clamp(17px, calc(1.3cqw + 2px), 24px); }
+.slides-reader--projector-large .slide-section li strong { font-size: clamp(23px, calc(1.9cqw + 2px), 34px); }
+.slides-reader--projector-large .slide-lead { font-size: clamp(20px, calc(1.6cqw + 2px), 29px); }
+.slides-reader--projector-large .slide-column h2 { font-size: clamp(26px, calc(2.35cqw + 2px), 44px); }
+.slides-reader--projector-large .slide-tag { font-size: clamp(16px, calc(1.05cqw + 2px), 20px); }
+.slides-reader--projector-large .slide-column > div { font-size: clamp(22px, calc(1.72cqw + 2px), 32px); }
+.slides-reader--projector-large .slide-footer { font-size: clamp(20px, calc(1.5cqw + 2px), 28px); }
+.slides-reader--projector-large .prompt-heading > div > span { font-size: clamp(14px, calc(.95cqw + 2px), 18px); }
+.slides-reader--projector-large .prompt-heading h1 { font-size: clamp(29px, calc(2.8cqw + 2px), 50px); }
+.slides-reader--projector-large .prompt-heading button { font-size: clamp(15px, calc(1cqw + 2px), 19px); }
+.slides-reader--projector-large .prompt-copy { font-size: clamp(18px, calc(1.25cqw + 2px), 25px); }
+.slides-reader--projector-large .copy-feedback { font-size: clamp(14px, calc(.9cqw + 2px), 18px); }
+
 .slide-controls { display: grid; grid-template-columns: 1fr auto auto 1fr; align-items: center; gap: 14px; margin: 16px auto 0; width: min(100%, 1200px); }
 .slide-controls button { justify-self: start; padding: 8px 13px; border: 1px solid var(--border); border-radius: 5px; background: var(--surface); color: var(--purple-dark); font-size: 12px; }
 .slide-controls .slide-previous { grid-column: 1; }

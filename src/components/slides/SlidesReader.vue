@@ -6,6 +6,7 @@ const props = defineProps({
   page: { type: Number, required: true },
   lessons: { type: Array, default: () => [] },
   currentLessonIndex: { type: Number, default: -1 },
+  variant: { type: String, default: '' },
 })
 const emit = defineEmits(['change', 'lesson-change'])
 const feedback = ref('')
@@ -80,7 +81,12 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section ref="reader" class="slides-reader" aria-label="静态课堂课件">
+  <section
+    ref="reader"
+    class="slides-reader"
+    :class="variant ? `slides-reader--${variant}` : undefined"
+    aria-label="静态课堂课件"
+  >
     <nav v-if="lessons.length" class="slide-lesson-tabs" aria-label="课次课件">
       <button
         v-for="(lesson, index) in lessons"

@@ -107,6 +107,7 @@ describe('teaching hub navigation', () => {
     await settle()
     expect(router.currentRoute.value.path).toBe(`${weekPath}/slides/1`)
     expect(wrapper.find('.slides-reader').exists()).toBe(true)
+    expect(wrapper.find('.slides-reader--projector-large').exists()).toBe(true)
 
     await wrapper.find('.resource-tabs a:last-child').trigger('click')
     await settle()
@@ -131,6 +132,7 @@ describe('teaching hub navigation', () => {
     const { term: itemTerm, course: itemCourse, topic } = mergedLimitExamBundle
     const path = `/terms/${itemTerm.id}/courses/${itemCourse.id}/topics/${topic.id}/slides`
     await openPage(`${path}/1`)
+    expect(wrapper.find('.slides-reader--projector-large').exists()).toBe(false)
     expect(wrapper.findAll('.slide-lesson-tabs button').map((button) => button.text()))
       .toEqual(['第一次课', '第二次课'])
     expect(wrapper.find('.slide-progress').text()).toContain('1 / 7')

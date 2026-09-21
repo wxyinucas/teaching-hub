@@ -126,6 +126,7 @@ watchEffect(() => {
       :page="visiblePage"
       :lessons="deck.lessons"
       :current-lesson-index="currentLessonIndex"
+      :variant="unit.slidesVariant"
       @change="routeToVisiblePage"
       @lesson-change="routeToLesson"
     />

@@ -1,6 +1,7 @@
 {
   "id": "week-01",
   "runbookLayout": "lesson-cards",
+  "slidesVariant": "projector-large",
   "label": "W1 · 新的职责",
   "title": "面对 AI Agent，我们应该做什么准备？",
   "summary": "从结果责任出发，搭起 WSL 与 VS Code 工作台，并留下可接续的状态。",
