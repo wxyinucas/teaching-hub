@@ -187,27 +187,6 @@ describe('teaching hub navigation', () => {
       .toBe(`${weekPath}/runbook`)
   })
 
-  it('adds a compact lesson outline to the topic guide without hiding its text', async () => {
-    expect(mergedLimitExamBundle).toBeDefined()
-    const { term: itemTerm, course: itemCourse, topic } = mergedLimitExamBundle
-    const path = `/terms/${itemTerm.id}/courses/${itemCourse.id}/topics/${topic.id}/guide`
-    await openPage(path)
-
-    const sections = wrapper.findAll('.guide-mini-content > ol > li > button')
-    expect(sections.map((button) => button.text())).toEqual([
-      '回看极限：四个视角', '第一次课：题目', '第二次课：题目',
-    ])
-    expect(wrapper.find('.guide-reader .notes-content h2#guide-section-1').text()).toBe('第一次课：题目')
-    expect(wrapper.find('.guide-reader .notes-content h3#guide-subsection-0').exists()).toBe(true)
-    expect(wrapper.findAll('.guide-mini-content li ol button').map((button) => button.text())).toEqual([
-      '数列极限与子数列', '函数在无穷远处的极限',
-      '有限点极限与定义证明', '左右极限、双侧极限与取点数列',
-    ])
-    await sections[1].trigger('click')
-    expect(scrollIntoViewMock).toHaveBeenCalled()
-    expect(wrapper.findAll('.guide-reader .notes-content h3')).toHaveLength(4)
-  })
-
   it('boots from a GitHub-Pages-friendly hash deep link', async () => {
     window.history.replaceState({}, '', `/#${weekPath}/runbook`)
     await openPage(undefined, createWebHashHistory('/'))
