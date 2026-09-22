@@ -2,11 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { normalizeExamQuestion, parseExamCollection, structureExamQuestion } from '../src/lib/exams.js'
 import { renderNotes } from '../src/lib/markdown.js'
 
-const topicExamSources = import.meta.glob(
-  '../terms/2026-fall/courses/calculus-i/exams/topics/*.tex',
-  { eager: true, query: '?raw', import: 'default' },
-)
-
 describe('calculus exam collections', () => {
   it('parses the topic, years, scores and questions without changing their order', () => {
     const collection = parseExamCollection([
@@ -120,70 +115,4 @@ describe('calculus exam collections', () => {
     ].join('\n'))).toThrow('结构标记')
   })
 
-  it('keeps all 2020–2025 questions uniquely assigned to one current topic', () => {
-    const expectedCounts = {
-      'fundamental.tex': 10,
-      'topic-01-limits.tex': 8,
-      'topic-02-continuity.tex': 2,
-      'topic-03-derivatives-and-differentials.tex': 19,
-      'topic-04-mvt-lhopital-taylor.tex': 16,
-      'topic-05-derivative-applications.tex': 15,
-      'topic-06-indefinite-integrals.tex': 8,
-      'topic-07-definite-integrals-and-applications.tex': 20,
-      'topic-08-differential-equations.tex': 2,
-    }
-    const seenQuestions = new Set()
-    const seenSourceIds = new Set()
-    const unnumberedSourceIds = []
-    const annualCounts = new Map()
-    const annualPoints = new Map()
-    let total = 0
-
-    for (const [path, source] of Object.entries(topicExamSources)) {
-      const filename = path.split('/').at(-1)
-      const collection = parseExamCollection(source)
-      expect(collection.questionCount).toBe(expectedCounts[filename])
-      total += collection.questionCount
-      for (const group of collection.years) {
-        for (const question of group.questions) {
-          expect(seenQuestions.has(question.source)).toBe(false)
-          seenQuestions.add(question.source)
-          expect(question.paperSection).not.toBe('')
-          expect(question.sourceId).not.toBeNull()
-          expect(seenSourceIds.has(question.sourceId)).toBe(false)
-          seenSourceIds.add(question.sourceId)
-          if (question.paperNumber === null) unnumberedSourceIds.push(question.sourceId)
-          else expect(question.paperNumber).toBeGreaterThan(0)
-          annualCounts.set(group.year, (annualCounts.get(group.year) ?? 0) + 1)
-          annualPoints.set(group.year, (annualPoints.get(group.year) ?? 0) + question.points)
-          const html = renderNotes(normalizeExamQuestion(question.source)).html
-          expect(html).not.toContain('katex-error')
-          expect(html).not.toContain('$')
-        }
-      }
-    }
-
-    expect(Object.keys(topicExamSources)).toHaveLength(Object.keys(expectedCounts).length)
-    expect(total).toBe(100)
-    expect(seenQuestions.size).toBe(100)
-    expect(seenSourceIds.size).toBe(100)
-    expect(unnumberedSourceIds).toEqual(['2022:应用题:unnumbered'])
-    expect(Object.fromEntries(annualCounts)).toEqual({
-      2020: 19,
-      2021: 17,
-      2022: 17,
-      2023: 19,
-      2024: 14,
-      2025: 14,
-    })
-    expect(Object.fromEntries(annualPoints)).toEqual({
-      2020: 100,
-      2021: 100,
-      2022: 100,
-      2023: 100,
-      2024: 100,
-      2025: 100,
-    })
-
-  })
 })

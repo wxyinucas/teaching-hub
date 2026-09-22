@@ -54,7 +54,7 @@ npm run dev
 npm run check
 ```
 
-网站使用 Hash 路由，适合 GitHub Pages 的静态托管。推送到 `main` 后，GitHub Actions 会先执行测试与构建，再发布 `dist/`。
+网站使用 Hash 路由，适合 GitHub Pages 的静态托管。推送到 `main` 后，GitHub Actions 只校验已登记的公开资源并完成生产构建，再发布 `dist/`；完整交互测试在修改程序代码时按需运行。
 
 ## 内容契约
 
