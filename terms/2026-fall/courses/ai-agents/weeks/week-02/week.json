@@ -1,8 +1,9 @@
 {
   "id": "week-02",
-  "label": "W2 · 正确地跑起来",
-  "title": "怎样让同学的一个改动出现在我的机器上？",
-  "summary": "在 fork 中留下公开签名；同伴只凭仓库 URL 恢复局部环境、运行测试，并观察签名是否随项目出现。",
+  "runbookLayout": "lesson-cards",
+  "label": "W2 · 位置、环境与版本",
+  "title": "项目究竟在哪里运行，改动又保存在哪里？",
+  "summary": "在 VS Code 的同一个项目中看清命令作用的位置、uv 管理的项目环境，以及 Git 本地状态与远端仓库的区别。",
   "order": 2,
   "resources": {
     "runbook": "runbook.md",

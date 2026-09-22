@@ -69,40 +69,36 @@ W1 的唯一实施依据是 [`weeks/week-01/`](../weeks/week-01/) 中的五文�
 
 ## 4. W2｜路径、Git、`uv` 与可复现运行
 
-> W2 是一个“不影响未来的本节课实验”：同学只在 fork 中改一项公开签名，我只凭对方的仓库 URL，在自己的机器恢复环境、运行程序并观察这项改动。它不构成 W3 的代码基础。分钟级实施以 [`weeks/week-02/runbook.md`](../weeks/week-02/runbook.md) 为唯一依据。
+> W2 在 VS Code 中持续使用同一个 `course-check`：先看清命令作用的位置，再恢复项目环境，最后用 Git 与 Source Control 观察并保存一项本地修改。它不构成 W3 的代码基础。分钟级实施以 [`weeks/week-02/runbook.md`](../weeks/week-02/runbook.md) 为唯一依据。
 
-### 课时 1：看懂项目为什么需要运行契约
+### 课时 1：命令作用在哪里
 
-- 区分全局工具、项目局部环境和环境变量的进程可见性；
-- 用 uv 与 conda 说明环境组织方式，不把二者简化成全局／局部；
-- 区分 local、remote 与 Git 版本记录；
-- 认识 `course-check 0.1.0`、`pyproject.toml`、`uv.lock`，并辨认 Python、项目版本和 Git 版本记录回答的是不同问题。
+- 统一使用 VS Code 的 WSL Bash 集成终端，分开工作台、终端界面、shell 与被调用程序；
+- 认识命令、子命令、选项和参数的常见结构；
+- 用 `pwd`、`ls`、`cd`、`cat` 与 `--help` 学习路径、补全和帮助；
+- 区分课程仓库根与 `course-check` 项目根。
 
-### 课时 2：在 fork 中制造一个可见变化
+### 课时 2：程序使用哪个环境
 
-- 教师完整示范 `clone → 定位 → sync → 运行 → 测试`，说明每一步在主链中的作用；
-- 学生在 GitHub 网页 fork 课程仓库；
-- 只把 `signature.toml` 中的 `teacher` 改为本人公开代号；
-- 两人只交换个人 fork 的 HTTPS URL，不交换 commit、答案或运行截图；
-- 预检 WSL、Git、uv 和空目标目录，为第三课时留出完整运行时间。
+- 区分机器或用户级工具、项目级运行条件和单次进程可见性；
+- 认识 `.python-version`、`pyproject.toml`、`uv.lock` 与 `.venv` 的职责；
+- 用 `uv sync --locked` 恢复项目环境，再用 `uv run` 运行程序与测试；
+- 区分用户级 uv 配置与项目级 uv 配置的收益和代价。
 
-### 课时 3：在自己的机器发现同学签名
+### 课时 3：改动怎样被记录
 
-- 两人分别在自己的机器新 clone 同学的 fork；
-- 进入 `warmups/week-02/course-check`，用 `uv sync --locked` 重新恢复 `.venv`；
-- 使用 `COURSE_MODE=fixture` 运行体检程序和给定测试；
-- 完成条件是程序与测试通过，并且输出显示同学代号而不是 `teacher`；
-- 最后只记录“我的机器是否通过、看到的同学代号、一项观察”。
+- 区分工作区、本地仓库与 remote；
+- 在 VS Code 中把 `signature.toml` 改为本人公开课程代号；
+- 对照 `git status`、`git diff` 与内置 Source Control 的 Changes、差异视图；
+- 只暂存这一项改动并形成一条本地 commit；本周不登录 GitHub、不 push。
 
 ### 本周边界与教师材料
 
-- 教师提供公开课程练习仓库、非 `teacher` 的示例 fork、干净 WSL 实测记录和已缓存 fallback；
-- W2 不修改 Python 逻辑、不要求本地 commit/push、不接平台和凭证；
-- 测试只检查程序是否按规则读取并展示签名；“是否看到了同学签名”由运行者判断，借此区分自动检查与人的结论；
-- 快组解释输出字段和测试边界，不提前进入 W3；
-- W2 课后开放 Longbridge paper 注册状态登记，但账号状态不构成成绩门槛。
-
-W2 课后开放 Longbridge paper 注册状态登记：只记录 `未选择 / 申请中 / READY / BLOCKED-REGION / BLOCKED-IDENTITY / BLOCKED-NET / 选择 REPLAY`，不收集账号、身份材料、截图或 token。它为 W4 分流服务，不构成成绩门槛。
+- 教师提供公开课程练习仓库、干净 WSL 实测记录、同步成功画面和 Source Control 操作 Plan B；
+- W2 不修改 Python 逻辑，不安装额外 Git 插件，不处理 GitHub 认证，不接平台或凭证；
+- 程序输出、pytest、diff 和 commit 各自只证明一部分事实，学生要能说明证据边界；
+- 快组完成独立挑战卡，不提前进入 W3；
+- W3 从新的正式仓库独立开始，不继承 W2 目录、环境或本地提交。
 
 ## 5. W3｜把自然语言契约变成可验证项目
 

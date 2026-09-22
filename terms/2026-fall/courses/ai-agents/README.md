@@ -3,7 +3,7 @@
 本课程不以系统教授统计理论为目标，而是用量化程序提供一个会产生外部反馈的练习场。学生可以让 Agent 完成实现，但必须能够提出规格、设计证据、判断证据，并为最终产物的安全、合规与适用边界负责。
 
 - `course-design/`：课程定位、16 周蓝图、学生证据契约与平台决策。
-- [课程练习仓库](https://github.com/wxyinucas/ai-agents)：独立发布可 fork 的课堂代码；W2 热身位于 `warmups/week-02/course-check/`，不作为后续项目基础。
+- [课程练习仓库](https://github.com/wxyinucas/ai-agents)：发布可独立取得的课堂代码；W2 在 `warmups/week-02/course-check/` 中练习路径、项目环境与本地 Git 状态，不作为后续项目基础。
 - [正式项目仓库](https://github.com/wxyinucas/ai-agents-project)：W3 从自然语言契约与公开测试起步。`course/` 保存教师任务，`common/` 保存公共能力，`students/sXX/system/` 是每名学生唯一持续演化的系统，`students/sXX/weeks/` 只追加周记录。
 - `weeks/`：按周冻结 `week.json`、`draft.md`、`runbook.md`、`slides.md` 与 `guide.md`；不再建立职责含混的 `resources/`。
 

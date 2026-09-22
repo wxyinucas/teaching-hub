@@ -1,241 +1,313 @@
 <!-- layout: cover -->
-# W2：项目环境与可复现运行
-> 理解运行条件，认识数值试验的可复现性
+# W2：位置、环境与版本
+> 在同一个 VS Code 工作台中，看清项目正在发生什么
 
 AI Agents · 王晓宇 · 中国海洋大学 · 2026 秋
 
 ---
-<!-- section: 第一课时：认识“项目”与“运行条件” -->
-
----
-<!-- layout: question -->
-# 屏幕上出现了结果，就算跑对了吗？
-> 同一条命令，在不同项目、目录和环境中，可能不是同一件事
-
----
-# 本周的小项目：`course-check 0.1.0`
-
-```text
-project: ai-agents-lab
-version: 0.1.0
-python: 3.12.x
-project-env: PASS
-course-mode: fixture
-signature: s07
-RUNTIME_CHECK=PASS
-```
-
-它报告当前事实；它不替人宣布一切正确。
+<!-- section: 第一课时：命令作用在哪里？ -->
 
 ---
 <!-- layout: columns -->
-# 六类文件，三种职责
+# 认识统一工作台
 
 <!-- column -->
-## 项目契约
+## VS Code
+**组织界面**
+
+Explorer · 编辑器 · Terminal
+
+<!-- column -->
+## WSL Bash
+**解释命令**
+
+路径 · 选项 · 参数
+
+<!-- column -->
+## 程序
+**执行工作**
+
+`git` · `uv` · `python`
+
+<!-- footer -->
+Integrated Terminal 是界面；Shell 决定命令怎样被解释。
+
+---
+# 取得项目，暂不展开 Git
+
+```bash
+mkdir -p ~/course
+git clone https://github.com/wxyinucas/ai-agents.git \
+  ~/course/w02-workbench
+cd ~/course/w02-workbench
+code .
+```
+
+<!-- footer -->
+先把 `clone` 当作取得材料的固定动作；第三课时再解释它。
+
+---
+# 命令有结构
+
+```bash
+ls -la warmups/week-02/course-check
+```
+
+```text
+ls        -la        warmups/week-02/course-check
+命令      选项        参数
+```
+
+<!-- footer -->
+常见形状：`command [subcommand] [options] [arguments]`
+
+---
+<!-- layout: columns -->
+# 路径决定作用对象
+
+<!-- column -->
+## `~`
+**用户 Home**
+
+从稳定起点出发
+
+<!-- column -->
+## `.`
+**当前目录**
+
+相对路径的起点
+
+<!-- column -->
+## `..`
+**上一级目录**
+
+沿目录树返回
+
+<!-- footer -->
+执行前先用 `pwd` 回答：我现在在哪里？
+
+---
+<!-- layout: columns -->
+# 两个根目录，不是一回事
+
+<!-- column -->
+## 仓库根
+**整个课程练习仓库**
+
+```text
+~/course/w02-workbench
+```
+
+<!-- column -->
+## 项目根
+**本周 Python 项目**
+
+```text
+warmups/week-02/course-check
+```
+
+<!-- footer -->
+打开了仓库，不等于终端已经进入项目目录。
+
+---
+<!-- section: 第二课时：程序使用哪个环境？ -->
+
+---
+<!-- layout: columns -->
+# 三种作用范围
+
+<!-- column -->
+## 机器／用户级
+**多个项目可调用**
+
+`git` · `uv` · `code`
+
+<!-- column -->
+## 项目级
+**属于当前项目**
+
+声明 · 锁文件 · `.venv`
+
+<!-- column -->
+## 单次进程级
+**只影响一次运行**
+
+`COURSE_MODE=fixture`
+
+---
+<!-- layout: columns -->
+# 项目用文件说明自己
+
+<!-- column -->
+## 声明
 **需要什么**
 
 `.python-version`
 
 `pyproject.toml`
 
+<!-- column -->
+## 锁定
+**这次采用什么**
+
 `uv.lock`
 
 <!-- column -->
-## 本节配置
-**传递什么**
+## 恢复
+**本机实际装出什么**
 
-`signature.toml`
-
-<!-- column -->
-## 运行与检查
-**实际是否满足**
-
-`course_check.py`
-
-`tests/`
+`.venv/`
 
 ---
-<!-- layout: columns -->
-# 同样是 TOML，承担不同工作
-
-<!-- column -->
-## `pyproject.toml`
-**定义整个项目**
-
-```toml
-[project]
-name = "ai-agents-lab"
-version = "0.1.0"
-```
-
-<!-- column -->
-## `signature.toml`
-**只保存本节签名**
-
-```toml
-[student]
-signature = "s07"
-```
-
----
-<!-- layout: columns -->
-# 三种版本，回答三个问题
-
-<!-- column -->
-## Python `3.12.x`
-**用什么解释器？**
-
-<!-- column -->
-## 项目 `0.1.0`
-**软件自身是哪一版？**
-
-<!-- column -->
-## Git commit
-**仓库记录了哪次快照？**
-
-<!-- footer -->
-本实验认识 commit，但不记录或交换 commit。
-
----
-# 本节只走一条主链
-
-```text
-取得 → 定位 → 同步 → 运行 → 测试 → 观察
-```
-
-前三步回答“究竟在运行什么”，后三步回答“实际发生了什么”。
-
----
-<!-- section: 第二课时：准备个人项目副本 -->
-
----
-<!-- layout: question -->
-# 今天需要编写 Python 吗？
-> 不；只把 `signature.toml` 中的 `teacher` 改成自己的公开代号
-
----
-# 从教师仓库到同学手中的 URL
-
-```text
-教师仓库
-   ↓ fork
-自己的 GitHub fork
-   ↓ 网页修改 signature.toml
-只把 fork HTTPS URL 交给同学
-```
-
-不发送签名答案、commit、截图、压缩包或 `.venv`。
-
----
-# 唯一允许修改的位置
-
-```text
-warmups/week-02/course-check/signature.toml
-```
-
-```toml
-[student]
-signature = "s07"
-```
-
-`s07` 使用教师分配的公开课程代号，不写真实学号。
-
----
-<!-- layout: prompt -->
-# 让 Chatbox 带我沿主链操作
-
-请按 W2 guide 带我完成“不影响未来的本节课实验”。每次只给一个操作，等我返回真实输出再继续，并说明当前是在取得、定位、同步、运行、测试还是观察。
-
-只使用 guide 给出的 GitHub、Git 和 uv 路线；不要删除已有目录，不要修改测试、Python、`pyproject.toml` 或 `uv.lock`。最终只根据真实输出判断是否看到同学而非 `teacher` 的签名。
-
----
-<!-- layout: question -->
-# 第二课时交付什么？
-> 只交给搭档一个信息：自己的 fork HTTPS URL
-
----
-<!-- section: 第三课时：复现同学的运行结果 -->
-
----
-<!-- layout: question -->
-# 只收到一个 URL，我们能观察到什么？
-> 从零取得项目、恢复环境，让程序自己报告同学留下的签名
-
----
-# 先取得，再进入练习目录
-
-```text
-clone 同学的 fork
-        ↓
-确认 origin 与仓库根目录
-        ↓
-warmups/week-02/course-check
-```
-
-不要在错误目录中追求绿色结果。
-
----
-# 从项目声明恢复局部环境
+# 用 uv 恢复项目环境
 
 ```bash
 uv sync --locked
+
 uv run --locked python -c \
   'import sys; print(sys.executable)'
 ```
 
-Python 应当来自当前练习目录的 `.venv`。
+<!-- footer -->
+Python 应来自当前 `course-check/.venv/`。
 
 ---
-# 同一个环境，两种检查
+# 让信息只对一次运行可见
+
+```bash
+unset COURSE_MODE
+printenv COURSE_MODE
+
+COURSE_MODE=fixture printenv COURSE_MODE
+
+printenv COURSE_MODE
+```
+
+<!-- footer -->
+预期：空 → `fixture` → 再次为空
+
+---
+<!-- layout: columns -->
+# 程序报告事实，测试检查规则
+
+<!-- column -->
+## 程序
+**现在实际是什么**
 
 ```bash
 COURSE_MODE=fixture \
 uv run --locked python course_check.py
+```
 
+<!-- column -->
+## 测试
+**给定规则是否满足**
+
+```bash
 COURSE_MODE=fixture \
 uv run --locked pytest -q
 ```
 
-程序报告事实，测试按照给定规则检查事实。
-
----
-<!-- layout: question -->
-# 什么时候算完成？
-> 自己的机器运行与测试通过，并看到同学而非 `teacher` 的签名
+<!-- footer -->
+测试通过，只说明已经覆盖的规则通过。
 
 ---
 <!-- layout: columns -->
-# 这个小实验，有哪些工程影子
+# 全局配置与项目配置各自承担什么？
 
 <!-- column -->
-## 恢复环境
-**声明 + 锁文件**
+## 用户级
+**个人默认**
 
-新机器建立运行条件
+`~/.config/uv/uv.toml`
 
-<!-- column -->
-## 取得改动
-**远端仓库 URL**
-
-另一人拿到项目内容
+方便，但不会随项目共享
 
 <!-- column -->
-## 检查结果
-**自检 + 自动测试**
+## 项目级
+**共同约定**
 
-发现内容或环境异常
+`uv.toml` · `[tool.uv]`
+
+可见、可审查、可复现
 
 <!-- footer -->
-正式工程还会固定 commit、tag 或构建产物；本实验主动省略。
+决定项目能否复现的条件，应尽量留在项目中。
 
 ---
-# 最后只记三项
+<!-- section: 第三课时：改动怎样被记录？ -->
+
+---
+# 本地与远端不是同一个地方
 
 ```text
-我的机器：通过 / 未通过
-看到的同学代号：
-一项观察：
+工作区
+  ↓ stage
+暂存区
+  ↓ commit
+本地仓库
+  ↓ push（本周不做）
+remote / GitHub
 ```
 
-W3 从新的课堂入口开始，不继承本节实验目录、签名或结果。
+---
+# 制造一个可解释的本地改动
+
+```toml
+[student]
+signature = "teacher"
+```
+
+```text
+             ↓ 只改一项
+```
+
+```toml
+[student]
+signature = "s07"
+```
+
+---
+# 终端与 Source Control 看见同一个 diff
+
+```text
+git status    ↔  Changes
+git diff      ↔  差异视图
+git add       ↔  Stage Changes
+git commit    ↔  Commit
+```
+
+<!-- footer -->
+不是两套状态，而是同一个 Git 工作区的两种入口。
+
+---
+# 把改动保存成本地提交
+
+```text
+修改 signature.toml
+        ↓
+只暂存这一项改动
+        ↓
+w2: set public signature
+        ↓
+本地历史新增一条 commit
+```
+
+<!-- footer -->
+`origin` 仍然不变；本周不执行 `git push`。
+
+---
+<!-- layout: question -->
+# 本地 commit 后，GitHub 会变化吗？
+> 不会；commit 保存本地历史，push 才会尝试发送给远端
+
+---
+# 带着四项证据结束
+
+- **位置**：`pwd` 指向项目根
+- **环境**：Python 来自项目 `.venv`
+- **运行**：程序与 pytest 通过
+- **版本**：最新本地 commit 记录签名变化
+
+<!-- footer -->
+W3 从新的正式仓库开始，不继承本周副本。
