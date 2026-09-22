@@ -13,5 +13,12 @@
       "scope": "course",
       "file": "exams/topics/topic-01-limits.tex"
     }
-  }
+  },
+  "demos": [
+    {
+      "id": "function-limit",
+      "title": "函数极限",
+      "summary": "调整参数，观察 ε–δ 控制、振荡函数的夹逼与第一重要极限。"
+    }
+  ]
 }
