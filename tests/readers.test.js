@@ -37,6 +37,7 @@ const slidesSource = [
 let wrapper
 let restoreFullscreen
 let restoreScrollIntoView
+let restoreLocalStorage
 afterEach(() => {
   wrapper?.unmount()
   wrapper = null
@@ -44,11 +45,30 @@ afterEach(() => {
   restoreFullscreen = null
   restoreScrollIntoView?.()
   restoreScrollIntoView = null
+  restoreLocalStorage?.()
+  restoreLocalStorage = null
   vi.restoreAllMocks()
   vi.unstubAllGlobals()
   window.sessionStorage.clear()
   document.body.innerHTML = ''
 })
+
+function installLocalStorageMock(initial = {}) {
+  const descriptor = Object.getOwnPropertyDescriptor(window, 'localStorage')
+  const entries = new Map(Object.entries(initial))
+  const storage = {
+    getItem: vi.fn((key) => entries.get(key) ?? null),
+    setItem: vi.fn((key, value) => entries.set(key, String(value))),
+    removeItem: vi.fn((key) => entries.delete(key)),
+    clear: vi.fn(() => entries.clear()),
+  }
+  Object.defineProperty(window, 'localStorage', { configurable: true, value: storage })
+  restoreLocalStorage = () => {
+    if (descriptor) Object.defineProperty(window, 'localStorage', descriptor)
+    else delete window.localStorage
+  }
+  return storage
+}
 
 function installFullscreenMock() {
   const requestDescriptor = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'requestFullscreen')
@@ -427,6 +447,49 @@ describe('slides reader', () => {
     const deck = parseSlides(slidesSource)
     wrapper = mount(SlidesReader, { props: { deck, page: 1 } })
     expect(wrapper.find('.slide-fullscreen').exists()).toBe(false)
+  })
+
+  it('scales every slide font, persists the choice and resets it', async () => {
+    const storage = installLocalStorageMock()
+    const deck = parseSlides(slidesSource)
+    wrapper = mount(SlidesReader, { attachTo: document.body, props: { deck, page: 1 } })
+    const slider = wrapper.find('.slide-font-scale input')
+
+    expect(slider.element.value).toBe('100')
+    expect(wrapper.find('.slides-reader').attributes('style')).toContain('--slide-font-scale: 1')
+
+    await slider.setValue('120')
+    expect(wrapper.find('.slides-reader').attributes('style')).toContain('--slide-font-scale: 1.2')
+    expect(storage.getItem('teaching-hub:slide-font-scale')).toBe('120')
+
+    await slider.trigger('keydown', { key: 'ArrowRight' })
+    expect(wrapper.emitted('change')).toBeUndefined()
+
+    wrapper.unmount()
+    wrapper = mount(SlidesReader, { attachTo: document.body, props: { deck, page: 1 } })
+    expect(wrapper.find('.slide-font-scale input').element.value).toBe('120')
+
+    await wrapper.find('.slide-font-reset').trigger('click')
+    expect(wrapper.find('.slide-font-scale input').element.value).toBe('100')
+    expect(storage.getItem('teaching-hub:slide-font-scale')).toBe('100')
+  })
+
+  it('warns without auto-shrinking when the selected size may clip the slide', async () => {
+    const deck = parseSlides(slidesSource)
+    wrapper = mount(SlidesReader, { attachTo: document.body, props: { deck, page: 1 } })
+    const canvas = wrapper.find('.slide-canvas').element
+    Object.defineProperties(canvas, {
+      clientHeight: { configurable: true, value: 400 },
+      scrollHeight: { configurable: true, value: 460 },
+      clientWidth: { configurable: true, value: 700 },
+      scrollWidth: { configurable: true, value: 700 },
+    })
+
+    await wrapper.find('.slide-font-scale input').setValue('125')
+    await flushPromises()
+
+    expect(wrapper.find('.slide-overflow-warning').text()).toBe('本页可能被裁切')
+    expect(wrapper.find('.slide-font-scale input').element.value).toBe('125')
   })
 
   it('renders a vertical content list with a separate closing line', () => {
