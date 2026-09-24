@@ -238,20 +238,7 @@ uv run --locked pytest -q
 <!-- section: 第三课时：改动怎样被记录？ -->
 
 ---
-# 本地与远端不是同一个地方
-
-```text
-工作区
-  ↓ stage
-暂存区
-  ↓ commit
-本地仓库
-  ↓ push（本周不做）
-remote / GitHub
-```
-
----
-# 制造一个可解释的本地改动
+# 只改一项：公开签名
 
 ```toml
 [student]
@@ -267,47 +254,71 @@ signature = "teacher"
 signature = "s07"
 ```
 
+<!-- footer -->
+先让程序读到新值，再考虑是否提交。
+
 ---
-# 终端与 Source Control 看见同一个 diff
+<!-- layout: columns -->
+# 两个入口，同一个 diff
+
+<!-- column -->
+## 终端
+**精确描述状态**
 
 ```text
-git status    ↔  Changes
-git diff      ↔  差异视图
-git add       ↔  Stage Changes
-git commit    ↔  Commit
+git status
+git diff
+git diff --staged
+```
+
+<!-- column -->
+## Source Control
+**可视化同一状态**
+
+Changes
+
+Staged Changes
+
+Diff Editor
+
+---
+# 一个改动怎样成为历史？
+
+```text
+编辑器
+  │ Save
+  ▼
+工作区 ── git add ──▶ 暂存区 ── git commit ──▶ Commit（HEAD）
+  ╰───── git diff ────╯       ╰── git diff --staged ──╯
 ```
 
 <!-- footer -->
-不是两套状态，而是同一个 Git 工作区的两种入口。
+Stage 是选择；Commit 是本地历史，不是上传。
 
 ---
-# 把改动保存成本地提交
+<!-- layout: columns -->
+# 一个 commit，由 SHA 指认
 
-```text
-修改 signature.toml
-        ↓
-只暂存这一项改动
-        ↓
-w2: set public signature
-        ↓
-本地历史新增一条 commit
+<!-- column -->
+## 查看
+**`a1b2c3d`**
+
+```bash
+git show <sha>
+```
+
+<!-- column -->
+## 撤销
+**新增反向 commit**
+
+```bash
+git revert <sha>
 ```
 
 <!-- footer -->
-`origin` 仍然不变；本周不执行 `git push`。
+Revert 保留旧历史；本节只理解，不执行。
 
 ---
 <!-- layout: question -->
 # 本地 commit 后，GitHub 会变化吗？
 > 不会；commit 保存本地历史，push 才会尝试发送给远端
-
----
-# 带着四项证据结束
-
-- **位置**：`pwd` 指向项目根
-- **环境**：Python 来自项目 `.venv`
-- **运行**：程序与 pytest 通过
-- **版本**：最新本地 commit 记录签名变化
-
-<!-- footer -->
-W3 从新的正式仓库开始，不继承本周副本。

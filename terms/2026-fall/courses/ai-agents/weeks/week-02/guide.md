@@ -44,15 +44,7 @@ code .
 
 ### 目标目录已经存在
 
-不要删除或覆盖已有目录。若 `~/course/w02-workbench` 已存在，改用：
-
-```bash
-git clone https://github.com/wxyinucas/ai-agents.git ~/course/w02-workbench-2
-cd ~/course/w02-workbench-2
-code .
-```
-
-两个目录都存在或来源不清楚时停止 clone，保留现场并告诉教师；不要执行 `rm -rf`、强制重置或覆盖文件。
+若 `git clone` 提示 `~/course/w02-workbench` 已存在，先停在这里，保留终端输出并直接告诉教师。不要删除或覆盖目录，也不要换一个目录名继续 clone。
 
 ## 第一课时｜命令与路径
 
@@ -69,7 +61,7 @@ echo "$SHELL"
 最低预期：
 
 - `uname -s` 输出 `Linux`；
-- `pwd` 以 `/course/w02-workbench` 或 `/course/w02-workbench-2` 结尾；
+- `pwd` 以 `/course/w02-workbench` 结尾；
 - shell 路径以 `bash` 结尾。
 
 ### 2. 看懂一条命令的常见结构
@@ -112,8 +104,6 @@ pwd
 ls -la
 cat signature.toml
 ```
-
-若使用备用目录，把第一条中的 `w02-workbench` 改为 `w02-workbench-2`。
 
 路径符号：
 
@@ -259,8 +249,6 @@ git remote -v
 git branch --show-current
 git status --short
 ```
-
-若使用备用目录，修改第一条路径。
 
 - 工作区：Explorer 中当前可以编辑的文件；
 - 本地仓库：`.git/` 保存的历史和配置；
@@ -420,7 +408,7 @@ git config --show-origin --get user.name
 
 - VS Code 左下角不是 `WSL: Ubuntu`，或 `uname -s` 不是 `Linux`；
 - 说不清当前目录是仓库根还是项目根；
-- `w02-workbench` 与 `w02-workbench-2` 都已存在或来源不明；
+- `git clone` 提示 `w02-workbench` 已存在，或者出现其他错误；
 - 命令要求输入 GitHub 密码、token、Cookie 或其他凭证；
 - 准备运行 `git push`、删除目录、强制重置、修改测试或手动改写 `uv.lock`；
 - 同一个操作连续失败，却没有产生新的错误信息或线索。
