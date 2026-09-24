@@ -4,7 +4,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 const FONT_SCALE_STORAGE_KEY = 'teaching-hub:slide-font-scale'
 const DEFAULT_FONT_SCALE = 100
 const MIN_FONT_SCALE = 90
-const MAX_FONT_SCALE = 140
+const MAX_FONT_SCALE = 200
 const FONT_SCALE_STEP = 5
 
 function normalizeFontScale(value) {

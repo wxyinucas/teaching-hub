@@ -136,7 +136,7 @@
 .slide-controls .slide-progress { grid-column: 2; }
 .slide-display-controls { grid-column: 3; display: flex; align-items: center; justify-self: center; gap: 8px; min-width: 0; }
 .slide-font-scale { display: flex; align-items: center; gap: 7px; color: var(--ink-muted); font-size: 12px; white-space: nowrap; }
-.slide-font-scale input { width: 118px; accent-color: var(--purple); }
+.slide-font-scale input { width: 150px; accent-color: var(--purple); }
 .slide-font-scale output { min-width: 3.4em; color: var(--purple-dark); font-variant-numeric: tabular-nums; }
 .slide-controls .slide-font-reset, .slide-controls .slide-fullscreen { justify-self: auto; }
 .slide-overflow-warning { color: #9f3f28; font-size: 11px; font-weight: 650; white-space: nowrap; }

@@ -456,6 +456,7 @@ describe('slides reader', () => {
     const slider = wrapper.find('.slide-font-scale input')
 
     expect(slider.element.value).toBe('100')
+    expect(slider.attributes('max')).toBe('200')
     expect(wrapper.find('.slides-reader').attributes('style')).toContain('--slide-font-scale: 1')
 
     await slider.setValue('120')
@@ -468,6 +469,10 @@ describe('slides reader', () => {
     wrapper.unmount()
     wrapper = mount(SlidesReader, { attachTo: document.body, props: { deck, page: 1 } })
     expect(wrapper.find('.slide-font-scale input').element.value).toBe('120')
+
+    await wrapper.find('.slide-font-scale input').setValue('200')
+    expect(wrapper.find('.slides-reader').attributes('style')).toContain('--slide-font-scale: 2')
+    expect(storage.getItem('teaching-hub:slide-font-scale')).toBe('200')
 
     await wrapper.find('.slide-font-reset').trigger('click')
     expect(wrapper.find('.slide-font-scale input').element.value).toBe('100')
