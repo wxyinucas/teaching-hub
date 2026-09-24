@@ -8,231 +8,131 @@ AI Agents · 王晓宇 · 中国海洋大学 · 2026 秋
 <!-- section: 第一课时：命令作用在哪里？ -->
 
 ---
-<!-- layout: columns -->
-# 认识统一工作台
+# 同一系统，两种操作入口
 
-<!-- column -->
-## VS Code
-**组织界面**
-
-Explorer · 编辑器 · Terminal
-
-<!-- column -->
-## WSL Bash
-**解释命令**
-
-路径 · 选项 · 参数
-
-<!-- column -->
-## 程序
-**执行工作**
-
-`git` · `uv` · `python`
+```text
+VS Code Explorer / Editor
+              ↕ 同一批文件
+WSL Bash / Integrated Terminal
+```
 
 <!-- footer -->
-Integrated Terminal 是界面；Shell 决定命令怎样被解释。
+Terminal 是界面；Bash 解释命令；程序执行工作。
 
 ---
-# 取得项目，暂不展开 Git
+# 当前位置 + 命令 + 路径
 
 ```bash
-mkdir -p ~/course
-git clone https://github.com/wxyinucas/ai-agents.git \
-  ~/course/w02-workbench
-cd ~/course/w02-workbench
-code .
+pwd
+```
+
+```text
+ls          -la          cli-lab
+调用谁       选项          作用对象
+
+~  Home     .  当前目录     ..  上一级
 ```
 
 <!-- footer -->
-先把 `clone` 当作取得材料的固定动作；第三课时再解释它。
+相对路径从 `pwd` 显示的位置开始解释。
 
 ---
-# 命令有结构
+# 删除没有撤销键
 
 ```bash
-ls -la warmups/week-02/course-check
+rm <文件>
+rmdir <空目录>
 ```
 
-```text
-ls        -la        warmups/week-02/course-check
-命令      选项        参数
-```
+- 只删除本次刚创建、并且已经核对路径的对象
+- 本节不用 `rm -r` 或 `rm -rf`
 
 <!-- footer -->
-常见形状：`command [subcommand] [options] [arguments]`
+删除前先看 `pwd` 和目标路径。
 
 ---
-<!-- layout: columns -->
-# 路径决定作用对象
-
-<!-- column -->
-## `~`
-**用户 Home**
-
-从稳定起点出发
-
-<!-- column -->
-## `.`
-**当前目录**
-
-相对路径的起点
-
-<!-- column -->
-## `..`
-**上一级目录**
-
-沿目录树返回
-
-<!-- footer -->
-执行前先用 `pwd` 回答：我现在在哪里？
-
----
-<!-- layout: columns -->
-# 两个根目录，不是一回事
-
-<!-- column -->
-## 仓库根
-**整个课程练习仓库**
+# 从本地文件操作到远端仓库
 
 ```text
-~/course/w02-workbench
+GitHub 仓库 ── git clone ──▶ ~/course/w02-workbench
 ```
 
-<!-- column -->
-## 项目根
-**本周 Python 项目**
-
 ```text
-warmups/week-02/course-check
+仓库根  ~/course/w02-workbench
+项目根  warmups/week-02/course-check
 ```
 
 <!-- footer -->
-打开了仓库，不等于终端已经进入项目目录。
+本节先把 `clone` 当作取得材料；第三课时再打开 Git 关系。
 
 ---
 <!-- section: 第二课时：程序使用哪个环境？ -->
 
 ---
-<!-- layout: columns -->
-# 三种作用范围
+# 同一个“名字”，为什么有时找得到？
 
-<!-- column -->
-## 机器／用户级
-**多个项目可调用**
+```text
+当前位置：.../cli-lab/inbox
+python3 some.py          ✓
 
-`git` · `uv` · `code`
-
-<!-- column -->
-## 项目级
-**属于当前项目**
-
-声明 · 锁文件 · `.venv`
-
-<!-- column -->
-## 单次进程级
-**只影响一次运行**
-
-`COURSE_MODE=fixture`
-
----
-<!-- layout: columns -->
-# 项目用文件说明自己
-
-<!-- column -->
-## 声明
-**需要什么**
-
-`.python-version`
-
-`pyproject.toml`
-
-<!-- column -->
-## 锁定
-**这次采用什么**
-
-`uv.lock`
-
-<!-- column -->
-## 恢复
-**本机实际装出什么**
-
-`.venv/`
-
----
-# 用 uv 恢复项目环境
-
-```bash
-uv sync --locked
-
-uv run --locked python -c \
-  'import sys; print(sys.executable)'
+当前位置：.../cli-lab
+python3 some.py          ✗
 ```
 
 <!-- footer -->
-Python 应来自当前 `course-check/.venv/`。
+文件没有移动；改变的是相对路径的起点。
 
 ---
-# 让信息只对一次运行可见
+# 谁在找，从哪里找？
 
-```bash
-unset COURSE_MODE
-printenv COURSE_MODE
-
-COURSE_MODE=fixture printenv COURSE_MODE
-
-printenv COURSE_MODE
+```text
+Shell  ── PATH ───────────▶ python3
+Python ── 当前目录 + 参数 ──▶ some.py
 ```
 
 <!-- footer -->
-预期：空 → `fixture` → 再次为空
+存在，不等于当前的查找规则能够找到。
+
+---
+# 可调用的工具，项目自己的环境
+
+```text
+.python-version
+pyproject.toml  ── uv sync --locked ──▶  .venv/
+uv.lock
+```
+
+```text
+uv run python  ──▶  course-check/.venv/.../python
+```
+
+<!-- footer -->
+锁定不是永不升级，而是让升级成为主动、可测试的改动。
 
 ---
 <!-- layout: columns -->
-# 程序报告事实，测试检查规则
+# 能找到程序 ≠ 用对项目环境
 
 <!-- column -->
-## 程序
-**现在实际是什么**
+## 运行条件
+**解释器从哪里来**
 
-```bash
-COURSE_MODE=fixture \
-uv run --locked python course_check.py
-```
+`python3`：机器环境
+
+`uv run python`：项目 `.venv`
+
+`COURSE_MODE=fixture`：本次命令及其子进程
 
 <!-- column -->
-## 测试
-**给定规则是否满足**
+## 两种证据
+**回答不同问题**
 
-```bash
-COURSE_MODE=fixture \
-uv run --locked pytest -q
-```
+`course_check.py`：报告当前事实
+
+`pytest`：检查已经写下的规则
 
 <!-- footer -->
 测试通过，只说明已经覆盖的规则通过。
-
----
-<!-- layout: columns -->
-# 全局配置与项目配置各自承担什么？
-
-<!-- column -->
-## 用户级
-**个人默认**
-
-`~/.config/uv/uv.toml`
-
-方便，但不会随项目共享
-
-<!-- column -->
-## 项目级
-**共同约定**
-
-`uv.toml` · `[tool.uv]`
-
-可见、可审查、可复现
-
-<!-- footer -->
-决定项目能否复现的条件，应尽量留在项目中。
 
 ---
 <!-- section: 第三课时：改动怎样被记录？ -->
@@ -240,18 +140,9 @@ uv run --locked pytest -q
 ---
 # 只改一项：公开签名
 
-```toml
-[student]
-signature = "teacher"
-```
-
-```text
-             ↓ 只改一项
-```
-
-```toml
-[student]
-signature = "s07"
+```diff
+- signature = "teacher"
++ signature = "s07"
 ```
 
 <!-- footer -->
@@ -266,7 +157,7 @@ signature = "s07"
 **精确描述状态**
 
 ```text
-git status
+git status --short
 git diff
 git diff --staged
 ```
@@ -288,8 +179,9 @@ Diff Editor
 编辑器
   │ Save
   ▼
-工作区 ── git add ──▶ 暂存区 ── git commit ──▶ Commit（HEAD）
+工作区 ── git add ──▶ 暂存区 ── git commit ──▶ 本地历史
   ╰───── git diff ────╯       ╰── git diff --staged ──╯
+                                  HEAD ─▶ 当前分支 ─▶ 当前 commit
 ```
 
 <!-- footer -->
@@ -301,7 +193,7 @@ Stage 是选择；Commit 是本地历史，不是上传。
 
 <!-- column -->
 ## 查看
-**`a1b2c3d`**
+**`<short-sha>`**
 
 ```bash
 git show <sha>
@@ -321,4 +213,4 @@ Revert 保留旧历史；本节只理解，不执行。
 ---
 <!-- layout: question -->
 # 本地 commit 后，GitHub 会变化吗？
-> 不会；commit 保存本地历史，push 才会尝试发送给远端
+> Commit 写入本地历史；Push 才会尝试发送给 Remote

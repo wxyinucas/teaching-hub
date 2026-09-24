@@ -1,207 +1,402 @@
 # W2 学生行动指南：位置、环境与版本
 
-本周只使用一个项目：
+本周使用两个位置：
 
 ```text
-warmups/week-02/course-check/
+~/course/cli-lab/
+└── 练习文件、目录、路径与命令查找
+
+~/course/w02-workbench/
+└── 练习项目环境、Git 状态与本地 commit
 ```
 
-三节课依次回答三个问题：
+三节课依次完成三件事：
 
-1. 我在哪里，这条命令会作用于什么？
-2. 程序使用哪一个 Python 和哪一组依赖？
-3. 当前修改在工作区、本地仓库还是远端仓库？
+1. 用 Explorer 和终端操作同一份文件系统，并在课末取得本周项目；
+2. 区分脚本路径、`PATH` 与项目 Python，用 uv 恢复并运行项目；
+3. 让一项修改经历工作区、暂存区和本地历史，同时证明它尚未上传。
 
-本周副本只用于课堂观察，不是 W3 的正式项目起点。
+本周目录和 commit 只用于课堂观察，不是 W3 的正式项目起点。
 
-## 统一操作环境
+本指南中的 **Explorer** 指 VS Code 左侧的文件浏览区，不是 Windows 文件资源管理器；**Integrated Terminal** 指 VS Code 内置的终端面板，本周在其中运行 WSL Bash；**Source Control** 指 VS Code 左侧用来观察 Git 状态的面板。
 
-取得项目的第一组命令可以在外部 WSL Bash 中执行；`code .` 打开项目后，统一转入 **VS Code 的 WSL Bash 集成终端**。
+Terminal 是输入和显示文字的界面；Bash 是读取命令的 Shell；`ls`、`tree`、`python3` 等则是被 Shell 调用的程序。
 
-开始前核对：
+除非文字明确要求一次执行，代码块也应从上到下逐行运行；某一步出现与指南不同的错误时，停在原处，不继续执行后面的命令。
 
-- VS Code 左下角显示 `WSL: Ubuntu`；
-- 集成终端运行 `uname -s`，输出 `Linux`；
-- `pwd` 显示 `/home/...` 下的 WSL 路径，而不是 `C:\...` 或 `/mnt/c/...`；
-- 本周不在管理员 PowerShell、Command Prompt 或普通 Windows 文件夹中运行项目命令。
+## 全周操作边界
 
-VS Code 提供统一工作台，Integrated Terminal 是终端界面，WSL Bash 才是本周解释命令的 shell。
+- 项目命令统一在 **VS Code 的 WSL Bash 集成终端**运行；左下角应显示 `WSL: Ubuntu`。
+- `uname -s` 应输出 `Linux`；`pwd` 应显示 `/home/...` 下的 WSL 路径，而不是 `C:\...` 或 `/mnt/c/...`。
+- 本周不执行 `git push`，不点击 Sync 或 Publish Branch。
+- 本周不使用 `rm -r`、`rm -rf`、`git reset`、`git restore` 或 Source Control 的 Discard Changes。
+- 教师带领安装 `tree` 时，可以在本机输入 WSL 用户密码；终端不显示密码字符是正常现象。不要展示、发送或记录密码。
+- 任何 GitHub 密码、token、Cookie 或其他网络服务凭证请求，都先停止并告诉教师。
 
-## 取得本周项目
+## 第一课时｜同一文件系统的两种入口
 
-### 第一次取得
+### 1. 打开统一工作台
 
-在 WSL Bash 中执行：
+在 Windows Terminal 中打开 Ubuntu／WSL Bash（不是 PowerShell），先执行本节唯一一组外部终端命令：
 
 ```bash
 mkdir -p ~/course
-git clone https://github.com/wxyinucas/ai-agents.git ~/course/w02-workbench
-cd ~/course/w02-workbench
+cd ~/course
 code .
 ```
 
-此时暂时把 `git clone` 当作“取得课堂材料”的固定动作；第三课时再解释它建立的本地与远端关系。
-
-### 目标目录已经存在
-
-若 `git clone` 提示 `~/course/w02-workbench` 已存在，先停在这里，保留终端输出并直接告诉教师。不要删除或覆盖目录，也不要换一个目录名继续 clone。
-
-## 第一课时｜命令与路径
-
-### 1. 确认当前工作位置
-
-在 VS Code 集成终端运行：
+在打开或切换后的 VS Code 窗口选择 **Terminal → New Terminal**，新建 Integrated Terminal 后再执行：
 
 ```bash
 uname -s
 pwd
-echo "$SHELL"
+ls
+ls -la
 ```
 
 最低预期：
 
 - `uname -s` 输出 `Linux`；
-- `pwd` 以 `/course/w02-workbench` 结尾；
-- shell 路径以 `bash` 结尾。
+- `pwd` 以 `/course` 结尾；
+- Explorer 与终端显示的是同一个 `~/course` 目录。
 
-### 2. 看懂一条命令的常见结构
+`ls` 显示普通目录项；`ls -la` 中，`-l` 要求详细列表，`-a` 还会显示以 `.` 开头的隐藏项。
+
+阅读命令时先找三个部分：
 
 ```text
-command [subcommand] [options] [arguments]
+command [options] [arguments]
 ```
 
-例如：
+例如 `ls -la cli-lab` 中，`ls` 是调用的程序，`-la` 是选项，`cli-lab` 是作用对象。常用路径符号：
+
+- `~`：当前用户的 home（用户主目录）；
+- `.`：当前目录；
+- `..`：上一级目录；
+- 相对路径从 `pwd` 显示的位置开始解释。
+
+### 2. 安装并验证 `tree`
+
+先检查：
 
 ```bash
-ls -la warmups/week-02/course-check
+command -v tree
 ```
 
-- `ls`：命令；
-- `-la`：选项；
-- `warmups/week-02/course-check`：参数。
+`command -v` 用来询问 Shell：“按当前查找规则，能否找到这个命令；找到的是哪一个程序？”没有输出表示当前找不到。
 
-这是一种常见阅读模型，不是所有程序都必须严格符合的语法。遇到陌生命令，先看该程序自己的帮助：
+若输出了一条路径，再运行：
 
 ```bash
-ls --help
+tree --version
 ```
 
-常用操作：
+若第一条没有输出，在教师带领下执行：
 
-- Tab：补全命令或路径；
-- `↑`／`↓`：查看历史命令；
-- `Ctrl+C`：停止当前命令；
-- 路径含空格时：用引号包住完整路径。
+```bash
+sudo apt update
+sudo apt install tree
+```
 
-### 3. 用路径进入项目
+安装完成后重新核对：
+
+```bash
+command -v tree
+tree --version
+```
+
+安装失败时保留终端输出并求助；不要自行反复更换软件源。后续文件实验仍可借助 Explorer 和 `ls` 继续。
+
+### 3. 从空目录建立文件树
+
+先只执行下面三条检查命令：
+
+```bash
+cd ~/course
+pwd
+ls
+```
+
+`pwd` 应以 `/course` 结尾，`ls` 的结果中不应出现 `cli-lab`。若已经出现，停下求助，不执行下面的创建命令。
+
+确认后再执行：
+
+```bash
+mkdir cli-lab
+cd cli-lab
+mkdir inbox
+touch inbox/note.txt
+pwd
+tree
+```
+
+在 Explorer 中打开 `inbox/note.txt`，写入下面一行并保存：
+
+```text
+created in Terminal; edited in VS Code
+```
+
+回到终端核对：
+
+```bash
+cat inbox/note.txt
+```
+
+### 4. 复制并移动文件
+
+在 `~/course/cli-lab` 中执行：
+
+```bash
+mkdir archive
+cd inbox
+pwd
+cp note.txt note-copy.txt
+mv note-copy.txt ../archive/
+cd ..
+tree
+```
+
+最低预期：
+
+```text
+.
+├── archive
+│   └── note-copy.txt
+└── inbox
+    └── note.txt
+```
+
+`cp` 保留源文件并产生副本；`mv` 改变副本所在的路径。从 `inbox` 出发，`../archive/` 指向平级目录 `archive`。
+
+### 5. 观察一次安全失败，再清理实验文件
+
+仍在 `~/course/cli-lab` 中，先执行：
+
+```bash
+rmdir inbox
+```
+
+这条命令应失败，因为 `inbox` 仍包含 `note.txt`。目录和文件没有因此受损。
+
+先只检查，不删除：
+
+```bash
+pwd
+tree
+```
+
+只有当 `pwd` 是 `~/course/cli-lab`，而且目录树与本节创建的内容完全一致时，才执行：
+
+```bash
+rm inbox/note.txt
+rm archive/note-copy.txt
+rmdir archive
+tree
+cd ~/course
+pwd
+```
+
+清理后必须保留：
+
+```text
+~/course/cli-lab/
+└── inbox/
+```
+
+不要删除 `inbox` 或 `cli-lab`；第二课时会继续使用它们。
+
+### 6. 取得本周项目
+
+先检查目标位置：
+
+```bash
+cd ~/course
+pwd
+ls
+```
+
+若列表中已经有 `w02-workbench`，停下求助，不执行 clone。确认目标不存在后，只执行：
+
+```bash
+git clone https://github.com/wxyinucas/ai-agents.git ~/course/w02-workbench
+```
+
+确认 clone 成功后再执行：
 
 ```bash
 cd ~/course/w02-workbench
 pwd
-ls
-cd warmups/week-02/course-check
-pwd
-ls -la
-cat signature.toml
+tree -L 2
+code .
 ```
 
-路径符号：
+`tree -L 2` 只显示当前目录以下两层，避免一次打印过多内容。
 
-- `~`：当前用户的 home；
-- `.`：当前目录；
-- `..`：上一级目录；
-- `/home/...`：绝对路径；
-- `warmups/week-02/course-check`：从当前目录出发的相对路径。
+在打开或切换后的 `w02-workbench` 窗口中新建 Integrated Terminal，再运行一次 `pwd`。它应以 `/course/w02-workbench` 结尾。
 
-本周同时存在两个重要层级：
+此时暂时把 `git clone` 理解为“把远端仓库取得为本地目录”；第三课时再解释它附带的 Git 关系。
+
+### 第一课时完成核对
+
+- [ ] `~/course/cli-lab/inbox` 存在且为空；
+- [ ] `~/course/w02-workbench` 已成功 clone；
+- [ ] `w02-workbench` 窗口左下角显示 `WSL: Ubuntu`；
+- [ ] 新终端的 `pwd` 指向 `~/course/w02-workbench`。
+
+### 第一课时需要停下求助的情况
+
+- 创建前已经存在 `~/course/cli-lab`；
+- 删除前 `pwd` 不是 `~/course/cli-lab`，或 `tree` 显示了不是本次创建的内容；
+- 安装 `tree` 失败；停止安装操作，不自行更换软件源；
+- clone 目标已经存在或 clone 报错；不删除、不覆盖，也不换一个目录名继续。
+
+## 第二课时｜谁在找，按什么规则找？
+
+### 1. 在 Vim 中创建一行程序
+
+先检查工具：
+
+```bash
+command -v vim
+command -v python3
+command -v uv
+```
+
+三条命令都应输出路径。然后另开一个 VS Code 窗口：
+
+```bash
+code -n ~/course/cli-lab
+```
+
+其中 `-n` 表示另开一个 VS Code 窗口，避免覆盖已经打开的项目窗口。
+
+在 `cli-lab` 窗口的新终端中执行：
+
+```bash
+cd ~/course/cli-lab/inbox
+pwd
+vim some.py
+```
+
+Vim 中只完成四步：
+
+1. 按 `i` 进入插入模式；
+2. 输入 `print("hello world!")`；
+3. 按 `Esc`；
+4. 输入 `:wq`，再按 Enter 保存退出。
+
+若操作失控，按 `Esc`，输入 `:q!` 后按 Enter 放弃退出，并告诉教师。
+
+运行：
+
+```bash
+python3 some.py
+```
+
+最低预期：终端输出 `hello world!`，Explorer 中出现 `inbox/some.py`。
+
+### 2. 只改变当前位置，制造一次失败
+
+先预测，再依次执行：
+
+```bash
+cd ..
+pwd
+python3 some.py
+python3 inbox/some.py
+```
+
+预期结果：
+
+1. `pwd` 指向 `~/course/cli-lab`；
+2. `python3 some.py` 报告找不到脚本；
+3. `python3 inbox/some.py` 再次输出 `hello world!`。
+
+`some.py` 始终存在；改变的是相对路径的起点。
+
+### 3. 区分两次查找
+
+执行：
+
+```bash
+pwd
+command -v python3
+python3 --version
+```
 
 ```text
-仓库根：~/course/w02-workbench
-项目根：~/course/w02-workbench/warmups/week-02/course-check
+Shell  ── PATH ───────────▶ python3
+Python ── 当前目录 + 参数 ──▶ some.py
 ```
 
-“VS Code 已经打开仓库”不等于“终端已经进入项目根”。运行项目前始终先看 `pwd`。
+`PATH` 是一个环境变量，里面按顺序记录了 Shell 查找程序的一组目录。Shell 从这些目录中寻找 `python3`；Python 再按命令提供的文件路径寻找脚本。两者都在查找，但使用的规则不同。
 
-### 4. 独立完成一次定位
+“全局／局部”必须先说明相对于谁、在哪个范围。环境变量是 Shell 交给程序的一组“名称—值”设置，稍后使用的 `COURSE_MODE` 就是一个例子。文件路径、`PATH`、环境变量和以后会遇到的程序变量，可以共享“可见范围”这个观察角度，但不是同一套机制。
 
-从项目根开始：
+### 4. 查看项目声明的运行条件
+
+切回 Explorer 根目录为 `w02-workbench` 的窗口，在其集成终端执行：
 
 ```bash
+cd ~/course/w02-workbench/warmups/week-02/course-check
 pwd
-cd ../../..
-pwd
-cd warmups/week-02/course-check
-pwd
+ls -la
 ```
 
-完成标准：三次 `pwd` 分别证明自己从项目根回到仓库根，再重新进入项目根。
+先在 Explorer 中查看随项目取得的三个文件；`.venv/` 此时通常还没有出现：
 
-## 第二课时｜uv 与作用范围
+- `.python-version`：项目希望采用的 Python；
+- `pyproject.toml`：项目名称、项目版本、Python 范围和依赖声明；依赖是项目运行时需要的其他软件包；
+- `uv.lock`：已经解析并锁定的依赖版本；
 
-### 1. 三种作用范围
+下一步同步后会出现第四个对象：
 
-- **机器或用户级工具**：`git`、`uv`、`code` 可以服务多个项目；
-- **项目级条件**：`.python-version`、`pyproject.toml`、`uv.lock` 与 `.venv` 围绕当前项目；
-- **单次进程级信息**：`COURSE_MODE=fixture` 只影响紧随其后的那次运行。
+- `.venv/`：在当前机器恢复出的项目环境。本项目的 `.gitignore` 已告诉 Git 不追踪它；它可以重新生成，不必提交到仓库。
 
-查看 shell 从哪里找到工具：
+项目版本 `0.1.0`、Python 版本 `3.12.x` 与依赖版本回答的是不同问题。
+
+为什么记录和锁定版本：
+
+- 今天运行成功，只能证明当前代码、Python 和依赖能够共同工作；
+- 代码即使不变，将来重新安装时得到的运行条件也可能变化；
+- 锁定不是永不升级，而是让升级成为一次主动、可观察、重新接受测试的改动；
+- 跨操作系统或 CPU 架构时，这些记录未必能直接复现，但仍为重建和排查环境提供充分线索。
+
+### 5. 用 uv 恢复并核对项目环境
+
+仍在 `course-check` 项目根执行：
 
 ```bash
-command -v git
 command -v uv
-command -v code
-```
-
-“全局／局部”描述作用范围，不表示高级／低级，也不是 Git 的 local／remote。
-
-### 2. 四类项目文件
-
-- `.python-version`：希望使用 Python `3.12`；
-- `pyproject.toml`：声明项目名、项目版本、Python 范围和依赖；
-- `uv.lock`：记录本次解析采用的精确依赖版本，由 uv 管理；
-- `.venv/`：uv 在当前机器恢复出的项目环境，不提交到 Git。
-
-不要手动修改 `uv.lock` 或 `.venv`。
-
-### 3. 恢复并核对项目环境
-
-确认 `pwd` 位于 `warmups/week-02/course-check`，再运行：
-
-```bash
 uv --version
+python3 -c 'import sys; print(sys.executable)'
 uv sync --locked
 uv run --locked python -c 'import sys; print(sys.executable)'
 ```
 
-最后一条路径应位于当前项目的：
+`python -c '...'` 直接执行引号中的一行 Python；这里仅用来打印实际运行的解释器路径。`uv sync --locked` 严格按照现有锁文件恢复 `.venv`，不会顺手更新锁文件。
 
-```text
-.../warmups/week-02/course-check/.venv/bin/python
-```
+刷新 Explorer，确认项目根出现 `.venv/`。再比较两次 Python 路径：
 
-本课程统一使用 `uv run`，不要求手动激活 `.venv`。
+- `python3 -c ...` 输出的是机器环境中的 Python，例如 `/usr/bin/python3`；
+- `uv run --locked python -c ...` 输出的路径应位于当前项目的 `.../course-check/.venv/bin/python`。
 
-### 4. 观察一次运行的可见性
+本课程统一使用 `uv run` 明确说明“从当前项目环境运行”，不要求手动激活 `.venv`。
+
+### 6. 让项目报告事实并运行测试
+
+执行：
 
 ```bash
 unset COURSE_MODE
-printenv COURSE_MODE
-COURSE_MODE=fixture printenv COURSE_MODE
-printenv COURSE_MODE
-```
-
-预期依次看到：空、`fixture`、再次为空。
-
-这说明 `NAME=value command` 可以只把信息交给一次命令，并没有永久修改项目或用户配置。
-
-### 5. 运行程序和给定测试
-
-```bash
 COURSE_MODE=fixture uv run --locked python course_check.py
 COURSE_MODE=fixture uv run --locked pytest -q
+printenv COURSE_MODE
 ```
 
-程序预期显示：
+第一条 `unset` 清除 Shell 中可能残留的同名变量；`pytest` 是项目使用的测试程序，`-q` 只让它减少输出。最后的 `printenv` 再检查变量是否仍然存在。
+
+程序最低预期：
 
 ```text
 project: ai-agents-lab
@@ -213,50 +408,41 @@ signature: teacher
 RUNTIME_CHECK=PASS
 ```
 
-Python 补丁版本可以不同。pytest 应全部通过；此时签名仍是 `teacher` 并不矛盾——测试只检查已经写入的规则，不会替人完成第三课时的签名修改。
+pytest 应显示 `6 passed`；最后的 `printenv COURSE_MODE` 应没有输出。`COURSE_MODE=fixture` 只对紧随其后的命令及其子进程可见，没有永久写入 shell 或项目文件。
 
-### 6. 用户级配置与项目级配置
+测试通过只说明已经写下的规则通过；此时签名仍是 `teacher`，因为个人签名属于第三课时的新任务。
 
-uv 的用户级配置可以位于 WSL 的：
+### 第二课时完成核对
 
-```text
-~/.config/uv/uv.toml
-```
+- [ ] 从 `inbox` 运行 `some.py` 成功；从 `cli-lab` 省略路径时失败，补全路径后成功；
+- [ ] 能说明 Shell 如何找到 `python3`，以及 Python 如何找到 `some.py`；
+- [ ] 项目 Python 路径位于 `course-check/.venv/`；
+- [ ] 程序显示 `RUNTIME_CHECK=PASS`，pytest 显示 `6 passed`；
+- [ ] 最后的 `printenv COURSE_MODE` 没有输出。
 
-项目级 uv 配置可以位于：
+### 第二课时需要停下求助的情况
 
-```text
-项目根/uv.toml
-```
+- `vim`、`python3` 或 `uv` 任意一个无法找到；
+- 实验开始前 `inbox/some.py` 已经存在；
+- Vim 无法正常退出；
+- `uv sync --locked` 失败；不改锁文件、不换镜像、不手动安装依赖；
+- 项目解释器不在 `.venv`，程序显示 FAIL，或测试失败。
 
-或 `pyproject.toml` 的 `[tool.uv]` 分区中。
+## 第三课时｜工作区、暂存区与本地历史
 
-- 用户级配置：个人默认只需设置一次，但同伴看不见，换机器时也可能遗漏；
-- 项目级配置：随项目共享、可以审查和复现，但需要逐项目维护；
-- 决定项目能否复现的条件，应尽量写进项目；只代表个人偏好的默认设置可以留在用户级。
+### 1. 从干净工作区开始
 
-本周只认识边界，不创建这些配置文件。项目依赖声明与 uv 自身的行为配置也不是同一件事。
-
-## 第三课时｜Git 与 Source Control
-
-### 1. 看清本地与远端
-
-先回到仓库根：
+切回 `w02-workbench` 窗口，在仓库根目录（也就是 clone 得到的最外层目录 `~/course/w02-workbench`）执行：
 
 ```bash
 cd ~/course/w02-workbench
-git remote -v
-git branch --show-current
+pwd
 git status --short
 ```
 
-- 工作区：Explorer 中当前可以编辑的文件；
-- 本地仓库：`.git/` 保存的历史和配置；
-- `origin`：一个惯用的 remote 名称，记录本仓库来自哪个网络地址。
+`git status --short` 必须没有输出。若已有改动，保留现场并直接求助；不要使用 reset、restore 或 Discard Changes 清理。
 
-`clone` 会取得文件与历史，并记录 `origin`；本地修改不会自动上传到 GitHub。
-
-### 2. 只修改公开签名
+### 2. 修改并验证公开签名
 
 在 Explorer 中打开：
 
@@ -264,155 +450,230 @@ git status --short
 warmups/week-02/course-check/signature.toml
 ```
 
-只把 `teacher` 改为教师分配的公开课程代号，例如：
+只把 `teacher` 改为教师指定或认可的公开课程代号，例如：
 
 ```toml
 [student]
 signature = "s07"
 ```
 
-不要写姓名、完整学号、个人邮箱、密码、token 或其他个人信息。
+如果教师尚未说明代号规则，先询问，不自行写入个人信息。不要写姓名、完整学号、个人邮箱或其他个人信息。保存后先验证：
 
-保存后，VS Code Source Control 应出现一个修改文件。
+```bash
+cd warmups/week-02/course-check
+COURSE_MODE=fixture uv run --locked python course_check.py
+cd ../../..
+```
 
-### 3. 用两种入口核对同一份 diff
+程序必须显示本人公开代号与 `RUNTIME_CHECK=PASS`。
 
-在仓库根运行：
+### 3. 用终端和 Source Control 查看同一个 diff
+
+在仓库根执行：
 
 ```bash
 git status --short
 git diff -- warmups/week-02/course-check/signature.toml
 ```
 
-再在 Source Control 中点击 `signature.toml`，核对图形差异视图与终端显示的是同一处删除和新增。
+最低预期：
 
-对应关系：
+- `git status --short` 显示第二列为 `M`，例如：
+
+  ```text
+   M warmups/week-02/course-check/signature.toml
+  ```
+
+- diff（差异记录）只包含 `teacher` 到个人代号的一行替换。
+
+按 `Ctrl+Shift+G` 打开 VS Code Source Control；`signature.toml` 应位于 Changes。点击它，图形 diff 应显示同一处删除和新增。
 
 ```text
-git status    ↔  Changes
-git diff      ↔  差异视图
-git add       ↔  Stage Changes
-git commit    ↔  Commit
+git status --short    ↔ Source Control 状态列表
+git diff              ↔ Changes
+git diff --staged     ↔ Staged Changes
 ```
 
-只有能说明“改了哪个文件、旧值是什么、新值是什么”，才进入提交。
+Git 的“追踪”不是保存每次键盘输入，而是比较当前状态与已经记录的状态。
 
-### 4. 设置本仓库的公开提交身份
+### 4. 把唯一改动送入暂存区
 
-把示例 `s07` 替换为本人公开课程代号：
+```text
+工作区 ── Stage / git add ──▶ 暂存区 ── Commit ──▶ 本地历史
+  │                              │
+  └─ git diff：与暂存区比较       └─ git diff --staged：与 HEAD 比较
+```
+
+这里先把 `HEAD` 理解为“当前分支最新一次 commit 的位置”。
+
+在 Source Control 的 Changes 中，只对 `signature.toml` 选择 **Stage Changes**。它应移动到 Staged Changes。
+
+回到终端执行：
+
+```bash
+git status --short
+git diff -- warmups/week-02/course-check/signature.toml
+git diff --staged -- warmups/week-02/course-check/signature.toml
+```
+
+预期：
+
+- 状态显示第一列为 `M`，例如：
+
+  ```text
+  M  warmups/week-02/course-check/signature.toml
+  ```
+
+- 普通 `git diff` 没有输出；
+- `git diff --staged` 仍显示这一行修改。
+
+Save 写入工作区；Stage 选择下一次快照；Commit 才把快照写入本地历史。Unstage 只把改动移回 Changes，不会删除文件内容。
+
+### 5. 设置本仓库身份并 commit
+
+把示例 `s07` 替换为 `signature.toml` 中使用的同一个公开课程代号：
 
 ```bash
 git config --local user.name "s07"
 git config --local user.email "s07@example.invalid"
 ```
 
-`--local` 表示这些设置只写入当前仓库的 `.git/config`，不会改变其他项目。`example.invalid` 是专门用于示例的无效域名，不接收邮件。
+`--local` 表示身份只写入当前仓库的 `.git/config`；`example.invalid` 是用于示例的无效域名，不接收邮件。
 
-### 5. 用 Source Control 完成本地提交
+在 Source Control 输入框填写：
 
-1. 在 Source Control 中只对 `signature.toml` 选择 **Stage Changes**；
-2. 确认 Staged Changes 中只有这一项；
-3. 输入提交信息：
+```text
+w2: set public signature
+```
 
-   ```text
-   w2: set public signature
-   ```
+确认 Staged Changes 中只有 `signature.toml`，再选择 **Commit**。
 
-4. 点击 **Commit**。
-
-若 Source Control 无法完成，可在仓库根使用：
+Source Control 无法完成时，在仓库根使用终端路线：
 
 ```bash
 git add warmups/week-02/course-check/signature.toml
 git commit -m "w2: set public signature"
 ```
 
-核对：
+提交后执行：
+
+```bash
+git log -1 --oneline
+git show --stat --oneline HEAD
+```
+
+若 `git show` 进入分页界面，按 `q` 返回终端。
+
+每个 commit 都有一个完整对象 ID；命令行和界面通常只显示其中足以区分对象的短前缀，称为短 SHA。`HEAD` 是一个引用；在本课的正常分支状态下，它经当前分支解析到最新 commit。可以在 Source Control 面板的 Graph（提交图）中找到同一条提交并查看其文件；若界面没有 Graph，以终端结果为准。
+
+以下命令只认识，不执行：
+
+```bash
+git show SHORT_SHA
+git revert SHORT_SHA
+```
+
+`git show` 查看指定历史对象；`git revert` 新增一个 commit，抵消旧 commit 带来的改动，但不删除旧历史。
+
+### 6. 证明 commit 尚未上传
+
+`git clone` 会把来源仓库的网络地址记录为 `origin`；它只是这个地址在本地的默认简称。然后在仓库根执行：
 
 ```bash
 git status --short
+git status -sb
 git log -1 --oneline
-git remote -v
+git remote get-url origin
 ```
 
 最低预期：
 
-- `git status --short` 没有输出；
+- 第一条没有输出，说明工作区干净；
+- 本流程正常完成时，`git status -sb` 应包含 `ahead 1`；若没有，保留完整输出并求助；
 - 最新提交信息是 `w2: set public signature`；
 - `origin` 仍指向教师仓库；
-- GitHub 页面没有出现这次本地提交。
+- Source Control Graph 可能把这条 commit 显示为尚未 push／outgoing；若界面没有该提示，以 `git status -sb` 的 `ahead 1` 为准。
 
-本周不运行 `git push`。commit 保存本地历史，push 才会尝试把本地历史发送到 remote。
+Commit 保存本地历史；只有 Push 才会尝试把本地 commit 发送给 remote。本周不执行 push，也不点击 Sync 或 Publish Branch。
 
-## 完成核对
+### 第三课时完成核对
 
-回到项目根：
+- [ ] 程序曾显示本人公开代号与 `RUNTIME_CHECK=PASS`；
+- [ ] `git status --short` 没有输出；
+- [ ] `git log -1 --oneline` 显示 `w2: set public signature`；
+- [ ] 能说明这次 commit 仍只在本机，尚未 push。
 
-```bash
-cd warmups/week-02/course-check
-pwd
-COURSE_MODE=fixture uv run --locked python course_check.py
-COURSE_MODE=fixture uv run --locked pytest -q
-git -C ../../.. log -1 --oneline
-```
+### 第三课时需要停下求助的情况
 
-本周完成时应同时具备：
-
-- `pwd` 指向 `warmups/week-02/course-check`；
-- 程序使用项目 `.venv`，并显示本人公开课程代号；
-- pytest 全部通过；
-- 最新本地 commit 是 `w2: set public signature`；
-- 能解释这次 commit 仍只在本机，尚未 push。
+- 初始 `git status --short` 已有输出；
+- 程序没有显示新签名或 PASS；
+- diff 出现额外文件或额外修改；
+- Staged Changes 不止一个文件；
+- Git 或 VS Code 索取 GitHub 凭证，或者准备执行 Sync、Publish 或 Push；
+- 不使用 reset、restore 或 Discard Changes 来“修好”现场。
 
 ## 选做挑战卡
 
-做 0 张也不影响本周完成状态。每张卡互相独立，不安装新工具、不删除文件、不 push。
+完成三课主线后自由选做；做 0 张不影响本周完成状态，卡片之间没有先后依赖。不安装新工具、不删除文件、不修改测试、不 push。
 
-### A｜路径
+### A｜两种路径
 
-从仓库根出发，分别用相对路径和绝对路径读取一次 `signature.toml`；每次先用 `pwd` 说明起点。
+从仓库根出发，先用 `cat` 和相对路径显示一次文件内容：
 
-### B｜帮助
+```bash
+cat warmups/week-02/course-check/signature.toml
+```
 
-从 `ls --help` 找到一个课堂未讲的选项：先写下预测，再在项目目录验证。
+再运行 `pwd`，把它输出的完整路径抄下来，末尾接上 `/warmups/week-02/course-check/signature.toml`，放在 `cat` 后面再次执行。两次输出应完全相同，并包含自己的公开代号。
 
-### C｜拆命令
+### B｜从帮助中学习
 
-逐层解释下面每一段交给谁：
+从 `ls --help` 或 `tree --help` 找一个只改变显示方式、不会改动文件的选项。记录所选选项和预测，再在 `cli-lab` 中分别运行“不带该选项”和“带该选项”的完整命令；最后记录实际输出与一句话结论。
+
+### C｜解释复合命令
+
+把下面命令拆成 `COURSE_MODE=fixture`、`uv run`、`--locked`、`pytest` 和 `-q` 五段，分别写出“由谁处理”和“改变了什么”：
 
 ```bash
 COURSE_MODE=fixture uv run --locked pytest -q
 ```
 
-### D｜观察环境
+### D｜只读检查项目环境
 
-运行：
+在 `course-check` 项目根执行：
 
 ```bash
-uv tree
+uv tree --locked
 uv lock --check
 ```
 
-用一句话分别说明它们展示或检查了什么；不要修改依赖。
+它们是本挑战中新出现的只读检查命令。必要时先查看 `uv tree --help` 和 `uv lock --help`：第一条应显示项目的依赖树，第二条应在锁文件有效时无报错结束。用一句话分别记录结果；不要修改依赖和锁文件。
 
-### E｜观察提交
+### E｜用对象 ID 查看历史
+
+在仓库根执行：
 
 ```bash
-git show --stat --oneline HEAD
-git config --show-origin --get user.name
+git rev-parse HEAD
+git log -1 --oneline
 ```
 
-指出最新提交改了什么，以及当前提交身份来自哪个配置文件。
+第一条应给出完整对象 ID，第二条开头应给出同一个 commit 的短 SHA。再把第二条中的短 SHA 替换到 `SHORT_SHA` 的位置：
 
-## 遇到这些情况，先停一下
+```bash
+git show --stat --oneline SHORT_SHA
+```
 
-- VS Code 左下角不是 `WSL: Ubuntu`，或 `uname -s` 不是 `Linux`；
-- 说不清当前目录是仓库根还是项目根；
-- `git clone` 提示 `w02-workbench` 已存在，或者出现其他错误；
-- 命令要求输入 GitHub 密码、token、Cookie 或其他凭证；
-- 准备运行 `git push`、删除目录、强制重置、修改测试或手动改写 `uv.lock`；
-- 同一个操作连续失败，却没有产生新的错误信息或线索。
+若 `git show` 显示的提交信息仍是 `w2: set public signature`，挑战完成。最后说明完整对象 ID、短 SHA 和 `HEAD` 在本仓库中怎样标识同一个 commit。
 
-保留当前终端输出和 Source Control 状态，告诉教师最后一个成功动作和实际错误。真实现场比随机继续操作更容易接续。
+## 求助时保留什么？
+
+不要随机继续尝试。保留当前终端输出、`pwd`、Explorer 根目录和 Source Control 状态，并告诉教师：
+
+1. 最后一个成功动作是什么；
+2. 实际执行了什么命令或界面动作；
+3. 屏幕上的完整错误信息是什么。
+
+真实现场比“清理后重新开始”更容易判断和接续。
 
 W3 会从新的正式仓库开始，不继承本周目录、环境或提交。

@@ -12,7 +12,7 @@
   - 看清运行条件
     - `git`、`uv` 是多个项目都能调用的工具
     - `pyproject.toml`、`uv.lock` 与 `.venv` 共同限定当前项目
-    - 环境变量还可以只对一次运行可见
+    - 环境变量还可以只对一次命令及其子进程可见
   - 看清版本状态
     - 工作区保存当前文件，本地仓库保存提交历史，remote 指向网络上的仓库
     - VS Code Source Control 把同一份 Git 状态变成可视界面
@@ -76,7 +76,7 @@ cd ~/course
 code .
 ```
 
-- 在新打开的 VS Code 中并排保留 Explorer 和 Integrated Terminal；从此处开始，课堂命令统一在集成终端执行。
+- 在打开或切换后的 VS Code 窗口中并排保留 Explorer 和 Integrated Terminal；从此处开始，课堂命令统一在集成终端执行。
 - 运行：
 
 ```bash
@@ -185,7 +185,7 @@ tree -L 2
 code .
 ```
 
-- 检查：VS Code 左下角显示 `WSL: Ubuntu`，Explorer 顶层目录是 `w02-workbench`；在这个新窗口中新建 Integrated Terminal，再运行 `pwd`，输出应以 `/course/w02-workbench` 结尾。
+- 检查：VS Code 左下角显示 `WSL: Ubuntu`，Explorer 顶层目录是 `w02-workbench`；在打开或切换后的窗口中新建 Integrated Terminal，再运行 `pwd`，输出应以 `/course/w02-workbench` 结尾。
 - 目标目录已经存在或 clone 报错时，保留终端输出并直接求助；不删除目录，也不换一个名字继续 clone。
 - 说明：这一份本地副本只服务本周观察，不是 W3 的正式项目起点。
 - 最后只收四句话：
@@ -491,7 +491,7 @@ git show --stat --oneline HEAD
 ```
 
 - 在 Source Control Graph 中找到同一个 commit：短 SHA、提交信息和改动文件应与终端一致。
-- 完整对象 ID 指认一个 commit；界面和 `--oneline` 通常显示能够在当前仓库中消除歧义的短前缀。`HEAD` 表示当前所在的 commit，也可以把它换成明确的 SHA 交给 `git show`。
+- 完整对象 ID 指认一个 commit；界面和 `--oneline` 通常显示能够在当前仓库中消除歧义的短前缀。`HEAD` 是一个引用；在本课的正常分支状态下，它经当前分支解析到最新 commit。`git show HEAD` 和 `git show <sha>` 都可以查看对应历史。
 - 只介绍、不执行：`git revert <sha>` 不会删除旧 commit，而会新增一个反向 commit 来撤销它；查看历史用 `git show`，暂不进入 checkout 与 detached HEAD。
 
 **转场：** 本地历史已经多出一个节点。最后证明它仍只存在于本机，而没有自动进入 GitHub。
