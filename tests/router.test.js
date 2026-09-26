@@ -112,7 +112,12 @@ describe('teaching hub navigation', () => {
     await settle()
     expect(router.currentRoute.value.path).toBe(`${weekPath}/guide`)
     expect(wrapper.find('.guide-reader').exists()).toBe(true)
-    expect(wrapper.find('.guide-mini-content').exists()).toBe(false)
+    expect(wrapper.find('.guide-mini-content').exists()).toBe(true)
+    const guideOutlineButtons = wrapper.findAll('.guide-mini-content button')
+    expect(guideOutlineButtons.length).toBeGreaterThan(1)
+    scrollIntoViewMock.mockClear()
+    await guideOutlineButtons[1].trigger('click')
+    expect(scrollIntoViewMock).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' })
   })
 
   it('keeps the slide page in the URL during keyboard navigation', async () => {

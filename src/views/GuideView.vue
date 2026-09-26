@@ -57,7 +57,7 @@ watch(sourcePath, async (path, _previous, onCleanup) => {
 
 function updateActiveSection() {
   scrollFrame = null
-  if (!isTopic.value || !outline.value.length) return
+  if (!outline.value.length) return
   const readingLine = Math.max(88, Math.min(180, window.innerHeight * 0.28))
   const current = outline.value.reduce((active, section) => {
     const heading = document.getElementById(section.id)
@@ -74,7 +74,7 @@ function scheduleActiveSectionUpdate() {
 function buildOutline() {
   outline.value = []
   activeSectionId.value = ''
-  if (!isTopic.value || !readerElement.value) return
+  if (!readerElement.value) return
   let section = null
   let sectionIndex = 0
   let subsectionIndex = 0
@@ -130,11 +130,11 @@ onBeforeUnmount(() => {
     </nav>
     <p v-if="loading" class="reader-loading" role="status">正在打开学生指南…</p>
     <section v-else-if="error" class="error-state" role="alert"><h1>学生指南暂时无法读取</h1><p>{{ error }}</p></section>
-    <div v-else-if="source !== null" class="guide-layout" :class="{ 'guide-layout--topic': isTopic }">
+    <div v-else-if="source !== null" class="guide-layout guide-layout--topic">
       <article ref="readerElement" class="guide-reader">
         <SegmentNotes :source="source" />
       </article>
-      <nav v-if="isTopic && outline.length" class="guide-mini-content" aria-label="学生指南目录">
+      <nav v-if="outline.length" class="guide-mini-content" aria-label="学生指南目录">
         <h2>本页目录</h2>
         <ol>
           <li v-for="section in outline" :key="section.id">
