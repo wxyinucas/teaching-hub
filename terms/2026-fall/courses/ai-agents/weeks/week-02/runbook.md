@@ -74,8 +74,6 @@
 
 > Explorer 显示目录树，Terminal 接收文字操作；`pwd` 给出命令行当前采用的观察位置。
 
-*翻页：相对路径从当前位置开始解释*
-
 - 在外部 WSL Bash 中执行：
 
 ```bash
@@ -105,40 +103,6 @@ ls -la
   - `ls` 来自 **list**，回答“这里有什么”；
   - `cd` 来自 **change directory**，改变命令行接下来采用的观察位置。
 - 若课前已经确认安装了 `fastfetch`，可以补充展示一次系统全景；它不是本课依赖，不要求学生安装。
-- 用 `ls -la` 当场拆解统一阅读方式：
-  - `ls`：调用谁；
-  - `-l` 来自 **long format**，显示详细列表；`-a` 来自 **all**，包含以 `.` 开头的隐藏项；
-  - `-la`：把两个短选项合并书写；
-  - 没有显式路径参数：默认查看当前目录 `.`。
-- 给出常见外形，但不要求背诵：
-
-```text
-command [subcommand] [options] [positional arguments]
-```
-
-- 这里的 `[]` 表示“这一部分可能省略”，不是要原样输入的字符；帮助文本中的 `<PATH>`、`URL` 或大写单词通常是等待替换的占位符。
-- 这是一张常用的**阅读地图**，不是所有命令都必须填满四格，也不是所有工具都采用完全相同的顺序：
-  - **command**：首先启动的程序，例如 `ls`、`tree`、`git`、`uv`；
-  - **subcommand**：让一个多功能程序选择“这次做什么”，例如 `git clone`、`git status`、`uv run`；只有工具自己定义的动作词才是 subcommand，不带短横线的词也可能只是路径或名称；
-  - **option**：修改本次动作的方式，常见短形式是 `-a`，长形式是 `--short`；有些 option 自己还需要一个值，例如 `tree -L 2` 中的 `-L 2`；
-  - **flag**：通常指只靠“出现／不出现”切换行为的 option，例如 `-a`、`-l`、`--locked`。口语中也常把所有 option 泛称为 flags，但 `-L 2` 更准确地说是“带值的 option”；
-  - **option value**：隶属于前一个 option 的值；`tree -L 2` 中的 `2` 归 `-L` 管，不是位置参数；
-  - **positional argument**：靠出现位置说明作用的对象，例如目录路径、文件名、URL 或目标目录。广义上，命令名之后交给程序的内容都可称为 arguments；这张地图特意写全称来区分位置参数与 option。
-
-*翻页：简单命令与多级命令*
-
-- 用投影表格把本周四条真实命令逐格对应起来；
-  - 先让学生逐行找 command，
-  - 再判断有没有 subcommand，
-  - 最后区分 options 与 positional arguments。
-
-- `-la` 是该命令支持的短选项合写，相当于 `-l -a`；不能据此假设任意选项都能合并。
-- 同一个词在不同解析层可能扮演不同角色。
-  - 例如对 `uv` 来说，`python course_check.py` 是交给 `run` 的 arguments；
-  - 随后真正启动 `python` 时，`course_check.py` 又成为 Python 的 argument。
-- `-x`／`--word` 只是常见外形，options 能否前后移动、能否合写以及属于哪一级命令，都由具体程序决定，不是 Bash 统一规定。
-  - 不确定时查看它自己的 `--help`。
-
 - 明确：
   - Integrated Terminal 是界面，
   - WSL Bash 负责解释命令，`ls` 等程序完成具体工作；
@@ -189,9 +153,15 @@ tree -L 2
 
 - 收束：
   - 安装前 shell 找不到 `tree`，安装后可以找到并启动它；
-  - `apt`、`sudo` 和安装范围的细节留到下一课时讨论。
+  - `apt`、`sudo` 和安装范围的更多细节本周不展开。
 - 安装失败时保留终端输出并直接求助；
   - 其余文件操作仍可通过 Explorer 和 `ls` 继续，不在课堂上反复更换软件源。
+
+**等待学生操作｜安装并确认 `tree`（预留约 5 min）**
+
+- 让学生现在开始执行 `command -v tree`；未安装者继续执行 `sudo apt update` 与 `sudo apt install tree`，已安装者用 `tree --version` 完成确认。
+- 我暂停主线并巡视，优先处理 `sudo` 密码无回显、密码错误、软件源连接和 `apt` 占用等真实问题；不在学生仍忙于安装时开始下一段演示。
+- 多数学生已经看到 `tree --version` 的结果后继续；尚未解决者保留完整输出并举手求助，可以先跟随投影完成后面的文件实验。
 
 **转场：** 工具已经齐全。
   - 现在从一个空目录开始，让终端创建对象，让 Explorer 负责实时显示结果。
@@ -199,6 +169,8 @@ tree -L 2
 #### 从空目录建立一棵树
 
 > 每次改变文件系统前先说出预期变化，执行后同时用 Explorer 和 `tree` 核对。
+
+*翻页：从空目录建立一棵树*
 
 - 本段出口：
   - `~/course/cli-lab/inbox/note.txt` 已存在，
@@ -248,7 +220,7 @@ tree -L 2
   - 目标文件是否到达 `archive`、
   - 切换目录后 `pwd` 是否与预期一致。
 
-*翻页：你现在在哪里，准备删除什么？*
+*翻页：复制与移动后的目录树*
 
 - 回到 `cli-lab`，先用 `rmdir inbox` 尝试删除非空目录；读取报错，并指出这次失败保护了其中的文件。
 
@@ -281,7 +253,7 @@ tree -L 2
 
 *翻页：Clone 的来源与本地目标*
 
-- 第 43 分钟停止继续扩展文件实验，统一执行：
+- 第 35 分钟停止继续扩展文件实验，统一进入 clone；尚未完成的目录清理课后继续，不占用项目取得与本课收口时间：
 
 ```bash
 cd ~
@@ -296,6 +268,34 @@ code .
 - 检查：VS Code 左下角显示 `WSL: Ubuntu`，Explorer 顶层目录是 `w02-workbench`；在打开或切换后的窗口中新建 Integrated Terminal，再运行 `pwd`，输出应以 `/course/w02-workbench` 结尾。
 - 目标目录已经存在或 clone 报错时，保留终端输出并直接求助；不删除目录，也不换一个名字继续 clone。
 - 说明：这一份本地副本只服务本周观察，不是 W3 的正式项目起点。
+
+#### 回看：一条命令怎样组成？
+
+> 先完成真实操作，再从已经使用过的命令中提取共同结构；这张结构图是阅读地图，不是需要背诵的语法公式。
+
+*翻页：简单命令与多级命令*
+
+- 用 `ls -la` 回看简单命令：
+  - `ls`：首先启动的 command；
+  - `-l` 来自 **long format**，显示详细列表；`-a` 来自 **all**，包含以 `.` 开头的隐藏项；
+  - `-la`：两个短 options 合写；
+  - 没有显式路径参数：默认查看当前目录 `.`。
+- 再把刚才实际使用的 `tree -L 2`、`sudo apt install tree` 与 `git clone <URL> <TARGET>` 放到同一张阅读地图中：
+
+```text
+command [subcommand] [options] [positional arguments]
+```
+
+- 这里的 `[]` 表示“这一部分可能省略”，不是要原样输入的字符；帮助文本中的 `<PATH>`、`URL` 或大写单词通常是等待替换的占位符。
+- 四种位置分别回答：
+  - **command**：首先启动哪个程序，例如 `ls`、`tree`、`git`、`uv`；
+  - **subcommand**：让多功能程序选择这次做什么，例如 `apt install`、`git clone`、`git status`、`uv run`；
+  - **option**：改变本次动作的方式，常见短形式为 `-a`，长形式为 `--short`；只靠出现与否切换行为的 option 常称为 **flag**，需要值的 `-L 2` 则由 option `-L` 带着 value `2`；
+  - **positional argument**：靠位置说明作用对象，例如目录、文件名、URL 或目标目录。
+- 两条边界：
+  - `-la` 是否能合写、option 能否换位置，都由具体程序决定，不是 Bash 统一规定；不确定时查看该程序的 `--help`；
+  - 同一个词在不同解析层可能扮演不同角色，例如 `uv run python course_check.py` 中，`python course_check.py` 先是交给 `uv run` 的 arguments，随后 `course_check.py` 又成为 Python 的 argument。
+
 - 最后只收四句话：
   1. 图形界面与命令行可以操作同一份文件系统；
   2. 当前目录决定相对路径从哪里开始解释；
@@ -314,7 +314,7 @@ code .
 ~/course/cli-lab/inbox/some.py
 └── 观察：当前目录、脚本路径与 PATH
 
-~/course/w02-workbench/warmups/week-02/course-check/
+~/course/w02-workbench/
 └── 观察：机器上的 Python 与项目需要的 Python
 ```
 
@@ -400,15 +400,17 @@ printenv | cut -d= -f1 | sort
 ```
 
 - 简短拆解：`printenv` 给出环境变量，`cut -d= -f1` 取每行等号前的名称，`sort` 排序；竖线 `|` 把左侧输出交给右侧继续处理。
-- 再只查看几项明确、安全且与当前问题有关的值：
+- 逐项查看几组明确、安全且与当前问题有关的 `KEY=VALUE`：
 
 ```bash
-printenv USER
-printenv HOME
-printenv SHELL
-printenv PWD
-printenv PATH
+printenv | grep '^USER='
+printenv | grep '^HOME='
+printenv | grep '^SHELL='
+printenv | grep '^PWD='
+printenv | grep '^PATH='
 ```
+
+- `^NAME=` 表示只匹配以该名称开头并紧跟 `=` 的整行，既保留环境变量的 `KEY=VALUE` 结构，也避免误命中包含相同字样的其他变量。
 
 - 指出这些名称承担不同职责：
   - `USER` 是当前用户名，
@@ -472,10 +474,10 @@ Python ── 当前目录 + 参数 ──> some.py
   - 升级应当成为一次主动、可观察、重新接受测试的改动，而不是在下次安装时悄悄发生。
 - 版本信息也不能保证跨操作系统、CPU 架构或外部服务完全复现；
   - 但即使原环境不能直接运行，它仍为新系统重建和排查环境提供了充分线索。
-- 切回第一课时保留的 `w02-workbench` 窗口，再进入已经准备好的项目：
+- 切回第一课时保留的 `w02-workbench` 窗口；此时仓库根目录同时也是 uv 项目根目录：
 
 ```bash
-cd ~/course/w02-workbench/warmups/week-02/course-check
+cd ~/course/w02-workbench
 pwd
 ```
 
@@ -499,7 +501,7 @@ pwd
 
 *翻页：项目环境：声明、锁定、恢复*
 
-- 在 `course-check` 项目根执行：
+- 在 `w02-workbench` 仓库根（也是 uv 项目根）执行：
 
 ```bash
 command -v uv
@@ -511,7 +513,7 @@ uv run --locked python -c 'import sys; print(sys.executable)'
 
 - 比较两次 Python 路径：
   - 前一条报告 shell 从机器环境找到的 Python，
-  - 最后一条应指向当前 `course-check/.venv/`；
+  - 最后一条应指向当前项目根的 `.venv/`；
   - 后者才是“本次确实使用了项目环境”的证据。
 - 在 Explorer 中观察 `.venv`：
   - `pyproject.toml` 与 `uv.lock` 可以共享和审查，
@@ -556,44 +558,59 @@ printenv COURSE_MODE
 
 > 修改并验证一项公开签名，用终端和 VS Code 观察同一个改动怎样从工作区进入暂存区，最终成为由 SHA 指认的本地 commit。
 
-#### 先让工作区出现一个可验证的改动
-
-> 从干净仓库开始，只修改一项程序能够报告的公开信息；先证明结果正确，再考虑提交。
-
 **课前检查**
 
-- [ ] 在没有全局 Git 身份的新仓库中完整走通 repo-local 身份、Stage、Commit 与 Source Control Graph；确认不会弹出 GitHub 登录。
-- [ ] 准备终端路线作为 Source Control 操作失效时的 Plan B；本周任何情况下都不执行 `git push`，也不点击 Sync 或 Publish Branch。
+- [ ] 在没有全局 Git 身份的新仓库中完整走通 repo-local 身份、`git add`、`git commit` 与 Source Control Graph；确认不会弹出 GitHub 登录。
+- [ ] 除 VS Code 保存产生初始工作区改动外，完整走通“CLI 产生 Git 状态并先观察，解释输出后立即用 GUI 对照观察”的顺序；GUI 全程不执行 Stage 或 Commit。
 - [ ] 准备一张已完成 commit 的 Source Control Graph 画面，作为界面版本不同或投影不清时的 Plan B。
 
-*翻页：只改一个可验证输入*
+#### 准备本仓库身份与干净起点
 
-- 切回 Explorer 根目录为 `w02-workbench` 的 VS Code 窗口，在仓库根确认起点：
+> 先完成一次性环境准备，再进入工作区、暂存区与本地历史的主线；身份信息只写入本仓库，不是 GitHub 登录。
+
+*翻页：先准备提交身份*
+
+- 切回 Explorer 根目录为 `w02-workbench` 的 VS Code 窗口，在仓库根执行；把示例代号替换为教师指定或认可的公开标识：
 
 ```bash
 cd ~/course/w02-workbench
 pwd
+git config --local user.name "s07"
+git config --local user.email "s07@example.invalid"
+git config --local --get user.name
+git config --local --get user.email
 git status --short
 ```
 
+- commit 需要作者身份；已有正确的全局配置时不一定必须重新设置，但本课统一写入 repo-local 配置，避免改变整台机器，也避免 Git 猜错或无法取得身份。
+- `user.name` 是 commit 作者名称，不是 GitHub 用户名；`user.email` 也是 commit 元数据，不负责登录或认证。
+- `--local` 把配置写入当前仓库的 `.git/config`；它可以覆盖本仓库读取到的全局值，但不会成为工作区改动。
 - `status` 是英文“状态”；
   - `--short` 要求用紧凑格式报告。
   - Git 子命令大多直接使用这种英文动作或名词，不必另外硬凑缩写。
 - `git status --short` 应没有输出；
   - 若已经存在改动，保留现场并直接求助，不执行 reset、restore 或覆盖。
-- 在 Explorer 中打开 `warmups/week-02/course-check/signature.toml`，只把 `teacher` 改为本人公开课程代号，例如：
+
+**转场：** 提交身份与干净起点已经确认；现在只制造一项程序能够验证的改动。
+
+#### 用 VS Code 编辑并验证一项改动
+
+> 上一课时用 Vim 编辑文件；这一次直接在 VS Code 中所见即所得地修改同一类文本文件，不展开比较编辑器的适用场景。
+
+*翻页：只改一个可验证输入*
+
+- 在 Explorer 中打开仓库根目录的 `signature.toml`，只把 `teacher` 改为教师指定或认可的公开标识，例如：
 
 ```toml
 [student]
 signature = "s07"
 ```
 
+- Vim、VS Code 或其他文本编辑器都能修改同一个文件；Git 关心的是保存后的文件状态，不关心使用了哪一种编辑器。
 - 保存后立即验证程序确实读到了新值：
 
 ```bash
-cd warmups/week-02/course-check
 COURSE_MODE=fixture uv run --locked python course_check.py
-cd ../../..
 ```
 
 - 出口：
@@ -603,11 +620,11 @@ cd ../../..
   - 程序结果已经改变，GitHub 页面为什么没有改变？
   - 先保留问题，不急着讲 remote。
 
-**转场：** 文件已经改变，但还没有进入本地历史。先用两个入口观察 Git 此刻究竟看见了什么。
+**转场：** 文件已经改变，但还没有进入本地历史。先让 CLI 给出第一份证据，解释清楚以后，再用 GUI 看同一个状态。
 
-#### 两个入口观察同一个 diff
+#### CLI 先观察工作区，GUI 随后对照
 
-> `git status` 报告哪些状态发生变化，`git diff` 展示工作区与暂存区之间具体变了什么。
+> `git status` 报告哪些状态发生变化，`git diff` 展示具体差异；解释完输出后，Source Control 只作第二观察窗口。
 
 - `diff` 是 **difference** 的常见缩写，表示差异；
   - `git diff` 仍是 Git 的子命令，不是另一套工具。
@@ -618,10 +635,13 @@ cd ../../..
 
 ```bash
 git status --short
-git diff -- warmups/week-02/course-check/signature.toml
+git diff -- signature.toml
 ```
 
-- 在 Source Control 中点击同一文件，核对图形 diff 与终端都显示 `teacher` 被替换为个人代号。
+- 先解释 CLI 证据：
+  - `git status --short` 显示工作区中的 `signature.toml` 已修改；
+  - `git diff` 只显示 `teacher` 被替换为新的公开标识。
+- 随即打开 Source Control，点击 Changes 中的同一文件；核对图形 diff 显示完全相同的一处替换，本段不点击 Stage Changes。
 - 固定对应关系：
   - `git status` ↔ Source Control 中的状态列表；
   - `git diff` ↔ Changes 中尚未 Stage 的差异；
@@ -636,73 +656,85 @@ git diff -- warmups/week-02/course-check/signature.toml
 
 **转场：** diff 已经能够解释。现在把“当前文件”与“下一次准备保存的快照”分开。
 
-#### 把改动送入暂存区
+#### CLI 产生暂存状态，GUI 随后对照
 
-> Save 写入工作区；Stage 选择下一次 commit 的内容；两者不是同一个动作。
+> `git add` 选择下一次 commit 的内容；CLI 先产生并观察暂存状态，Source Control 随后显示同一个结果。
 
 *翻页：一个改动怎样成为历史？*
 
-- 在 Source Control 的 Changes 中只对 `signature.toml` 选择 Stage Changes，观察它移动到 Staged Changes。
-- 回到终端比较：
+- 在终端执行：
 
 ```bash
+git add signature.toml
 git status --short
-git diff -- warmups/week-02/course-check/signature.toml
-git diff --staged -- warmups/week-02/course-check/signature.toml
+git diff -- signature.toml
+git diff --staged -- signature.toml
 ```
 
+- `add` 在这里不是“新建文件”，而是把当前选定内容放入暂存区，成为下一次 commit 的候选快照。
 - 预期：
   - 普通 `git diff` 不再显示这项差异，`git diff --staged` 仍显示它；
   - 改动没有消失，只是进入了“下一次 commit 将包含什么”的快照。
+- 解释完三条观察命令的结果后立即回到 Source Control；其中普通 `git diff` 没有输出本身也是证据：
+  - `signature.toml` 应已经从 Changes 移入 Staged Changes；
+  - 这里只观察，不再执行一次 Stage。
+
+**仅供教师演示｜不进入 Guide，学生不用跟做**
+
+- 暂存区已经保存了只修改 `signature` 的版本。此时在 VS Code 中临时为 `signature.toml` 增加一个字段并保存，但不要再次执行 `git add`：
+
+```toml
+note = "not staged"
+```
+
+- 立即执行：
+
+```bash
+git status --short
+git diff -- signature.toml
+git diff --staged -- signature.toml
+```
+
+- `git status --short` 此时通常显示 `MM signature.toml`；Source Control 中同一个文件会同时出现在 Staged Changes 和 Changes：
+
+| Source Control 区域 | 比较对象 | 对应命令 | 本次显示的内容 |
+| --- | --- | --- | --- |
+| Staged Changes | 暂存区相对 HEAD | `git diff --staged` | 已经暂存的 `signature` 修改 |
+| Changes | 工作区相对暂存区 | `git diff` | 暂存后新增、尚未暂存的 `note` 字段 |
+
+- 只说明两种 Changes 的比较对象不同；不展开部分暂存、逐块暂存或其他操作。
+- 演示结束后在 VS Code 中删除临时的 `note` 字段并保存，仍然不要执行 `git add`；确认普通 `git diff` 没有输出，Source Control 只剩 Staged Changes，再继续 commit。
+
 - 固定一句话：**Save 改变工作区文件；Stage 选择下一次快照；Commit 才把快照写入本地历史。**
 - 说明：
   - Unstage 只把改动移回 Changes，不会删除文件内容；
   - 本节不使用 Discard Changes。
 
-**转场：** 暂存区已经准确描述下一次快照；现在给它作者身份和一句说明，把它写入本地历史。
+**转场：** 暂存区已经准确描述下一次快照；提交身份也已在开场准备好，现在直接把它写入本地历史。
 
-#### 用 commit 保存历史，用 SHA 找回它
+#### CLI 产生 commit，GUI 随后对照历史
 
-> Commit 是带有作者、时间、说明和父级关系的历史节点；SHA 是 Git 用来指认这个节点的对象 ID。
+> `git commit` 产生历史节点；CLI 先用 `log` 和 `show` 观察，Source Control Graph 随后显示同一个 commit。
 
-- `config` 是 **configuration** 的缩写；
-  - `add` 是加入暂存区，
-  - `commit` 是把选定快照记录成历史节点。
+- `commit` 是把选定快照记录成历史节点；
 - `SHA` 来自 **Secure Hash Algorithm**。
   - 本课只把它理解成 Git 对象 ID 的哈希表示，不展开哈希算法细节。
 
 *翻页：Commit 的指认与撤销*
 
-- 在仓库根设置仅属于这个练习仓库的公开身份；把示例代号替换为本人课程代号：
+- 第 140 分钟统一停止教师演示、GUI 往返和个别排障；已经确认 `git diff --staged` 只含预期签名修改者继续完成 commit，尚未确认者保留现场并跟随投影。Graph 来不及现场打开时直接使用课前画面。
+- 在终端提交并立即观察最新历史：
 
 ```bash
-git config --local user.name "s07"
-git config --local user.email "s07@example.invalid"
-```
-
-- 在 Source Control 的输入框填写固定提交信息并选择 Commit：
-
-```text
-w2: set public signature
-```
-
-- 第 140 分钟仍未完成提交时，统一切换终端 Plan B：
-
-```bash
-git add warmups/week-02/course-check/signature.toml
 git commit -m "w2: set public signature"
-```
-
-- 提交后执行：
-
-```bash
 git log -1 --oneline
 git show --stat --oneline HEAD
 ```
 
 - `log` 是历史日志，`show` 是查看对象；`HEAD` 是 Git 的特殊引用名称，不是需要展开的缩写。
-- 在 Source Control Graph 中找到同一个 commit：
+- 解释完 CLI 输出后，再打开 Source Control Graph，找到同一个 commit：
   - 短 SHA、提交信息和改动文件应与终端一致。
+- Source Control 的 Commit 控件可以完成相同动作，但本节只认识其对应关系，不再重复提交。
 - 完整对象 ID 指认一个 commit；
   - 界面和 `--oneline` 通常显示能够在当前仓库中消除歧义的短前缀。
   - `HEAD` 是一个引用；
@@ -712,15 +744,15 @@ git show --stat --oneline HEAD
   - `git revert <sha>` 不会删除旧 commit，而会新增一个反向 commit 来撤销它；
   - 查看历史用 `git show`，暂不进入 checkout 与 detached HEAD。
 
-**转场：** 本地历史已经多出一个节点。最后证明它仍只存在于本机，而没有自动进入 GitHub。
+**转场：** 本地历史已经多出一个节点。最后核对 Git 怎样把它记录为相对 `origin` 尚未推送的本地提交。
 
-#### 本地 commit 为什么没有改变 GitHub？
+#### Git 怎样表示尚未 push 的本地 commit？
 
 > Clone 取得历史并记录 remote；Commit 更新本地历史；只有 Push 才会尝试把本地 commit 发送给 remote。
 
 - `remote` 是“远端”的普通英文名词；`origin` 是 `clone` 默认赋予来源远端的惯例名称，不是缩写；`push` 是把本地对象发送到远端的动作。
 
-*翻页：本地 commit 后，GitHub 会变化吗？*
+*翻页：本地 commit 后，Git 记录了什么？*
 
 - 在仓库根执行：
 
@@ -731,12 +763,16 @@ git log -1 --oneline
 git remote get-url origin
 ```
 
+- `git status -sb` 把两个短选项合写：
+  - `-s` 等于 `--short`，使用紧凑格式显示工作区和暂存区状态；
+  - `-b` 等于 `--branch`，在紧凑输出顶部额外显示当前分支及其 upstream 关系，例如本地 `main` 是否领先 `origin/main`。
 - 核对：
   - 第一条没有输出，说明工作区已经干净；
-  - 第二条通常显示本地分支相对 `origin` 为 `ahead 1`；
+  - 第二条通常显示本地 `main` 相对 upstream `origin/main` 为 `ahead 1`；
   - 最新 commit 是 `w2: set public signature`；`origin` 仍指向教师仓库。
-- 在 Source Control Graph 中观察这条 commit 处于 outgoing／尚未 push 的一侧；
+- 解释完 CLI 证据后，在 Source Control Graph 中观察这条 commit 处于 outgoing／尚未 push 的一侧；
   - 不同版本界面文字可以不同，以终端事实为准。
+- `origin/main` 是本地保存的远端跟踪状态，不是实时查询 GitHub；`origin` 则是 remote 的名称，`git remote get-url origin` 查询它记录的 URL。结合本流程从未执行 push，可以说明这次操作没有把新 commit 发送出去。
 - 本周故意停在本地 commit，不点击 Sync 或 Publish Branch；W3 再处理个人 fork、认证、push 与 upstream。
 - 做得快：
   - 完成 Guide 中任意一张独立挑战卡；

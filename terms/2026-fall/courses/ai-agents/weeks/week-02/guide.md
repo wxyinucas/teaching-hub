@@ -62,21 +62,6 @@ ls -la
 
 `ls` 显示普通目录项；`ls -la` 中，`-l` 要求详细列表，`-a` 还会显示以 `.` 开头的隐藏项。
 
-阅读命令时先找四种可能出现的部分：
-
-```text
-command [subcommand] [options] [positional arguments]
-```
-
-方括号表示这一部分可以省略，不是需要原样输入的字符：
-
-- **command** 是首先启动的程序，例如 `ls`、`git`、`uv`；
-- **subcommand** 让多功能程序选择本次动作，例如 `git clone` 中的 `clone`；
-- **option** 改变动作方式。无需额外值的 option 常称为 **flag**，例如 `ls -a`；`tree -L 2` 中的 `-L` 是带值 option，`2` 是它的值；
-- **positional argument** 靠位置说明作用，例如 URL、文件名和目标目录。
-
-例如 `ls -la cli-lab` 中，`ls` 是 command，`-l` 与 `-a` 是两个合写的 flags，`cli-lab` 是位置参数。不同工具的具体语法由工具自己规定，不确定时查看它的 `--help`。
-
 常用路径符号：
 
 - `~`：当前用户的 home（用户主目录）；
@@ -247,6 +232,23 @@ code .
 
 此时暂时把 `git clone` 理解为“把远端仓库取得为本地目录”；第三课时再解释它附带的 Git 关系。
 
+### 7. 回看命令结构
+
+完成实际操作后，再从已经使用过的命令中找四种可能出现的部分：
+
+```text
+command [subcommand] [options] [positional arguments]
+```
+
+方括号表示这一部分可以省略，不是需要原样输入的字符：
+
+- **command** 是首先启动的程序，例如 `ls`、`tree`、`git`；
+- **subcommand** 让多功能程序选择本次动作，例如 `apt install` 中的 `install`、`git clone` 中的 `clone`；
+- **option** 改变动作方式。无需额外值的 option 常称为 **flag**，例如 `ls -a`；`tree -L 2` 中的 `-L` 是带值 option，`2` 是它的值；
+- **positional argument** 靠位置说明作用，例如 URL、文件名和目标目录。
+
+例如 `ls -la` 中，`ls` 是 command，`-l` 与 `-a` 是两个合写的 flags，没有显式路径参数时默认查看当前目录 `.`。`git clone <URL> <TARGET>` 中，`git` 是 command，`clone` 是 subcommand，URL 和目标目录是位置参数。不同工具的具体语法由工具自己规定，不确定时查看它的 `--help`。
+
 ### 第一课时完成核对
 
 - [ ] `~/course/cli-lab/inbox` 存在且为空；
@@ -273,7 +275,25 @@ command -v python3
 command -v uv
 ```
 
-三条命令都应输出路径。然后另开一个 VS Code 窗口：
+`vim`、`python3` 和 `uv` 都应输出路径。如果 `command -v uv` 没有输出，不要照搬 Homebrew，也不要尝试 `sudo apt install uv`；在 WSL 的 Ubuntu 中使用 [uv 官方 Linux 安装器](https://docs.astral.sh/uv/getting-started/installation/)：
+
+```bash
+sudo apt update
+sudo apt install curl
+curl -LsSf https://astral.sh/uv/install.sh | sh
+source "$HOME/.local/bin/env"
+```
+
+随后验证：
+
+```bash
+command -v uv
+uv --version
+```
+
+如果 `source` 报告文件不存在，或随后仍然找不到 `uv`，先保留安装器最后显示的提示并求助；不要反复安装或手动移动文件。`curl ... | sh` 在这里表示从 uv 官方地址下载并执行安装脚本，不应把这种写法随意用于来源不明的网址。
+
+三项工具都能找到后，另开一个 VS Code 窗口：
 
 ```bash
 code -n ~/course/cli-lab
@@ -335,15 +355,17 @@ printenv | cut -d= -f1 | sort
 
 `printenv` 给出环境变量，`cut -d= -f1` 取每行等号前的名称，`sort` 对名称排序；竖线 `|` 把左侧命令的输出交给右侧继续处理。
 
-再逐项查看几个与本课有关的值：
+逐项查看几组与本课有关的完整 `KEY=VALUE`：
 
 ```bash
-printenv USER
-printenv HOME
-printenv SHELL
-printenv PWD
-printenv PATH
+printenv | grep '^USER='
+printenv | grep '^HOME='
+printenv | grep '^SHELL='
+printenv | grep '^PWD='
+printenv | grep '^PATH='
 ```
+
+`^NAME=` 只匹配以该名称开头并紧跟 `=` 的整行，既保留环境变量的 `KEY=VALUE` 结构，也避免误匹配包含相同字样的其他变量。
 
 最后把 `PATH` 中由冒号分隔的目录逐行显示：
 
@@ -375,7 +397,7 @@ Python ── 当前目录 + 参数 ──▶ some.py
 切回 Explorer 根目录为 `w02-workbench` 的窗口，在其集成终端执行：
 
 ```bash
-cd ~/course/w02-workbench/warmups/week-02/course-check
+cd ~/course/w02-workbench
 pwd
 ls -la
 ```
@@ -401,7 +423,7 @@ ls -la
 
 ### 5. 用 uv 恢复并核对项目环境
 
-仍在 `course-check` 项目根执行：
+仍在 `w02-workbench` 仓库根（也是 uv 项目根）执行：
 
 ```bash
 command -v uv
@@ -416,7 +438,7 @@ uv run --locked python -c 'import sys; print(sys.executable)'
 刷新 Explorer，确认项目根出现 `.venv/`。再比较两次 Python 路径：
 
 - `python3 -c ...` 输出的是机器环境中的 Python，例如 `/usr/bin/python3`；
-- `uv run --locked python -c ...` 输出的路径应位于当前项目的 `.../course-check/.venv/bin/python`。
+- `uv run --locked python -c ...` 输出的路径应位于当前项目根的 `.../w02-workbench/.venv/bin/python`。
 
 本课程统一使用 `uv run` 明确说明“从当前项目环境运行”，不要求手动激活 `.venv`。
 
@@ -455,13 +477,13 @@ pytest 应显示 `6 passed`；最后的 `printenv COURSE_MODE` 应没有输出�
 
 - [ ] 从 `inbox` 运行 `some.py` 成功；从 `cli-lab` 省略路径时失败，补全路径后成功；
 - [ ] 能说明 Shell 如何找到 `python3`，以及 Python 如何找到 `some.py`；
-- [ ] 项目 Python 路径位于 `course-check/.venv/`；
+- [ ] 项目 Python 路径位于 `w02-workbench/.venv/`；
 - [ ] 程序显示 `RUNTIME_CHECK=PASS`，pytest 显示 `6 passed`；
 - [ ] 最后的 `printenv COURSE_MODE` 没有输出。
 
 ### 第二课时需要停下求助的情况
 
-- `vim`、`python3` 或 `uv` 任意一个无法找到；
+- `vim`、`python3` 无法找到，或完成上述官方安装步骤后仍然无法找到 `uv`；
 - 实验开始前 `inbox/some.py` 已经存在；
 - Vim 无法正常退出；
 - `uv sync --locked` 失败；不改锁文件、不换镜像、不手动安装依赖；
@@ -469,63 +491,61 @@ pytest 应显示 `6 passed`；最后的 `printenv COURSE_MODE` 应没有输出�
 
 ## 第三课时｜工作区、暂存区与本地历史
 
-### 1. 从干净工作区开始
+### 1. 设置本仓库提交身份并确认干净起点
 
-切回 `w02-workbench` 窗口，在仓库根目录（也就是 clone 得到的最外层目录 `~/course/w02-workbench`）执行：
+切回 `w02-workbench` 窗口，在仓库根目录执行；把示例 `s07` 替换为教师指定或认可的公开标识：
 
 ```bash
 cd ~/course/w02-workbench
 pwd
+git config --local user.name "s07"
+git config --local user.email "s07@example.invalid"
+git config --local --get user.name
+git config --local --get user.email
 git status --short
 ```
 
-`git status --short` 必须没有输出。若已有改动，保留现场并直接求助；不要使用 reset、restore 或 Discard Changes 清理。
+`--local` 把身份写入当前仓库的 `.git/config`，不会修改整台机器的全局配置，也不会形成工作区改动。`user.name` 和 `user.email` 是 commit 元数据，不是 GitHub 用户名或登录凭证；`example.invalid` 是不会接收邮件的示例域名。
 
-### 2. 修改并验证公开签名
+最后一条命令必须没有输出。若已有改动，保留现场并直接求助；不要使用 reset、restore 或 Discard Changes 清理。
 
-在 Explorer 中打开：
+### 2. 用 VS Code 修改并验证公开签名
 
-```text
-warmups/week-02/course-check/signature.toml
-```
-
-只把 `teacher` 改为教师指定或认可的公开课程代号，例如：
+在 Explorer 中打开仓库根目录的 `signature.toml`，只把 `teacher` 改为教师指定或认可的公开标识，例如：
 
 ```toml
 [student]
 signature = "s07"
 ```
 
-如果教师尚未说明代号规则，先询问，不自行写入个人信息。不要写姓名、完整学号、个人邮箱或其他个人信息。保存后先验证：
+如果教师尚未说明标识，先询问。不要写姓名、完整学号、个人邮箱或其他个人信息。保存后执行：
 
 ```bash
-cd warmups/week-02/course-check
 COURSE_MODE=fixture uv run --locked python course_check.py
-cd ../../..
 ```
 
-程序必须显示本人公开代号与 `RUNTIME_CHECK=PASS`。
+程序必须显示新的公开标识与 `RUNTIME_CHECK=PASS`。
 
-### 3. 用终端和 Source Control 查看同一个 diff
+### 3. CLI 先观察工作区，Source Control 随后对照
 
 在仓库根执行：
 
 ```bash
 git status --short
-git diff -- warmups/week-02/course-check/signature.toml
+git diff -- signature.toml
 ```
 
 最低预期：
 
-- `git status --short` 显示第二列为 `M`，例如：
+- `git status --short` 显示第二列为 `M`：
 
   ```text
-   M warmups/week-02/course-check/signature.toml
+   M signature.toml
   ```
 
-- diff（差异记录）只包含 `teacher` 到个人代号的一行替换。
+- `git diff` 只包含 `teacher` 到新标识的一行替换。
 
-按 `Ctrl+Shift+G` 打开 VS Code Source Control；`signature.toml` 应位于 Changes。点击它，图形 diff 应显示同一处删除和新增。
+解释清楚终端结果后，按 `Ctrl+Shift+G` 打开 Source Control；`signature.toml` 应位于 Changes。点击文件查看图形 diff，它应显示同一处修改。本节只观察，不点击 Stage Changes。
 
 ```text
 git status --short    ↔ Source Control 状态列表
@@ -535,75 +555,51 @@ git diff --staged     ↔ Staged Changes
 
 Git 的“追踪”不是保存每次键盘输入，而是比较当前状态与已经记录的状态。
 
-### 4. 把唯一改动送入暂存区
+### 4. CLI 产生暂存状态，Source Control 随后对照
 
 ```text
-工作区 ── Stage / git add ──▶ 暂存区 ── Commit ──▶ 本地历史
-  │                              │
-  └─ git diff：与暂存区比较       └─ git diff --staged：与 HEAD 比较
+工作区 ── git add ──▶ 暂存区 ── git commit ──▶ 本地历史
+  │                        │
+  └─ git diff              └─ git diff --staged
 ```
 
-这里先把 `HEAD` 理解为“当前分支最新一次 commit 的位置”。
-
-在 Source Control 的 Changes 中，只对 `signature.toml` 选择 **Stage Changes**。它应移动到 Staged Changes。
-
-回到终端执行：
+这里先把 `HEAD` 理解为“当前分支最新一次 commit 的位置”。在终端执行：
 
 ```bash
+git add signature.toml
 git status --short
-git diff -- warmups/week-02/course-check/signature.toml
-git diff --staged -- warmups/week-02/course-check/signature.toml
+git diff -- signature.toml
+git diff --staged -- signature.toml
 ```
 
 预期：
 
-- 状态显示第一列为 `M`，例如：
+- 状态显示第一列为 `M`：
 
   ```text
-  M  warmups/week-02/course-check/signature.toml
+  M  signature.toml
   ```
 
 - 普通 `git diff` 没有输出；
 - `git diff --staged` 仍显示这一行修改。
 
-Save 写入工作区；Stage 选择下一次快照；Commit 才把快照写入本地历史。Unstage 只把改动移回 Changes，不会删除文件内容。
+随后回到 Source Control，确认 `signature.toml` 已经从 Changes 移入 Staged Changes。这里只观察，不再执行一次 Stage。
 
-### 5. 设置本仓库身份并 commit
+Save 写入工作区；Stage 选择下一次快照；Commit 才把快照写入本地历史。
 
-把示例 `s07` 替换为 `signature.toml` 中使用的同一个公开课程代号：
+### 5. CLI 产生 commit，Source Control Graph 随后对照
 
-```bash
-git config --local user.name "s07"
-git config --local user.email "s07@example.invalid"
-```
-
-`--local` 表示身份只写入当前仓库的 `.git/config`；`example.invalid` 是用于示例的无效域名，不接收邮件。
-
-在 Source Control 输入框填写：
-
-```text
-w2: set public signature
-```
-
-确认 Staged Changes 中只有 `signature.toml`，再选择 **Commit**。
-
-Source Control 无法完成时，在仓库根使用终端路线：
+在终端执行：
 
 ```bash
-git add warmups/week-02/course-check/signature.toml
 git commit -m "w2: set public signature"
-```
-
-提交后执行：
-
-```bash
 git log -1 --oneline
 git show --stat --oneline HEAD
 ```
 
-若 `git show` 进入分页界面，按 `q` 返回终端。
+若 `git show` 进入分页界面，按 `q` 返回终端。每个 commit 都有完整对象 ID；命令行通常显示足以区分对象的短 SHA。`HEAD` 是一个引用，在本课的正常分支状态下指向当前分支的最新 commit。
 
-每个 commit 都有一个完整对象 ID；命令行和界面通常只显示其中足以区分对象的短前缀，称为短 SHA。`HEAD` 是一个引用；在本课的正常分支状态下，它经当前分支解析到最新 commit。可以在 Source Control 面板的 Graph（提交图）中找到同一条提交并查看其文件；若界面没有 Graph，以终端结果为准。
+解释终端结果后，再在 Source Control Graph 中找到同一条 commit；短 SHA、提交信息和改动文件应与终端一致。若界面没有 Graph，以终端结果为准。
 
 以下命令只认识，不执行：
 
@@ -612,11 +608,11 @@ git show SHORT_SHA
 git revert SHORT_SHA
 ```
 
-`git show` 查看指定历史对象；`git revert` 新增一个 commit，抵消旧 commit 带来的改动，但不删除旧历史。
+`git show` 查看指定历史对象；`git revert` 新增一个 commit 来抵消旧 commit 的改动，但不删除旧历史。
 
-### 6. 证明 commit 尚未上传
+### 6. 核对尚未 push 的本地 commit
 
-`git clone` 会把来源仓库的网络地址记录为 `origin`；它只是这个地址在本地的默认简称。然后在仓库根执行：
+`git clone` 会把来源仓库的网络地址记录为 `origin`。在仓库根执行：
 
 ```bash
 git status --short
@@ -625,30 +621,34 @@ git log -1 --oneline
 git remote get-url origin
 ```
 
+`git status -sb` 把两个短选项合写：`-s` 等于 `--short`，使用紧凑格式；`-b` 等于 `--branch`，额外显示当前分支及其 upstream 关系。
+
 最低预期：
 
 - 第一条没有输出，说明工作区干净；
-- 本流程正常完成时，`git status -sb` 应包含 `ahead 1`；若没有，保留完整输出并求助；
+- `git status -sb` 通常显示本地 `main` 相对 upstream `origin/main` 为 `ahead 1`；
 - 最新提交信息是 `w2: set public signature`；
 - `origin` 仍指向教师仓库；
-- Source Control Graph 可能把这条 commit 显示为尚未 push／outgoing；若界面没有该提示，以 `git status -sb` 的 `ahead 1` 为准。
+- Source Control Graph 可以把这条 commit 显示为 outgoing／尚未 push。
 
-Commit 保存本地历史；只有 Push 才会尝试把本地 commit 发送给 remote。本周不执行 push，也不点击 Sync 或 Publish Branch。
+`origin/main` 是本地保存的远端跟踪状态，并非实时查询 GitHub；`origin` 是 remote 的名称，最后一条命令只查询它记录的 URL。结合本流程从未执行 push，可以说明这次操作没有把新 commit 发送出去。本周不执行 push，也不点击 Sync 或 Publish Branch。
 
 ### 第三课时完成核对
 
-- [ ] 程序曾显示本人公开代号与 `RUNTIME_CHECK=PASS`；
+- [ ] 程序曾显示新的公开标识与 `RUNTIME_CHECK=PASS`；
 - [ ] `git status --short` 没有输出；
 - [ ] `git log -1 --oneline` 显示 `w2: set public signature`；
-- [ ] 能说明这次 commit 仍只在本机，尚未 push。
+- [ ] 能说明 CLI 与 Source Control 观察的是同一份 Git 状态；
+- [ ] 能说明本流程没有把新 commit push 到 remote。
 
 ### 第三课时需要停下求助的情况
 
 - 初始 `git status --short` 已有输出；
-- 程序没有显示新签名或 PASS；
-- diff 出现额外文件或额外修改；
-- Staged Changes 不止一个文件；
-- Git 或 VS Code 索取 GitHub 凭证，或者准备执行 Sync、Publish 或 Push；
+- 程序没有显示新标识或 PASS；
+- `git diff` 出现额外文件或额外修改；
+- `git diff --staged` 不止包含 `signature.toml` 的预期修改；
+- commit 失败，或 Git、VS Code 索取 GitHub 凭证；
+- 准备执行 Sync、Publish 或 Push；
 - 不使用 reset、restore 或 Discard Changes 来“修好”现场。
 
 ## 选做挑战卡
@@ -660,10 +660,10 @@ Commit 保存本地历史；只有 Push 才会尝试把本地 commit 发送给 r
 从仓库根出发，先用 `cat` 和相对路径显示一次文件内容：
 
 ```bash
-cat warmups/week-02/course-check/signature.toml
+cat signature.toml
 ```
 
-再运行 `pwd`，把它输出的完整路径抄下来，末尾接上 `/warmups/week-02/course-check/signature.toml`，放在 `cat` 后面再次执行。两次输出应完全相同，并包含自己的公开代号。
+再运行 `pwd`，把它输出的完整路径抄下来，末尾接上 `/signature.toml`，放在 `cat` 后面再次执行。两次输出应完全相同，并包含自己的公开代号。
 
 ### B｜从帮助中学习
 
@@ -679,7 +679,7 @@ COURSE_MODE=fixture uv run --locked pytest -q
 
 ### D｜只读检查项目环境
 
-在 `course-check` 项目根执行：
+在 `w02-workbench` 仓库根执行：
 
 ```bash
 uv tree --locked

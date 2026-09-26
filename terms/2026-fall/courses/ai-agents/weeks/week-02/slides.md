@@ -31,55 +31,28 @@ Bash 解释命令
 两种入口改变的是同一份文件系统状态。
 
 ---
-<!-- layout: columns -->
-# 相对路径从当前位置开始解释
+<!-- layout: tree -->
+# 从空目录建立一棵树
 
-<!-- column -->
-## 当前起点
-**pwd**
-
-`~/course`
-
-<!-- column -->
-## 本次操作
-**ls cli-lab**
-
-查看 `~/course/cli-lab`
-
-<!-- footer -->
-当前位置补全相对路径的起点；命令描述动作，路径指向对象。
+```text
+~/course/
+└── cli-lab/
+    └── inbox/
+        └── note.txt
+```
 
 ---
-<!-- layout: columns -->
-# 简单命令与多级命令
+<!-- layout: tree -->
+# 复制与移动后的目录树
 
-<!-- column -->
-## ls -la cli-lab
-**直接调用一个程序**
-
-`ls`　command
-
-`-l -a`　flags
-
-`cli-lab`　positional argument
-
-<!-- column -->
-## git clone URL [TARGET]
-**先选择工具中的动作**
-
-`git`　command
-
-`clone`　subcommand
-
-`URL [TARGET]`　positional arguments
-
-<!-- footer -->
-`[]` 表示可选；flag 不需要额外值，`-L 2` 则是 option 与它的 value。
-
----
-<!-- layout: question -->
-# 你现在在哪里，准备删除什么？
-> 先看 `pwd` 和目标路径；本节只删除刚创建并已经核对的实验对象。
+```text
+~/course/
+└── cli-lab/
+    ├── inbox/
+    │   └── note.txt
+    └── archive/
+        └── note-copy.txt
+```
 
 ---
 <!-- layout: columns -->
@@ -99,6 +72,33 @@ Bash 解释命令
 
 <!-- footer -->
 `git clone <URL> [<TARGET>]` 取得材料和历史；第三课时再打开 remote 关系。
+
+---
+<!-- layout: columns -->
+# 简单命令与多级命令
+
+<!-- column -->
+## ls -la
+**直接调用一个程序**
+
+`ls`　command
+
+`-l -a`　flags
+
+默认查看当前目录 `.`
+
+<!-- column -->
+## git clone URL [TARGET]
+**先选择工具中的动作**
+
+`git`　command
+
+`clone`　subcommand
+
+`URL [TARGET]`　positional arguments
+
+<!-- footer -->
+`[]` 表示可选；flag 不需要额外值，`-L 2` 则是 option 与它的 value。
 
 ---
 <!-- section: 第二课时：程序使用哪个环境？ -->
@@ -202,6 +202,27 @@ Bash 解释命令
 
 ---
 <!-- layout: columns -->
+# 先准备提交身份
+
+<!-- column -->
+## 本仓库
+**只写入 .git/config**
+
+`git config --local`
+
+<!-- column -->
+## 提交身份
+**不是 GitHub 登录**
+
+`user.name`
+
+`user.email`
+
+<!-- footer -->
+开场一次配置，后面直接完成 add 与 commit。
+
+---
+<!-- layout: columns -->
 # 只改一个可验证输入
 
 <!-- column -->
@@ -224,23 +245,23 @@ Bash 解释命令
 # 一个改动，两个观察入口
 
 <!-- column -->
-## Terminal
-**精确描述状态**
+## CLI
+**先给出证据**
 
 `git status --short`
 
 `git diff`
 
 <!-- column -->
-## Source Control
-**可视化同一状态**
+## GUI
+**立即对照同一状态**
 
 Changes
 
 Diff Editor
 
 <!-- footer -->
-两者读取同一个工作区，没有第二套 Git 状态。
+先解释 CLI 输出，再看 Source Control 中的同一状态。
 
 ---
 <!-- layout: columns -->
@@ -265,7 +286,7 @@ Diff Editor
 由 SHA 指认的节点
 
 <!-- footer -->
-Save 改变文件；Stage 选择快照；Commit 写入本地历史。
+`git add` 与 `git commit` 改变状态；Source Control 显示结果。
 
 ---
 <!-- layout: columns -->
@@ -288,5 +309,5 @@ Revert 不删除旧历史；本节只理解，不执行。
 
 ---
 <!-- layout: question -->
-# 本地 commit 后，GitHub 会变化吗？
-> Commit 写入本地历史；Push 才会尝试发送给 remote。
+# 本地 commit 后，Git 记录了什么？
+> `git status -sb` 显示本地 `main` 相对 `origin/main` 的状态；Push 才会尝试发送。
