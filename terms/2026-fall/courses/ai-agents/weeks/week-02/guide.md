@@ -62,13 +62,22 @@ ls -la
 
 `ls` 显示普通目录项；`ls -la` 中，`-l` 要求详细列表，`-a` 还会显示以 `.` 开头的隐藏项。
 
-阅读命令时先找三个部分：
+阅读命令时先找四种可能出现的部分：
 
 ```text
-command [options] [arguments]
+command [subcommand] [options] [positional arguments]
 ```
 
-例如 `ls -la cli-lab` 中，`ls` 是调用的程序，`-la` 是选项，`cli-lab` 是作用对象。常用路径符号：
+方括号表示这一部分可以省略，不是需要原样输入的字符：
+
+- **command** 是首先启动的程序，例如 `ls`、`git`、`uv`；
+- **subcommand** 让多功能程序选择本次动作，例如 `git clone` 中的 `clone`；
+- **option** 改变动作方式。无需额外值的 option 常称为 **flag**，例如 `ls -a`；`tree -L 2` 中的 `-L` 是带值 option，`2` 是它的值；
+- **positional argument** 靠位置说明作用，例如 URL、文件名和目标目录。
+
+例如 `ls -la cli-lab` 中，`ls` 是 command，`-l` 与 `-a` 是两个合写的 flags，`cli-lab` 是位置参数。不同工具的具体语法由工具自己规定，不确定时查看它的 `--help`。
+
+常用路径符号：
 
 - `~`：当前用户的 home（用户主目录）；
 - `.`：当前目录；
@@ -207,19 +216,21 @@ pwd
 
 ### 6. 取得本周项目
 
-先检查目标位置：
+先回到 home，并检查目标位置：
 
 ```bash
-cd ~/course
+cd ~
 pwd
-ls
+ls ~/course
 ```
 
-若列表中已经有 `w02-workbench`，停下求助，不执行 clone。确认目标不存在后，只执行：
+若 `~/course` 的列表中已经有 `w02-workbench`，停下求助，不执行 clone。确认目标不存在后，只执行：
 
 ```bash
 git clone https://github.com/wxyinucas/ai-agents.git ~/course/w02-workbench
 ```
+
+`git` 是 command，`clone` 是 subcommand，仓库 URL 与 `~/course/w02-workbench` 是两个位置参数：前者说明来源，后者指定本地目标目录。目标不存在时 Git 会创建它；若省略目标目录，Git 通常会在当前位置按仓库名创建 `ai-agents/`。本课明确指定统一目录。
 
 确认 clone 成功后再执行：
 
@@ -230,7 +241,7 @@ tree -L 2
 code .
 ```
 
-`tree -L 2` 只显示当前目录以下两层，避免一次打印过多内容。
+`tree -L 2` 只显示当前目录以下两层，避免一次打印过多内容；`-L` 是带值 option，`2` 是它的值。
 
 在打开或切换后的 `w02-workbench` 窗口中新建 Integrated Terminal，再运行一次 `pwd`。它应以 `/course/w02-workbench` 结尾。
 
@@ -268,7 +279,7 @@ command -v uv
 code -n ~/course/cli-lab
 ```
 
-其中 `-n` 表示另开一个 VS Code 窗口，避免覆盖已经打开的项目窗口。
+其中 `-n`（`--new-window`）是“另开窗口”的 option，`~/course/cli-lab` 是要打开的位置参数。该命令只打开已有目录，不负责创建它。
 
 在 `cli-lab` 窗口的新终端中执行：
 
@@ -315,6 +326,32 @@ python3 inbox/some.py
 `some.py` 始终存在；改变的是相对路径的起点。
 
 ### 3. 区分两次查找
+
+先只列出当前终端会话中的环境变量名称，避免意外显示 token 等私密值：
+
+```bash
+printenv | cut -d= -f1 | sort
+```
+
+`printenv` 给出环境变量，`cut -d= -f1` 取每行等号前的名称，`sort` 对名称排序；竖线 `|` 把左侧命令的输出交给右侧继续处理。
+
+再逐项查看几个与本课有关的值：
+
+```bash
+printenv USER
+printenv HOME
+printenv SHELL
+printenv PWD
+printenv PATH
+```
+
+最后把 `PATH` 中由冒号分隔的目录逐行显示：
+
+```bash
+printf '%s\n' "$PATH" | tr ':' '\n'
+```
+
+这里只需观察：`PATH` 不是一个目录，而是一组有先后顺序的搜索目录。
 
 执行：
 
@@ -395,6 +432,8 @@ printenv COURSE_MODE
 ```
 
 第一条 `unset` 清除 Shell 中可能残留的同名变量；`pytest` 是项目使用的测试程序，`-q` 只让它减少输出。最后的 `printenv` 再检查变量是否仍然存在。
+
+`fixture` 只是本课程为固定实验数据约定的运行模式值，不是 Bash 的特殊关键字。
 
 程序最低预期：
 

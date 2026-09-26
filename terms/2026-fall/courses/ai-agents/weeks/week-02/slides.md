@@ -8,159 +8,228 @@ AI Agents · 王晓宇 · 中国海洋大学 · 2026 秋
 <!-- section: 第一课时：命令作用在哪里？ -->
 
 ---
-# 同一系统，两种操作入口
+<!-- layout: columns -->
+# 同一份文件，两种操作入口
 
-```text
-VS Code Explorer / Editor
-              ↕ 同一批文件
-WSL Bash / Integrated Terminal
-```
+<!-- column -->
+## 图形界面
+**看见状态 · 直接操作**
+
+Explorer 展示结构
+
+Editor 修改文件
+
+<!-- column -->
+## 命令行
+**描述动作 · 重复组合**
+
+Terminal 接收文字
+
+Bash 解释命令
 
 <!-- footer -->
-Terminal 是界面；Bash 解释命令；程序执行工作。
+两种入口改变的是同一份文件系统状态。
 
 ---
-# 当前位置 + 命令 + 路径
+<!-- layout: columns -->
+# 相对路径从当前位置开始解释
 
-```bash
-pwd
-```
+<!-- column -->
+## 当前起点
+**pwd**
 
-```text
-ls          -la          cli-lab
-调用谁       选项          作用对象
+`~/course`
 
-~  Home     .  当前目录     ..  上一级
-```
+<!-- column -->
+## 本次操作
+**ls cli-lab**
+
+查看 `~/course/cli-lab`
 
 <!-- footer -->
-相对路径从 `pwd` 显示的位置开始解释。
+当前位置补全相对路径的起点；命令描述动作，路径指向对象。
 
 ---
-# 删除没有撤销键
+<!-- layout: columns -->
+# 简单命令与多级命令
 
-```bash
-rm <文件>
-rmdir <空目录>
-```
+<!-- column -->
+## ls -la cli-lab
+**直接调用一个程序**
 
-- 只删除本次刚创建、并且已经核对路径的对象
-- 本节不用 `rm -r` 或 `rm -rf`
+`ls`　command
+
+`-l -a`　flags
+
+`cli-lab`　positional argument
+
+<!-- column -->
+## git clone URL [TARGET]
+**先选择工具中的动作**
+
+`git`　command
+
+`clone`　subcommand
+
+`URL [TARGET]`　positional arguments
 
 <!-- footer -->
-删除前先看 `pwd` 和目标路径。
+`[]` 表示可选；flag 不需要额外值，`-L 2` 则是 option 与它的 value。
 
 ---
-# 从本地文件操作到远端仓库
+<!-- layout: question -->
+# 你现在在哪里，准备删除什么？
+> 先看 `pwd` 和目标路径；本节只删除刚创建并已经核对的实验对象。
 
-```text
-GitHub 仓库 ── git clone ──▶ ~/course/w02-workbench
-```
+---
+<!-- layout: columns -->
+# Clone 的来源与本地目标
 
-```text
-仓库根  ~/course/w02-workbench
-项目根  warmups/week-02/course-check
-```
+<!-- column -->
+## 远端来源
+**GitHub 仓库**
+
+`wxyinucas/ai-agents`
+
+<!-- column -->
+## 本地目标
+**课程工作台**
+
+`~/course/w02-workbench`
 
 <!-- footer -->
-本节先把 `clone` 当作取得材料；第三课时再打开 Git 关系。
+`git clone <URL> [<TARGET>]` 取得材料和历史；第三课时再打开 remote 关系。
 
 ---
 <!-- section: 第二课时：程序使用哪个环境？ -->
 
 ---
-# 同一个“名字”，为什么有时找得到？
+<!-- layout: columns -->
+# 为什么同一个命令一成一败？
 
-```text
-当前位置：.../cli-lab/inbox
-python3 some.py          ✓
+<!-- column -->
+## 当前位于 inbox/
+**脚本就在当前目录**
 
-当前位置：.../cli-lab
-python3 some.py          ✗
-```
+`python3 some.py`　✓
+
+<!-- column -->
+## 回到 cli-lab/
+**相对路径的起点改变**
+
+`python3 some.py`　✗
 
 <!-- footer -->
-文件没有移动；改变的是相对路径的起点。
+文件没有移动；改变的是相对路径从哪里开始解释。
 
 ---
-# 谁在找，从哪里找？
+<!-- layout: columns -->
+# 两次查找，两套规则
 
-```text
-Shell  ── PATH ───────────▶ python3
-Python ── 当前目录 + 参数 ──▶ some.py
-```
+<!-- column -->
+## Shell 找程序
+**PATH**
+
+找到 `python3`
+
+<!-- column -->
+## Python 找脚本
+**当前目录 + 参数**
+
+找到 `some.py`
 
 <!-- footer -->
 存在，不等于当前的查找规则能够找到。
 
 ---
-# 可调用的工具，项目自己的环境
+<!-- layout: columns -->
+# 项目环境：声明、锁定、恢复
 
-```text
-.python-version
-pyproject.toml  ── uv sync --locked ──▶  .venv/
-uv.lock
-```
+<!-- column -->
+## 声明
+**Python 与依赖**
 
-```text
-uv run python  ──▶  course-check/.venv/.../python
-```
+`.python-version`
+
+`pyproject.toml`
+
+<!-- column -->
+## 锁定
+**已经解析的版本**
+
+`uv.lock`
+
+<!-- column -->
+## 恢复
+**当前机器的结果**
+
+`.venv/`
 
 <!-- footer -->
-锁定不是永不升级，而是让升级成为主动、可测试的改动。
+`uv sync --locked` 按项目记录恢复环境；锁定让升级成为主动、可测试的改动。
 
 ---
 <!-- layout: columns -->
-# 能找到程序 ≠ 用对项目环境
+# 从能调用，到证据充分
 
 <!-- column -->
-## 运行条件
-**解释器从哪里来**
+## 找得到
+**机器上的程序**
 
-`python3`：机器环境
-
-`uv run python`：项目 `.venv`
-
-`COURSE_MODE=fixture`：本次命令及其子进程
+`command -v python3`
 
 <!-- column -->
-## 两种证据
-**回答不同问题**
+## 用得对
+**项目中的解释器**
 
-`course_check.py`：报告当前事实
+`sys.executable`
 
-`pytest`：检查已经写下的规则
+指向 `.venv/`
+
+<!-- column -->
+## 验收过
+**事实与规则**
+
+`course_check.py`
+
+`pytest`
 
 <!-- footer -->
-测试通过，只说明已经覆盖的规则通过。
+程序报告当前事实；测试检查已经写下的规则。
 
 ---
 <!-- section: 第三课时：改动怎样被记录？ -->
 
 ---
-# 只改一项：公开签名
+<!-- layout: columns -->
+# 只改一个可验证输入
 
-```diff
-- signature = "teacher"
-+ signature = "s07"
-```
+<!-- column -->
+## 修改前
+**教师默认值**
+
+`signature = "teacher"`
+
+<!-- column -->
+## 修改后
+**公开课程代号**
+
+`signature = "s07"`
 
 <!-- footer -->
-先让程序读到新值，再考虑是否提交。
+先运行程序并确认它读到新值，再考虑提交。
 
 ---
 <!-- layout: columns -->
-# 两个入口，同一个 diff
+# 一个改动，两个观察入口
 
 <!-- column -->
-## 终端
+## Terminal
 **精确描述状态**
 
-```text
-git status --short
-git diff
-git diff --staged
-```
+`git status --short`
+
+`git diff`
 
 <!-- column -->
 ## Source Control
@@ -168,49 +237,56 @@ git diff --staged
 
 Changes
 
-Staged Changes
-
 Diff Editor
 
----
-# 一个改动怎样成为历史？
-
-```text
-编辑器
-  │ Save
-  ▼
-工作区 ── git add ──▶ 暂存区 ── git commit ──▶ 本地历史
-  ╰───── git diff ────╯       ╰── git diff --staged ──╯
-                                  HEAD ─▶ 当前分支 ─▶ 当前 commit
-```
-
 <!-- footer -->
-Stage 是选择；Commit 是本地历史，不是上传。
+两者读取同一个工作区，没有第二套 Git 状态。
 
 ---
 <!-- layout: columns -->
-# 一个 commit，由 SHA 指认
+# 一个改动怎样成为历史？
 
 <!-- column -->
-## 查看
-**`<short-sha>`**
+## 工作区
+**Save**
 
-```bash
-git show <sha>
-```
+当前文件
 
 <!-- column -->
-## 撤销
-**新增反向 commit**
+## 暂存区
+**Stage · git add**
 
-```bash
-git revert <sha>
-```
+下一次快照
+
+<!-- column -->
+## 本地历史
+**Commit**
+
+由 SHA 指认的节点
 
 <!-- footer -->
-Revert 保留旧历史；本节只理解，不执行。
+Save 改变文件；Stage 选择快照；Commit 写入本地历史。
+
+---
+<!-- layout: columns -->
+# Commit 的指认与撤销
+
+<!-- column -->
+## 指认与查看
+**SHA · HEAD**
+
+`git show <sha>`
+
+<!-- column -->
+## 保留历史地撤销
+**新增反向 commit**
+
+`git revert <sha>`
+
+<!-- footer -->
+Revert 不删除旧历史；本节只理解，不执行。
 
 ---
 <!-- layout: question -->
 # 本地 commit 后，GitHub 会变化吗？
-> Commit 写入本地历史；Push 才会尝试发送给 Remote
+> Commit 写入本地历史；Push 才会尝试发送给 remote。

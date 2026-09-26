@@ -53,7 +53,7 @@
 - [ ] 在临时目录完整走通 `cli-lab` 的创建、移动与清理；正式演示开始前确认 `~/course/cli-lab` 和 `~/course/w02-workbench` 尚不存在。
 - [ ] 保存一张 VS Code Explorer 与 WSL Bash 集成终端同时可见的真实画面，作为投影或设备异常时的 Plan B。
 
-*翻页：同一系统，两种操作入口*
+*翻页：同一份文件，两种操作入口*
 
 - 历史只讲三步：
   - 文字终端先于图形界面出现；
@@ -74,7 +74,7 @@
 
 > Explorer 显示目录树，Terminal 接收文字操作；`pwd` 给出命令行当前采用的观察位置。
 
-*翻页：当前位置 + 命令 + 路径*
+*翻页：相对路径从当前位置开始解释*
 
 - 在外部 WSL Bash 中执行：
 
@@ -125,7 +125,7 @@ command [subcommand] [options] [positional arguments]
   - **option value**：隶属于前一个 option 的值；`tree -L 2` 中的 `2` 归 `-L` 管，不是位置参数；
   - **positional argument**：靠出现位置说明作用的对象，例如目录路径、文件名、URL 或目标目录。广义上，命令名之后交给程序的内容都可称为 arguments；这张地图特意写全称来区分位置参数与 option。
 
-*翻页：一条命令，分别在说什么？*
+*翻页：简单命令与多级命令*
 
 - 用投影表格把本周四条真实命令逐格对应起来；
   - 先让学生逐行找 command，
@@ -248,7 +248,7 @@ tree -L 2
   - 目标文件是否到达 `archive`、
   - 切换目录后 `pwd` 是否与预期一致。
 
-*翻页：删除没有撤销键*
+*翻页：你现在在哪里，准备删除什么？*
 
 - 回到 `cli-lab`，先用 `rmdir inbox` 尝试删除非空目录；读取报错，并指出这次失败保护了其中的文件。
 
@@ -279,7 +279,7 @@ tree -L 2
 
 - `clone` 就是英文“克隆／复制”。`Git` 是工具名称，不把它当作需要展开的正式缩写；`git clone` 表示取得一份包含 Git 历史与远端关系的本地仓库。
 
-*翻页：从本地文件操作到远端仓库*
+*翻页：Clone 的来源与本地目标*
 
 - 第 43 分钟停止继续扩展文件实验，统一执行：
 
@@ -328,7 +328,7 @@ code .
 - [ ] 从干净 clone 删除本地 `.venv` 后完整运行 `uv sync --locked`，记录首次下载用时，并保存同步成功与项目 Python 路径的画面作为 Plan B。
 - [ ] 确认第一课时结束时保留了空的 `~/course/cli-lab/inbox`，且 `~/course/w02-workbench` 已成功取得。
 
-*翻页：同一个“名字”，为什么有时找得到？*
+*翻页：为什么同一个命令一成一败？*
 
 - 从第一课时保留的 `w02-workbench` 窗口之外，另开一个 `cli-lab` 窗口：
 
@@ -425,7 +425,7 @@ printenv PATH
 printf '%s\n' "$PATH" | tr ':' '\n'
 ```
 
-*翻页：谁在找，从哪里找？*
+*翻页：两次查找，两套规则*
 
 - 在 `~/course/cli-lab` 执行：
 
@@ -497,7 +497,7 @@ pwd
   - `sync` 是“同步项目环境”，
   - `run` 是“在项目环境中运行”。
 
-*翻页：可调用的工具，项目自己的环境*
+*翻页：项目环境：声明、锁定、恢复*
 
 - 在 `course-check` 项目根执行：
 
@@ -525,7 +525,7 @@ uv run --locked python -c 'import sys; print(sys.executable)'
 
 > 程序报告事实，测试检查规则；先取得可观察证据，再讨论“应该如此”。
 
-*翻页：能找到程序 ≠ 用对项目环境*
+*翻页：从能调用，到证据充分*
 
 - 在项目根执行：
 
@@ -566,7 +566,7 @@ printenv COURSE_MODE
 - [ ] 准备终端路线作为 Source Control 操作失效时的 Plan B；本周任何情况下都不执行 `git push`，也不点击 Sync 或 Publish Branch。
 - [ ] 准备一张已完成 commit 的 Source Control Graph 画面，作为界面版本不同或投影不清时的 Plan B。
 
-*翻页：只改一项：公开签名*
+*翻页：只改一个可验证输入*
 
 - 切回 Explorer 根目录为 `w02-workbench` 的 VS Code 窗口，在仓库根确认起点：
 
@@ -612,7 +612,7 @@ cd ../../..
 - `diff` 是 **difference** 的常见缩写，表示差异；
   - `git diff` 仍是 Git 的子命令，不是另一套工具。
 
-*翻页：两个入口，同一个 diff*
+*翻页：一个改动，两个观察入口*
 
 - 在仓库根执行：
 
@@ -671,7 +671,7 @@ git diff --staged -- warmups/week-02/course-check/signature.toml
 - `SHA` 来自 **Secure Hash Algorithm**。
   - 本课只把它理解成 Git 对象 ID 的哈希表示，不展开哈希算法细节。
 
-*翻页：一个 commit，由 SHA 指认*
+*翻页：Commit 的指认与撤销*
 
 - 在仓库根设置仅属于这个练习仓库的公开身份；把示例代号替换为本人课程代号：
 
