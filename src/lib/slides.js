@@ -1,7 +1,7 @@
 import { renderSlideMarkdown } from './markdown.js'
 
 const directivePattern = /<!--\s*(layout|section|subsection|column|footer|lead|lesson)\s*(?::\s*([^>]*?))?\s*-->/gi
-const allowedLayouts = new Set(['cover', 'question', 'columns', 'prompt', 'agenda', 'content'])
+const allowedLayouts = new Set(['cover', 'question', 'columns', 'prompt', 'agenda', 'tree', 'content'])
 
 function splitPages(source) {
   const pages = []
@@ -130,6 +130,7 @@ export function parseSlides(source) {
       return { number: index + 1, layout, sectionIndex, ...readColumns(raw) }
     }
     if (layout === 'content') return readContent(raw, index, sectionIndex)
+    if (layout === 'tree') return { ...readContent(raw, index, sectionIndex), layout }
 
     const clean = stripDirectives(raw)
     const { title, body: afterTitle } = readTitle(clean)

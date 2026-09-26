@@ -205,6 +205,12 @@ onBeforeUnmount(() => {
         <div class="slide-agenda-body" v-html="slide.html"></div>
       </article>
 
+      <article v-else-if="slide.layout === 'tree'" ref="slideCanvas" class="slide-canvas slide-tree" :class="{ 'has-footer': slide.footerHtml }">
+        <header class="slide-heading"><h1>{{ slide.title }}</h1></header>
+        <div class="slide-tree-body" v-html="slide.html"></div>
+        <footer v-if="slide.footerHtml" class="slide-footer" v-html="slide.footerHtml"></footer>
+      </article>
+
       <article v-else-if="slide.layout === 'prompt'" ref="slideCanvas" class="slide-canvas slide-prompt">
         <header class="slide-heading prompt-heading">
           <div><span>可直接复制</span><h1>{{ slide.title }}</h1></div>

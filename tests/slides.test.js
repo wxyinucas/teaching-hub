@@ -69,6 +69,12 @@ describe('static slides Markdown parser', () => {
     expect(deck.slides[0].copyText).toContain('$$\n\\int_0^1 x^2\\,dx\n$$')
   })
 
+  it('parses a dedicated tree layout without changing ordinary content slides', () => {
+    const deck = parseSlides('<!-- layout: tree -->\n# 目录树\n\n```text\n~/course/\n└── cli-lab/\n```')
+    expect(deck.slides[0]).toMatchObject({ layout: 'tree', title: '目录树' })
+    expect(deck.slides[0].html).toContain('cli-lab')
+  })
+
   it('requires page titles and keeps section pages free of body text', () => {
     expect(() => parseSlides('plain text')).toThrow('课件页缺少 # 标题')
     expect(() => parseSlides('<!-- section: 第一课时 -->\n# 不该出现')).toThrow('section 页只写 section 注释')

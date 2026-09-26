@@ -51,6 +51,22 @@
 .slide-content-body li + li { margin-top: .45em; }
 .slide-content-body blockquote { margin: 1.6cqw 0; padding: 1.2cqw 1.6cqw; border-left: .3cqw solid var(--purple); background: var(--purple-light); color: var(--purple-dark); }
 .slide-content-body blockquote p { margin: 0; }
+.slide-tree { display: flex; flex-direction: column; }
+.slide-tree-body { display: grid; flex: 1; place-items: center; min-height: 0; }
+.slide-tree-body > pre {
+  justify-self: center;
+  width: 58%;
+  margin: 0;
+  padding: 2.3cqw 3cqw;
+  border-left: .3cqw solid var(--purple);
+  background: var(--purple-light);
+  color: var(--purple-dark);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: clamp(calc(24px * var(--slide-font-scale, 1)), calc(2.25cqw * var(--slide-font-scale, 1)), calc(40px * var(--slide-font-scale, 1)));
+  line-height: 1.65;
+  white-space: pre;
+}
+.slide-tree-body > pre code { display: block; padding: 0; background: transparent; color: inherit; font-size: inherit; }
 .slide-content-body table { margin: auto; border-collapse: collapse; font-size: clamp(calc(24px * var(--slide-font-scale, 1)), calc(2.25cqw * var(--slide-font-scale, 1)), calc(40px * var(--slide-font-scale, 1))); }
 .slide-content-body table thead:not(:has(th:not(:empty))) { display: none; }
 .slide-content-body th, .slide-content-body td { padding: 1.1cqw 1.7cqw; border-bottom: 1px solid var(--border); }
