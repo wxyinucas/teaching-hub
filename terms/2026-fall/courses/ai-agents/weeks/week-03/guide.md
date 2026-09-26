@@ -10,11 +10,12 @@
 - 主线 Agent：VS Code 中的 **Cline**；
 - 默认入口：Cline Provider 中当前标有 **FREE** 的模型；
 - 低价增强：自己的 DeepSeek API Key，自愿使用、按量付费；
-- 选学：Codex 图形界面或 Claude Code 终端界面。
+- 教师展示：Codex 的 VS Code 原生扩展；学生无需安装或登录；
+- 选学：在 VS Code 集成终端中使用 Codex CLI 或 Claude Code CLI。
 
 免费模型、界面名称、账号条件和计费规则都可能变化。本页不固定模型名和软件版本；以下链接与步骤已于 2026-09-08 核对，**开课前请重新打开官方文档确认**。课程不要求购买订阅或充值，个人产生的费用不报销。
 
-本周只处理仓库中的本地 fixture：不做 CI，不连接 Longbridge，不读取真实账户，不发起交易，也不向教师仓库提交 PR。Agent 只修改你的 `students/sXX/system/`；你亲自填写 `students/sXX/weeks/week-03/report.md`。
+本周只处理仓库中的本地 fixture：不做 CI，不连接 Longbridge，不读取真实账户，也不发起交易。必做主线不向教师仓库提交 PR；只有第三课时明确标出的选做探索例外。Agent 只修改你的 `students/sXX/system/`；你亲自填写 `students/sXX/weeks/week-03/report.md`。
 
 ## 课前准备
 
@@ -87,7 +88,7 @@ uv --version
 2. 点击 Fork，在自己的 GitHub 账号下建立 fork；
 3. 确认仓库所有者是自己，并显示它 fork 自 wxyinucas/ai-agents-project。
 
-不要在教师仓库中直接编辑，也不要创建 upstream PR。
+不要在教师仓库中直接编辑。必做主线不创建 upstream PR；只有第三课时的选做探索明确开放时才继续到 PR。
 
 ### 2. 从自己的 fork clone
 
@@ -402,7 +403,71 @@ git log -1 --oneline
 
 第一次 push 时，VS Code 可能要求在浏览器中登录 GitHub；按界面返回 VS Code，不在终端输入 GitHub 密码或把 token 交给 Agent。也可以在 Source Control 的 `…` 菜单选择 **Push**，使用同一个浏览器登录流程。参考 [VS Code 官方 GitHub 工作流](https://code.visualstudio.com/docs/sourcecontrol/github)。
 
-不要创建指向教师仓库的 PR，也不要创建 `dev-week-03` 或其他周分支。W3 只在个人 `origin/main` 上持续；push 失败时保留本地 commit 和完整错误，不要强制 push。
+必做主线到个人 `origin/main` 为止，不创建指向教师仓库的 PR，也不创建 `dev-week-03` 或其他周分支；只有下面明确标出的选做探索例外。push 失败时保留本地 commit 和完整错误，不要强制 push。
+
+## 选做探索｜让 Agent 帮你理解并走通 GitHub 协作链
+
+> 这个选做探索需要掌握 Agent 的两种用法：
+>
+> 1. **Agent 帮助建立心智模型**：先把 `upstream / origin / local / PR` 的职责和关系说清楚；
+> 2. **Agent 帮助实现具体任务**：再协助检查状态，把已经接受的本地版本推到自己的 fork，并准备向课程主仓库提出 PR。
+
+本节完全选做。未开始、未完成、没有创建 PR，或者 PR 没有被合并，都不影响 W3 完成判定，也不影响进入 W4。只有教师当堂宣布开放 PR 入口时才进行；否则只完成下面的只读建模。你在必做主线中已经完成 fork、clone、commit 与 push，不要重新 fork、重复 clone，也不要为了选做题另建一份正式项目。
+
+### 先让 Agent 帮你建立心智模型
+
+先把真实仓库关系画清楚：
+
+~~~text
+upstream：教师维护的课程主仓库
+    │ fork
+    ▼
+origin：你在 GitHub 账号下的远端 fork
+    │ clone                         ▲ push
+    ▼                               │
+local：WSL 中实际修改、检查和 commit 的本地仓库
+
+origin 中已经 push 的变化 ── Pull Request ──▶ upstream 审查
+~~~
+
+- `upstream` 是教师主仓库承担的角色，也是 PR 的目标；它不等于你拥有写权限，也不要求本地一定存在一个名为 `upstream` 的 remote；
+- `origin` 是自己的远端 fork，是本课 `push` 的目的地；
+- `local` 是 WSL 中真正修改文件、运行测试、暂存和 commit 的副本；
+- `fork` 创建远端副本，`clone` 创建本地副本，`commit` 仍只保存到 local，`push` 才更新 origin；
+- PR 不是第四个仓库，也不会自动 merge；它请求 upstream 审查并决定是否接纳 origin 中的变化。
+
+把自己的 GitHub 用户名与课程代号补进下面的请求，再交给 Agent：
+
+~~~text
+现在只帮助我建立 Git 心智模型，不修改文件、不改变 remote、不 commit、不 push，也不创建 PR。
+
+教师主仓库是 https://github.com/wxyinucas/ai-agents-project；我的 GitHub 用户名是 YOUR_GITHUB_NAME，课程代号是 s07。请先用只读命令检查当前仓库根目录、分支、工作区状态、最近一次 commit 和 git remote -v。
+
+结合真实输出，区分 upstream、origin 和 local 各自在哪里、归谁维护、我对它拥有什么权限；再按时间顺序解释 fork、clone、commit、push 和 Pull Request 分别改变了哪里。最后说明：我当前已经走到哪一步，进入下一步以前还要由我核对什么。完成后停下，不执行任何写操作。
+~~~
+
+你要亲自核对 Agent 的解释至少满足三点：`origin` 的 URL 属于自己的 GitHub 账号；最新 commit 是自己刚才接受的版本；工作区没有尚未解释的修改。说错任何一项时先纠正模型，不进入具体操作。
+
+### 再让 Agent 帮你完成具体流程
+
+只有教师已经开放选做 PR，且上面的解释与真实状态一致时，才继续发送：
+
+~~~text
+我已经核对仓库关系。请帮助我把当前已经接受并 push 到 origin/main 的版本准备成一个发往教师 upstream/main 的 Pull Request。
+
+先再次检查当前分支、git status、最新 commit 和 origin URL；不要修改项目文件，不添加或改写 remote，不创建新分支，不 rebase、reset、merge、force push，也不要安装 GitHub CLI。请说明 GitHub 网页中 base repository、base branch、head repository 和 compare branch 分别应该选择什么，并为这次变化拟一条简短标题和两三句说明。
+
+停在最终 Create pull request 之前；由我本人核对目标仓库、来源仓库、diff、标题和说明，并决定是否点击创建。不要替我 merge。
+~~~
+
+最终只核对四项证据：
+
+- base 是教师的 `wxyinucas/ai-agents-project:main`；
+- head／compare 是自己的 fork 与 `main`；
+- PR diff 只包含自己已经审查和接受的学生目录变化；
+- PR 创建后保持待审查即可，不要求教师当堂 merge。
+
+Agent 可以解释关系、读取状态、拟定步骤和准备 PR 内容；GitHub 登录、最终创建 PR 和是否接受合并仍由人决定。
 
 ## 参考实现与 W4 恢复基线
 
@@ -412,24 +477,17 @@ git log -1 --oneline
 - HOLD 或 BLOCKED-AGENT：可以在 W4 前采用教师发布的恢复基线；
 - 无论选择哪条路线，都不要删除或覆盖本周第一次尝试；按届时发布的无损取得步骤保留它。新的周次只在 `students/sXX/weeks/week-XX/` 增加责任记录，不复制一份新的源码。
 
-## 选学：Codex GUI 与 Claude Code TUI
+## 其他 Agent 入口
 
 选学工具不影响 W3 完成判定。不要同时让两个 Agent 修改同一个工作目录；若试用，先完成主线或使用另一个独立副本。
 
-### Codex GUI
+### 教师展示：Codex VS Code 扩展
 
-Codex 图形界面当前位于统一的 ChatGPT desktop app 中。安装与入口以 [OpenAI 官方桌面应用指南](https://learn.chatgpt.com/zh-Hans/docs/app) 为准：
+想在终端里使用，不需要扩展；想把 Agent 变成 VS Code 原生侧栏，才需要对应扩展。教师只展示 [OpenAI 官方 Codex IDE 扩展](https://learn.chatgpt.com/docs/codex/ide) 如何取得当前文件、选区和 diff 上下文；学生无需安装或登录，也不计入本周完成判定。
 
-1. 从官方页面安装 ChatGPT desktop app；
-2. 启动应用，用自己的 ChatGPT 账号登录并进入 Codex；
-3. 添加或打开本地课程项目；
-4. Windows 用户若要让 Agent 在 WSL 中工作，按 [OpenAI 官方 Windows/WSL 指南](https://learn.chatgpt.com/zh-Hans/docs/windows/windows-app) 在设置中把 Agent 环境切换为 WSL，重启应用后再添加 WSL 中的课程仓库；
-5. 保留沙箱与 **Ask for approval**，不要授予完整系统访问；
-6. 先发送 Prompt 1，确认目录与权限，再决定是否发送 Prompt 2。
+已经具备 Codex 使用条件且希望自行尝试的学生，可以在 VS Code 集成终端中按 [OpenAI 官方 Codex CLI 指南](https://learn.chatgpt.com/docs/codex/cli) 独立安装和登录；这条路线不占用课堂排障时间，也不替代 Cline 主线。
 
-如果账号没有 Codex、额度不可用或系统不受支持，到此停止即可；课程不要求为选学工具付费，也不提供绕过地区或账号限制的方法。
-
-### Claude Code TUI
+### 选学：Claude Code TUI
 
 课程项目位于 WSL，因此也应在 WSL 内安装和运行。以 [Anthropic 官方安装说明](https://code.claude.com/docs/en/installation) 为准。官方当前推荐的原生安装路线是：
 
