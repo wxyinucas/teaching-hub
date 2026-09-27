@@ -3,7 +3,7 @@
   "label": "T01",
   "title": "极限：从定义到存在与运算",
   "summary": "建立数列极限与函数极限的定义及联系，进而研究极限的性质、存在准则、运算法则与无穷小量、无穷大量。",
-  "lessonCount": 6,
+  "lessonCount": 3,
   "order": 2,
   "resources": {
     "runbook": "runbook.md",

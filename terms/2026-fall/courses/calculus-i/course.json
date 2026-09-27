@@ -20,7 +20,7 @@
       "label": "T01",
       "title": "极限：从定义到存在与运算",
       "summary": "建立数列极限与函数极限的定义及联系，进而研究极限的性质、存在准则、运算法则与无穷小量、无穷大量。",
-      "lessonCount": 6,
+      "lessonCount": 3,
       "completedBy": "2026-10-18",
       "order": 2
     },
@@ -29,7 +29,7 @@
       "label": "T02",
       "title": "函数的连续性",
       "summary": "建立连续性的概念、运算与性质，处理间断和闭区间上的连续函数，并完成第一章整合。",
-      "lessonCount": 3,
+      "lessonCount": 1,
       "completedBy": "2026-10-25",
       "order": 3
     },

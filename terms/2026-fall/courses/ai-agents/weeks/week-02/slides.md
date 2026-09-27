@@ -210,13 +210,14 @@ Bash 解释命令
 
 `git config --local`
 
-<!-- column -->
-## 提交身份
-**不是 GitHub 登录**
-
 `user.name`
 
 `user.email`
+
+<!-- column -->
+## 组合起来
+
+`git config --local user.name "s01"`
 
 <!-- footer -->
 开场一次配置，后面直接完成 add 与 commit。
