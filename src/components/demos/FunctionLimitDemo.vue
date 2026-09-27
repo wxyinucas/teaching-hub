@@ -203,7 +203,7 @@ const angleLabel = computed(() => ({
   <section class="function-limit-demo">
     <nav class="demo-scene-nav" aria-label="演示页面">
       <button type="button" :class="{ 'is-active': scene === 1 }" :aria-current="scene === 1 ? 'page' : undefined" @click="scene = 1">1 · 两个邻域取交集</button>
-      <button type="button" :class="{ 'is-active': scene === 2 }" :aria-current="scene === 2 ? 'page' : undefined" @click="scene = 2">2 · 振荡函数的夹逼</button>
+      <button type="button" :class="{ 'is-active': scene === 2 }" :aria-current="scene === 2 ? 'page' : undefined" @click="scene = 2">2 · 振荡函数与三明治定理</button>
       <button type="button" :class="{ 'is-active': scene === 3 }" :aria-current="scene === 3 ? 'page' : undefined" @click="scene = 3">3 · 第一重要极限</button>
     </nav>
 
@@ -427,7 +427,7 @@ const angleLabel = computed(() => ({
       <div id="important-limit-result" class="demo-result" aria-live="polite">
         <MathFormula class="result-formula" :tex="areaComparisonTex" display />
         <MathFormula class="result-formula" :tex="ratioComparisonTex" display />
-        <p>正侧由面积关系得到夹逼；负侧由 <MathFormula tex="\sin x/x" /> 与 <MathFormula tex="\cos x" /> 的偶性补齐。</p>
+        <p>正侧由面积关系得到三明治估计；负侧由 <MathFormula tex="\sin x/x" /> 与 <MathFormula tex="\cos x" /> 的偶性补齐。</p>
       </div>
     </div>
   </section>
