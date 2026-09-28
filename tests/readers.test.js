@@ -169,7 +169,7 @@ describe('runbook disclosure', () => {
     expect(boundary.element.tagName).toBe('DIV')
   })
 
-  it('applies a course layout variant without changing the default reader', () => {
+  it('shows both halves of the current calculus lesson without changing the default reader', async () => {
     const source = [
       '# T01｜专题台本',
       '> 高数测试',
@@ -184,6 +184,9 @@ describe('runbook disclosure', () => {
       '### 0-50 | 第三课时',
       '#### 比较两种定义',
       '- 找到共同结构。',
+      '### 50-100 | 第四课时',
+      '#### 汇总两种定义',
+      '- 形成比较结果。',
     ].join('\n')
     wrapper = mount(RunbookReader, {
       props: { source, file: 'runbook.md', variant: 'calculus-topic' },
@@ -191,7 +194,19 @@ describe('runbook disclosure', () => {
 
     expect(wrapper.find('.runbook-reader--calculus-topic').exists()).toBe(true)
     expect(wrapper.find('.topic-side-nav').exists()).toBe(true)
-    expect(wrapper.find('.topic-segment-toc').exists()).toBe(true)
+    expect(wrapper.find('.topic-toc-stack').attributes('aria-label')).toBe('当前课次目录')
+    expect(wrapper.findAll('.topic-segment-toc')).toHaveLength(2)
+    expect(wrapper.findAll('.topic-segment-link span').map((item) => item.text())).toEqual([
+      '第一次课 · 0–50',
+      '第一次课 · 50–100',
+    ])
+
+    await wrapper.findAll('.topic-lesson-index button')[1].trigger('click')
+    expect(wrapper.findAll('.topic-segment-toc')).toHaveLength(2)
+    expect(wrapper.findAll('.topic-segment-link span').map((item) => item.text())).toEqual([
+      '第二次课 · 0–50',
+      '第二次课 · 50–100',
+    ])
     expect(wrapper.find('.anchors').exists()).toBe(false)
     expect(wrapper.find('[aria-labelledby="controls-title"]').exists()).toBe(false)
   })

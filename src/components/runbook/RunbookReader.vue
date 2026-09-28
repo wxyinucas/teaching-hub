@@ -54,6 +54,10 @@ const currentSectionId = computed(() => (
 ))
 const navigationSegments = computed(() => {
   const sections = runbook.value?.sections ?? []
+  if (isCalculusTopic.value) {
+    const section = sections.find((item) => item.id === currentSectionId.value) ?? sections[0]
+    return section?.segments.map((segment) => ({ section, segment })) ?? []
+  }
   const entries = sections.flatMap((section) => section.segments.map((segment) => ({ section, segment })))
   const fallback = entries[0]?.segment.id
   const ids = visibleSegmentIds.value.length ? visibleSegmentIds.value : [activeSegmentId.value || fallback]
@@ -450,7 +454,7 @@ watchEffect(() => {
           </div>
         </nav>
 
-        <nav class="topic-toc-stack" aria-label="当前课时目录">
+        <nav class="topic-toc-stack" :aria-label="isCalculusTopic ? '当前课次目录' : '当前课时目录'">
           <section
             v-for="entry in navigationSegments"
             :key="entry.segment.id"
