@@ -7,6 +7,7 @@
   "order": 3,
   "resources": {
     "runbook": "runbook.md",
+    "guide": "guide.md",
     "exams": {
       "scope": "course",
       "file": "exams/topics/topic-02-continuity.tex"
