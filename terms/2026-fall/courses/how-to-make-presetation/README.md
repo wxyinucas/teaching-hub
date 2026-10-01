@@ -19,4 +19,4 @@
 
 ## 当前入口
 
-课程页复用高数的 `surface-study` 排版。`organization: materials` 目前仅用于空课程入口，不预先规定作者目录下的材料层级，也尚未实现材料资源路由。讨论确定后，再建立实际作者、材料与对应文档。
+课程页使用网站的公共目录卡片样式，配色集中在 `src/styles/tokens.css`；`courseLayout: surface-study` 暂作兼容字段。`organization: materials` 目前仅用于空课程入口，不预先规定作者目录下的材料层级，也尚未实现材料资源路由。讨论确定后，再建立实际作者、材料与对应文档。

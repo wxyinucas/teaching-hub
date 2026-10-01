@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, watchEffect } from 'vue'
 import SegmentNotes from './SegmentNotes.vue'
+import RoadmapPanel from '../shared/RoadmapPanel.vue'
 import { parseRunbook } from '../../lib/runbook.js'
 import { resolveRunbookNavigation } from '../../lib/runbookNavigation.js'
 
@@ -318,22 +319,17 @@ watchEffect(() => {
       </div>
     </dl>
 
-    <section v-if="usesPeriodCards && runbook.roadmap" class="topic-roadmap" :class="{ 'is-collapsed': !roadmapExpanded }" aria-labelledby="topic-roadmap-title">
-      <div class="topic-roadmap-header">
-        <h2 id="topic-roadmap-title">{{ roadmapTitle }}<span v-if="runbook.roadmap.title"> · {{ runbook.roadmap.title }}</span></h2>
-        <button
-          type="button"
-          class="topic-roadmap-toggle"
-          :aria-label="`${roadmapExpanded ? '收起' : '展开'}${usesLessonCards ? '知识地图' : ' Road map'}`"
-          :aria-expanded="roadmapExpanded"
-          aria-controls="topic-roadmap-content"
-          @click="toggleRoadmap"
-        >{{ roadmapExpanded ? '收起' : '展开' }} <span aria-hidden="true">{{ roadmapExpanded ? '↑' : '↓' }}</span></button>
-      </div>
-      <div id="topic-roadmap-content" v-show="roadmapExpanded" class="topic-roadmap-content" role="region" aria-labelledby="topic-roadmap-title">
-        <SegmentNotes :source="runbook.roadmap.source" />
-      </div>
-    </section>
+    <RoadmapPanel
+      v-if="usesPeriodCards && runbook.roadmap"
+      :title="roadmapTitle"
+      :subtitle="runbook.roadmap.title"
+      :source="runbook.roadmap.source"
+      :expanded="roadmapExpanded"
+      title-id="topic-roadmap-title"
+      content-id="topic-roadmap-content"
+      :toggle-label="`${roadmapExpanded ? '收起' : '展开'}${usesLessonCards ? '知识地图' : ' Road map'}`"
+      @toggle="toggleRoadmap"
+    />
 
     <div class="workspace">
       <section id="lesson-route" class="route" aria-labelledby="route-title">

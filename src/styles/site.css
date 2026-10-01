@@ -17,7 +17,6 @@
 .skip-link { position: fixed; left: 16px; top: -60px; background: var(--accent-solid); color: var(--on-accent); padding: 10px 16px; z-index: 100; }
 .skip-link:focus { top: 12px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.markdown-strong { margin-inline: .35em; }
 .eyebrow { color: var(--purple); font-size: 12px; letter-spacing: .06em; }
 .directory-heading { padding: 32px 0 30px; }
 .home-heading { max-width: 760px; padding-top: 52px; }
@@ -29,7 +28,7 @@
 .directory-section-heading > span { color: var(--ink-muted); font-size: 11px; }
 .term-group { margin-bottom: 38px; }
 .course-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.course-card { display: flex; flex-direction: column; min-height: 180px; padding: 20px; border: 1px solid var(--border); border-top: 3px solid var(--purple); border-radius: 7px; background: var(--surface); color: var(--ink); text-decoration: none; transition: border-color .15s ease, transform .15s ease; }
+.course-card { display: flex; flex-direction: column; min-height: 180px; padding: 20px; border: 1px solid var(--border-card); border-top: 3px solid var(--purple); border-radius: 7px; background: var(--surface-card); color: var(--ink); text-decoration: none; transition: border-color .15s ease, transform .15s ease; }
 .course-card:hover { border-color: var(--purple); transform: translateY(-2px); }
 .course-card-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .course-card h3 { font-size: 19px; margin: 0; font-weight: 600; }
@@ -43,7 +42,7 @@
 .breadcrumbs a:hover { text-decoration: underline; }
 .breadcrumbs [aria-current] { color: var(--ink); }
 .week-list, .topic-list { display: grid; gap: 14px; }
-.week-card, .topic-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 30px; align-items: center; padding: 22px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+.week-card, .topic-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 30px; align-items: center; padding: 22px; background: var(--surface-card); border: 1px solid var(--border-card); border-radius: 8px; }
 .week-kicker, .topic-kicker { color: var(--purple); font-size: 11px; font-weight: 650; letter-spacing: .06em; }
 .week-copy h3, .topic-copy h3 { margin: 6px 0 7px; font-size: 18px; }
 .week-copy p, .topic-copy p { margin: 0; color: var(--ink-muted); font-size: 12px; line-height: 1.75; }
@@ -52,13 +51,14 @@
 .resource-link { display: flex; flex-direction: column; min-width: 120px; padding: 13px 15px; border: 1px solid var(--purple-border); border-radius: 6px; text-decoration: none; background: var(--purple-light); }
 .resource-link span { color: var(--purple-dark); font-size: 13px; font-weight: 650; }
 .resource-link small { margin-top: 4px; color: var(--ink-muted); font-size: 10px; }
-.resource-slides { background: var(--accent-solid); border-color: var(--accent-solid); }
-.resource-slides span, .resource-slides small { color: var(--on-accent); }
-.resource-slides small { opacity: .72; }
-.resource-demo { background: var(--surface); border-color: var(--purple); }
-.resource-demo span { color: var(--purple); }
+/* 按实际渲染的入口顺序循环；颜色不绑定材料类型。 */
+.resource-link:nth-child(3n + 2) { background: var(--accent-solid); border-color: var(--accent-solid); }
+.resource-link:nth-child(3n + 2) span, .resource-link:nth-child(3n + 2) small { color: var(--on-accent); }
+.resource-link:nth-child(3n + 2) small { opacity: .72; }
+.resource-link:nth-child(3n) { background: var(--surface); border-color: var(--purple); }
+.resource-link:nth-child(3n) span { color: var(--purple); }
 .directory-footnote, .directory-empty { color: var(--ink-muted); font-size: 12px; line-height: 1.8; margin-top: 20px; }
-.empty-course { padding: 54px 24px; text-align: center; border: 1px dashed var(--purple-border); border-radius: 8px; background: var(--surface); }
+.empty-course { padding: 54px 24px; text-align: center; border: 1px dashed var(--purple-border); border-radius: 8px; background: var(--surface-card); }
 .empty-course > span { color: var(--purple); font-size: 28px; }
 .empty-course h2 { margin: 10px 0 8px; font-size: 16px; }
 .empty-course p { margin: 0; color: var(--ink-muted); font-size: 12px; }
@@ -89,12 +89,6 @@
 .error-state h1 { margin: 0; font-size: 23px; }
 .page-footer { display: flex; justify-content: space-between; border-top: 1px solid var(--border); margin-top: 30px; padding-top: 16px; font-size: 10px; color: var(--ink-subtle); }
 
-/* 高数课程页暂用选定的暗色表面，确认后再收束为全局 token。 */
-:root[data-theme="dark"] .directory-page--surface-study .topic-card {
-  border-color: #665178;
-  background: #292630;
-}
-
 @media (max-width: 900px) {
   .course-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .site-shell { padding: 20px 24px 26px; }
@@ -120,8 +114,8 @@
 @media print {
   .site-shell { max-width: none; padding: 0; }
   .site-header, .skip-link { display: none; }
-  .resource-slides, .resource-tabs a.router-link-exact-active { border-color: var(--border); background: var(--surface); }
-  .resource-slides span, .resource-slides small, .resource-tabs a.router-link-exact-active { color: var(--ink); opacity: 1; }
+  .resource-link:nth-child(3n + 2), .resource-tabs a.router-link-exact-active { border-color: var(--border); background: var(--surface); }
+  .resource-link:nth-child(3n + 2) span, .resource-link:nth-child(3n + 2) small, .resource-tabs a.router-link-exact-active { color: var(--ink); opacity: 1; }
   .course-card, .week-card, .topic-card, .guide-reader { box-shadow: none; }
   .guide-layout--topic { display: block; }
   .guide-mini-content { display: none; }

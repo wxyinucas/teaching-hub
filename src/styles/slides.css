@@ -9,17 +9,27 @@
 .slide-stage { width: min(100%, 1200px); margin: 0 auto; }
 .slide-canvas {
   /* Slides 是独立的投影文稿画布，不随站点外壳反色。 */
-  --purple: #5e33bf;
-  --purple-dark: #291344;
-  --purple-deep: #180c28;
-  --purple-light: #f1ecfa;
-  --purple-border: #d9cbed;
-  --ink: #191919;
-  --ink-muted: #626066;
-  --ink-subtle: #76727c;
-  --border: #dddce1;
-  --surface: #fff;
-  --surface-muted: #f2f2f4;
+  --accent: var(--light-accent);
+  --accent-text: var(--light-accent-text);
+  --accent-soft: var(--light-accent-soft);
+  --accent-border: var(--light-accent-border);
+  --accent-solid: var(--light-accent-solid);
+  --accent-solid-strong: var(--light-accent-solid-strong);
+  --on-accent: var(--light-on-accent);
+  --on-accent-muted: var(--light-on-accent-muted);
+  --ink: var(--light-ink);
+  --ink-muted: var(--light-ink-muted);
+  --ink-subtle: var(--light-ink-subtle);
+  --border: var(--light-border);
+  --surface: var(--light-surface);
+  --surface-muted: var(--light-surface-muted);
+  --surface-card: var(--surface);
+  --border-card: var(--border);
+  --purple: var(--accent);
+  --purple-dark: var(--accent-text);
+  --purple-deep: var(--accent-solid-strong);
+  --purple-light: var(--accent-soft);
+  --purple-border: var(--accent-border);
   --shadow: 0 18px 45px rgba(25, 16, 39, .16);
   container-type: inline-size;
   color-scheme: light;

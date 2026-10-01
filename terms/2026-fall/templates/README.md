@@ -17,6 +17,10 @@
 
 ## 网站展示能力的查看入口
 
+布局以 Mac／PC 的默认纵向浏览器窗口为主要使用场景；移动端适配与验收只覆盖 iPad，手机不作为布局设计或验收目标。Slides 的投影画布继续遵循自身的 16:9 呈现规格。
+
+课程目录中的材料入口按每行实际显示的顺序，以浅紫、实紫、描边三种外观循环；缺失材料不占颜色位置，刷新后分配保持稳定。颜色只用于装饰与区分相邻入口，材料类型由文字名称说明。
+
 备课方法仍以 [`docs/prep-system.md`](../../../docs/prep-system.md) 为准。确定网站支持的布局、内容语法、导航与交互时，先读实际实现；文档与实现不一致时，以解析器、渲染组件和样式共同形成的实际行为为准。仅被解析器识别或移除的标记，不等于已经有对应展示功能。
 
 | 展示能力 | 实现入口 |
@@ -25,6 +29,8 @@
 | 台本结构、卡片与导航 | [`runbook.js`](../../../src/lib/runbook.js)、[`RunbookReader.vue`](../../../src/components/runbook/RunbookReader.vue)、[`runbook.css`](../../../src/styles/runbook.css) |
 | Slides 语法、布局与课次导航 | [`slides.js`](../../../src/lib/slides.js)、[`SlidesReader.vue`](../../../src/components/slides/SlidesReader.vue)、[`SlidesView.vue`](../../../src/views/SlidesView.vue)、[`slides.css`](../../../src/styles/slides.css) |
 | Markdown 正文与 Guide 目录 | [`markdown.js`](../../../src/lib/markdown.js)、[`SegmentNotes.vue`](../../../src/components/runbook/SegmentNotes.vue)、[`GuideView.vue`](../../../src/views/GuideView.vue) |
+| 公共配色与阅读样式 | [`tokens.css`](../../../src/styles/tokens.css)、[`markdown.css`](../../../src/styles/markdown.css)；目录卡片使用 `--surface-card` 与 `--border-card`，浅色基线也供 Slides 和打印复用 |
+| Roadmap 展示部件 | [`RoadmapPanel.vue`](../../../src/components/shared/RoadmapPanel.vue)、[`roadmap.css`](../../../src/styles/roadmap.css)；内容与展开状态由调用方提供 |
 | 交互 Demo | [`DemoView.vue`](../../../src/views/DemoView.vue)、[`demos/`](../../../src/components/demos/)；新增演示需要实现并注册组件 |
 | 真题语法与浏览 | [`exams.js`](../../../src/lib/exams.js)、[`ExamsView.vue`](../../../src/views/ExamsView.vue) |
 

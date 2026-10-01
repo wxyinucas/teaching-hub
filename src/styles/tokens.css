@@ -7,21 +7,40 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 
-  --accent: #5e33bf;
-  --accent-text: #291344;
-  --accent-soft: #f1ecfa;
-  --accent-border: #d9cbed;
-  --accent-solid: #291344;
-  --accent-solid-strong: #180c28;
-  --on-accent: #fff;
-  --on-accent-muted: #d9cbed;
-  --ink: #191919;
-  --ink-muted: #626066;
-  --ink-subtle: #76727c;
-  --border: #dddce1;
-  --paper: #f7f7f8;
-  --surface: #fff;
-  --surface-muted: #f2f2f4;
+  /* 浅色基线同时用于阅读页面、投影画布和打印。 */
+  --light-accent: #5e33bf;
+  --light-accent-text: #291344;
+  --light-accent-soft: #f1ecfa;
+  --light-accent-border: #d9cbed;
+  --light-accent-solid: #291344;
+  --light-accent-solid-strong: #180c28;
+  --light-on-accent: #fff;
+  --light-on-accent-muted: #d9cbed;
+  --light-ink: #191919;
+  --light-ink-muted: #626066;
+  --light-ink-subtle: #76727c;
+  --light-border: #dddce1;
+  --light-paper: #f7f7f8;
+  --light-surface: #fff;
+  --light-surface-muted: #f2f2f4;
+
+  --accent: var(--light-accent);
+  --accent-text: var(--light-accent-text);
+  --accent-soft: var(--light-accent-soft);
+  --accent-border: var(--light-accent-border);
+  --accent-solid: var(--light-accent-solid);
+  --accent-solid-strong: var(--light-accent-solid-strong);
+  --on-accent: var(--light-on-accent);
+  --on-accent-muted: var(--light-on-accent-muted);
+  --ink: var(--light-ink);
+  --ink-muted: var(--light-ink-muted);
+  --ink-subtle: var(--light-ink-subtle);
+  --border: var(--light-border);
+  --paper: var(--light-paper);
+  --surface: var(--light-surface);
+  --surface-muted: var(--light-surface-muted);
+  --surface-card: var(--surface);
+  --border-card: var(--border);
   --shadow: 0 18px 45px rgba(25, 16, 39, .12);
   --backdrop: #17121d;
 
@@ -50,6 +69,8 @@
   --paper: #17151b;
   --surface: #211e27;
   --surface-muted: #302a38;
+  --surface-card: #292630;
+  --border-card: #665178;
   --shadow: 0 18px 45px rgba(0, 0, 0, .38);
   --backdrop: #0e0c11;
 }
@@ -68,21 +89,23 @@ code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
   :root,
   :root[data-theme="dark"] {
     color-scheme: light;
-    --accent: #5e33bf;
-    --accent-text: #291344;
-    --accent-soft: #f1ecfa;
-    --accent-border: #d9cbed;
-    --accent-solid: #291344;
-    --accent-solid-strong: #180c28;
-    --on-accent: #fff;
-    --on-accent-muted: #d9cbed;
-    --ink: #191919;
-    --ink-muted: #626066;
-    --ink-subtle: #76727c;
-    --border: #dddce1;
-    --paper: #fff;
-    --surface: #fff;
-    --surface-muted: #f2f2f4;
+    --accent: var(--light-accent);
+    --accent-text: var(--light-accent-text);
+    --accent-soft: var(--light-accent-soft);
+    --accent-border: var(--light-accent-border);
+    --accent-solid: var(--light-accent-solid);
+    --accent-solid-strong: var(--light-accent-solid-strong);
+    --on-accent: var(--light-on-accent);
+    --on-accent-muted: var(--light-on-accent-muted);
+    --ink: var(--light-ink);
+    --ink-muted: var(--light-ink-muted);
+    --ink-subtle: var(--light-ink-subtle);
+    --border: var(--light-border);
+    --paper: var(--light-surface);
+    --surface: var(--light-surface);
+    --surface-muted: var(--light-surface-muted);
+    --surface-card: var(--surface);
+    --border-card: var(--border);
     --shadow: none;
   }
 }
