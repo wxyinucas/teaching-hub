@@ -4,6 +4,7 @@
   "description": "以小专题组织极限、导数、积分与微分方程；每个专题共享台本、Slides、Guide 与交互 Demo。",
   "order": 2,
   "organization": "topics",
+  "courseLayout": "surface-study",
   "runbookLayout": "calculus-topic",
   "topicMap": [
     {

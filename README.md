@@ -60,14 +60,7 @@ npm run check
 
 台本遵循课程契约，并在结构兼容时复制 [`terms/2026-fall/templates/runbook-template.md`](terms/2026-fall/templates/runbook-template.md) 填写。二级标题划分周内执行区段，三级标题划分推进段；推进段的数量与长度由课程契约决定，排课中的课时边界不必成为内容卡片。总览保留根问题、最低出口与硬收口，展开区域再写讲述提示、活动、转场和 Plan B。
 
-课件复制 [`terms/2026-fall/templates/slides-template.md`](terms/2026-fall/templates/slides-template.md) 填写。单独一行 `---` 分页；默认是普通内容页，显式布局只有：
-
-- `cover`：封面；
-- `question`：全班面对的单一问题；
-- `columns`：两栏或三栏并列；
-- `prompt`：可直接复制给 Chatbox 的完整提示词。
-
-`<!-- section: ... -->` 自动生成全局目录页；`<!-- column -->` 分栏；`<!-- footer -->` 写跨栏落点。首版不支持动画、逐项出现、讲者备注、自定义 HTML 或页面级 CSS。
+课件以 [`terms/2026-fall/templates/slides-template.md`](terms/2026-fall/templates/slides-template.md) 为常用示例；模板不穷举网站能力。单独一行 `---` 分页，默认是普通内容页。当前布局、分页标记和按课次导航的说明见[模板说明](terms/2026-fall/templates/README.md#slides-布局与标记)。选择展示方式前，按[实现入口](terms/2026-fall/templates/README.md#网站展示能力的查看入口)核对解析器、渲染组件和样式；文档与实现不一致时，以实际行为为准。当前不支持动画、逐项出现、讲者备注、自定义 HTML 或页面级 CSS。
 
 学生指南只承载学生需要独立执行、核验或课后接续的内容。台本决定教师何时推进和如何取舍；Slides 的受众与用途由课程契约说明。不同材料可以有少量有意重复，但同一规则必须只有一个权威出处。
 

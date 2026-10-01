@@ -7,8 +7,9 @@ import NotFoundView from './NotFoundView.vue'
 const props = defineProps({ termId: String, courseId: String })
 const context = computed(() => findCourse(props.termId, props.courseId))
 const isTopicCourse = computed(() => context.value?.course.organization === 'topics')
+const isMaterialCourse = computed(() => context.value?.course.organization === 'materials')
 const entries = computed(() => (
-  isTopicCourse.value ? context.value?.course.topicMap ?? [] : context.value?.course.calendar ?? []
+  isMaterialCourse.value ? [] : isTopicCourse.value ? context.value?.course.topicMap ?? [] : context.value?.course.calendar ?? []
 ))
 
 function record(entry) {
@@ -45,7 +46,7 @@ watchEffect(() => {
   <section
     v-if="context"
     class="directory-page"
-    :class="{ 'directory-page--surface-study': courseId === 'calculus-i' }"
+    :class="{ 'directory-page--surface-study': context.course.courseLayout === 'surface-study' }"
   >
     <nav class="breadcrumbs" aria-label="当前位置">
       <RouterLink to="/">首页</RouterLink><span aria-hidden="true">/</span>
@@ -59,7 +60,7 @@ watchEffect(() => {
     </header>
 
     <div class="directory-section-heading">
-      <h2>{{ isTopicCourse ? '专题地图' : '教学周' }}</h2>
+      <h2>{{ isMaterialCourse ? '学习材料' : isTopicCourse ? '专题地图' : '教学周' }}</h2>
       <span v-if="entries.length">{{ entries.length }} {{ isTopicCourse ? '个专题' : '周' }}</span>
     </div>
     <div v-if="entries.length" :class="isTopicCourse ? 'topic-list' : 'week-list'">
@@ -109,11 +110,13 @@ watchEffect(() => {
     </div>
     <div v-else class="empty-course">
       <span aria-hidden="true">○</span>
-      <h2>还没有登记{{ isTopicCourse ? '专题' : '教学周' }}</h2>
-      <p v-if="isTopicCourse">课程入口已经建立；第一个专题准备好后，再加入对应的 topic 目录。</p>
+      <h2>还没有登记{{ isMaterialCourse ? '学习材料' : isTopicCourse ? '专题' : '教学周' }}</h2>
+      <p v-if="isMaterialCourse">围绕作者与学习材料，逐步积累内容大纲、Slides 与个人提醒。</p>
+      <p v-else-if="isTopicCourse">课程入口已经建立；第一个专题准备好后，再加入对应的 topic 目录。</p>
       <p v-else>课程入口已经建立；第一份正式周材料准备好后，再加入对应的 week 目录。</p>
     </div>
-    <p v-if="isTopicCourse" class="directory-footnote">网站按专题组织；每次课的日期与材料写在对应专题内。</p>
+    <p v-if="isMaterialCourse" class="directory-footnote">围绕学习材料练习组织、衔接与节奏。</p>
+    <p v-else-if="isTopicCourse" class="directory-footnote">网站按专题组织；每次课的日期与材料写在对应专题内。</p>
     <p v-else class="directory-footnote">网站按教学周组织；备课与放行单位由课程契约定义。</p>
   </section>
   <NotFoundView v-else />
