@@ -16,7 +16,7 @@
 2. 区分脚本路径、`PATH` 与项目 Python，用 uv 恢复并运行项目；
 3. 让一项修改经历工作区、暂存区和本地历史，同时证明它尚未上传。
 
-本周目录和 commit 只用于课堂观察，不是 W3 的正式项目起点。
+本周工作台代码用于课堂观察，不作为 W3 报告的实现基线；W3 会继续使用这份仓库和本地提交历史。
 
 本指南中的 **Explorer** 指 VS Code 左侧的文件浏览区，不是 Windows 文件资源管理器；**Integrated Terminal** 指 VS Code 内置的终端面板，本周在其中运行 WSL Bash；**Source Control** 指 VS Code 左侧用来观察 Git 状态的面板。
 
@@ -715,4 +715,4 @@ git show --stat --oneline SHORT_SHA
 
 真实现场比“清理后重新开始”更容易判断和接续。
 
-W3 会从新的正式仓库开始，不继承本周目录、环境或提交。
+W3 先沿用本周已打开的 `w02-workbench` 窗口接通 Agent，再更新同一仓库并进入 `week-03/` 完成报告。这个子项目使用自己的 `pyproject.toml`、`uv.lock` 和 `.venv/`；发布到个人远端时保留本周已有的 Git 历史。

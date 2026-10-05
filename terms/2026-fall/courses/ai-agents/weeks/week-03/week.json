@@ -1,8 +1,9 @@
 {
   "id": "week-03",
-  "label": "W3 · 本地 Agent",
-  "title": "把契约变成自己的可验证系统",
-  "summary": "初始化个人持续项目，让本地 Agent 只在自己的 system 中实现任务，并用教师区的公开测试、实际运行与 diff 作出 ACCEPT/HOLD。",
+  "runbookLayout": "lesson-cards",
+  "label": "W3 · 接通本地 Agent",
+  "title": "怎样把模型 API 接入本地工作台？",
+  "summary": "区分 Agent 与 LLM，把 DeepSeek API 接入 VS Code 原生 Agent，获得真实响应后借助 Agent 探索；Cline 留作选做，实验报告按进度推进。",
   "order": 3,
   "resources": {
     "runbook": "runbook.md",

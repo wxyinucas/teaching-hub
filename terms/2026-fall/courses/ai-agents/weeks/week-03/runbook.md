@@ -1,363 +1,351 @@
-# W3｜把 Agent 接入本地工作台
+# W3｜把模型 API 接入本地 Agent
 
-> W3 · 3 × 50 min · 约 30 名学生，按零编程基础设计 · 无助教
+> W3 · 3 × 50 min · 约 30 名学生，按零编程基础设计 · 无助教 · 试跑版，Windows + WSL 接入与整链路待真机核验
 
 ## 知识地图
 
-- **Road map：从可运行、可追踪的项目进入 Agent 协作**
-  - W2 已经建立工作台
-    - Explorer、编辑器、Terminal 和 Source Control 显示同一项目的不同状态
-    - `uv` 负责恢复和运行项目，Git 负责观察修改并保存历史
-  - W3 增加 Agent 面板
-    - VS Code 提供工作区，Cline 提供 Agent 行动入口
-    - DeepSeek API 提供模型服务，也把 API key、额度和按量计费变得可见
-    - 人决定 Agent 可以读什么、改什么、运行什么，以及结果是否保留
-  - 完成第一次 Agent 协作闭环
-    - 配置连接 → 只读认识项目 → 规划任务 → 授权执行
-    - 查看 diff → 运行程序与测试 → 反馈修正 → 接受或拒绝
-  - 从这里进入后续课程
-    - W4 起默认先让 Agent 参与执行，再由人沿运行、测试和 diff 验收
-    - Codex GUI、Claude Code TUI 等只是不同工作入口，不改变这条责任链
+- **Road map：接通 Agent → 完成实验报告 → 维护与发布**
+  - 前置：W2 本地工作台（WSL · VS Code · uv · Git）
+  - 操作前的介绍与讨论
+    - 共享协作 · 开源与付费 · IDE
+    - Agent 与 LLM · 常见例子 · 使用入口
+  - ① 接通 Agent｜本周必达
+    - 主线：VS Code 原生 Agent + DeepSeek API；Cline 选做
+    - 真实响应 → README 读取 → Git 面板；批准与核验
+  - ② 完成实验报告｜接通后推进
+    - 材料入口：已有 ai-agents 仓库 → pull → week-03 独立实验目录
+    - 编译出口：LaTeX 扩展 + 编译器 → 模板 → PDF
+    - 投针实验：uv · seed=42 · 教师动态演示／学生批量模拟
+    - 结果核验：公开测试 → 实际图表 → 一页报告（seed、投针数）
+  - ③ 维护与发布｜同一项目
+    - 统一入口：rebuild.sh（实验 → 图表 → PDF）；测试独立运行
+    - 首版 commit → 改动 → 测试与重建 → diff → commit / push
+    - 拓展选做：比较 Agent／实验参数／独立测试／随机结果对照
+  - 进度：API 优先；报告可跨课时继续，完成后再选做维护
 
-## 本次课 · 配好一个 Agent，并完成第一次可核验协作
+## 本次课 · 接通 Agent，再进入实验报告
 
-### 0-50 | Agent 怎样进入 VS Code，又在调用谁？
+### 0-50 | 把 DeepSeek API 接入 VS Code
 
-> 在 W2 工作台上增加 Agent 面板，拆清 IDE、插件、API 服务商与模型，并完成一次 DeepSeek API 健康检查。
-
-#### W2 的工作台还缺少什么？
-
-> Agent 面板把读取文件、修改文件、运行命令和读取结果连接成一个可以连续推进的工作过程。
+> 完成最小 API 配置，获得一次真实响应；随后借助 Agent 探索使用方法。
 
 **课前检查**
 
-- [ ] 在真实 Windows + WSL 的 VS Code 中安装 Cline，完整跑通“选择 DeepSeek → 填入 API key → 选择模型 → 发送一次只读请求”。
-- [ ] 用接近学生条件的账号核对注册、创建 key、余额与首次调用；确认新账号没有可用额度时，不在课堂上临时要求学生充值。
-- [ ] 核对 [Cline 授权说明](https://docs.cline.bot/getting-started/authorizing-with-cline)、[Cline 的 DeepSeek 配置说明](https://docs.cline.bot/provider-config/deepseek)与 [DeepSeek 实时价格](https://api-docs.deepseek.com/zh-cn/quick_start/pricing/)，不把截图中的旧模型名或价格写死。
-- [ ] 准备一段脱敏的成功录屏、一份成功会话和同一项目的候选 diff；网络、账号或服务商异常时，全班仍能练习授权与验收。
-- [ ] 准备 Cline Provider 中当前可用的免费模型作为调用故障的 Plan B；它只负责维持课堂行动，不替代对 DeepSeek API、key 和计费方式的认识。
+- [ ] 跑通 Windows + WSL 中的原生 Chat/Agent：添加模型 → DeepSeek 配置 → 请求成功，记下实际界面、模型名称与耗时。
+- [ ] 确认 DeepSeek 注册、可用余额与创建 Key 的入口；准备投屏时隐藏 Key 的方式。
+- [ ] 核对 [VS Code 模型配置](https://code.visualstudio.com/docs/agent-customization/language-models#_add-a-custom-endpoint-model)与 [DeepSeek 模型信息](https://api-docs.deepseek.com/)；试跑下方配置、README 读取与一次小操作。
 
-*翻页：W2 的工作台还缺少什么？*
+#### 操作前的介绍与讨论
 
-- 重新打开 W2 的 `w02-workbench`：
-  - Explorer 看项目结构；
-  - 编辑器看文件内容；
-  - Terminal 运行命令并读取输出；
-  - Source Control 看修改和 diff。
-- 现场展示一次已准备好的 Agent 行动：它读取一个文件、提出一项小改动、请求权限、运行命令，再根据结果继续。
-- 指出本周新增的不是“另一个聊天框”，而是一个能够调用这些工具的行动入口。
+*slides: 操作前的介绍与讨论*
 
-**转场：** Agent 面板出现在 VS Code 里，不代表 VS Code、Cline 和模型是同一个东西；先把这条服务链拆开。
+- W2：本地工作台；W3：让 Agent 进入工作台。
 
-#### 拆开 IDE、Agent、服务商与模型
+*slides: 共享与协作*
 
-> VS Code 是工作台，Cline 是行动入口，API 服务商处理连接与计费，模型生成判断和内容。
+- 共享：源码、文档、可复用的实现。
+- 协作：提出问题、复现错误、补充说明、提交改动。
+- 直观介绍：从 GitHub 拿到他人的成果，也可以留下让后来者继续使用的成果。
 
-*翻页：VS Code → Cline → DeepSeek API → 模型*
+*slides: 开源与付费*
 
-```text
-VS Code（IDE）
-→ Cline（Agent 插件）
-→ DeepSeek API（服务商、账号、额度与请求入口）
-→ 模型（生成回复、计划和工具调用）
-```
+- 开源：按许可证使用、修改与分享软件；代码可见只是其中一部分。
+- 付费：软件、算力、托管、维护与支持，都可能产生费用。
+- 直观介绍：开放代码与付费服务可以同时存在；Agent 工具的开放方式，与模型 API 怎么收费，是不同的问题。[开源与商业使用说明](https://opensource.org/faq)
 
-- **VS Code** 组织工作区、编辑器、终端与 diff，本身不是模型。
-- **Cline** 把被选取或读取并纳入上下文的内容发送给模型，并把读取、写入、运行和额外联网等行动请求带回本机。
-- **DeepSeek API** 接收请求并按规则计费；换服务商不等于换工作区或换插件。
-- **模型** 生成内容与下一步建议；换模型不等于换 Agent 获得的本机权限。
-- 故障也按四层定位：窗口是否正确、插件是否工作、服务商是否可调用、模型是否适合任务。
-- Cline 自带“登录 + 内置计费／免费模型”的路线；本课仍使用 DeepSeek BYOK 作为标准路线，因为它能直接暴露服务商、API key、余额和按量付费的关系。
-- 想在终端里使用，不需要扩展；想把 Agent 变成 VS Code 原生侧栏，才需要对应扩展。
-- 教师只展示 Codex VS Code 扩展的形态与编辑器上下文；学生无需安装或登录，也不计入第一课时出口。Claude Code 的终端入口同样只作路线说明，不另开全班安装支线。
+*slides: IDE：把工具放在同一处*
 
-**转场：** 这条链路里真正可能代表费用与调用权的，不是聊天账号，而是 API key。
+- 编辑器：修改文本；IDE：整合编辑、运行、调试等工具。
+- W2 的 VS Code：Explorer、Editor、Terminal、Source Control。
+- 直观介绍：过去需要在不同工具之间切换的动作，可以在同一工作台里完成；今天再接入 Agent。
 
-#### API key 不是会员密码
+*slides: 比较常见 Agent 和 LLM*
 
-> API key 代表程序调用服务的权限；网页会员、聊天订阅和 API 余额不能想当然地互相通用。
+- Agent：围绕任务组织模型、工具和反馈，读取文件、执行命令、继续修改。
+- LLM：理解输入，生成回答和行动建议；工具执行由 Agent 系统承接。
+- 直观介绍：模型建议下一步，Agent 调用工具，再把执行结果交回模型。
 
-*翻页：API key、额度与费用*
+*slides: 常见 Agent 与运行框架*
 
-- 在 DeepSeek 开放平台展示完整地图：账号 → API Keys → 创建 key → 余额／用量 → 实时价格。
-- 创建 key 时只展示按钮和字段，不投影完整 key；它通常只在创建时完整显示一次。
-- key 只粘贴到 Cline 专用的 DeepSeek API Key 字段，不放入：
-  - Cline 对话或其他聊天框；
-  - 代码、`.env`、终端命令或剪贴到公开文档的示例；
-  - 截图、录屏、Git 提交或作业。
-- 每次云端调用都会消耗 token；模型、输入上下文、输出长度和重复尝试都会影响费用。
-- DeepSeek 余额不足会使 API 调用失败。学生将来是否付费由本人决定；课程只要求能够看见价格与用量，不能在不知情时持续消耗。
-- 若 key 意外出现在屏幕、文件或对话中，先撤销该 key，再创建新 key；不能只删除画面后继续使用。
+- Agent 例子：VS Code 原生 Agent、Cline、OpenCode、Claude Code（CC）、Codex。
+- DSH（DeepSeek Harness）：承载模型、工具与任务循环的 Agent harness；有本地网页入口，只介绍，不要求安装。
 
-**转场：** 现在不比较更多平台，只把这一条标准链路真正接通。
+*slides: 常见模型系列*
 
-#### 把 DeepSeek API 接入 Cline
+- LLM 例子：DeepSeek、Kimi、GPT、Claude 系列。
+- 常见搭配：Claude Code + Claude；Codex + OpenAI 模型；Cline、OpenCode 可以选择多家模型服务。
+- 同一个 Agent 可以接不同兼容模型；同一个模型也可以被不同 Agent 调用。
 
-> 配置成功必须由一次真实调用证明，不能只凭设置页面“看起来填好了”。
+*slides: Agent 的不同入口*
 
-*翻页：把 DeepSeek API 接入 Cline*
+- IDE 集成式：Agent 和文件、终端、差异视图放在一起；原生 Agent 与扩展是两种接入方式。
+- 终端式：从当前目录开始，执行命令、查看输出；终端也可以放在 IDE 内。
+- 独立 App／网页：单独的任务界面；仍需确认项目位置、模型与权限。
+- 直观介绍：入口可以不同，模型也可以换；本周只维护 **VS Code 原生 Agent + DeepSeek API** 这一条实践路线。
 
-- 在 WSL 窗口的 VS Code 中打开 Extensions，安装教师课前实测过的 Cline。
-- 打开 Cline Settings：
-  1. API Provider 选择 **DeepSeek**；
-  2. 只在专用字段中粘贴自己的 API key；
-  3. 从下拉列表选择教师当天实测过的模型；
-  4. 保持全局 Auto Approve 关闭。
-- 第一次请求仍在 W2 的 `w02-workbench` 中完成，不同时切换正式项目：
+*slides: 下面开始操作*
 
-```text
-只读取当前工作区，不修改文件，也不运行命令。
-请告诉我工作区根目录名，并指出 warmups/week-02/course-check/pyproject.toml 是否存在。
-最后列出你实际读取了哪些文件。
-```
+> 下面开始操作
 
-- 同时核对三项证据：Agent 回答的目录与文件真实存在；当前 provider／model 正确；平台或 Cline 显示了本次用量。
-- DeepSeek 因账号、余额或网络无法调用时，保留原始错误；切到教师指定的 Cline 免费模型完成后续课堂，但不把它记录成“DeepSeek 已经接通”。
+#### 打开工作区与原生 Chat
 
-**转场：** 一次回答只证明连接可用；当 Agent 准备调用工具时，人的第一项工作才真正出现。
+> 沿用 W2 工作区，让 Agent 读取已有文件。
 
-#### 权限提示不是“下一步”按钮
-
-> 每次批准都在决定 Agent 可以对本机做什么；先看动作、对象和范围，再决定允许或拒绝。
-
-*翻页：权限提示不是“下一步”按钮*
-
-- 用刚才的只读请求区分四类行动：
-  - **读文件**：取得工作区上下文；
-  - **写文件**：改变项目内容；
-  - **运行命令**：让本机程序执行；
-  - **联网**：把请求发送到外部服务或取得外部内容。
-- 调用 DeepSeek 模型本身已经联网：当前提示词与已经纳入上下文的内容会发送给服务商；Browser、MCP 等权限控制的是额外外部工具，不能把“未批准额外联网工具”误解为“数据没有离开本机”。
-- 批准前先说出三件事：它要做什么、作用于哪里、为什么完成当前任务需要它。
-- 默认拒绝：工作区外修改、读取凭证、不可逆删除、无法解释的安装、替学生执行 Git 发布，以及与当前目标无关的扩展任务。
-- 本课只把 Agent 放进指定实验工作区；不打开全局自动批准，不把“总是允许”当作省时间。
-- 第一课时出口：Cline 已安装；DeepSeek 路线留下真实成功或失败证据；每个人都完成了一次只读请求，并能读懂下一次权限提示。
-
-
-### 50-100 | 怎样让 Agent 完成第一项本地任务？
-
-> 在正式项目的个人目录中，把自然语言合同交给 Agent；先核对它的理解，再授权生成一份尚未接受的候选实现。
-
-#### 先给 Agent 一个边界清楚的工作区
-
-> Agent 能看见和改变什么，首先取决于 VS Code 打开了哪个目录。
-
-- W2 的练习仓库不再继续修改；本课从正式项目仓库建立 W4 以后持续使用的个人系统。
-- 学生先在 GitHub fork `wxyinucas/ai-agents-project`，再把自己的 fork clone 到固定位置。把占位内容换成自己的 GitHub 用户名与课程代号：
+- 在 WSL Bash 中打开已有工作区：
 
 ```bash
-git clone https://github.com/<你的 GitHub 用户名>/ai-agents-project.git ~/course/ai-agents-project
-cd ~/course/ai-agents-project
-bash course/week-03/init-student.sh s07
+cd ~/course/w02-workbench
 code .
 ```
 
-- 目标目录已经存在、初始化脚本拒绝执行或路径与预期不同，保留实际输出并求助；不删除目录、不换名字制造第二份正式项目。
-- W2 使用的 `git config --local` 只属于 W2 仓库。进入新仓库后检查：
+- 沿用 W2 的 VS Code + WSL 环境和已有 `README.md`，不重复安装，不改写文件。
+- 若窗口处于 Restricted Mode，通过 Manage Workspace Trust 检查这个已知课程工作区的信任状态。
 
-```bash
-git remote -v
-git config --get user.name
-git config --get user.email
-git status --short
+- 点击 VS Code 窗口顶部的 **Chat** 图标，打开原生 **Chat** 面板；不是 Codex 或 Cline 面板，也不另开 Agents window。
+
+#### 准备 DeepSeek API Key
+
+> 准备自己的 Key 与可用余额；Key 不进入聊天或项目。
+
+1. 打开 [DeepSeek 开放平台](https://platform.deepseek.com/)，注册或登录。
+2. 查看余额；需要时按平台当前要求小额充值。
+3. 在 **API Keys** 中创建 Key，名称填 `w3-vscode`，立即妥善保存。
+4. 接下来只把 Key 粘贴到 VS Code 的凭据输入框，不投影、不发到聊天、不写入文件。
+
+#### 在 VS Code 添加 DeepSeek 模型
+
+> 复制模型配置，保留软件生成的凭据引用。
+
+1. 按 `Ctrl+Shift+P`，输入并运行 `Chat: Manage Language Models`。
+2. 选择 **Add Models → Custom Endpoint**。
+3. 按提示填写分组／显示名称 `DeepSeek` 与自己的 API Key；API 类型选择 **Chat Completions**。
+4. 在自动打开的 `chatLanguageModels.json` 中，找到 `models` 属性；只把它后面的数组 `[...]` 替换为：
+
+```json
+[
+  {
+    "id": "deepseek-flash",
+    "name": "DeepSeek Flash",
+    "url": "https://api.deepseek.com/chat/completions",
+    "toolCalling": true,
+    "vision": true,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 8192,
+    "modelOptions": {
+      "thinking": {
+        "type": "disabled"
+      }
+    }
+  }
+]
 ```
 
-- `origin` 应指向本人的 fork；Git 身份为空时按 Guide 在当前仓库补全；起点有无法解释的修改时不让 Agent 开始工作。
-- 用 Explorer、`pwd` 和仓库根目录三者相互核对，再打开 Cline 面板。
+5. 其他字段保持不变，尤其是 `apiKey` 的 `${input:…}` 引用；不要用明文 Key 替换它，也不要把上面的数组覆盖到整个文件。
+6. 保存，回到 **Chat**；模式选择 **Agent**，模型选择 **DeepSeek Flash**，不是 `Auto`。
+7. 保持默认批准机制，不选择全部自动批准。
 
-**转场：** 正确工作区只是范围的外壳；Agent 还需要先理解教师给定的任务与保护区。
+#### 发出第一条请求
 
-#### 先让 Agent 只读复述合同
+> 发出请求，核对真实回答与文件读取记录。
 
-> Agent 的摘要只是待核对的理解，教师给定的 brief 与公开测试才是任务来源。
-
-*翻页：先让 Agent 只读复述合同*
-
-- 把 `s07` 换成自己的课程代号，再发送：
+- 在 Chat 中新建对话，发送：
 
 ```text
-先不要修改文件，也不要运行命令。我的课程代号是 s07。
-请阅读 course/week-03/PROJECT_BRIEF.txt 和公开测试，区分 course、common、students 三个区域。
-告诉我：本周要得到什么、成功和失败分别怎样判断、你只可以修改哪里，以及最后怎样验收。
+请读取当前工作区的 README.md，告诉我这个项目的目标。
+先不要修改文件或运行命令。
 ```
 
-- 学生亲自打开 brief 与测试，核对 Agent 是否说对：
-  - 输入与成功输出；
-  - 文件不存在、字段缺失等失败行为；
-  - 教师区、公共区、其他学生目录和本人周记录均不得由 Agent 修改；
-  - Agent 只可以修改本人的 `students/sXX/system/`。
-- 复述有遗漏时直接指出哪一项与原文不符，请它重新复述；不靠继续增加任务掩盖误解。
+- 查看工具记录：读取的是当前工作区的 `README.md`；若出现批准请求，检查后再批准。
+- 对照文件检查回答：项目目标应与 README 一致。
 
-**转场：** 合同已经对齐，下一步不是写一篇复杂 prompt，而是把目标、边界和完成证据一起交代清楚。
+#### 让 Agent 帮助打开 Git 面板
 
-#### 把愿望改成可以验收的任务
+> 打开 Source Control，区分 Agent 直接执行与指导自己操作。
 
-> 一个可执行任务至少说清目标、允许范围、禁止范围与完成证据。
-
-*翻页：目标 + 边界 + 证据*
-
-- 继续同一个任务，发送一段能够由人自然写出的简短提示词：
+- 在已经接通的 Agent 对话中继续：
 
 ```text
-我已经核对了你的复述。现在请按 brief 完成本人的 system。
-先给出不超过三步的计划；只修改 students/s07/system，不碰其他区域，也不要 git commit 或 push。
-完成后运行 brief 指定的程序和公开测试，并如实报告实际结果。
+请帮我打开 VS Code 的 Source Control（Git）面板，简单解释它有什么用。
+如果你不能直接操作界面，就告诉我怎么打开，让我来做；不要修改文件或初始化仓库。
 ```
 
-- 让学生在提示词中指出四部分，而不是背诵“提示词工程”：
-  - **目标**：按 brief 得到一个最小可运行项目；
-  - **允许范围**：本人的 `system/`；
-  - **禁止范围**：其他区域与 Git 发布；
-  - **证据**：实际运行和公开测试。
-- Agent 的计划若扩大功能、改变保护区或没有验收步骤，先缩小计划再执行。
+- 看结果：Source Control 面板已经打开，仍是 W2 的仓库；不重新初始化。
+- 看过程：是 Agent 直接打开，还是自己按它的指导打开？
 
-**转场：** 计划不是授权。接下来观察 Agent 每一步实际准备做什么。
+### 50-100 | 让 Agent 把数值实验写成报告
 
-#### 逐项授权，观察 Agent 的行动循环
+> Agent 执行，人批准、矫正与核验：先编译模板，再完成投针实验、测试与图表，逐步写成报告。
 
-> Agent 协作不是“一问一答”，而是读取、修改、运行、读取结果并继续调整。
+**课前检查**
 
-- 将 Cline 面板、Explorer 和 Terminal 同时保持可见；每次请求权限时暂停并指认：
-  - 它刚读取了什么；
-  - 准备修改哪个路径；
-  - 准备运行哪条命令；
-  - 上一步结果为什么引出了这一步。
-- 允许：读取合同与本人目录、只在本人 `system/` 写入、从指定目录运行建项目和验收命令。
-- 拒绝：修改报告或保护区、读取 key、越出工作区、删除未知内容、自动 commit/push，以及实现 Longbridge、策略、订单等未来功能。
-- 命令看不懂时，先要求 Agent 用一句话解释命令的作用和目录，再决定是否授权；不把“Agent 建议运行”当作理由。
-- 学生跟做时，教师优先处理全班共同问题；个别 provider 故障使用第一课时的 Plan B，不让配置支线吞掉实践。
+- [ ] 确认 [ai-agents 的 W3 材料](https://github.com/wxyinucas/ai-agents/tree/main/week-03)已推送；在有 W2 本地 commit 的副本中 pull，进入 `week-03/`，不另 clone 或复制材料。
+- [ ] 模板使用 XeLaTeX，不依赖教师机器的私有字体；尚未生成图表时也能单独编译。
+- [ ] 核对师生共用 `rebuild.sh`：根目录 `experiment.py` → `results.csv` → `render_results.py` → 表图与参数 → PDF；失败即停止。公开测试独立运行。
+- [ ] 核对公开测试：触线也计数；零交叉明确报错；手算 `N=100, K=32, L=0.5, d=1` 得 `3.125`；维护时可加实验组、改 seed。
+- [ ] 在 Windows + WSL 中逐步跑通安装 → 编译模板 → uv 实验 → 测试 → 图表 → PDF，再验证 `bash rebuild.sh`；记录下载与编译耗时。macOS 的 Homebrew 安装方式留给 Guide 补充。
+- [ ] 准备动态投针演示及录屏；公开测试先在教师实现上运行通过。
 
-**转场：** Agent 停止行动，只表示它提出了一份候选结果；是否完成必须留给下一课时判断。
+#### 配置扩展与编译器
 
-#### 停在候选结果，不急着发布
+> 扩展负责编辑体验，编译器负责生成 PDF。
 
-> “Agent 说完成了”不是验收结论；先冻结工作区，下一课时再用独立证据判断。
-
-- 停止继续追问“还能优化什么”，也不要求 Agent 做额外功能。
-- 保留三项现场状态：
-
-```bash
-git status --short
-```
+- 在已接通的 Agent 中发送：
 
 ```text
-Agent 声称完成了什么：
-实际新增或修改了哪些路径：
-程序与测试最后一次实际结果：
+检查当前 WSL 工作区的 LaTeX 环境，目标是 LaTeX Workshop、XeLaTeX 和 latexmk。
+先列出已有和缺少的组件，再帮我配置缺少的部分。
+遇到 sudo，把命令交给我在终端执行；不要索取密码。
 ```
 
-- 第二课时不执行 `git add`、`git commit` 或 `git push`；候选实现仍留在工作区中。
-- Agent 未生成完整候选时也保留真实状态。第三课时仍可从已有文件、输出和错误开始，不复制同学结果冒充本人完成。
-
-
-### 100-150 | Agent 说完成以后，人怎样决定是否接受？
-
-> 复用 W2 的状态、diff、运行、测试与 commit，把 Agent 的完成声明变成人能够承担的版本。
-
-- 本课时继续练习 Agent 的两种用法：先让它帮助建立关于仓库、状态与证据的心智模型，再让它帮助执行检查、修正和发布任务。
-- 两者不能倒置：没有先核对 Agent 对当前状态的理解，就不把具体操作直接委托给它。
-
-#### 先看实际改了什么
-
-> Agent 的总结是主张，Source Control、`git status` 与 diff 才显示工作区的真实变化。
-
-*翻页：Agent 的总结不是 diff*
-
-- 从仓库根开始确认：
+- 在 Extensions 中核对 **LaTeX Workshop（James Yu）**，安装到当前 WSL 环境。
+- Ubuntu 缺少编译组件时，在 WSL Terminal 执行：
 
 ```bash
-pwd
-git rev-parse --show-toplevel
-git status --short
-git diff --stat
-git diff
+sudo apt update
+sudo apt install texlive-xetex texlive-lang-chinese latexmk
+xelatex --version
+latexmk --version
 ```
 
-- `git status --short` 负责列出已跟踪与未跟踪文件；`git diff` 只显示尚未暂存的已跟踪修改。
-- 本周的正式项目主要由全新、未跟踪文件组成；完整检查必须以 `git status --short` 的文件清单，加上 Source Control 中逐个打开全部新文件为准，不能把空的 `git diff` 解释成“没有修改”。
-- 在 VS Code Source Control 中逐个打开新文件和修改文件；此时不为方便查看而先 Stage。
-- 先检查范围：所有实现变化只能位于本人 `students/sXX/system/`；再检查用途：每个新文件为什么存在、对应合同中的哪一项。
-- 可以让 Agent 解释某个 diff，但必须同时打开真实文件对照；解释与内容不一致时，以可重现的文件和命令输出为准。
+- 按需批准安装；密码由本人输入。[LaTeX Workshop 安装说明](https://github.com/James-Yu/LaTeX-Workshop/wiki/Install)
 
-**转场：** 文件范围合理仍不能证明程序行为正确；下一步回到运行证据。
+#### 取得教师材料
 
-#### 再运行，不用阅读代替执行
+> 更新已有仓库，在 W3 目录中直接完成实验。
 
-> 文件看起来合理，不等于它能在当前环境运行；程序、测试与预期失败分别回答不同问题。
-
-*翻页：运行 + 测试 + 预期失败*
-
-- 把 `s07` 换成自己的代号，从本人的系统目录运行同一组固定命令：
+- 在已有仓库取得本周材料，再打开实验目录：
 
 ```bash
-cd students/s07/system
-uv sync --locked
-uv run --locked pytest -q ../../../course/week-03/tests
-uv run --locked market-check ../../../course/week-03/data/sample_prices.csv
-uv run --locked market-check ../../../course/week-03/tests/fixtures/missing_close.csv
-echo "FAILURE_EXIT=$?"
+cd ~/course/w02-workbench
+git pull --no-rebase origin main
+cd week-03
+code .
+ls
 ```
 
-- 分清三类证据：
-  - 公开测试检查已经写下的规则；
-  - 正常样例显示程序在一组有效输入上的实际行为；
-  - 缺列样例应被明确拒绝，并留下非零退出状态。
-- 失败时保存完整命令、输出和当前目录，不把“Agent 说是网络问题／版本问题”当作已经诊断。
-- 全部通过也不等于没有风险；它只支持“当前公开合同在这些例子上得到满足”。
+- 看 `EXPERIMENT.txt`、`report.tex`、`rebuild.sh`、`tests/`；实现和报告直接在这里完成。
+- `week-03/` 使用自己的 uv 项目和环境；Git 仍沿用 W2 历史，不在子目录执行 `git init`。
 
-**转场：** 现在已经有真实证据，可以把观察到的偏差交还给 Agent，而不是笼统地说“还是不行”。
+#### 先编译一份空报告
 
-#### 用真实反馈完成一次修正
+> 模板先能独立编译，实验随后填入。
 
-> 有效反馈指出实际偏差、必须保持的边界和重新验收的方法。
-
-- 存在失败时，把原始命令与完整输出交给 Agent：
+- 在当前 `week-03` 工作区打开 `report.tex`。
+- 发送：
 
 ```text
-这是刚才的真实命令和完整输出。请先解释最可能的原因，再提出最小修改。
-仍然只允许修改 students/s07/system；不要放宽或删除测试，不要修改教师区，也不要提交 Git。
-修改后请重新运行同一条失败命令和全部公开测试。
+请用 XeLaTeX 编译提供的 report.tex，让我看到 PDF。
+保持模板的字体和版式，不加入实验图表；有错误就按日志修复并重新编译。
 ```
 
-- 全部通过时，不制造故障凑流程；让 Agent 选择一个公开测试，用日常语言解释它验证了什么、没有验证什么，学生再对照测试源码核验。
-- 修改后重新查看 `git status`、关键 diff 和同一组运行结果，检查它是否只改变了必要部分。
-- 最多完成一轮明确修正；新问题留在记录中，不靠连续许愿把课堂拖成无边界会话。
+- 查看编译记录，亲自打开 PDF。终端参考命令：
 
-**转场：** Agent 可以帮助生成、解释和修正，但是否保存这个版本仍要由调用者作出明确决定。
+```bash
+latexmk -xelatex -interaction=nonstopmode -halt-on-error report.tex
+```
 
-#### 先作判断，再保存历史
+#### 从动态投针到批量模拟
 
-> Commit 保存的是人已经检查并愿意负责的版本，不是 Agent 自称完成的版本。
+> 演示可以动态，学生实验只需批量运行。
 
-*翻页：接受，还是暂不接受？*
+- 展示动态投针：平行线 → 随机落针 → 统计交叉 → 估计 π。
+- 默认 `seed=42`；每次独立实验开始时初始化随机数生成器，取样循环中不重复设置 seed，以免反复从同一起点取样。
+- 学生发送：
 
-- 作出 `ACCEPT` 至少需要：
-  - 修改没有越出本人 `system/`；
-  - 公开测试、正常样例和预期失败符合合同；
-  - 学生已经查看全部变化，并能解释一个测试或一处关键实现。
-- 任一证据不足就选择 `HOLD`，写清缺口；`HOLD` 是诚实判断，不是把失败包装成完成。
-- 所有人先亲自填写本人的 `weeks/week-03/report.md`；`HOLD` 或 Agent 尚未接通者保留本地记录，不发布候选代码，待教师另行指定收集或恢复方式。
-- 只有 `ACCEPT` 才精确 Stage 本人系统和本人填写的周记录，复核 staged diff 后 commit，再 push 到自己的 `origin/main`。
-- Agent 不替学生填写最终责任判断，也不替学生执行发布。第一次 push 的 GitHub 授权由学生本人在浏览器完成。
-- 教师在全班作出判断后再公布参考实现与恢复基线；参考实现提供 W4 的共同起点，不倒推本周已经作出的判断。
+```text
+阅读 EXPERIMENT.txt 和 tests，在当前 week-03 目录建立独立的 uv Python 3.12 项目。
+pyproject.toml、uv.lock 和 .venv 都放在 week-03，不改仓库根目录的 W2 项目。
+使用 uv init 时加 --no-workspace，不把 W3 加入父项目。
+在本周 pyproject.toml 的 [tool.pytest.ini_options] 中设置 testpaths = ["tests"]，不沿用 W2 测试配置。
+加入 matplotlib 和 pytest，生成 uv.lock；适配教师 rebuild.sh，不修改教师脚本。
+实现蒲丰投针，默认 seed=42，每次独立实验只初始化一次随机数生成器，不在取样循环中重设。
+从 1000、10000、100000 次投针开始，保存实际 seed、投针数、交叉数和 π 的估计值。
+实际运行程序，不编造结果；不做动画，不修改教师测试。
+```
 
-**转场：** 这一次不是特殊演练；从下一周开始，Agent 将成为默认执行入口，而 W2 的证据链成为默认验收出口。
+- 查看 Agent 的命令和实际输出；复用 W2 的 uv 工作流，不重新讲一遍安装与版本管理。
+
+#### 用已知答案检查程序
+
+> 先核对确定性的规则，不用“接近 π”代替测试。
+
+- 让 Agent 安装项目所需的测试依赖并运行公开测试；本人在 Terminal 再运行一次：
+
+```bash
+uv run --locked pytest -q
+```
+
+- 展示三类检查：固定针位是否交叉；给定投针数与交叉数，估计公式是否算对；固定环境、参数与种子能否复现。
+- 测试失败：对照实验说明修正实现，再运行；教师测试保持不变。
+- 估计值不要求等于 π，投针数增加也不保证每一次误差都变小。
+
+#### 把本次结果放进报告
+
+> 图、表、文字使用同一份实际结果。
+
+- 发送：
+
+```text
+读取实际 results.csv，完成 render_results.py，生成 results-table.tex、results-params.tex 和 results.png。
+让 report.tex 使用这些结果。
+保持模板版式，写明实际 seed 和投针数，补上简要方法和一句观察，再编译 PDF。
+核对表格数字与程序输出一致，并重新运行测试；不要手工编造或美化实验结果。
+```
+
+- 用教师提供的统一入口重新生成报告；项目适配入口，内部代码结构不作统一要求：
+
+```bash
+bash rebuild.sh
+```
+
+- 脚本只串联“运行实验 → 生成图表 → 编译 PDF”；任何一步失败即停止，测试仍单独执行。
+- 打开原始结果、图与 PDF：核对 seed、投针数、交叉数和估计值；看图表是否完整、是否对应本次运行。
+- 未完成者在第三课时继续同一个项目，不另起任务。
+
+### 100-150 | 修改报告，检查版本并上传
+
+> 完成报告后保存第一版，再修改一项要求，检查整条链路并上传。
+
+#### 完成报告，保存第一版
+
+> 先有可比较的版本，再展示维护。
+
+- 继续完成实验、测试、图表与 PDF；已经完成者先核对产物。
+- 让 Agent 补齐 `week-03/.gitignore`，排除虚拟环境、缓存、LaTeX 中间文件与任何凭据；保留源码、锁文件及报告所需材料。
+- 在 Source Control 查看本周改动，确认后保存 W3 首版 commit；保留 W2 历史，不初始化新的 Git 仓库。
+
+#### 同一个项目，增加一条要求
+
+> 改动后，实验与报告一起更新。
+
+- 打开 Guide 的“选做：四个拓展项目”，按任务与验收标准自行推进；四项合计按约一小时估算，不作为下一周前提。
+  - A：同一只读任务，比较两种 Agent。
+  - B：用参数改变 seed 与投针数，不改源码。
+  - C：新增确定性测试，验证它能抓住故障副本。
+  - D：比较不同 seed 的真实结果，补进报告；不依赖 B。
+- 看实际命令、测试结果与 Git diff；不修改教师公开测试与 `rebuild.sh`。
+
+#### 检查变化，上传自己的版本
+
+> 本地保存与 remote 发布是两个动作。
+
+- 查看 `git diff` 与 Source Control，对照新增要求、测试结果和 PDF。
+- 确认后 commit；在 GitHub 建立自己的空仓库，让 Agent 保留教师 remote 为 `upstream`、配置自己的 `origin`，再 push；登录授权由本人完成。
+- 上传同一仓库中的 W2 与 W3，不复制文件、不重新初始化历史；不要求 fork 或 PR。
+- 打开自己的 GitHub 仓库，核对源码、锁文件与报告材料已经上传；不上传 Key、虚拟环境与编译中间文件。
 
 #### 本次课回顾
 
-> 后续课程默认重复“委托—观察—验收—反馈—保存”，而不是回到学生独自写完、最后才找 Agent 检查。
+> 模型接通之后，用真实执行与核验完成一次委托。
 
-*翻页：以后怎样与 Agent 一起工作？*
-
-- **委托**：给出目标、边界与完成证据。
-- **观察**：读权限请求，看它实际读、写、运行与联网什么。
-- **验收**：检查 diff、程序、测试与失败行为，不采用 Agent 自述替代证据。
-- **反馈**：把真实偏差和边界交还 Agent，要求最小修正并重新运行。
-- **保存**：只有人决定接受以后，才用 Git 留下历史并发布。
-- W4 起讲解、练习和项目增量都围绕 Agent 展开；新的编程知识用来提高预测、观察、诊断和验收能力，而不是为了和 Agent 比拼敲代码。
+- API 接入 → 模板编译 → 实验运行 → 测试 → 图表与 PDF → Git 版本。
+- Agent 帮助执行；人批准操作、检查证据、决定保留哪一版。
 
 ## 临场取舍
 
-- **慢了**：压缩 Codex／Claude Code 的形态对照、同伴展示和第二轮修正；不删除 DeepSeek 服务链、key／费用边界、第一次只读调用、权限判断、完整 diff 与独立运行。
-- **快了**：比较两份不同但都满足合同的实现，或让学生找出一个公开测试尚未覆盖的风险；不提前进入 W4 功能。
-- **坏了**：DeepSeek 调用失败就保留真实错误并切换教师指定的 Cline 免费模型；Cline 或网络整体失败就使用教师的脱敏会话、候选 diff 与本地副本继续授权和验收；GitHub push 失败保留本地 commit。任何 Plan B 都要标明证据来源，不冒充本人已经接通的服务。
+- 已经接通：借助 Agent 自行探索，或提前进入实验报告。
+- 安装或编译耗时：第三课时继续报告，不强求第 100 分钟前得到最终 PDF。
+- 提前完成：选择同一项目的一项维护任务；不临时增加另一套工具或新主题。
+- 模型未出现：保存配置并重启 VS Code；仍失败时带着实际界面求助。
+- 连接报错：保留 Provider、模型名和完整错误，隐藏 Key 后向已有可用的 Agent 或教师求助；没有成功响应就继续处理接入。
+- 界面不同：提供实际页面或截图，借助 Agent 和 [VS Code 官方模型说明](https://code.visualstudio.com/docs/agent-customization/language-models)定位，不照着旧按钮名称盲点。

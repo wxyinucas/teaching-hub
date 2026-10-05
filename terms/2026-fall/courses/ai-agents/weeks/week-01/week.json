@@ -9,6 +9,7 @@
   "resources": {
     "runbook": "runbook.md",
     "slides": "slides.md",
-    "guide": "guide.md"
+    "guide": "guide.md",
+    "template": { "scope": "course", "file": "template.md" }
   }
 }

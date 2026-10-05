@@ -17,7 +17,7 @@
     - 工作区保存当前文件，本地仓库保存提交历史，remote 指向网络上的仓库
     - VS Code Source Control 把同一份 Git 状态变成可视界面
   - 从这里进入后续课程
-    - W3：在正式项目中配置本地开发工具
+    - W3：接通本地 Agent，在同一仓库的 `week-03/` 中完成独立实验报告
     - W4～W9：预测、运行、追踪、诊断和验收程序
 
 ## 本次课 · 从文件系统操作进入可运行、可追踪的项目
@@ -267,7 +267,7 @@ code .
 
 - 检查：VS Code 左下角显示 `WSL: Ubuntu`，Explorer 顶层目录是 `w02-workbench`；在打开或切换后的窗口中新建 Integrated Terminal，再运行 `pwd`，输出应以 `/course/w02-workbench` 结尾。
 - 目标目录已经存在或 clone 报错时，保留终端输出并直接求助；不删除目录，也不换一个名字继续 clone。
-- 说明：这一份本地副本只服务本周观察，不是 W3 的正式项目起点。
+- 说明：本周工作台代码用于观察，不作为 W3 报告的实现基线；这份仓库和本地提交历史会在 W3 继续使用。
 
 #### 回看：一条命令怎样组成？
 
@@ -773,11 +773,11 @@ git remote get-url origin
 - 解释完 CLI 证据后，在 Source Control Graph 中观察这条 commit 处于 outgoing／尚未 push 的一侧；
   - 不同版本界面文字可以不同，以终端事实为准。
 - `origin/main` 是本地保存的远端跟踪状态，不是实时查询 GitHub；`origin` 则是 remote 的名称，`git remote get-url origin` 查询它记录的 URL。结合本流程从未执行 push，可以说明这次操作没有把新 commit 发送出去。
-- 本周故意停在本地 commit，不点击 Sync 或 Publish Branch；W3 再处理个人 fork、认证、push 与 upstream。
+- 本周故意停在本地 commit，不点击 Sync 或 Publish Branch；W3 更新这份仓库，完成报告后保留现有历史并发布到个人远端。
 - 做得快：
   - 完成 Guide 中任意一张独立挑战卡；
   - 做 0 张不影响本周完成状态，不提前进入 W3。
-- 本周副本和 commit 不作为 W3 起点；下一周从新的正式仓库独立开始。
+- 下一周先沿用已打开的 `w02-workbench` 窗口接通 Agent；报告阶段更新同一仓库并进入 `week-03/`，由子项目自己的 `pyproject.toml`、`uv.lock` 和 `.venv/` 恢复环境。
 
 #### 本次课回顾
 

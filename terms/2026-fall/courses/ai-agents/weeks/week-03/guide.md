@@ -1,523 +1,453 @@
-# W3 学生行动指南：把自然语言契约变成可核验项目
+# W3 学生行动指南：接通 Agent，完成一份实验报告
 
-> 本周从一份自然语言说明出发，请本地 Agent 在你的个人目录中补全一个由 uv 管理的 Python 项目。你不需要独立写出全部代码，但必须守住目录边界、审查修改、运行公开测试，并决定是否接受这个版本。
-
-正式项目仓库：<https://github.com/wxyinucas/ai-agents-project>
+> 先接通自己的 DeepSeek API，再让 Agent 协助完成“投针实验 → 图表 → LaTeX 报告 → Git 版本”。按顺序跟做即可；没完成的步骤可以课后继续。
 
 ## 本周路线与边界
 
 - 必修工作台：**VS Code + WSL**；
-- 主线 Agent：VS Code 中的 **Cline**；
-- 默认入口：Cline Provider 中当前标有 **FREE** 的模型；
-- 低价增强：自己的 DeepSeek API Key，自愿使用、按量付费；
+- 主线 Agent：VS Code 自带的 **Chat → Agent**；
+- 模型服务：自己的 **DeepSeek API Key**，按量付费；
 - 教师展示：Codex 的 VS Code 原生扩展；学生无需安装或登录；
-- 选学：在 VS Code 集成终端中使用 Codex CLI 或 Claude Code CLI。
 
-免费模型、界面名称、账号条件和计费规则都可能变化。本页不固定模型名和软件版本；以下链接与步骤已于 2026-09-08 核对，**开课前请重新打开官方文档确认**。课程不要求购买订阅或充值，个人产生的费用不报销。
+这条自带 Key（BYOK）的 Chat/Agent 路线不要求 GitHub 登录或 Copilot 订阅；**不等于 DeepSeek API 免费**。按平台要求准备少量可用余额，费用不报销；有支付或账号困难时向教师求助，不购买额外订阅。
 
-本周只处理仓库中的本地 fixture：不做 CI，不连接 Longbridge，不读取真实账户，也不发起交易。必做主线不向教师仓库提交 PR；只有第三课时明确标出的选做探索例外。Agent 只修改你的 `students/sXX/system/`；你亲自填写 `students/sXX/weeks/week-03/report.md`。
+以下配置依据 2026-10-05 的官方文档整理，真实接入仍待教师试跑。软件入口、模型 ID 和价格会变化，以 [VS Code 官方模型说明](https://code.visualstudio.com/docs/agent-customization/language-models)和 [DeepSeek 官方文档](https://api-docs.deepseek.com/)为准。
 
 ## 课前准备
 
-### 1. 确认 WSL、Git 与 uv
+沿用 W2 已经使用的 **VS Code + WSL** 环境，以及 `~/course/w02-workbench` 中的 `ai-agents` 仓库和本地 commit。不重复安装 WSL、VS Code、Git 或 uv，也不重新 clone。
 
-以下命令都在 Ubuntu / WSL Bash 中运行：
+还没有完成前两周配置时，参考 [W1 Guide](#/terms/2026-fall/courses/ai-agents/weeks/week-01/guide) 和 [W2 Guide](#/terms/2026-fall/courses/ai-agents/weeks/week-02/guide)补做即可。
 
-~~~bash
-uname -s
-git --version
-uv --version
-~~~
+## 接入 DeepSeek API
 
-最低预期：`uname` 输出 `Linux`，Git 与 uv 都能显示版本。W1 或 W2 已经完成这部分时不要重复安装。
+### 1. 打开已有工作区
 
-### 2. 安装 VS Code 的 WSL 工作方式
-
-按照 [VS Code 官方 WSL 指南](https://code.visualstudio.com/docs/remote/wsl) 操作：
-
-1. 把 VS Code 安装在 Windows，不要在 WSL 中另装一份；
-2. 在 VS Code 的 Extensions 中安装微软官方 **WSL** 扩展；
-3. 从 WSL 终端进入一个 Linux 目录后运行 `code .`；
-4. 确认新窗口左下角显示 `WSL: Ubuntu` 或自己的 WSL 发行版；
-5. 选择 **Terminal → New Terminal**，确认新终端仍显示 Linux 路径。
-
-第一次执行 `code .` 时，VS Code 可能自动安装配套的 VS Code Server，等待它完成即可。如果 `code` 不存在，先重开 WSL 终端，再按官方指南检查 VS Code 是否加入 `PATH`。
-
-### 3. 安装并登录 Cline
-
-按照 [Cline 官方安装页](https://docs.cline.bot/getting-started/installing-cline) 操作：
-
-1. 在已经连接 WSL 的 VS Code 窗口中点击 Extensions，或按 Ctrl+Shift+X；
-2. 搜索 Cline，打开 Cline 扩展页面并选择 Install；
-3. 如果页面显示 **Install in WSL: Ubuntu**，按提示安装到当前 WSL 环境；
-4. 点击 Activity Bar 中的 Cline 图标；若图标没有出现，重启 VS Code；
-5. 打开 Cline 设置，把 API Provider 设为 **Cline**；
-6. 选择 Sign In，在浏览器中用 GitHub、Google 或邮箱完成登录；
-7. 返回 VS Code，选择当前标有 **FREE** 的模型。
-
-[Cline 官方登录与模型说明](https://docs.cline.bot/getting-started/authorizing-with-cline) 说明，登录凭据由 IDE 的原生安全存储管理；免费模型会轮换，也可能有临时配额。不要因为某个免费模型暂时不可用而在课堂中匆忙付费。
-
-#### 可选：改用 DeepSeek API
-
-只有在你已有 DeepSeek 账号并理解按量计费时才使用这条路线。以 [Cline 官方 DeepSeek 配置页](https://docs.cline.bot/provider-config/deepseek) 为准：
-
-1. 登录 [DeepSeek 开放平台](https://platform.deepseek.com/)；
-2. 在 API Keys 页面创建一个仅供本机使用的 Key；
-3. 立即把 Key 保存到自己的密码管理工具；
-4. 在 Cline 设置中把 API Provider 改为 **DeepSeek**；
-5. 只把 Key 粘贴到 Cline 专用的 DeepSeek API Key 字段；
-6. 从当前列表选择可用模型，保存后发一条普通消息检查连接。
-
-模型与费用以 [DeepSeek 官方实时价格页](https://api-docs.deepseek.com/quick_start/pricing/) 为准，不照抄旧教程中的模型名或价格。
-
-### API Key 是密码，不是项目材料
-
-- 不把 Key 发送到 Cline 对话或任何其他聊天输入框；
-- 不把 Key 写入代码、PROJECT_BRIEF.txt、.env、VS Code 设置文件、作业记录或截图；
-- 优先使用 Cline 的专用凭据字段和 IDE 安全存储；
-- 不在投屏、录屏或结对核验时展示 Key；
-- 一旦怀疑泄露，立即在服务商后台撤销旧 Key，再创建新 Key。
-
-到课程公布的 Agent 安装硬停止点仍不能让 Cline 正常响应时，记录 **BLOCKED-AGENT**，停止反复安装、换模型或充值。你仍可使用既有 diff 或同伴屏幕继续练习审查，但不能把这种跟随记录成“我已完成 Agent 配置”或 ACCEPT。
-
-## 取得自己的正式项目
-
-### 1. 在 GitHub 网页 fork
-
-1. 打开 <https://github.com/wxyinucas/ai-agents-project>；
-2. 点击 Fork，在自己的 GitHub 账号下建立 fork；
-3. 确认仓库所有者是自己，并显示它 fork 自 wxyinucas/ai-agents-project。
-
-不要在教师仓库中直接编辑。必做主线不创建 upstream PR；只有第三课时的选做探索明确开放时才继续到 PR。
-
-### 2. 从自己的 fork clone
-
-把 `YOUR_GITHUB_NAME` 换成自己的 GitHub 用户名。项目放在 WSL 文件系统的 `~/course` 下，不放在 `C:\` 或 `/mnt/c` 中。本周延续 W2 的 HTTPS 路线，不在课堂临时配置 SSH Key。
+在 WSL Bash 中运行：
 
 ~~~bash
-mkdir -p ~/course
-cd ~/course
-ls
-git clone "https://github.com/YOUR_GITHUB_NAME/ai-agents-project.git"
-cd ai-agents-project
+cd ~/course/w02-workbench
+code .
 ~~~
 
-如果 ~/course/ai-agents-project 已存在，不要删除、覆盖或再次 clone；先确认它是否就是本课程项目。
+这是上周用过的工作区，里面已有 `README.md` 和 Git 历史，不需要新建或改写 README。左下角仍应显示 `WSL: Ubuntu`。若窗口处于 **Restricted Mode**，通过 **Manage Workspace Trust** 检查这个已知课程工作区的信任状态，否则模型选择器可能只显示 `Auto`。
 
-新 clone 的仓库已把自己的 fork 记为 `origin`。本周不需要另加 `upstream`：
+### 2. 准备自己的 API Key
 
-~~~bash
-git remote -v
-pwd
-git rev-parse --show-toplevel
-git status --short --branch
+1. 注册或登录 [DeepSeek 开放平台](https://platform.deepseek.com/)；网页版聊天账号可用，不代表 API 已有可用余额。
+2. 查看余额与 [当前 API 价格](https://api-docs.deepseek.com/quick_start/pricing/)，需要时按平台要求小额充值。
+3. 在 **API Keys** 中创建 Key，例如命名为 `w3-vscode`，立即妥善保存。
+
+**Key 是密码，不是项目材料。** 只填入软件提供的凭据输入框；不发到聊天、不写入代码或配置文件、不放进截图或 Git。怀疑泄露时，在平台撤销旧 Key 再创建新的。
+
+### 3. 在 VS Code 添加模型
+
+使用编辑器自带的 **Chat** 面板，不是 Codex、Cline 面板，也不是单独的 Agents window。
+
+1. 按 `Ctrl+Shift+P`，运行 **Chat: Manage Language Models**。
+2. 选择 **Add Models → Custom Endpoint**。找不到这个入口时，先更新 VS Code，再重新打开模型管理。
+3. 按提示填写分组／显示名称（例如 `DeepSeek`）和自己的 API Key；API 类型选择 **Chat Completions**。
+4. VS Code 自动打开 `chatLanguageModels.json`。**保留生成的 `name`、`vendor`、`apiKey` 引用与其他字段**，只把 `models` 属性的数组值替换为下面的数组：
+
+~~~json
+[
+  {
+    "id": "deepseek-flash",
+    "name": "DeepSeek Flash",
+    "url": "https://api.deepseek.com/chat/completions",
+    "toolCalling": true,
+    "vision": true,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 8192,
+    "modelOptions": {
+      "thinking": {
+        "type": "disabled"
+      }
+    }
+  }
+]
 ~~~
 
-最低预期：
+不要把上面的数组覆盖到整个文件，也不要把明文 Key 写进 `apiKey`。原来生成的 `${input:…}` 是凭据引用，应保持不变。模型的 `url` 使用完整接口路径，不只填域名。
+
+本次先关闭 thinking，缩短接入链路；`8192` 是本次配置的单次输出上限，不是模型能力上限。当前 `deepseek-flash` 支持工具调用与图像输入，模型信息以后可能更新，不照抄旧教程中的名称和能力。
+
+5. 保存文件，回到 Chat，在模型选择器中选 **DeepSeek Flash**，模式选 **Agent**。
+6. 保持默认的权限批准机制，不开启全部自动批准。模型未出现时，先保存并重启 VS Code；仍不行就带着实际界面向教师或已有可用的 Agent 求助。
+
+### 4. 发出一条真实请求
+
+在新的 Agent 对话中发送：
 
 ~~~text
-origin    https://github.com/YOUR_GITHUB_NAME/ai-agents-project.git
+请读取当前工作区的 README.md，告诉我这个项目的目标。
+先不要修改文件或运行命令。
 ~~~
 
-fetch 与 push 两行都可能显示，这是正常的。`origin` 必须是自己的 fork；分支应为 `main`，起点不应有未解释的修改。
+- 确认当前选中的是 **DeepSeek Flash**，不是 `Auto` 或其他模型。
+- 查看工具记录，确认读取的是工作区中的 `README.md`；若需要批准，检查对象后再批准。
+- 对照 README 核对回答。**成功响应证明 API 接通；读取记录帮助确认 Agent 使用了本地工具。** 不要求余额立刻出现肉眼可见的变化。
 
-### 3. 提前检查本地提交身份
+接着让 Agent 帮你打开 W2 用过的 Git 面板：
 
-W3 第一次从 WSL 产生本地 commit。先查看当前项目实际会使用的名称和邮箱：
+~~~text
+请帮我打开 VS Code 的 Source Control（Git）面板，简单解释它有什么用。
+如果你不能直接操作界面，就告诉我怎么打开，让我来做；不要修改文件或初始化仓库。
+~~~
+
+看到 Source Control 面板就完成这个小操作，仍使用上周的 Git 仓库，不重新初始化。留意这一步是 Agent 直接执行，还是你按它的指导完成。
+
+两个目标：**让 Agent 帮助建立心智模型，也让 Agent 帮忙实现具体任务。** 完成这个固定操作后，再从其他不懂的按钮、文件或报错开始探索。
+
+遇到报错，提供模型名、实际页面和完整错误，隐藏 Key 后求助。不要靠反复充值解决配置问题。
+
+### macOS 补充
+
+macOS 沿用 W2 的本地工作区，不安装 WSL；从 Terminal 进入目录后 `code .`，不需要左下角出现 `WSL: Ubuntu`。命令面板快捷键改为 `Cmd+Shift+P`，模型配置步骤相同。`code` 不存在时，在命令面板运行 **Shell Command: Install 'code' command in PATH**，再重新打开终端。
+
+---
+
+## 让 Agent 完成数值实验与 LaTeX 报告
+
+接通 Agent 后，更新已有的 `ai-agents` 仓库，在其中的 `week-03/` 完成一份可以重新生成的蒲丰投针实验报告。本周不 clone 另一个课程仓库，也不复制材料到仓库外。
+
+### 1. 安装编辑扩展和编译器
+
+**LaTeX Workshop 是编辑扩展，XeLaTeX 是编译器。** 只安装扩展，不能把 `.tex` 变成 PDF。
+
+1. 在 VS Code 按 `Ctrl+Shift+X`，搜索 **LaTeX Workshop**，确认作者是 **James Yu**。
+2. 点击安装；若显示 **Install in WSL: Ubuntu**，安装到当前 WSL 环境。
+3. 打开 **Terminal → New Terminal**，确认这是 WSL Bash，运行：
 
 ~~~bash
+xelatex --version
+latexmk --version
+~~~
+
+能看到两个版本就跳过安装。缺少组件时，在同一个终端运行：
+
+~~~bash
+sudo apt update
+sudo apt install texlive-xetex texlive-lang-chinese latexmk
+~~~
+
+下载可能较大，等待安装完成，再运行前面的版本检查。sudo 密码由你自己在终端输入；输入时不显示字符是正常现象，不交给 Agent。
+
+可以让已经接通的 Agent 帮忙检查：
+
+~~~text
+检查当前 WSL 工作区的 LaTeX 环境，目标是 LaTeX Workshop、XeLaTeX 和 latexmk。
+先列出已有和缺少的组件，再帮我配置缺少的部分。
+遇到 sudo，把命令交给我在终端执行；不要索取密码。
+~~~
+
+macOS 补充：不安装 WSL，也不运行 apt。先检查已有的 XeLaTeX；没有 TeX 环境时可在自己的 Terminal 使用 `brew install --cask mactex-no-gui`。安装完成后重开终端，再检查版本；若找不到命令，请让 Agent 检查 `/Library/TeX/texbin` 是否在 PATH 中。已有可用环境时不重复安装；已有 XeLaTeX 但没有 latexmk 时，首次编译可运行 `xelatex -interaction=nonstopmode -halt-on-error report.tex` 两遍，后面的重建脚本也支持这条路线。
+
+参考：[LaTeX Workshop 安装说明](https://github.com/James-Yu/LaTeX-Workshop/wiki/Install)、[MacTeX 的 Homebrew 入口](https://formulae.brew.sh/cask/mactex-no-gui)。
+
+### 2. 用 Git 获取教师材料
+
+教师材料在 [ai-agents 的 week-03](https://github.com/wxyinucas/ai-agents/tree/main/week-03)。其中只有实验要求、报告模板、重建脚本和公开测试，**没有完整答案**。
+
+在 WSL Terminal 中更新上周已经 clone 的仓库：
+
+~~~bash
+cd ~/course/w02-workbench
+git pull --no-rebase origin main
+~~~
+
+成功后，打开本周实验目录：
+
+~~~bash
+cd week-03
+code .
+~~~
+
+这里使用 W2 克隆时记录的教师 `origin`。遇到报错或目录没有出现时，使用本页末尾的备用提示向 Agent 求助。
+
+现在应该看到：
+
+~~~text
+w02-workbench/week-03/
+├── README-materials.md       # 材料说明
+├── EXPERIMENT.txt            # 实验和接口要求
+├── report.tex                # 中文报告模板
+├── rebuild.sh                # 统一重建入口
+└── tests/                    # 教师公开测试
+~~~
+
+阅读 `README-materials.md` 和 `EXPERIMENT.txt`，随后直接在这个目录完成实现和报告。
+
+**Python 项目独立，Git 历史沿用。** W3 的 `pyproject.toml`、`uv.lock` 和 `.venv` 都放在 `week-03/`，不改仓库根目录的 W2 项目；不复制文件，不在子目录执行 `git init`。
+
+### 3. 先编译空报告
+
+在 Explorer 中打开 `report.tex`，让 Agent 编译：
+
+~~~text
+请用 XeLaTeX 编译提供的 report.tex，让我看到 PDF。
+保持模板的字体和版式，先不加入实验图表；有错误就按日志修复并重新编译。
+~~~
+
+也可以自己在项目根目录运行：
+
+~~~bash
+latexmk -xelatex -interaction=nonstopmode -halt-on-error report.tex
+~~~
+
+成功后，在 Explorer 中打开 `report.pdf`。此时尚未运行实验，报告中显示“结果尚未生成”是正常的；**先确认中文和 PDF 能正常显示**。
+
+以后也可以在命令面板运行 **LaTeX Workshop: Build with recipe**，选择 XeLaTeX 配方。若现有配方不是 XeLaTeX，先让 Agent 配好，不要因为报错反复换编译引擎。参考：[LaTeX Workshop 编译说明](https://github.com/James-Yu/LaTeX-Workshop/wiki/Compile)。
+
+### 4. 建立 uv 项目，运行投针实验
+
+实验任务：随机把短针投到等距平行线上，统计触线次数，用它估计 π。学生做批量模拟，不要求做课堂展示中的动画。
+
+向 Agent 发送：
+
+~~~text
+阅读 EXPERIMENT.txt 和 tests，在当前 week-03 目录建立独立的 uv Python 3.12 项目，
+加入 matplotlib 和 pytest，并生成 uv.lock。
+pyproject.toml、uv.lock 和 .venv 都放在 week-03，不改仓库根目录的 W2 项目。
+使用 uv init 时加 --no-workspace，不把 W3 加入父项目。
+在本周 pyproject.toml 的 [tool.pytest.ini_options] 中设置 testpaths = ["tests"]，不沿用 W2 测试配置。
+实现蒲丰投针，默认 seed=42，比较 1000、10000、100000 次投针。
+每次独立实验只初始化一次随机数生成器，不在取样循环中重设 seed。
+适配教师 rebuild.sh：experiment.py 运行实验，render_results.py 生成图表。
+实际运行并保存结果；不做动画，不修改教师脚本与公开测试。
+~~~
+
+Agent 请求运行命令或修改文件时，查看它要做什么，再批准。它可以解释不懂的步骤，但不能代替你核对实际结果。
+
+完成后，在项目根目录自己运行：
+
+~~~bash
+uv run --locked python experiment.py
+~~~
+
+打开 `results.csv`。每行应包含实际使用的 `seed`、投针数 `n`、触线数 `crossings`、估计值 `pi_estimate`、针长 `needle_length` 和线距 `line_spacing`。默认三组投针数都应出现在结果中。
+
+默认种子是 `42`。**随机种子是可复现的起点，不是让结果变好的按钮**；不要在每次落针前重设它。相同环境、参数和种子应能重复运行得到相同结果。
+
+`uv run --locked` 使用已有锁文件；如果提示依赖或锁文件不一致，让 Agent 检查 `pyproject.toml` 和 `uv.lock`，不要直接删除整个环境重来。
+
+### 5. 运行公开测试
+
+在项目根目录运行：
+
+~~~bash
+uv run --locked pytest -q
+~~~
+
+这些测试检查：
+
+- 已知针位是否触线，包括刚好触线的情况；
+- 给定投针数和触线数，估计公式是否算对；
+- 固定环境、参数与 seed 能否复现；
+- CSV 的记录是否和实际模拟、估计公式一致。
+
+例如默认针长与线距下，100 次投针、32 次触线的估计值是 `3.125`。这类已知答案用于检查规则，**不是要求随机实验每次都接近 π**；投针数增加也不保证每次误差都变小。
+
+有失败时，复制实际输出给 Agent：
+
+~~~text
+这是公开测试的失败输出：……
+请对照 EXPERIMENT.txt 定位并修复实现，说明错在哪里，然后重新运行测试。
+不要修改教师测试，也不要把结果写死。
+~~~
+
+最后由你自己再运行一次。看到没有失败项再继续；`collected 0 items` 或没有执行测试，不算通过。
+
+### 6. 用同一份结果生成图、表和报告
+
+向 Agent 发送：
+
+~~~text
+读取实际 results.csv，完成 render_results.py：
+生成 results-table.tex、results-params.tex 和一张静态 results.png，
+让 report.tex 使用这些结果，写一段简要方法和一句观察，再编译 PDF。
+保留模板版式和实际 seed、投针数；不要编造或手工美化结果。
+~~~
+
+随后自己运行两条命令：
+
+~~~bash
+uv run --locked pytest -q
+bash rebuild.sh
+~~~
+
+教师的 `rebuild.sh` 依次执行“运行实验 → 生成表图 → 编译报告”；失败时停止并显示所在阶段。**它不运行测试**，因此测试单独执行。
+
+打开 `results.csv`、`results.png` 和 `report.pdf`，核对：
+
+- 表格中的投针数、触线数和估计值，以及报告中的 seed、针长与线距，与 CSV 一致；
+- 图对应这次实验，坐标轴和各组结果可以辨认；
+- 报告写明实际参数，中文、图、表没有截断或缺失。
+
+这里验收的是实现与记录正确，不是“必须算得比别人更接近 π”。未完成者继续这个项目，不需要重新起一个任务。
+
+## 保存并上传自己的版本
+
+### 1. 保存第一版
+
+W3 目录属于上周的 Git 仓库，已经有 W2 的 commit。先让 Agent 整理本周需要保存的文件：
+
+~~~text
+请在当前 week-03 目录补齐 .gitignore，排除虚拟环境、缓存、LaTeX 中间文件和凭据。
+保留源码、uv.lock、教师材料及报告所需的结果，不修改 W2 文件。
+沿用已有 Git 仓库和 W2 历史，不在 week-03 重新初始化。
+先让我查看待提交文件，不要替我提交或上传。
+~~~
+
+通常需要忽略 `.venv/`、`__pycache__/`、`.pytest_cache/`、`*.aux`、`*.log`、`*.out`、`*.synctex.gz`、`*.fdb_latexmk`、`*.fls`。不要忽略 `.tex` 源文件，也不要把包含 Key 的文件上传。
+
+以下操作仍在 `week-03/` 的终端执行：
+
+~~~bash
+git status -sb
 git config --get user.name
 git config --get user.email
 ~~~
 
-任一项为空时，不要等到第三课时才处理。从 GitHub **Settings → Emails** 查看自己的 `noreply` 地址，再只为当前仓库设置：
+姓名或邮箱为空时，沿用 W2 的配置方法。先把下面的占位内容换成自己的公开署名和 GitHub 邮箱；邮箱可以使用 GitHub **Settings → Emails** 中的 noreply 地址。
 
 ~~~bash
 git config user.name "YOUR_PUBLIC_NAME"
-git config user.email "YOUR_GITHUB_NOREPLY_EMAIL"
+git config user.email "YOUR_GITHUB_EMAIL"
 ~~~
 
-这里故意不使用 `--global`：设置只对当前项目生效，不替你决定其他项目的身份。地址要从本人账号复制，不要根据格式猜测。参考 [GitHub 官方的提交邮箱说明](https://docs.github.com/zh/account-and-profile/how-tos/email-preferences/setting-your-commit-email-address)。
-
-### 4. 初始化自己的学生目录
-
-仍在仓库根目录，把 `s07` 换成教师分配给你的公开代号，只运行一次：
+在 Source Control 核对文件，再执行：
 
 ~~~bash
-bash course/week-03/init-student.sh s07
-~~~
-
-成功时应看到：
-
-~~~text
-STUDENT_INIT=PASS
-student=s07
-system=students/s07/system
-report=students/s07/weeks/week-03/report.md
-~~~
-
-脚本只接受 `sNN` 形式的代号。个人目录已经存在时，它会停止而不会覆盖；不要删除目录后重来，请先核对自己是否曾经初始化过。成功后确认以下两个位置存在：
-
-~~~bash
-ls -la students/s07/system
-ls -l students/s07/weeks/week-03/report.md
-~~~
-
-## 从 WSL 打开正确的 VS Code 窗口
-
-仍在仓库根目录运行：
-
-~~~bash
-code .
-~~~
-
-在 VS Code 中认出五个固定工作位置，并各做一次动作：
-
-| 工作位置 | 本周用它做什么 |
-| --- | --- |
-| 文件资源管理器（Explorer） | 确认项目文件与目录结构 |
-| 编辑器（Editor） | 阅读 brief、测试、代码和 diff |
-| 集成终端（Terminal） | 确认当前目录，运行 uv 与 Git 命令 |
-| 源代码管理／差异视图（Source Control） | 找到所有变化，逐文件检查内容 |
-| Cline 对话面板 | 给出任务，阅读行动请求，决定是否授权 |
-
-Activity Bar 是切换这些视图的图标栏，Extensions 只是安装 Cline 的入口，不另算一个工作位置。Status Bar 用来确认 WSL 和当前分支。
-
-在集成终端再次运行：
-
-~~~bash
-pwd
-git status --short --branch
-~~~
-
-如果路径不是刚才的 WSL 仓库，或左下角不是 WSL，关闭窗口，回到 WSL 项目目录重新运行 code .。不要让 Agent 在错误目录中“帮忙找项目”。
-
-## 先认识 starter
-
-Explorer 中应当看到：
-
-~~~text
-course/
-└── week-03/
-    ├── PROJECT_BRIEF.txt
-    ├── data/sample_prices.csv
-    ├── tests/
-    │   ├── fixtures/
-    │   │   ├── another_valid_prices.csv
-    │   │   ├── missing_close.csv
-    │   │   ├── missing_symbol.csv
-    │   │   └── missing_timestamp.csv
-    │   └── test_project_contract.py
-    ├── report-template.md
-    └── init-student.sh
-common/
-students/
-├── README.md
-└── s07/
-    ├── system/
-    └── weeks/week-03/report.md
-README.md
-.gitignore
-~~~
-
-- `course/week-03/` 是教师给定的本周合同：任务、数据、公开测试、报告模板和初始化脚本；
-- `common/` 是教师公共区，将来按课程进度增加稳定能力；
-- `students/s07/system/` 是你的唯一持续系统，后续周次继续在这里演化，不按周复制源码；
-- `students/s07/weeks/week-03/report.md` 是本周责任记录，由你本人填写；
-- 根 `README.md`、`.gitignore` 与 `students/README.md` 也是教师保护文件。
-
-此时你的 `system/` 中没有 pyproject.toml、uv.lock 和源码是正常的：把契约转成这些项目文件，正是本周任务。
-
-保护范围固定为：根 `README.md`、`course/**`、`common/**`、根 `.gitignore`、`students/README.md`、其他学生目录，以及由你亲自填写的本周报告。Agent 只可以修改你自己的 `students/s07/system/**`。
-
-## Prompt 1｜只读确认，不允许修改
-
-把下面整段交给 Cline：
-
-~~~text
-你现在只做只读检查。不要创建、修改或删除文件，不要安装依赖，不要运行会改变项目的命令，不要读取或显示任何环境变量、API Key 或凭据。
-
-请完成以下事项：
-1. 说明你当前看到的工作目录，并判断它是否是 ai-agents-project 的 Git 根目录。
-2. 我的课程公开代号是 s07。区分 course、common 和 students 三个区域，确认你之后只可以修改 students/s07/system；students/s07/weeks/week-03/report.md 由我自己填写。
-3. 阅读 course/week-03/PROJECT_BRIEF.txt 与 course/week-03/tests/test_project_contract.py，复述本周目标、输入、成功输出、失败行为，以及从 students/s07/system 中运行的验收命令。
-4. 列出所有保护区域，以及你预计只在 students/s07/system 中新增的文件；不要现在创建它们。
-5. 说明五项公开测试分别检查什么，并指出测试通过仍不能证明什么。
-
-如果目录、brief 或测试不完整，请停止并明确指出缺少什么。完成复述后等待我的确认，不要开始实现，也不要执行 git add、commit 或 push。
-~~~
-
-把示例中的 `s07` 全部换成自己的公开代号。你自己打开 brief 和测试，至少核对：项目名是 quant-lab；Python 是 3.12.x；输入至少有 timestamp、symbol、close；失败必须非零退出并包含 DATA_CHECK=FAIL；Agent 只改本人 `system/`；教师区、公共区、根保护文件、本人报告和其他学生目录不得修改；本周不读取凭据、不连接网络服务、不实现未来功能。
-
-Agent 说错目录、保护范围或验收命令时，不要发 Prompt 2。
-
-## Prompt 2｜生成最小项目，但不得提交
-
-确认 Prompt 1 的复述准确后，再发送：
-
-~~~text
-我已核对你的复述。我的课程公开代号是 s07；现在允许你按 course/week-03/PROJECT_BRIEF.txt 补全 students/s07/system。
-
-请只在 students/s07/system 中生成一个足够小、便于初学者解释的 uv Python 项目，并严格满足全部公开测试。不要修改根 README.md、course/**、common/**、根 .gitignore、students/README.md、students/s07/weeks/** 或其他学生目录；不要读取环境变量或凭据，不要连接行情、账户或其他网络服务，不要生成策略、订单、数据库、网页或未来功能的空壳。
-
-请自行完成必要的最小项目结构、pandas 运行依赖、pytest 开发依赖、market-check 命令入口和 uv.lock。所有实现命令都从 students/s07/system 中运行。先生成锁文件，再运行并报告下列验收的真实结果：
-
-cd students/s07/system
-uv sync --locked
-uv run --locked pytest -q ../../../course/week-03/tests
-uv run --locked market-check ../../../course/week-03/data/sample_prices.csv
-uv run --locked market-check ../../../course/week-03/tests/fixtures/missing_close.csv
-echo "FAILURE_EXIT=$?"
-
-遇到失败时查明原因并在约束内修正；如果必须修改保护文件或扩大范围，请停止并问我。完成后逐项列出新增或修改的文件、每个文件的职责、测试结果和仍未证明的内容。
-
-不要填写我的 report.md，不要执行 git add、git commit、git push，不要创建或切换分支。完成后停下来，等我独立检查。
-~~~
-
-Cline 请求权限时先读清动作，只批准本人 `system/` 内的文件操作，以及从该目录运行的建项目／验收命令。不要开启“全部自动批准”，也不要批准读取凭据、修改保护区或仓库外文件、删除目录、强制重置或向远端写入。
-
-## 独立检查 Agent 的结果
-
-### 1. 文件范围与 diff
-
-~~~bash
-cd ~/course/ai-agents-project
-git status --short
-git diff --cached --name-status
+git add -- .
 git diff --cached
-git add --intent-to-add .
-git diff HEAD --name-status
-git diff HEAD
-git diff HEAD -- README.md course common .gitignore students/README.md
+git commit -m "Complete W3 Buffon report"
 ~~~
 
-这些命令从仓库根运行；把 `s07` 换成自己的公开代号。两条 `git diff --cached` 命令检查 Agent 是否擅自暂存了内容；正常应没有输出。`--intent-to-add` 让仓库中所有全新文件进入完整 diff，但不会暂存其内容。随后检查每一条变化路径：都必须位于本人的 `students/s07/**`；教师／公共保护区的最后一条 diff 必须没有输出，其他学生目录也不能出现变化。此后 `git status --short` 中的 ` A` 是审查标记，不代表文件内容已暂存；选择 HOLD 时可以保留该状态。仍要在 VS Code 源代码管理面板中逐个打开变化文件。
+`git diff --cached` 展示准备进入这次 commit 的修改。源码、锁文件、图表和报告材料应有解释；不应出现 API Key、虚拟环境或大量中间文件。`report.pdf` 可以一并保存，方便别人查看。
 
-至少确认：
+### 2. 上传到自己的 GitHub 仓库
 
-- `students/s07/system/` 中存在 pyproject.toml 和 uv.lock；
-- 其中的 pyproject.toml 声明 quant-lab 与 Python >=3.12,<3.13；
-- pandas 是运行依赖，pytest 是开发依赖；
-- market-check 指向真实实现，而不是固定打印样例答案；
-- 源码只读取传入的本地 CSV，不读取密钥或环境变量，不连接网络；
-- .venv、缓存、凭据和无关文件没有出现在待提交清单中；
-- Agent 没有修改本人 `system/` 以外的任何文件；
-- 你能用一句话说明每个新增源文件的职责。
+上传的是你已经维护的同一个 Git 仓库，里面包含 W2 和 W3；不另建本地仓库，不要求 fork 或向教师提交 PR。
 
-测试通过不能抵消越界修改。出现无法解释的文件、保护文件变化或敏感信息时，选择 HOLD。
+1. 在 GitHub 新建自己的空仓库，例如 `ai-agents-lab`。不要勾选初始化 README、`.gitignore` 或许可证；这些内容沿用本地已有文件。
+2. 复制自己仓库的 HTTPS 地址，把下面的占位地址替换掉，再发给 Agent：
 
-### 2. 自己跑完验收路线
+~~~text
+请把当前仓库发布到我的 GitHub 仓库：<粘贴自己的仓库 URL>。
+沿用已有 Git 历史，保留 W2 和 W3，不重新初始化、不复制项目。
+检查现有 remote，把教师 wxyinucas/ai-agents 保留为 upstream，把我的仓库配置为 origin。
+先让我核对 remote 和待上传的提交；不要替我 push，登录授权由我完成。
+~~~
+
+3. 在 Terminal 查看：
 
 ~~~bash
-cd students/s07/system
-uv sync --locked
-uv run --locked pytest -q ../../../course/week-03/tests
-uv run --locked market-check ../../../course/week-03/data/sample_prices.csv
-uv run --locked market-check ../../../course/week-03/tests/fixtures/missing_close.csv
-echo "FAILURE_EXIT=$?"
-cd ../../..
+git remote -v
+git status -sb
 ~~~
 
-公开测试当前有五项。没有自行增加测试时，最低预期是 `5 passed`，且没有 `failed` 或 `error`。前三条命令应正常结束；缺列命令应输出 `DATA_CHECK=FAIL`，紧接着的一行应显示 `FAILURE_EXIT` 为非 0。这是“程序成功拒绝错误输入”的证据，不是需要被消除的红灯。`echo` 必须在失败命令之后立即运行，否则它显示的就不是该命令的退出状态。
-
-样例程序的可见事实应为：
-
-~~~text
-execution_mode=fixture
-symbols=AAPL
-rows=4
-start=2026-09-01T09:30:00
-end=2026-09-01T09:33:00
-DATA_CHECK=PASS
-~~~
-
-公开测试还会使用另一份正常数据、缺列数据和不存在的路径，所以只把这六行写死不能通过。
-
-### 3. 解释一项测试
-
-从 `course/week-03/tests/test_project_contract.py` 中选一项，请 Agent 用日常语言解释，再由你对照源码填写本人的 `students/s07/weeks/week-03/report.md`：
-
-~~~text
-测试名称：
-它给程序的输入：
-它期待的结果：
-我的实际结果：
-它支持我作出的判断：
-即使通过，它仍不能证明：
-~~~
-
-如果只能复述“绿了”，却说不清输入和期待结果，证据还不足以 ACCEPT。
-
-## 作出 ACCEPT 或 HOLD
-
-只有同时满足下面条件才选择 ACCEPT：
-
-- 仓库根、本人 `system/` 和 `origin` 都正确；
-- Agent 只改本人 `system/`，保护区保持原样，修改范围可以逐项解释；
-- 锁定环境、公开测试和正常样例都成功，失败样例明确拒绝并返回非 0；
-- 输出来自实际读取数据，不是硬编码；
-- 没有密钥、真实账户、联网功能或越界文件；
-- 你能解释一项公开测试及其证据边界。
-
-状态分界只看一件事：自己的仓库里是否已经有一份可以完整审查的候选实现。
-
-- Agent 在硬停止前没有产生这样的候选实现，包括安装、登录、工作区失败、会话中断或生成未完成：选择 BLOCKED-AGENT；
-- 候选实现已经存在，但范围、测试、证据或发布条件有一项不满足：选择 HOLD。
-
-两种情况都保留现场，不为得到完成标签而删除测试或掩盖错误。
-
-打开 `students/s07/weeks/week-03/report.md`，由你本人填写，不把这一步交给 Agent：
-
-~~~text
-决定：ACCEPT / HOLD / BLOCKED-AGENT
-我实际使用的 Agent 与模型路线：
-origin：
-Agent 新增或修改了什么：
-保护文件是否未变：
-验收路线的真实结果：
-我能解释的一项测试：
-这些证据能够证明：
-这些证据仍不能证明：
-若未接受，下一步只做什么：
-~~~
-
-## 只有 ACCEPT 才保存并 push
-
-确认自己已经回到仓库根，把 `s07` 换成自己的公开代号。只暂存经过审查的个人系统和本人填写的本周报告；不使用 `git add .`、通配符或“全部暂存”：
+`origin` 应指向自己的仓库，`upstream` 应指向教师的 `wxyinucas/ai-agents`。确认本地分支仍是 `main` 后上传：
 
 ~~~bash
-git add -- students/s07/system students/s07/weeks/week-03/report.md
-git diff --cached --name-only
-git diff --cached
-git diff --cached -- README.md course common .gitignore students/README.md
+git push -u origin main
 ~~~
 
-确认前两条 diff 中的每个文件都属于 `students/s07/**`，最后一条保护区 diff 没有输出，再运行：
+GitHub 登录与授权由本人完成；这个账号用于上传，不是 DeepSeek API 的前提。打开自己的 GitHub 仓库，核对 W2 历史、`week-03/` 源码、锁文件和报告材料已经出现。
+
+已经配置个人 `origin` 的同学不需要再新建仓库；保存新 commit 后继续 push 即可。认证报错时，用末尾的备用提示向 Agent 求助。
+
+## 选做：四个拓展项目
+
+四项可以任选，不做也不影响下一周。全部完成按约 **1 小时**估算，不包含下载等待或故障排查；不要求卡着时间完成。
+
+A 在接通 Agent 后即可做；B、C、D 需要已有投针实验实现，彼此不依赖。让 Agent 帮助实现下面的任务与测试，再由你核对真实结果。教师已有测试和 `rebuild.sh` 保持不变。
+
+### A. 同一任务，比较两种 Agent｜约 15 min
+
+**任务：** 使用 VS Code 原生 Agent 和另一种 Agent，完成同一个只读任务：读取 `README-materials.md`，用两句话说明材料用途，再运行 `git status -sb`。
+
+默认尝试 [Cline 扩展](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)：选择 **Bring my own API key → DeepSeek**，在专用字段填写 Key，从实际列表选择模型；使用 **Act**，保持 **Auto Approve** 关闭。配置过程可以请已接通的 Agent 帮忙，参考 [Cline 官方说明](https://docs.cline.bot/provider-config/deepseek)。不需要购买 ClinePass。
+
+已经能使用 Codex CLI、Claude Code CLI 等终端 Agent，也可以用它们替代 Cline；不必为了选做购买新订阅。
+
+**测试与验收：**
+
+- 两种 Agent 使用同一个工作目录、同一条任务描述；各自留下实际读取文件与运行命令的记录。
+- 文件摘要与原文一致；状态输出与自己在 Terminal 执行 `git status -sb` 的结果相符。
+- 操作前后核对 Git 状态和文件内容，没有新增修改、提交或上传；不能只凭一份空的 `git diff` 判断。
+- 记录实际 Agent、模型名称及两项可观察的差异，例如批准操作的方式、结果展示的位置。模型不同就如实注明，不把所有差异归因于 Agent。
+
+### B. 用参数控制实验｜约 15 min
+
+**任务：** 给 `experiment.py` 增加 `--seed` 和 `--n` 参数，使下面的命令可以直接完成实验、图表和报告，不必再改源码：
 
 ~~~bash
-git commit -m "Build W3 fixture data checker"
-git push origin main
-git status --short --branch
-git log -1 --oneline
+bash rebuild.sh --seed 7 --n 2000 5000
 ~~~
 
-第一次 push 时，VS Code 可能要求在浏览器中登录 GitHub；按界面返回 VS Code，不在终端输入 GitHub 密码或把 token 交给 Agent。也可以在 Source Control 的 `…` 菜单选择 **Push**，使用同一个浏览器登录流程。参考 [VS Code 官方 GitHub 工作流](https://code.visualstudio.com/docs/sourcecontrol/github)。
+**测试与验收：**
 
-必做主线到个人 `origin/main` 为止，不创建指向教师仓库的 PR，也不创建 `dev-week-03` 或其他周分支；只有下面明确标出的选做探索例外。push 失败时保留本地 commit 和完整错误，不要强制 push。
+- 本次 `results.csv` 有两组结果：`n=2000`、`n=5000`，两组 `seed` 都是 `7`；报告和图表显示同样的实际参数与结果。
+- 相同环境下重复同一命令，两份 CSV 的六个字段一致；换 seed 后记录新 seed，不要求估计值必定改变或变好。
+- `uv run --locked python experiment.py --n 0` 明确报错并以非零状态结束，不生成伪造的成功结果。
+- 无参数运行仍保留 `seed=42` 和原三组投针数；函数接口及默认参数不变，公开测试仍通过。
 
-## 选做探索｜让 Agent 帮你理解并走通 GitHub 协作链
+### C. 给自己的实现增加独立测试｜约 15 min
 
-> 这个选做探索需要掌握 Agent 的两种用法：
->
-> 1. **Agent 帮助建立心智模型**：先把 `upstream / origin / local / PR` 的职责和关系说清楚；
-> 2. **Agent 帮助实现具体任务**：再协助检查状态，把已经接受的本地版本推到自己的 fork，并准备向课程主仓库提出 PR。
+**任务：** 在新目录 `tests_extra/` 中编写 `test_extra.py`，检查下面的已知答案，不改教师的 `tests/`：
 
-本节完全选做。未开始、未完成、没有创建 PR，或者 PR 没有被合并，都不影响 W3 完成判定，也不影响进入 W4。只有教师当堂宣布开放 PR 入口时才进行；否则只完成下面的只读建模。你在必做主线中已经完成 fork、clone、commit 与 push，不要重新 fork、重复 clone，也不要为了选做题另建一份正式项目。
+- 针长 `0.8`、线距 `2.0`、夹角 `π/2`：中心距离为 `0.4` 时刚好触线，应为 `True`；距离为 `0.4001` 时应为 `False`。
+- `estimate_pi(100, 25, length=0.25, spacing=2.0)` 应为 `1.0`。
+- `estimate_pi(100, 0)` 应抛出 `ValueError`，不能报告一个有效估计值。
 
-### 先让 Agent 帮你建立心智模型
-
-先把真实仓库关系画清楚：
-
-~~~text
-upstream：教师维护的课程主仓库
-    │ fork
-    ▼
-origin：你在 GitHub 账号下的远端 fork
-    │ clone                         ▲ push
-    ▼                               │
-local：WSL 中实际修改、检查和 commit 的本地仓库
-
-origin 中已经 push 的变化 ── Pull Request ──▶ upstream 审查
-~~~
-
-- `upstream` 是教师主仓库承担的角色，也是 PR 的目标；它不等于你拥有写权限，也不要求本地一定存在一个名为 `upstream` 的 remote；
-- `origin` 是自己的远端 fork，是本课 `push` 的目的地；
-- `local` 是 WSL 中真正修改文件、运行测试、暂存和 commit 的副本；
-- `fork` 创建远端副本，`clone` 创建本地副本，`commit` 仍只保存到 local，`push` 才更新 origin；
-- PR 不是第四个仓库，也不会自动 merge；它请求 upstream 审查并决定是否接纳 origin 中的变化。
-
-把自己的 GitHub 用户名与课程代号补进下面的请求，再交给 Agent：
-
-~~~text
-现在只帮助我建立 Git 心智模型，不修改文件、不改变 remote、不 commit、不 push，也不创建 PR。
-
-教师主仓库是 https://github.com/wxyinucas/ai-agents-project；我的 GitHub 用户名是 YOUR_GITHUB_NAME，课程代号是 s07。请先用只读命令检查当前仓库根目录、分支、工作区状态、最近一次 commit 和 git remote -v。
-
-结合真实输出，区分 upstream、origin 和 local 各自在哪里、归谁维护、我对它拥有什么权限；再按时间顺序解释 fork、clone、commit、push 和 Pull Request 分别改变了哪里。最后说明：我当前已经走到哪一步，进入下一步以前还要由我核对什么。完成后停下，不执行任何写操作。
-~~~
-
-你要亲自核对 Agent 的解释至少满足三点：`origin` 的 URL 属于自己的 GitHub 账号；最新 commit 是自己刚才接受的版本；工作区没有尚未解释的修改。说错任何一项时先纠正模型，不进入具体操作。
-
-### 再让 Agent 帮你完成具体流程
-
-只有教师已经开放选做 PR，且上面的解释与真实状态一致时，才继续发送：
-
-~~~text
-我已经核对仓库关系。请帮助我把当前已经接受并 push 到 origin/main 的版本准备成一个发往教师 upstream/main 的 Pull Request。
-
-先再次检查当前分支、git status、最新 commit 和 origin URL；不要修改项目文件，不添加或改写 remote，不创建新分支，不 rebase、reset、merge、force push，也不要安装 GitHub CLI。请说明 GitHub 网页中 base repository、base branch、head repository 和 compare branch 分别应该选择什么，并为这次变化拟一条简短标题和两三句说明。
-
-停在最终 Create pull request 之前；由我本人核对目标仓库、来源仓库、diff、标题和说明，并决定是否点击创建。不要替我 merge。
-~~~
-
-最终只核对四项证据：
-
-- base 是教师的 `wxyinucas/ai-agents-project:main`；
-- head／compare 是自己的 fork 与 `main`；
-- PR diff 只包含自己已经审查和接受的学生目录变化；
-- PR 创建后保持待审查即可，不要求教师当堂 merge。
-
-Agent 可以解释关系、读取状态、拟定步骤和准备 PR 内容；GitHub 登录、最终创建 PR 和是否接受合并仍由人决定。
-
-## 参考实现与 W4 恢复基线
-
-参考实现会在第三课时讨论结束后公开，而不是在你第一次作出 ACCEPT/HOLD 之前公开。它是一种可比较、可恢复的实现，不是唯一正确答案。
-
-- 已经 ACCEPT：后续继续演化同一个 `students/sXX/system/`，并把参考实现用于比较；
-- HOLD 或 BLOCKED-AGENT：可以在 W4 前采用教师发布的恢复基线；
-- 无论选择哪条路线，都不要删除或覆盖本周第一次尝试；按届时发布的无损取得步骤保留它。新的周次只在 `students/sXX/weeks/week-XX/` 增加责任记录，不复制一份新的源码。
-
-## 其他 Agent 入口
-
-选学工具不影响 W3 完成判定。不要同时让两个 Agent 修改同一个工作目录；若试用，先完成主线或使用另一个独立副本。
-
-### 教师展示：Codex VS Code 扩展
-
-想在终端里使用，不需要扩展；想把 Agent 变成 VS Code 原生侧栏，才需要对应扩展。教师只展示 [OpenAI 官方 Codex IDE 扩展](https://learn.chatgpt.com/docs/codex/ide) 如何取得当前文件、选区和 diff 上下文；学生无需安装或登录，也不计入本周完成判定。
-
-已经具备 Codex 使用条件且希望自行尝试的学生，可以在 VS Code 集成终端中按 [OpenAI 官方 Codex CLI 指南](https://learn.chatgpt.com/docs/codex/cli) 独立安装和登录；这条路线不占用课堂排障时间，也不替代 Cline 主线。
-
-### 选学：Claude Code TUI
-
-课程项目位于 WSL，因此也应在 WSL 内安装和运行。以 [Anthropic 官方安装说明](https://code.claude.com/docs/en/installation) 为准。官方当前推荐的原生安装路线是：
+**测试与验收：**
 
 ~~~bash
-curl -fsSL https://claude.ai/install.sh | bash
+uv run --locked python -m pytest -q tests_extra
+uv run --locked python -m pytest -q tests tests_extra
 ~~~
 
-这会下载并执行脚本，因此只从上面的 Anthropic 官方页面复制，不使用博客、网盘或群聊转发的命令。安装后重开 WSL 终端，再运行：
+- 第一条确实运行新增测试，且全部通过；第二条中教师测试与新增测试一起通过，不能是零项收集。
+- 让 Agent 在**临时副本**中故意制造“刚好触线却不计数”的错误；同一套新增测试必须抓住这个错误。正式项目和教师测试保持不变。
+- 能解释上面三个预期结果的依据，而不是用当前程序的输出充当正确答案。
 
-~~~bash
-claude --version
-claude doctor
-cd ~/course/ai-agents-project
-claude
+### D. 比较不同 seed 的结果｜约 15 min
+
+**任务：** 新建 `compare_seeds.py`，直接调用已有的 `simulate`，比较三个 seed（`7、42、2026`）与三组投针数（`1000、10000、100000`）的全部组合。不需要先完成 B，也不做动画。
+
+输出独立的 `comparison.csv` 和 `comparison.png`，不覆盖主线的 `results.csv`。CSV 保留每组实际参数、触线数和估计值；图按 seed 分组，展示各组估计值与 π 的绝对误差。把图和两句基于实际数据的观察加入报告。
+
+**测试与验收：**
+
+- 九种参数组合各出现一次；每行与相同参数调用 `simulate` 的结果一致，估计值符合给定公式。
+- 相同环境下重复运行，CSV 内容一致；图中的点等于 CSV 计算出的 `abs(pi_estimate - π)`，坐标轴与 seed 标注清楚。
+- 自己运行比较程序后，执行 `bash rebuild.sh`；打开 PDF，确认新增图与观察仍在，原报告也能正常重建。
+- 用自己的具体结果说明波动；不要求某个 seed 更优，也不要求投针数增加后每次误差都下降。没有出现的现象不编造。
+
+完成选做后检查 Git diff，决定是否保存新的 commit；测试记录和实际产物比 Agent 的“已完成”声明更重要。
+
+## 遇到问题怎么求助
+
+先告诉 Agent 或教师：**你在哪个目录、刚做了什么、实际出现了什么**。命令和完整报错通常比“它不行了”更有用；截图与文字先遮住 Key。
+
+~~~text
+我在 ~/course/w02-workbench/week-03，当前做到：……
+我运行的命令或点击的入口是：……
+实际输出或截图是：……
+请先定位问题，说明下一步该做什么，再帮我修复。
 ~~~
 
-第一次运行会引导浏览器登录。WSL2 中若浏览器不能自动返回终端，按界面提示复制登录地址或验证码，不把验证码发给他人。进入后先使用 Prompt 1，并逐项审查权限请求；按 Ctrl+D 可以退出。
+接通 API、编译模板、运行实验、通过测试、重建报告、保存并上传版本，是本周的推进顺序。任何一步卡住，都从这一步求助，不必把前面的步骤全部重做。
 
-Claude Code 不包含在免费 Claude.ai 套餐中，通常需要符合条件的订阅、Console 余额或组织账号；服务地区也有限制。没有现成条件就跳过，不要为 W3 临时购买。
+### 备用提示：pull 或 merge 遇到问题
 
-## 必须停下来的情况
+你已经有自己的 W2 commit，更新教师材料时可能需要合并。出现报错、停在陌生界面或不知道下一步时，把完整输出一起发给 Agent：
 
-- Agent 看到的不是当前 WSL 仓库；
-- `origin` 不是自己的 fork；
-- 初始化命令中的代号不是教师分配的本人 `sNN`，或目标目录已经存在；
-- Agent 要修改根 `README.md`、`course/**`、`common/**`、根 `.gitignore`、`students/README.md`、本人周报告或其他学生目录；
-- Agent 索取、读取或显示 API Key、token、.env 或真实账户信息；
-- Agent 要连接行情、账户或其他网络服务；
-- Agent 建议删除目录、强制重置、强制 push 或向远端写入；
-- 当前工作区包含自己无法解释的修改；
-- 同一操作反复失败，却没有得到新证据。
-
-不要只写“失败”。完整错误、最后成功检查点和明确下一步，才是可以继续工作的记录。
+~~~text
+我已有 W2 的本地 commit，想更新教师 wxyinucas/ai-agents 的材料，并继续完成 W3。
+本地仓库是 ~/course/w02-workbench；刚才执行的命令和完整输出是：……
+请检查 Git 状态与 remote，解释问题，再帮我完成 pull 或需要的 merge，保留我的提交和文件。
+教师 remote 可能还是 origin，也可能已改为 upstream，请按实际状态处理。
+需要我作决定时先问我，不要删除改动、重写历史或替我 push。
+~~~
