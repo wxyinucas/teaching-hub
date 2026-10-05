@@ -11,7 +11,7 @@
 
 这条自带 Key（BYOK）的 Chat/Agent 路线不要求 GitHub 登录或 Copilot 订阅；**不等于 DeepSeek API 免费**。按平台要求准备少量可用余额，费用不报销；有支付或账号困难时向教师求助，不购买额外订阅。
 
-以下配置依据 2026-10-05 的官方文档整理，真实接入仍待教师试跑。软件入口、模型 ID 和价格会变化，以 [VS Code 官方模型说明](https://code.visualstudio.com/docs/agent-customization/language-models)和 [DeepSeek 官方文档](https://api-docs.deepseek.com/)为准。
+以下配置依据 2026-10-05 的官方文档整理，尚未在 Windows + WSL 实测；界面或环境有差异时，课堂按实际页面求助处理。软件入口、模型 ID 和价格会变化，以 [VS Code 官方模型说明](https://code.visualstudio.com/docs/agent-customization/language-models)和 [DeepSeek 官方文档](https://api-docs.deepseek.com/)为准。
 
 ## 课前准备
 
@@ -148,6 +148,8 @@ macOS 补充：不安装 WSL，也不运行 apt。先检查已有的 XeLaTeX；�
 ### 2. 用 Git 获取教师材料
 
 教师材料在 [ai-agents 的 week-03](https://github.com/wxyinucas/ai-agents/tree/main/week-03)。其中只有实验要求、报告模板、重建脚本和公开测试，**没有完整答案**。
+
+课上使用的[可运行教师演示](https://github.com/wxyinucas/ai-agents/tree/main/demos/week-03-buffon)另放在同一仓库的 `demos/week-03-buffon/`，包含批量模拟、静态图表和报告源码。想在本地复现时，按其中的 README 运行即可；不需要另外 clone，不覆盖自己的 `week-03/`，也不要求完成动画。
 
 在 WSL Terminal 中更新上周已经 clone 的仓库：
 
@@ -357,75 +359,142 @@ GitHub 登录与授权由本人完成；这个账号用于上传，不是 DeepSe
 
 已经配置个人 `origin` 的同学不需要再新建仓库；保存新 commit 后继续 push 即可。认证报错时，用末尾的备用提示向 Agent 求助。
 
-## 选做：四个拓展项目
+## 选做：同一份报告的四轮维护
 
-四项可以任选，不做也不影响下一周。全部完成按约 **1 小时**估算，不包含下载等待或故障排查；不要求卡着时间完成。
+先完成主线的一份报告，再围绕它继续：**换 Agent 核验 → 参数化运行 → 测试纠错 → 随机结果对照**。建议按 A → B → C → D 推进，也可以任选；四项都只依赖主线，不要求先做完上一项。
 
-A 在接通 Agent 后即可做；B、C、D 需要已有投针实验实现，彼此不依赖。让 Agent 帮助实现下面的任务与测试，再由你核对真实结果。教师已有测试和 `rebuild.sh` 保持不变。
+每项按约 **20 分钟**设计，全套约 **80 分钟**；这是未实测的估计，不包括安装等待和故障排查。完成一项可以继续下一项，不要求卡着时间或全部做完，也不影响下一周。
 
-### A. 同一任务，比较两种 Agent｜约 15 min
+每轮都走完“确认现状 → 委托一个增量 → 自己运行与核验 → 查看 diff → 保存版本”。教师 `tests/` 和 `rebuild.sh` 保持不变；新增测试放在 `tests_extra/`。A 的检查阶段只读，比较记录按需保存；B、C、D 核验后可以各自留下一个 commit。
 
-**任务：** 使用 VS Code 原生 Agent 和另一种 Agent，完成同一个只读任务：读取 `README-materials.md`，用两句话说明材料用途，再运行 `git status -sb`。
+### A. 换一个 Agent，核验同一份报告｜约 20 min
 
-默认尝试 [Cline 扩展](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)：选择 **Bring my own API key → DeepSeek**，在专用字段填写 Key，从实际列表选择模型；使用 **Act**，保持 **Auto Approve** 关闭。配置过程可以请已接通的 Agent 帮忙，参考 [Cline 官方说明](https://docs.cline.bot/provider-config/deepseek)。不需要购买 ClinePass。
+**目标：** 不重做报告，让两种 Agent 检查同一批已有结果，再由你判断检查是否可靠。
 
-已经能使用 Codex CLI、Claude Code CLI 等终端 Agent，也可以用它们替代 Cline；不必为了选做购买新订阅。
+1. 打开 `results.csv`、`results-params.tex` 和 PDF，先记下实际 seed 与投针数；自己运行 `git status -sb`，保留当前状态。
+2. 使用 VS Code 原生 Agent 和另一种 Agent。默认可尝试 [Cline 扩展](https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev)：选择 **Bring my own API key → DeepSeek**，在专用字段填写 Key，从实际列表选择模型；使用 **Act**，保持 **Auto Approve** 关闭。参考 [Cline 官方说明](https://docs.cline.bot/provider-config/deepseek)。已经可用的 Codex CLI、Claude Code CLI 等也可以；不为选做购买新订阅，安装卡住时先做 B。
+3. 对两种 Agent 发送完全相同的任务；核对它们是否真的读取了文件并执行了命令：
+
+~~~text
+请只读检查当前 week-03 的实验报告：读取 EXPERIMENT.txt、results.csv、results-params.tex 和 report.tex。
+告诉我实际 seed、各组投针数，以及报告是否引用了这份结果；运行 git status -sb。
+指出一个已确认的问题或仍需人工核验的地方，不为找问题而编造。
+不要修改文件、重新运行实验或编译，也不要提交、上传。
+~~~
+
+4. 把两份回答与第一步的文件、实际命令记录对照。追问其中一个结论：“你依据的是哪份文件、哪段实际内容？”不能只看回答是否流畅。
+5. 再看 Git 状态与文件内容；检查结束后，用几句话记下实际 Agent／模型、一项共同结论和两项可观察差异。需要保存比较记录时，在核对只读操作没有改动后再保存。
 
 **测试与验收：**
 
-- 两种 Agent 使用同一个工作目录、同一条任务描述；各自留下实际读取文件与运行命令的记录。
-- 文件摘要与原文一致；状态输出与自己在 Terminal 执行 `git status -sb` 的结果相符。
-- 操作前后核对 Git 状态和文件内容，没有新增修改、提交或上传；不能只凭一份空的 `git diff` 判断。
-- 记录实际 Agent、模型名称及两项可观察的差异，例如批准操作的方式、结果展示的位置。模型不同就如实注明，不把所有差异归因于 Agent。
+- 两种 Agent 检查的是同一目录、同一版文件；实际参数与 CSV 一致，不能把需求中的默认值当作本次运行结果。
+- 状态输出与自己执行的 `git status -sb` 相符；只读检查期间没有修改、提交或上传，不能只凭空的 `git diff` 判断。
+- 能指出至少一个结论的文件依据，以及仍需人打开 PDF 核验的内容。模型不同就如实注明，不把所有差异归因于 Agent。
 
-### B. 用参数控制实验｜约 15 min
+### B. 把手改参数变成可重复的命令｜约 20 min
 
-**任务：** 给 `experiment.py` 增加 `--seed` 和 `--n` 参数，使下面的命令可以直接完成实验、图表和报告，不必再改源码：
+**目标：** 不再为了换 seed 或投针数修改源码，用同一个入口重建报告。
+
+1. 先写下本次预期：两组投针数 `2000、5000`，seed 都是 `7`；原有函数接口和无参数运行保持不变。
+2. 让 Agent 给 `experiment.py` 增加参数与说明：
+
+~~~text
+给 experiment.py 增加 --seed 和 --n 参数，以及 --help 说明。
+让 bash rebuild.sh --seed 7 --n 2000 5000 可以重建两组实验的图表和报告，不修改教师脚本。
+无参数运行保留 seed=42 和原三组投针数；原函数接口不变。
+非法投针数要报错并以非零状态结束；实际运行正常、重复和失败三种情况，再运行教师测试。
+~~~
+
+3. 自己运行两次，检查同一环境下能否复现；`cmp` 无输出且正常结束表示两份文件一致：
 
 ~~~bash
 bash rebuild.sh --seed 7 --n 2000 5000
+cp results.csv results-first.csv
+bash rebuild.sh --seed 7 --n 2000 5000
+cmp results-first.csv results.csv
 ~~~
 
-**测试与验收：**
+4. 打开 CSV、图与 PDF，核对不是只更新了某一处；再检查错误输入与默认路线：
 
-- 本次 `results.csv` 有两组结果：`n=2000`、`n=5000`，两组 `seed` 都是 `7`；报告和图表显示同样的实际参数与结果。
-- 相同环境下重复同一命令，两份 CSV 的六个字段一致；换 seed 后记录新 seed，不要求估计值必定改变或变好。
-- `uv run --locked python experiment.py --n 0` 明确报错并以非零状态结束，不生成伪造的成功结果。
-- 无参数运行仍保留 `seed=42` 和原三组投针数；函数接口及默认参数不变，公开测试仍通过。
+~~~bash
+uv run --locked python experiment.py --help
+uv run --locked python experiment.py --n 0
+bash rebuild.sh
+uv run --locked python -m pytest -q tests
+~~~
 
-### C. 给自己的实现增加独立测试｜约 15 min
-
-**任务：** 在新目录 `tests_extra/` 中编写 `test_extra.py`，检查下面的已知答案，不改教师的 `tests/`：
-
-- 针长 `0.8`、线距 `2.0`、夹角 `π/2`：中心距离为 `0.4` 时刚好触线，应为 `True`；距离为 `0.4001` 时应为 `False`。
-- `estimate_pi(100, 25, length=0.25, spacing=2.0)` 应为 `1.0`。
-- `estimate_pi(100, 0)` 应抛出 `ValueError`，不能报告一个有效估计值。
+5. 对照原版看 diff，只保留参数化有关的变化；临时比较文件按需保留，不混入实现代码。核验后保存版本。
 
 **测试与验收：**
+
+- 带参数运行的 CSV 恰好有 `n=2000、5000` 两行，两行 seed 为 `7`；PDF、参数说明和图表一致，两次 CSV 的六个字段一致。
+- `--help` 说明参数用法与默认值；`--n 0` 明确报错、非零退出，不把失败报告成成功。
+- 无参数运行恢复 seed `42` 与原三组投针数，教师测试仍通过。换 seed 不要求结果一定改变或变好。
+
+### C. 让新测试抓住一个真实错误｜约 20 min
+
+**目标：** 不只看到测试通过，还验证测试能区分正确实现和故障实现。
+
+1. 先核对三个已知答案：
+   - 针长 `0.8`、线距 `2.0`、夹角 `π/2`：中心距离 `0.4` 刚好触线，应为 `True`；距离 `0.4001` 应为 `False`。
+   - `estimate_pi(100, 25, length=0.25, spacing=2.0)` 应为 `1.0`。
+   - `estimate_pi(100, 0)` 应抛出 `ValueError`，不能给出有效估计值。
+2. 请 Agent 在 `tests_extra/test_geometry.py` 中把上述事实写成测试；先说明预期答案的依据，不用当前程序输出当答案。
+3. 自己运行新测试与教师测试，确认确实收集到了测试：
 
 ~~~bash
 uv run --locked python -m pytest -q tests_extra
 uv run --locked python -m pytest -q tests tests_extra
 ~~~
 
-- 第一条确实运行新增测试，且全部通过；第二条中教师测试与新增测试一起通过，不能是零项收集。
-- 让 Agent 在**临时副本**中故意制造“刚好触线却不计数”的错误；同一套新增测试必须抓住这个错误。正式项目和教师测试保持不变。
-- 能解释上面三个预期结果的依据，而不是用当前程序的输出充当正确答案。
+4. 再交给 Agent 一个故障验证任务；你核对它实际测试的目录与失败断言：
 
-### D. 比较不同 seed 的结果｜约 15 min
+~~~text
+在项目外创建临时副本，只把“触线也计数”的 <= 判据改为 <，其他规则不变。
+在副本中运行同一套 tests_extra，确认测试导入的是副本的 experiment.py。
+我要看到刚好触线的断言失败，不是导入失败或环境错误。不要改正式实现或教师测试，也不要把故障版本复制回来。
+~~~
 
-**任务：** 新建 `compare_seeds.py`，直接调用已有的 `simulate`，比较三个 seed（`7、42、2026`）与三组投针数（`1000、10000、100000`）的全部组合。不需要先完成 B，也不做动画。
-
-输出独立的 `comparison.csv` 和 `comparison.png`，不覆盖主线的 `results.csv`。CSV 保留每组实际参数、触线数和估计值；图按 seed 分组，展示各组估计值与 π 的绝对误差。把图和两句基于实际数据的观察加入报告。
+5. 回到正式项目，重新运行教师与新增测试；看 diff，确认本轮留下的是测试，不是故意制造的故障，再保存版本。
 
 **测试与验收：**
 
-- 九种参数组合各出现一次；每行与相同参数调用 `simulate` 的结果一致，估计值符合给定公式。
-- 相同环境下重复运行，CSV 内容一致；图中的点等于 CSV 计算出的 `abs(pi_estimate - π)`，坐标轴与 seed 标注清楚。
-- 自己运行比较程序后，执行 `bash rebuild.sh`；打开 PDF，确认新增图与观察仍在，原报告也能正常重建。
-- 用自己的具体结果说明波动；不要求某个 seed 更优，也不要求投针数增加后每次误差都下降。没有出现的现象不编造。
+- 正式实现中，新测试与教师测试全部通过，不能是零项收集。
+- 故障副本中，同一套新测试在“刚好触线”的预期断言处失败；正式实现未被故障副本覆盖。
+- 能解释几何边界、手算公式和零交叉三个答案的依据；不能把 Agent 的“测试有效”声明当证据。
 
-完成选做后检查 Git diff，决定是否保存新的 commit；测试记录和实际产物比 Agent 的“已完成”声明更重要。
+### D. 在同一份报告中对照随机结果｜约 20 min
+
+**目标：** 复用已有算法增加一次对照实验，不重写投针，也不假设样本越大每次都更准。
+
+1. 确认已有 `simulate` 可调用；先列出 seed `7、42、2026` 与投针数 `1000、10000、100000` 的九种组合。不需要先完成 B。
+2. 给 Agent 以下任务：
+
+~~~text
+新增 compare_seeds.py，直接调用已有 simulate，运行 seed=7、42、2026 与 n=1000、10000、100000 的全部组合。
+输出 comparison.csv 和 comparison.png，不覆盖主线的 results.csv。CSV 保留六个实际字段；图按 seed 分组显示估计值与绝对误差。
+在 tests_extra/test_comparison.py 中检查组合完整、结果与 simulate 一致、相同环境下可复现。
+运行程序与测试，把图和两句基于实际数据的观察加入报告，保留原图表与模板结构。不要做动画或重写投针算法。
+~~~
+
+3. 自己运行程序和测试，打开九行结果与图，核对实际组合和图上的点：
+
+~~~bash
+uv run --locked python compare_seeds.py
+uv run --locked python -m pytest -q tests tests_extra
+~~~
+
+4. 用实际数据比较两组 seed 的表现，再检查一个 seed 下误差随投针数怎样变化。把观察写入报告；没有出现的现象不编造。
+5. 执行 `bash rebuild.sh`，再次打开 PDF，确认新增比较仍在、原主线也能重建；看 diff，保存这一轮版本。
+
+**测试与验收：**
+
+- 九种组合各出现一次；每行与相同参数调用 `simulate` 的结果一致，估计值符合给定公式。
+- 相同环境下重复运行，CSV 内容一致；图中的误差等于 CSV 计算出的 `abs(pi_estimate - π)`，坐标轴与 seed 标注清楚。
+- 教师测试和新增测试都通过；原始 `results.csv` 不被比较程序覆盖，重建后两组图表和观察仍在 PDF 中。
+- 观察有对应数字，不要求某个 seed 更优，也不要求投针数增加后每次误差都下降。
+
+一轮完成后先检查实际产物和 Git diff，再进入下一轮。测试记录与真实文件比 Agent 的“已完成”声明更重要。
 
 ## 遇到问题怎么求助
 
