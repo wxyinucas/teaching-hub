@@ -64,6 +64,10 @@ npm run check
 
 学生指南只承载学生需要独立执行、核验或课后接续的内容。台本决定教师何时推进和如何取舍；Slides 的受众与用途由课程契约说明。不同材料可以有少量有意重复，但同一规则必须只有一个权威出处。
 
+## 网站与课程代码
+
+本仓库按学期聚拢台本、Slides、Guide 与课程设计。新发布的课程实验代码、测试和工具由外部课程仓库统一维护，不在网站另存下载副本：[`ai-agents`](https://github.com/wxyinucas/ai-agents) 承载工作台与独立课堂实验，W3 材料唯一维护在它的 `week-03/` 独立 uv 子项目中；[`ai-agents-project`](https://github.com/wxyinucas/ai-agents-project) 留作后续持续系统，启用时承载相应的逐周任务、模板、公开测试与工具。两个仓库按用途分工，不是复制材料的流水线。Guide 链接相应仓库并说明如何获取、更新和使用；W3 沿用学生 W2 已 clone 的 `ai-agents` 仓库和 Git 历史。旧 Longbridge 教师工具已迁至 `ai-agents-project/course/pilots/longbridge-gate-a/`，暂作历史存放，不纳入当前学生路线；已有 W4 `demo/` 仍随对应课程迭代另行处理。
+
 ## 公开边界
 
 本仓库只包含可公开的教学内容与网站源码。行政申请表、历史稿、旧 PDF/Beamer 工具链、生成文件、字体文件、缓存和依赖目录均保留在本地旧档案，不进入本仓库。
