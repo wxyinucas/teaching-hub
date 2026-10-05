@@ -7,13 +7,14 @@ import SegmentNotes from '../components/runbook/SegmentNotes.vue'
 import NotFoundView from './NotFoundView.vue'
 
 const props = defineProps({ termId: String, courseId: String, weekId: String, topicId: String, authorId: String, materialId: String, resourceId: String, page: String })
-const { context, sourcePath, resourceTitle, unitLabel, materialsLabel, tabs, tabLocation } = useResourceContext(props, 'guide')
+const { context, resource, sourcePath, resourceTitle, unitLabel, materialsLabel, tabs, tabLocation } = useResourceContext(props, 'guide')
 const source = ref(null)
 const loading = ref(false)
 const error = ref('')
 const readerElement = ref(null)
 const outline = ref([])
 const activeSectionId = ref('')
+const copyStatus = ref('')
 let scrollFrame = null
 
 watch([sourcePath, resourceTitle], async ([path], _previous, onCleanup) => {
@@ -21,6 +22,7 @@ watch([sourcePath, resourceTitle], async ([path], _previous, onCleanup) => {
   onCleanup(() => { active = false })
   source.value = null
   error.value = ''
+  copyStatus.value = ''
   if (!path) return
   loading.value = true
   document.title = `${unitLabel.value} · ${resourceTitle.value} · Teaching Hub`
@@ -36,6 +38,18 @@ watch([sourcePath, resourceTitle], async ([path], _previous, onCleanup) => {
     if (active) loading.value = false
   }
 }, { immediate: true })
+
+async function copyTemplate() {
+  if (source.value === null) return
+  copyStatus.value = 'copying'
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error('clipboard unavailable')
+    await navigator.clipboard.writeText(source.value)
+    copyStatus.value = 'copied'
+  } catch {
+    copyStatus.value = 'manual'
+  }
+}
 
 function updateActiveSection() {
   scrollFrame = null
@@ -111,6 +125,15 @@ onBeforeUnmount(() => {
     <section v-else-if="error" class="error-state" role="alert"><h1>{{ resourceTitle }}暂时无法读取</h1><p>{{ error }}</p></section>
     <div v-else-if="source !== null" class="guide-layout guide-layout--topic">
       <article ref="readerElement" class="guide-reader">
+        <div v-if="resource.id === 'template'" class="guide-source-tools">
+          <span>全学期通用 · 按话题交流</span>
+          <button type="button" :disabled="copyStatus === 'copying'" @click="copyTemplate">{{ copyStatus === 'copied' ? '已复制' : '复制整份模板' }}</button>
+          <p v-if="copyStatus === 'copied'" class="sr-only" role="status">已复制完整 Markdown，可保存为自己的话题记录。</p>
+          <div v-if="copyStatus === 'manual'" class="guide-source-fallback">
+            <label for="template-source" role="status">浏览器未允许复制，请选中下面的原始 Markdown 手动复制。</label>
+            <textarea id="template-source" :value="source" readonly rows="12" aria-label="原始 Markdown" @focus="$event.target.select()"></textarea>
+          </div>
+        </div>
         <SegmentNotes :source="source" />
       </article>
       <nav v-if="outline.length" class="guide-mini-content" :aria-label="`${resourceTitle}目录`">

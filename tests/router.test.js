@@ -35,6 +35,11 @@ const examBundle = catalog.terms.flatMap((itemTerm) => itemTerm.courses.flatMap(
 const materialBundle = catalog.terms.flatMap((itemTerm) => itemTerm.courses.flatMap((itemCourse) => (
   itemCourse.materials.map((material) => ({ term: itemTerm, course: itemCourse, material }))
 ))).at(0)
+const templateBundle = catalog.terms.flatMap((itemTerm) => itemTerm.courses.flatMap((itemCourse) => (
+  itemCourse.weeks.map((itemWeek) => ({ term: itemTerm, course: itemCourse, week: itemWeek }))
+))).find(({ course: itemCourse, week: itemWeek }) => (
+  itemCourse.id === 'ai-agents' && itemWeek.id === 'week-01'
+))
 
 let wrapper
 let router
@@ -62,6 +67,7 @@ afterEach(() => {
   wrapper = null
   router = null
   vi.restoreAllMocks()
+  vi.unstubAllGlobals()
   document.body.innerHTML = ''
   window.history.replaceState({}, '', '/')
 })
@@ -155,6 +161,102 @@ describe('teaching hub navigation', () => {
     await settle()
     expect(router.currentRoute.value.path).toBe(`${weekPath}/guide`)
     expect(wrapper.find('.guide-reader').exists()).toBe(true)
+  })
+
+  it('opens the semester-wide topic template after W1 materials and keeps it in the resource tabs', async () => {
+    expect(templateBundle).toBeDefined()
+    const item = templateBundle
+    const directory = `/terms/${item.term.id}/courses/${item.course.id}`
+    const base = `${directory}/weeks/${item.week.id}`
+    expect(item.week.resources.template).toBe(`${item.term.id}/courses/${item.course.id}/template.md`)
+    await openPage(directory)
+
+    const card = wrapper.findAll('.week-card').find((entry) => (
+      entry.findAll('.resource-link').some((link) => link.attributes('href') === `${base}/guide`)
+    ))
+    expect(card).toBeDefined()
+    const links = card.findAll('.resource-link')
+    const templateLink = links.find((link) => link.attributes('href') === `${base}/template`)
+    expect(templateLink).toBeDefined()
+    expect(templateLink.text()).toContain('话题交流模板')
+    expect(templateLink.text()).toContain('全学期通用')
+    expect(links.at(-1).attributes('href')).toBe(`${base}/template`)
+    await templateLink.trigger('click')
+    await settle()
+
+    expect(router.currentRoute.value.path).toBe(`${base}/template`)
+    expect(wrapper.find('.guide-reader').exists()).toBe(true)
+    expect(wrapper.find('.breadcrumbs [aria-current]').text()).toBe('话题交流模板')
+    expect(document.title).toContain('话题交流模板')
+    const guideTab = wrapper.findAll('.resource-tabs a').find((link) => (
+      link.attributes('href') === `${base}/guide`
+    ))
+    await guideTab.trigger('click')
+    await settle()
+    const templateTab = wrapper.findAll('.resource-tabs a').find((link) => (
+      link.attributes('href') === `${base}/template`
+    ))
+    expect(templateTab.text()).toBe('话题交流模板')
+    await templateTab.trigger('click')
+    await settle()
+    expect(router.currentRoute.value.path).toBe(`${base}/template`)
+    expect(wrapper.find('.breadcrumbs [aria-current]').text()).toBe('话题交流模板')
+  })
+
+  it('loads the named template route and copies its complete original Markdown', async () => {
+    expect(templateBundle).toBeDefined()
+    const item = templateBundle
+    const source = await loadContent(item.week.resources.template)
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    vi.stubGlobal('navigator', { clipboard: { writeText } })
+    await openPage({
+      name: 'template',
+      params: { termId: item.term.id, courseId: item.course.id, weekId: item.week.id },
+    })
+
+    expect(router.currentRoute.value.path).toBe(`/terms/${item.term.id}/courses/${item.course.id}/weeks/${item.week.id}/template`)
+    expect(wrapper.find('.guide-reader').exists()).toBe(true)
+    const copyButton = wrapper.findAll('button').find((button) => button.text() === '复制整份模板')
+    expect(copyButton).toBeDefined()
+    await copyButton.trigger('click')
+    await settle()
+    expect(writeText).toHaveBeenCalledTimes(1)
+    expect(writeText).toHaveBeenCalledWith(source)
+  })
+
+  it('offers the complete original Markdown for manual copying when clipboard writing fails', async () => {
+    expect(templateBundle).toBeDefined()
+    const item = templateBundle
+    const source = await loadContent(item.week.resources.template)
+    const writeText = vi.fn().mockRejectedValue(new Error('Clipboard unavailable'))
+    vi.stubGlobal('navigator', { clipboard: { writeText } })
+    await openPage(`/terms/${item.term.id}/courses/${item.course.id}/weeks/${item.week.id}/template`)
+
+    const copyButton = wrapper.findAll('button').find((button) => button.text() === '复制整份模板')
+    await copyButton.trigger('click')
+    await settle()
+    const manualCopy = wrapper.find('textarea[aria-label="原始 Markdown"]')
+    expect(manualCopy.exists()).toBe(true)
+    expect(manualCopy.attributes('readonly')).toBeDefined()
+    expect(manualCopy.element.value).toBe(source)
+  })
+
+  it('does not substitute the W2 guide for an undeclared template', async () => {
+    expect(templateBundle).toBeDefined()
+    const item = templateBundle
+    const secondWeek = item.course.weeks.find((entry) => entry.id === 'week-02')
+    expect(secondWeek.resources.guide).toBeDefined()
+    expect(secondWeek.resources.template).toBeUndefined()
+    const base = `/terms/${item.term.id}/courses/${item.course.id}/weeks/${secondWeek.id}`
+    await openPage(`${base}/guide`)
+    expect(wrapper.find('.guide-reader').exists()).toBe(true)
+    expect(wrapper.findAll('.resource-tabs a').some((link) => link.attributes('href') === `${base}/template`)).toBe(false)
+    expect(wrapper.findAll('button').some((button) => button.text() === '复制整份模板')).toBe(false)
+
+    await router.push(`${base}/template`)
+    await settle()
+    expect(wrapper.find('.error-state').exists()).toBe(true)
+    expect(wrapper.find('.guide-reader').exists()).toBe(false)
   })
 
   it('keeps the slide page in the URL during keyboard navigation', async () => {

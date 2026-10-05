@@ -4,6 +4,7 @@ const weekFiles = import.meta.glob('../../terms/*/courses/*/weeks/*/week.json', 
 const topicFiles = import.meta.glob('../../terms/*/courses/*/topics/*/topic.json', { eager: true, import: 'default' })
 const materialFiles = import.meta.glob('../../terms/*/courses/*/authors/*/materials/*/material.json', { eager: true, import: 'default' })
 const sources = import.meta.glob([
+  '../../terms/*/courses/*/template.md',
   '../../terms/*/courses/*/weeks/*/*.md',
   '../../terms/*/courses/*/topics/*/*.md',
   '../../terms/*/courses/*/authors/*/materials/*/*.md',

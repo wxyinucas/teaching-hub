@@ -48,9 +48,11 @@
 .week-copy p, .topic-copy p { margin: 0; color: var(--ink-muted); font-size: 12px; line-height: 1.75; }
 .topic-copy .topic-meta { margin-top: 9px; color: var(--purple); font-size: 11px; font-weight: 650; }
 .week-actions, .topic-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.week-actions:has(> .resource-template) { max-width: 24rem; }
 .resource-link { display: flex; flex-direction: column; min-width: 120px; padding: 13px 15px; border: 1px solid var(--purple-border); border-radius: 6px; text-decoration: none; background: var(--purple-light); }
 .resource-link span { color: var(--purple-dark); font-size: 13px; font-weight: 650; }
 .resource-link small { margin-top: 4px; color: var(--ink-muted); font-size: 10px; }
+.resource-link.resource-template { flex-basis: 100%; }
 /* 按实际渲染的入口顺序循环；颜色不绑定材料类型。 */
 .resource-link:nth-child(3n + 2) { background: var(--accent-solid); border-color: var(--accent-solid); }
 .resource-link:nth-child(3n + 2) span, .resource-link:nth-child(3n + 2) small { color: var(--on-accent); }
@@ -73,6 +75,10 @@
 .guide-reader .notes-content h3 { margin: 26px 0 10px; color: var(--purple); font-size: 16px; line-height: 1.55; }
 .guide-reader .notes-content a { text-underline-offset: 3px; }
 .guide-reader .code-block { margin: 18px 0; }
+.guide-source-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 26px; padding-bottom: 16px; border-bottom: 1px solid var(--border); color: var(--ink-muted); font-size: 12px; }
+.guide-source-tools > button { padding: 8px 12px; border: 1px solid var(--accent-border); border-radius: 5px; background: var(--accent-soft); color: var(--accent-text); }
+.guide-source-fallback { flex-basis: 100%; }
+.guide-source-fallback textarea { display: block; width: 100%; margin-top: 10px; padding: 12px; border: 1px solid var(--border); border-radius: 5px; background: var(--surface-muted); color: var(--ink); font: 12px/1.6 "SFMono-Regular", Consolas, monospace; resize: vertical; }
 .guide-layout--topic { display: grid; grid-template-columns: minmax(0, 900px) 210px; gap: 24px; align-items: start; justify-content: center; }
 .guide-layout--topic .guide-reader { box-sizing: border-box; min-width: 0; width: 100%; margin: 30px 0 0; }
 .guide-layout--topic .notes-content h2[id], .guide-layout--topic .notes-content h3[id] { scroll-margin-top: 24px; }

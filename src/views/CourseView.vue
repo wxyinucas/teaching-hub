@@ -122,6 +122,11 @@ watchEffect(() => {
             :to="resourceLocation(entry, 'guide')"
           ><span>学生指南</span><small >课中辅助与课后补充</small></RouterLink>
           <RouterLink
+            v-if="!isTopicCourse && ready(entry, 'template')"
+            class="resource-link resource-template"
+            :to="resourceLocation(entry, 'template')"
+          ><span>话题交流模板</span><small>全学期通用 · 按话题交流</small></RouterLink>
+          <RouterLink
             v-if="isTopicCourse && ready(entry, 'exams')"
             class="resource-link resource-exams"
             :to="resourceLocation(entry, 'exams')"

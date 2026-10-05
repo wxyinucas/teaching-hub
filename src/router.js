@@ -32,6 +32,11 @@ export function createTeachingRouter(history = createWebHashHistory(import.meta.
         name: 'guide', component: GuideView, props: true,
       },
       {
+        path: '/terms/:termId/courses/:courseId/weeks/:weekId/template',
+        name: 'template', component: GuideView,
+        props: (route) => ({ ...route.params, resourceId: 'template' }),
+      },
+      {
         path: '/terms/:termId/courses/:courseId/weeks/:weekId/demos/:demoId',
         name: 'demo', component: DemoView, props: true,
       },

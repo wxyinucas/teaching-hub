@@ -8,6 +8,7 @@ const parsers = {
   runbook: parseRunbook,
   slides: parseSlides,
   guide: (source) => source.trim(),
+  template: (source) => source.trim(),
   exams: parseExamCollection,
   cards: (source) => parseRunbook(source, { format: 'cards' }),
 }
