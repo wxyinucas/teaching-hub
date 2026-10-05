@@ -7,6 +7,7 @@
   "order": 4,
   "resources": {
     "runbook": "runbook.md",
+    "slides": "slides.md",
     "exams": {
       "scope": "course",
       "file": "exams/topics/topic-03-derivatives-and-differentials.tex"
