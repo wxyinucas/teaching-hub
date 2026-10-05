@@ -1,7 +1,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
-import { findCourse } from './lib/catalog.js'
+import { findCourse, findMaterialResource } from './lib/catalog.js'
 import {
   applyTheme,
   getInitialTheme,
@@ -21,9 +21,13 @@ const activeCourse = computed(() => (
 ))
 const organizationNote = computed(() => (
   activeCourse.value
-    ? `2026 秋 · ${activeCourse.value.organization === 'topics' ? '按专题准备' : '按周准备'}`
+    ? `2026 秋 · ${activeCourse.value.organization === 'materials' ? '按材料学习' : activeCourse.value.organization === 'topics' ? '按专题准备' : '按周准备'}`
     : '2026 秋 · 课程准备'
 ))
+const isSlideRoute = computed(() => ['slides', 'topic-slides'].includes(route.name)
+  || (route.name === 'material-resource' && findMaterialResource(
+    route.params.termId, route.params.courseId, route.params.authorId, route.params.materialId, route.params.resourceId,
+  )?.resource.renderer === 'slides'))
 
 function focusContent() {
   content.value?.focus({ preventScroll: true })
@@ -61,7 +65,7 @@ watch(() => route.path, async () => {
 
 <template>
   <a class="skip-link" href="#page-content" @click.prevent="skipToContent">跳到主要内容</a>
-  <div class="site-shell" :class="{ 'is-slide-route': ['slides', 'topic-slides'].includes(route.name) }">
+  <div class="site-shell" :class="{ 'is-slide-route': isSlideRoute }">
     <header class="site-header">
       <RouterLink to="/" class="identity" aria-label="Teaching Hub 首页">
         <span class="identity-mark" aria-hidden="true">TH</span>

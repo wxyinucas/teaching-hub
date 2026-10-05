@@ -26,9 +26,9 @@ function readOverview(lines) {
   }
 }
 
-function readSegment(heading, lines, end, number, detailHeadings = []) {
+function readSegment(heading, lines, end, number, detailHeadings = [], freeCards = false) {
   const match = heading.text.match(/^(\d+)\s*[-–—]\s*(\d+)\s*[|｜]\s*(.+)$/)
-  if (!match || Number(match[1]) >= Number(match[2])) {
+  if (!freeCards && (!match || Number(match[1]) >= Number(match[2]))) {
     throw new Error(`“${heading.text}”的标题请写成“0-10 | 推进什么”，结束时间需晚于开始时间。`)
   }
   const body = lines.slice(heading.end, end)
@@ -40,10 +40,10 @@ function readSegment(heading, lines, end, number, detailHeadings = []) {
   return {
     id,
     number,
-    start: Number(match[1]),
-    end: Number(match[2]),
-    time: `${match[1]}–${match[2]}`,
-    title: match[3].trim(),
+    start: freeCards ? null : Number(match[1]),
+    end: freeCards ? null : Number(match[2]),
+    time: freeCards ? '' : `${match[1]}–${match[2]}`,
+    title: freeCards ? heading.text : match[3].trim(),
     summary: summary?.[1].trim() ?? '',
     notes: body.join('\n').trim(),
     outline: detailHeadings
@@ -82,7 +82,8 @@ function validateTimeline(sectionTitle, segments) {
   })
 }
 
-export function parseRunbook(source) {
+export function parseRunbook(source, { format = 'runbook' } = {}) {
+  const freeCards = format === 'cards'
   const lines = source.replace(/\r\n?/g, '\n').split('\n')
   const tokens = markdown.parse(lines.join('\n'), {})
   const headings = tokens.flatMap((token, index) => {
@@ -96,10 +97,10 @@ export function parseRunbook(source) {
     return [{ level, text, start: token.map[0], end: token.map[1] }]
   })
   const title = headings.find((heading) => heading.level === 1)
-  if (!title) throw new Error('请先用一个 # 标题写下台本名称。')
+  if (!title) throw new Error(freeCards ? '请先用一个 # 标题写下提示名称。' : '请先用一个 # 标题写下台本名称。')
 
   const titleParts = title.text.split(/[|｜]/)
-  const code = titleParts.length > 1 ? titleParts.shift().trim() : '台本'
+  const code = titleParts.length > 1 ? titleParts.shift().trim() : freeCards ? '我的提示' : '台本'
   const name = titleParts.join('｜').trim()
   const lessonHeadings = headings.filter((heading) => heading.level === 2)
   const firstSection = lessonHeadings[0]?.start ?? lines.length
@@ -112,7 +113,7 @@ export function parseRunbook(source) {
 
   lessonHeadings.forEach((heading, index) => {
     const end = lessonHeadings[index + 1]?.start ?? lines.length
-    if (['本次课', '本周', '本专题', '专题概览', '知识地图'].includes(heading.text)) {
+    if (['本次课', '本周', '本专题', '专题概览', '知识地图', ...(freeCards ? ['本材料'] : [])].includes(heading.text)) {
       const summary = readOverview(lines.slice(heading.end, end))
       overview = summary.anchors
       roadmap = summary.roadmap
@@ -124,24 +125,34 @@ export function parseRunbook(source) {
     }
     const sectionHeadings = headings.filter((item) => item.level === 3 && item.start > heading.start && item.start < end)
     const detailHeadings = headings.filter((item) => item.level === 4 && item.start > heading.start && item.start < end)
-    const segments = validateTimeline(heading.text, sectionHeadings.map((item, itemIndex) => readSegment(
-      item, lines, sectionHeadings[itemIndex + 1]?.start ?? end, ++segmentNumber, detailHeadings,
-    )))
-    if (!segments.length) throw new Error(`“${heading.text}”下还没有推进段，请用 ### 添加一段。`)
+    const occurrences = new Map()
+    const parsedSegments = sectionHeadings.map((item, itemIndex) => {
+      const segment = readSegment(item, lines, sectionHeadings[itemIndex + 1]?.start ?? end, ++segmentNumber, detailHeadings, freeCards)
+      if (freeCards) {
+        const occurrence = occurrences.get(item.text) ?? 0
+        occurrences.set(item.text, occurrence + 1)
+        segment.stateKey = `${heading.text}::${item.text}::${occurrence}`
+      }
+      return segment
+    })
+    const segments = freeCards ? parsedSegments : validateTimeline(heading.text, parsedSegments)
+    if (!segments.length) throw new Error(freeCards
+      ? `“${heading.text}”下还没有卡片，请用 ### 添加一张。`
+      : `“${heading.text}”下还没有推进段，请用 ### 添加一段。`)
     const [label, ...nameParts] = heading.text.split('·')
     sections.push({
       id: `period-${sections.length + 1}`,
-      label: nameParts.length ? label.trim() : `第 ${sections.length + 1} 区段`,
-      title: nameParts.length ? nameParts.join('·').trim() : label.trim(),
-      duration: segments.at(-1).end,
+      label: freeCards ? heading.text : nameParts.length ? label.trim() : `第 ${sections.length + 1} 区段`,
+      title: freeCards ? heading.text : nameParts.length ? nameParts.join('·').trim() : label.trim(),
+      duration: freeCards ? null : segments.at(-1).end,
       segments,
     })
   })
 
-  if (!sections.length) throw new Error('请用 ## 添加教学区段，再用 ### 添加推进段。')
+  if (!sections.length) throw new Error(freeCards ? '请用 ## 添加分组，再用 ### 添加卡片。' : '请用 ## 添加教学区段，再用 ### 添加推进段。')
   return {
     code, title: name, subtitle, overview, roadmap, controls, sections,
     segmentCount: segmentNumber,
-    duration: sections.reduce((total, section) => total + section.duration, 0),
+    duration: freeCards ? null : sections.reduce((total, section) => total + section.duration, 0),
   }
 }

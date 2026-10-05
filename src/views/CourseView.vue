@@ -8,12 +8,29 @@ const props = defineProps({ termId: String, courseId: String })
 const context = computed(() => findCourse(props.termId, props.courseId))
 const isTopicCourse = computed(() => context.value?.course.organization === 'topics')
 const isMaterialCourse = computed(() => context.value?.course.organization === 'materials')
+const usesTopicCards = computed(() => isTopicCourse.value || isMaterialCourse.value)
 const entries = computed(() => (
-  isMaterialCourse.value ? [] : isTopicCourse.value ? context.value?.course.topicMap ?? [] : context.value?.course.calendar ?? []
+  isMaterialCourse.value ? context.value?.course.materials ?? [] : isTopicCourse.value ? context.value?.course.topicMap ?? [] : context.value?.course.calendar ?? []
 ))
 
 function record(entry) {
+  if (isMaterialCourse.value) return entry
   return isTopicCourse.value ? entry.topic : entry.week
+}
+
+function materialResources(entry) {
+  return entry.resources.filter((resource) => hasContent(resource.path))
+}
+
+function materialLocation(entry, resource) {
+  return {
+    name: 'material-resource',
+    params: {
+      termId: props.termId, courseId: props.courseId,
+      authorId: entry.authorId, materialId: entry.id, resourceId: resource.id,
+      ...(resource.renderer === 'slides' ? { page: 1 } : {}),
+    },
+  }
 }
 
 function ready(entry, kind) {
@@ -46,7 +63,7 @@ watchEffect(() => {
   <section
     v-if="context"
     class="directory-page"
-    :class="{ 'directory-page--surface-study': context.course.courseLayout === 'surface-study' }"
+    :class="{ 'directory-page--surface-study': context.course.courseLayout === 'surface-study', 'directory-page--materials': isMaterialCourse }"
   >
     <nav class="breadcrumbs" aria-label="当前位置">
       <RouterLink to="/">首页</RouterLink><span aria-hidden="true">/</span>
@@ -61,12 +78,12 @@ watchEffect(() => {
 
     <div class="directory-section-heading">
       <h2>{{ isMaterialCourse ? '学习材料' : isTopicCourse ? '专题地图' : '教学周' }}</h2>
-      <span v-if="entries.length">{{ entries.length }} {{ isTopicCourse ? '个专题' : '周' }}</span>
+      <span v-if="entries.length">{{ entries.length }} {{ isMaterialCourse ? '份材料' : isTopicCourse ? '个专题' : '周' }}</span>
     </div>
-    <div v-if="entries.length" :class="isTopicCourse ? 'topic-list' : 'week-list'">
-      <article v-for="entry in entries" :key="entry.id" :class="isTopicCourse ? 'topic-card' : 'week-card'">
-        <div :class="isTopicCourse ? 'topic-copy' : 'week-copy'">
-          <span :class="isTopicCourse ? 'topic-kicker' : 'week-kicker'">{{ entry.label }}</span>
+    <div v-if="entries.length" :class="usesTopicCards ? 'topic-list' : 'week-list'">
+      <article v-for="entry in entries" :key="isMaterialCourse ? `${entry.authorId}/${entry.id}` : entry.id" :class="usesTopicCards ? 'topic-card' : 'week-card'">
+        <div :class="usesTopicCards ? 'topic-copy' : 'week-copy'">
+          <span :class="usesTopicCards ? 'topic-kicker' : 'week-kicker'">{{ isMaterialCourse ? entry.author : entry.label }}</span>
           <h3>{{ entry.title }}</h3>
           <p v-if="entry.summary">{{ entry.summary }}</p>
           <p v-if="isTopicCourse && (entry.lessonCount || entry.completedBy)" class="topic-meta">
@@ -76,9 +93,19 @@ watchEffect(() => {
         </div>
         <div
           v-if="record(entry)"
-          :class="isTopicCourse ? 'topic-actions' : 'week-actions'"
-          :aria-label="isTopicCourse ? '本专题材料' : '本周材料'"
+          :class="usesTopicCards ? 'topic-actions' : 'week-actions'"
+          :aria-label="isMaterialCourse ? '本材料内容' : isTopicCourse ? '本专题材料' : '本周材料'"
         >
+          <template v-if="isMaterialCourse">
+            <RouterLink
+              v-for="resource in materialResources(entry)"
+              :key="resource.id"
+              class="resource-link"
+              :class="`resource-${resource.renderer}`"
+              :to="materialLocation(entry, resource)"
+            ><span>{{ resource.title }}</span><small v-if="resource.caption">{{ resource.caption }}</small></RouterLink>
+          </template>
+          <template v-else>
           <RouterLink
             v-if="ready(entry, 'runbook')"
             class="resource-link resource-runbook"
@@ -105,6 +132,7 @@ watchEffect(() => {
             class="resource-link resource-demo"
             :to="resourceLocation(entry, 'demo', { demoId: demo.id })"
           ><span>演示</span><small>{{ demo.title }}</small></RouterLink>
+          </template>
         </div>
       </article>
     </div>

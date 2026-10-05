@@ -95,6 +95,8 @@
   .guide-layout--topic { display: flex; flex-direction: column; gap: 0; align-items: stretch; }
   .guide-layout--topic .guide-reader { max-width: 900px; margin: 16px auto 0; }
   .guide-mini-content { order: -1; position: static; max-height: none; margin-top: 20px; }
+  .directory-page--materials .topic-card { grid-template-columns: 1fr; gap: 18px; }
+  .directory-page--materials .topic-actions { justify-content: flex-start; }
 }
 
 @media (max-width: 680px) {

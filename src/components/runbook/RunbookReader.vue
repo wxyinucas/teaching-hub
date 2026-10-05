@@ -9,34 +9,38 @@ const props = defineProps({
   source: { type: String, required: true },
   file: { type: String, required: true },
   variant: { type: String, default: '' },
+  format: { type: String, default: 'runbook' },
+  pageTitle: { type: String, default: '' },
 })
 
 const parsed = computed(() => {
-  try { return { runbook: parseRunbook(props.source), error: null } }
+  try { return { runbook: parseRunbook(props.source, { format: props.format }), error: null } }
   catch (error) { return { runbook: null, error: error.message } }
 })
 const runbook = computed(() => parsed.value.runbook)
 const variantClass = computed(() => {
-  const name = props.variant.trim().replace(/[^a-zA-Z0-9_-]+/g, '-')
+  const name = (props.format === 'cards' ? 'cards' : props.variant).trim().replace(/[^a-zA-Z0-9_-]+/g, '-')
   return name ? `runbook-reader--${name}` : ''
 })
 const isCalculusTopic = computed(() => props.variant === 'calculus-topic')
 const usesLessonCards = computed(() => props.variant === 'lesson-cards')
-const usesPeriodCards = computed(() => isCalculusTopic.value || usesLessonCards.value)
+const usesFreeCards = computed(() => props.format === 'cards')
+const usesPeriodCards = computed(() => isCalculusTopic.value || usesLessonCards.value || usesFreeCards.value)
 const routeTitle = computed(() => {
+  if (usesFreeCards.value) return '提示卡片'
   if (isCalculusTopic.value) return '专题路线'
   if (usesLessonCards.value) return '本次课路线'
   return '课堂路线'
 })
-const roadmapTitle = computed(() => (usesLessonCards.value ? '知识地图' : 'Road map'))
-const navigationLabel = computed(() => (usesLessonCards.value ? '本周台本导航' : '专题台本导航'))
-const segmentUnit = computed(() => (usesPeriodCards.value ? '个课时卡片' : '个教学动作段'))
+const roadmapTitle = computed(() => (usesFreeCards.value ? '材料路线' : usesLessonCards.value ? '知识地图' : 'Road map'))
+const navigationLabel = computed(() => (usesFreeCards.value ? '提示卡片导航' : usesLessonCards.value ? '本周台本导航' : '专题台本导航'))
+const segmentUnit = computed(() => (usesFreeCards.value ? '张卡片' : usesPeriodCards.value ? '个课时卡片' : '个教学动作段'))
 const sectionUnit = computed(() => (
   runbook.value?.sections.every((section) => /次课$/.test(section.label)) ? '次课' : '个教学区段'
 ))
 const openSegments = ref(new Set())
 const roadmapExpanded = ref(true)
-const topicNavigationOpen = ref(true)
+const topicNavigationOpen = ref(!usesFreeCards.value)
 const readerElement = ref(null)
 const activeSectionId = ref('')
 const activeSegmentId = ref('')
@@ -55,7 +59,7 @@ const currentSectionId = computed(() => (
 ))
 const navigationSegments = computed(() => {
   const sections = runbook.value?.sections ?? []
-  if (isCalculusTopic.value) {
+  if (isCalculusTopic.value || usesFreeCards.value) {
     const section = sections.find((item) => item.id === currentSectionId.value) ?? sections[0]
     return section?.segments.map((segment) => ({ section, segment })) ?? []
   }
@@ -77,7 +81,7 @@ function durationLabel(section) {
 function segmentEntries(book = runbook.value) {
   return book?.sections.flatMap((section) => section.segments.map((segment) => ({
     id: segment.id,
-    key: `${section.label}::${segment.start}-${segment.end}`,
+    key: segment.stateKey ?? `${section.label}::${segment.start}-${segment.end}`,
   }))) ?? []
 }
 
@@ -288,7 +292,7 @@ watch([() => props.source, () => props.file], async () => {
   activeSectionId.value = ''
   activeSegmentId.value = ''
   visibleSegmentIds.value = []
-  topicNavigationOpen.value = true
+  topicNavigationOpen.value = !usesFreeCards.value
   await nextTick()
   scheduleNavigationUpdate()
 })
@@ -299,7 +303,7 @@ watch(() => props.file, () => {
 
 watchEffect(() => {
   document.title = runbook.value
-    ? `${runbook.value.code} · ${runbook.value.title} · Teaching Hub`
+    ? props.pageTitle || `${runbook.value.code} · ${runbook.value.title} · Teaching Hub`
     : '台本暂时无法读取 · Teaching Hub'
 })
 </script>
@@ -313,7 +317,7 @@ watchEffect(() => {
       </p>
     </section>
 
-    <dl v-if="!usesPeriodCards" class="anchors" aria-label="台本的方向">
+    <dl v-if="!usesPeriodCards || (usesFreeCards && runbook.overview.length)" class="anchors" :aria-label="usesFreeCards ? '材料的方向' : '台本的方向'">
       <div v-for="(anchor, index) in runbook.overview" :key="anchor.label" class="anchor" :class="{ 'anchor-close': index === runbook.overview.length - 1 }">
         <dt>{{ anchor.label }}</dt><dd>{{ anchor.text }}</dd>
       </div>
@@ -327,7 +331,7 @@ watchEffect(() => {
       :expanded="roadmapExpanded"
       title-id="topic-roadmap-title"
       content-id="topic-roadmap-content"
-      :toggle-label="`${roadmapExpanded ? '收起' : '展开'}${usesLessonCards ? '知识地图' : ' Road map'}`"
+      :toggle-label="usesFreeCards ? `${roadmapExpanded ? '收起' : '展开'}${roadmapTitle}` : `${roadmapExpanded ? '收起' : '展开'}${usesLessonCards ? '知识地图' : ' Road map'}`"
       @toggle="toggleRoadmap"
     />
 
@@ -347,8 +351,8 @@ watchEffect(() => {
           :aria-labelledby="section.id"
         >
           <header class="period-header">
-            <div><span class="period-label">{{ section.label }}</span><h3 :id="section.id">{{ section.title }}</h3></div>
-            <span class="period-duration">{{ durationLabel(section) }}</span>
+            <div><span v-if="!usesFreeCards" class="period-label">{{ section.label }}</span><h3 :id="section.id">{{ section.title }}</h3></div>
+            <span v-if="!usesFreeCards" class="period-duration">{{ durationLabel(section) }}</span>
           </header>
           <template v-for="segment in section.segments" :key="segment.id">
             <div
@@ -374,12 +378,12 @@ watchEffect(() => {
                 :aria-controls="`${segment.id}-notes`"
                 @click="toggleSegment(segment.id)"
               >
-                <span class="segment-time">{{ segment.time }}<small>min</small></span>
+                <span v-if="!usesFreeCards" class="segment-time">{{ segment.time }}<small>min</small></span>
                 <span class="segment-overview"><span class="segment-title">{{ segment.title }}</span><span v-if="segment.summary" class="segment-summary">{{ segment.summary }}</span></span>
                 <span class="disclosure-icon" aria-hidden="true">{{ openSegments.has(segment.id) ? '−' : '+' }}</span>
               </button>
               <div v-show="openSegments.has(segment.id)" :id="`${segment.id}-notes`" class="segment-notes" role="region" :aria-labelledby="`${segment.id}-trigger`">
-                <div class="notes-heading"><span>教师提示</span><span>卡片内按 Esc 收起</span></div>
+                <div class="notes-heading"><span>{{ usesFreeCards ? '个人提示' : '教师提示' }}</span><span>卡片内按 Esc 收起</span></div>
                 <SegmentNotes :source="segment.notes" :outline="segment.outline" />
                 <button class="close-inline" @click="closeSegment(segment.id, true)">收起本段 ↑</button>
               </div>
@@ -421,8 +425,8 @@ watchEffect(() => {
         class="side-notes topic-side-nav"
         :aria-label="navigationLabel"
       >
-        <nav v-if="isCalculusTopic" class="topic-lesson-index" aria-label="课次索引">
-          <span>课次</span>
+        <nav v-if="isCalculusTopic || usesFreeCards" class="topic-lesson-index" :aria-label="usesFreeCards ? '分组索引' : '课次索引'">
+          <span>{{ usesFreeCards ? '分组' : '课次' }}</span>
           <div>
             <button
               v-for="section in runbook.sections"
@@ -431,7 +435,7 @@ watchEffect(() => {
               :class="{ 'is-current': section.id === currentSectionId }"
               :aria-current="section.id === currentSectionId ? 'location' : undefined"
               @click="goToSection(section.id)"
-            >{{ section.label }}</button>
+            >{{ usesFreeCards ? section.title : section.label }}</button>
           </div>
         </nav>
 
@@ -450,7 +454,7 @@ watchEffect(() => {
           </div>
         </nav>
 
-        <nav class="topic-toc-stack" :aria-label="isCalculusTopic ? '当前课次目录' : '当前课时目录'">
+        <nav class="topic-toc-stack" :aria-label="usesFreeCards ? '当前分组目录' : isCalculusTopic ? '当前课次目录' : '当前课时目录'">
           <section
             v-for="entry in navigationSegments"
             :key="entry.segment.id"
@@ -465,13 +469,14 @@ watchEffect(() => {
                 :aria-current="entry.segment.id === activeSegmentId ? 'location' : undefined"
                 @click="goToSegment(entry.segment.id)"
               >
-                <span>{{ isCalculusTopic ? entry.section.label : `第 ${entry.segment.periodNumber} 课时` }} · {{ entry.segment.time }}</span>
+                <span v-if="usesFreeCards">{{ entry.section.title }}</span>
+                <span v-else>{{ isCalculusTopic ? entry.section.label : `第 ${entry.segment.periodNumber} 课时` }} · {{ entry.segment.time }}</span>
                 <strong :id="`${entry.segment.id}-toc-title`">{{ entry.segment.title }}</strong>
               </button>
               <button
                 type="button"
                 class="topic-segment-toggle"
-                :aria-label="`${openSegments.has(entry.segment.id) ? '收起' : '展开'}左侧${isCalculusTopic ? entry.section.label : `第 ${entry.segment.periodNumber} 课时`}的${entry.segment.time}`"
+                :aria-label="usesFreeCards ? `${openSegments.has(entry.segment.id) ? '收起' : '展开'}卡片：${entry.segment.title}` : `${openSegments.has(entry.segment.id) ? '收起' : '展开'}左侧${isCalculusTopic ? entry.section.label : `第 ${entry.segment.periodNumber} 课时`}的${entry.segment.time}`"
                 :aria-expanded="openSegments.has(entry.segment.id)"
                 :aria-controls="`${entry.segment.id}-notes`"
                 @click="toggleSegmentFromNavigation(entry.segment.id)"

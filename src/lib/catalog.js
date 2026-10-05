@@ -2,12 +2,15 @@ const termFiles = import.meta.glob('../../terms/*/term.json', { eager: true, imp
 const courseFiles = import.meta.glob('../../terms/*/courses/*/course.json', { eager: true, import: 'default' })
 const weekFiles = import.meta.glob('../../terms/*/courses/*/weeks/*/week.json', { eager: true, import: 'default' })
 const topicFiles = import.meta.glob('../../terms/*/courses/*/topics/*/topic.json', { eager: true, import: 'default' })
+const materialFiles = import.meta.glob('../../terms/*/courses/*/authors/*/materials/*/material.json', { eager: true, import: 'default' })
 const sources = import.meta.glob([
   '../../terms/*/courses/*/weeks/*/*.md',
   '../../terms/*/courses/*/topics/*/*.md',
+  '../../terms/*/courses/*/authors/*/materials/*/*.md',
   '../../terms/*/courses/*/exams/topics/*.tex',
   '!../../terms/*/courses/*/weeks/*/draft.md',
   '!../../terms/*/courses/*/topics/*/draft.md',
+  '!../../terms/*/courses/*/authors/*/materials/*/draft.md',
 ], { query: '?raw', import: 'default' })
 
 const byOrder = (left, right) => (left.order ?? 999) - (right.order ?? 999) || left.id.localeCompare(right.id)
@@ -75,7 +78,24 @@ function buildCatalog() {
       }).sort(byOrder)
       const calendar = mapEntries(coursePath, course.weekMap, weeks, 'week', '课程地图含有重复周次')
       const topicMap = mapEntries(coursePath, course.topicMap, topics, 'topic', '课程地图含有重复专题')
-      return [{ ...course, organization: course.organization ?? 'weeks', weeks, calendar, topics, topicMap }]
+      const materials = Object.entries(materialFiles).flatMap(([materialPath, material]) => {
+        const match = materialPath.match(/terms\/([^/]+)\/courses\/([^/]+)\/authors\/([^/]+)\/materials\/([^/]+)\/material\.json$/)
+        if (!match || match[1] !== termId || match[2] !== courseId) return []
+        if (material.id !== match[4]) throw new Error(`材料清单与目录不一致：${materialPath}`)
+        const resources = material.resources ?? []
+        if (!Array.isArray(resources) || new Set(resources.map((resource) => resource.id)).size !== resources.length) {
+          throw new Error(`材料资源声明无效或含有重复 id：${materialPath}`)
+        }
+        const directory = `${termId}/courses/${courseId}/authors/${match[3]}/materials/${match[4]}`
+        return [{ ...material, authorId: match[3], resources: resources.map((resource) => {
+          if (!/^[a-zA-Z0-9_-]+$/.test(resource.id ?? '') || !resource.title || !['guide', 'slides', 'cards'].includes(resource.renderer)
+            || typeof resource.file !== 'string' || !/^[^/\\]+\.md$/.test(resource.file) || resource.file === 'draft.md') {
+            throw new Error(`材料资源声明无效：${materialPath}`)
+          }
+          return { ...resource, path: `${directory}/${resource.file}` }
+        }) }]
+      }).sort((left, right) => byOrder(left, right) || left.authorId.localeCompare(right.authorId))
+      return [{ ...course, organization: course.organization ?? 'weeks', weeks, calendar, topics, topicMap, materials }]
     }).sort(byOrder)
     return { ...manifest, courses }
   }).sort(byOrder)
@@ -106,6 +126,20 @@ export function findTopic(termId, courseId, topicId, collection = catalog) {
     ? context.course.topics.find((item) => item.id === topicId)
     : null
   return topic ? { ...context, topic } : null
+}
+
+export function findMaterial(termId, courseId, authorId, materialId, collection = catalog) {
+  const context = findCourse(termId, courseId, collection)
+  const material = context?.course.organization === 'materials'
+    ? (context.course.materials ?? []).find((item) => item.authorId === authorId && item.id === materialId)
+    : null
+  return material ? { ...context, material } : null
+}
+
+export function findMaterialResource(termId, courseId, authorId, materialId, resourceId, collection = catalog) {
+  const context = findMaterial(termId, courseId, authorId, materialId, collection)
+  const resource = context?.material.resources.find((item) => item.id === resourceId)
+  return resource ? { ...context, resource } : null
 }
 
 export function hasContent(path) {

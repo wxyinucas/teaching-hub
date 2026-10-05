@@ -7,6 +7,7 @@ import GuideView from './views/GuideView.vue'
 import DemoView from './views/DemoView.vue'
 import ExamsView from './views/ExamsView.vue'
 import NotFoundView from './views/NotFoundView.vue'
+import MaterialResourceView from './views/MaterialResourceView.vue'
 
 export function createTeachingRouter(history = createWebHashHistory(import.meta.env.BASE_URL)) {
   return createRouter({
@@ -14,6 +15,10 @@ export function createTeachingRouter(history = createWebHashHistory(import.meta.
     routes: [
       { path: '/', name: 'home', component: HomeView },
       { path: '/terms/:termId/courses/:courseId', name: 'course', component: CourseView, props: true },
+      {
+        path: '/terms/:termId/courses/:courseId/authors/:authorId/materials/:materialId/resources/:resourceId/:page?',
+        name: 'material-resource', component: MaterialResourceView, props: true,
+      },
       {
         path: '/terms/:termId/courses/:courseId/weeks/:weekId/runbook',
         name: 'runbook', component: RunbookView, props: true,

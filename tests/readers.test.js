@@ -104,6 +104,29 @@ function installFullscreenMock() {
 }
 
 describe('runbook disclosure', () => {
+  it('reuses disclosure and outline navigation for free cards and restores each card independently', async () => {
+    const source = '# 我的提示\n## 组织\n### 先看听众\n> 一个判断\n#### 试一次\n写下当前理解。\n### 先看听众\n另一条提醒。'
+    const props = { source, file: 'materials/cues.md', format: 'cards' }
+    wrapper = mount(RunbookReader, { props })
+    expect(wrapper.classes()).toContain('runbook-reader--cards')
+    expect(wrapper.find('.segment-time').exists()).toBe(false)
+    expect(wrapper.find('.period-duration').exists()).toBe(false)
+    expect(wrapper.find('.topic-side-nav').text()).toContain('分组')
+    expect(wrapper.find('.topic-outline').text()).toContain('试一次')
+    const triggers = wrapper.findAll('.segment-trigger')
+    await triggers[1].trigger('click')
+    expect(triggers[0].attributes('aria-expanded')).toBe('false')
+    expect(triggers[1].attributes('aria-expanded')).toBe('true')
+
+    wrapper.unmount()
+    wrapper = mount(RunbookReader, { props })
+    await flushPromises()
+    expect(wrapper.findAll('.segment-trigger')[0].attributes('aria-expanded')).toBe('false')
+    expect(wrapper.findAll('.segment-trigger')[1].attributes('aria-expanded')).toBe('true')
+    await wrapper.find('.collapse-all').trigger('click')
+    expect(wrapper.findAll('.segment-trigger').every((trigger) => trigger.attributes('aria-expanded') === 'false')).toBe(true)
+  })
+
   it('opens multiple cards independently and collapses all', async () => {
     wrapper = mount(RunbookReader, { props: { source: runbookSource, file: 'runbook.md' } })
     const triggers = wrapper.findAll('.segment-trigger')

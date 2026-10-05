@@ -1,0 +1,43 @@
+{
+  "id": "secret-structure-great-talks",
+  "title": "让表达有推进感",
+  "author": "Nancy Duarte",
+  "summary": "从《The secret structure of great talks》理解现状与可能性的对照，再试改一段课堂表达。",
+  "sources": [
+    {
+      "title": "The secret structure of great talks · 原视频",
+      "url": "https://www.youtube.com/watch?v=1nYFpuc2Umk"
+    },
+    {
+      "title": "Duarte · 原作入口",
+      "url": "https://www.duarte.com/resources/talks/the-secret-structure-of-great-talks/"
+    },
+    {
+      "title": "Duarte · Storytelling framework",
+      "url": "https://www.duarte.com/resources/storytelling-framework/"
+    }
+  ],
+  "resources": [
+    {
+      "id": "notes",
+      "title": "材料笔记",
+      "caption": "原作大纲与结构观察",
+      "renderer": "guide",
+      "file": "guide.md"
+    },
+    {
+      "id": "demonstration",
+      "title": "方法演示",
+      "caption": "用对照组织这份材料的讲解",
+      "renderer": "slides",
+      "file": "slides.md"
+    },
+    {
+      "id": "cues",
+      "title": "我的提示",
+      "caption": "学习、试讲与课堂调用",
+      "renderer": "cards",
+      "file": "runbook.md"
+    }
+  ]
+}

@@ -32,6 +32,9 @@ const examBundle = catalog.terms.flatMap((itemTerm) => itemTerm.courses.flatMap(
     topic.resources.exams ? [{ term: itemTerm, course: itemCourse, topic }] : []
   ))
 ))).at(0)
+const materialBundle = catalog.terms.flatMap((itemTerm) => itemTerm.courses.flatMap((itemCourse) => (
+  itemCourse.materials.map((material) => ({ term: itemTerm, course: itemCourse, material }))
+))).at(0)
 
 let wrapper
 let router
@@ -64,6 +67,65 @@ afterEach(() => {
 })
 
 describe('teaching hub navigation', () => {
+  it('opens material resources with their own names and keeps slides inside their declared identity', async () => {
+    expect(materialBundle).toBeDefined()
+    const item = materialBundle
+    const directory = `/terms/${item.term.id}/courses/${item.course.id}`
+    const base = `${directory}/authors/${item.material.authorId}/materials/${item.material.id}/resources`
+    await openPage(directory)
+    expect(wrapper.find('.site-note').text()).toContain('按材料学习')
+    const notes = item.material.resources.find((resource) => resource.renderer === 'guide')
+    const slides = item.material.resources.find((resource) => resource.renderer === 'slides')
+    const cards = item.material.resources.find((resource) => resource.renderer === 'cards')
+
+    const noteLink = wrapper.findAll('.resource-link').find((link) => link.attributes('href') === `${base}/${notes.id}`)
+    expect(noteLink.text()).toContain(notes.title)
+    await noteLink.trigger('click')
+    await settle()
+    expect(wrapper.find('.guide-reader').exists()).toBe(true)
+    expect(wrapper.find('.breadcrumbs [aria-current]').text()).toBe(notes.title)
+    expect(wrapper.findAll('.resource-tabs a').map((link) => link.text())).toEqual(item.material.resources.map((resource) => resource.title))
+
+    await wrapper.findAll('.resource-tabs a').find((link) => link.attributes('href') === `${base}/${slides.id}/1`).trigger('click')
+    await settle()
+    expect(wrapper.find('.slides-reader').exists()).toBe(true)
+    expect(wrapper.find('.site-shell').classes()).toContain('is-slide-route')
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight' }))
+    await settle()
+    expect(router.currentRoute.value.path).toBe(`${base}/${slides.id}/2`)
+
+    await wrapper.findAll('.resource-tabs a').find((link) => link.attributes('href') === `${base}/${cards.id}`).trigger('click')
+    await settle()
+    expect(wrapper.find('.runbook-reader--cards').exists()).toBe(true)
+    expect(wrapper.find('.segment-time').exists()).toBe(false)
+    expect(wrapper.find('.site-shell').classes()).not.toContain('is-slide-route')
+    expect(wrapper.find('.breadcrumbs [aria-current]').text()).toBe(cards.title)
+
+    await router.push(`${directory}/authors/wrong-author/materials/${item.material.id}/resources/${notes.id}`)
+    await settle()
+    expect(wrapper.find('.error-state').exists()).toBe(true)
+  })
+
+  it('allows two named resources to share the same guide reader and source', async () => {
+    expect(materialBundle).toBeDefined()
+    const item = materialBundle
+    const original = item.material.resources.find((resource) => resource.renderer === 'guide')
+    const alternative = { ...original, id: 'comparison', title: '观点对照' }
+    item.material.resources.push(alternative)
+    try {
+      const base = `/terms/${item.term.id}/courses/${item.course.id}/authors/${item.material.authorId}/materials/${item.material.id}/resources`
+      await openPage(`${base}/${original.id}`)
+      await wrapper.findAll('.resource-tabs a').find((link) => link.attributes('href') === `${base}/${alternative.id}`).trigger('click')
+      await settle()
+      expect(router.currentRoute.value.path).toBe(`${base}/${alternative.id}`)
+      expect(wrapper.find('.guide-reader').exists()).toBe(true)
+      expect(wrapper.find('.breadcrumbs [aria-current]').text()).toBe(alternative.title)
+      expect(document.title).toContain(alternative.title)
+    } finally {
+      item.material.resources.pop()
+    }
+  })
+
   it('opens each declared weekly resource from the course directory', async () => {
     await openPage('/')
     const courseLink = wrapper.findAll('.course-card').find((link) => link.attributes('href') === coursePath)

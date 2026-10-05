@@ -213,6 +213,38 @@ describe('Markdown runbook parser', () => {
     expect(() => parseRunbook('# 只有标题')).toThrow('请用 ## 添加教学区段')
     expect(() => parseRunbook('# 台本\n\n## 课堂')).toThrow('还没有推进段')
   })
+
+  it('reads free reminder cards without teaching time or period boundaries', () => {
+    const source = [
+      '# 材料｜我的提示',
+      '## 本材料',
+      '- 根问题：怎样带着听众推进？',
+      '- **Road map：理解与应用**',
+      '  - 组织',
+      '  - 转场',
+      '## 设计之前',
+      '### 先看听众',
+      '> 判断当前理解。',
+      '#### 试一次',
+      '把问题写出来。',
+      '```markdown',
+      '### 围栏里的伪卡片',
+      '```',
+      '### 留下一个出口',
+      '结束时能做什么？',
+    ].join('\n')
+    const cards = parseRunbook(source, { format: 'cards' })
+    expect(cards.sections).toHaveLength(1)
+    expect(cards.sections[0].title).toBe('设计之前')
+    expect(cards.sections[0].segments.map((segment) => segment.title)).toEqual(['先看听众', '留下一个出口'])
+    expect(cards.sections[0].segments[0]).toMatchObject({ start: null, end: null, time: '', summary: '判断当前理解。' })
+    expect(cards.sections[0].segments[0].outline.map((item) => item.text)).toEqual(['试一次'])
+    expect(cards.duration).toBeNull()
+    expect(cards.sections[0].duration).toBeNull()
+    expect(cards.sections[0].segments[0].periodNumber).toBeUndefined()
+    expect(cards.roadmap.source).toBe('- 组织\n- 转场')
+    expect(() => parseRunbook('# 台本\n## 分组\n### 先看听众')).toThrow('标题请写成')
+  })
 })
 
 describe('runbook reading position', () => {

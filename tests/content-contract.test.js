@@ -9,6 +9,7 @@ const parsers = {
   slides: parseSlides,
   guide: (source) => source.trim(),
   exams: parseExamCollection,
+  cards: (source) => parseRunbook(source, { format: 'cards' }),
 }
 
 describe('published content contract', () => {
@@ -46,6 +47,18 @@ describe('published content contract', () => {
               expect(() => parsers[kind](source), '资源无法解析：' + path).not.toThrow()
               if (kind === 'exams') expect(parseExamCollection(source).questionCount).toBeGreaterThan(0)
             }
+          }
+        }
+        expect(new Set(course.materials.map((material) => `${material.authorId}/${material.id}`)).size).toBe(course.materials.length)
+        for (const material of course.materials) {
+          expect(new Set(material.resources.map((resource) => resource.id)).size).toBe(material.resources.length)
+          expect(hasContent(`${term.id}/courses/${course.id}/authors/${material.authorId}/materials/${material.id}/draft.md`)).toBe(false)
+          for (const resource of material.resources) {
+            expect(parsers[resource.renderer], '未支持的呈现方式：' + resource.renderer).toBeDefined()
+            expect(hasContent(resource.path), '资源不存在：' + resource.path).toBe(true)
+            const source = await loadContent(resource.path)
+            expect(source.trim(), '资源为空：' + resource.path).not.toBe('')
+            expect(() => parsers[resource.renderer](source), '资源无法解析：' + resource.path).not.toThrow()
           }
         }
       }

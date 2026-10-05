@@ -1,22 +1,19 @@
 # How to Make a Presentation
 
-这是教师教给自己的课堂表达课，主要关注组织、衔接与节奏。课程入口已建立，暂未登记学习材料。
+这是教师教给自己的课堂表达课，主要关注组织、衔接与节奏。每份原材料与一次小迁移构成一个学习单位，不按固定教学周排列。
 
-## 已确认的方向
+## 第一份材料
 
-- 内容按学习材料或作者组织；同一作者的材料共享一个目录。
-- Guide：材料内容的文字稿或大纲。
-- Slides：按材料所介绍的方法展示它的内容。
-- Runbook：自己总结后，用来提醒自己的内容。
+[Nancy Duarte：让表达有推进感](authors/nancy-duarte/materials/secret-structure-great-talks/material.json)，基于《The secret structure of great talks》。当前学习工作版以理解方法、试改一段 60—90 秒课堂表达为出口。
 
-## 继续讨论
+- [材料笔记](authors/nancy-duarte/materials/secret-structure-great-talks/guide.md)：保留原作大纲，区分作者框架与本课的课堂迁移。
+- [方法演示](authors/nancy-duarte/materials/secret-structure-great-talks/slides.md)：用现状与可能性的对照重新组织讲解。
+- [我的提示](authors/nancy-duarte/materials/secret-structure-great-talks/runbook.md)：观看、改稿与下次开口时可调用的自由卡片。
 
-- 作者目录下有多份材料时，三份文档是每份材料各自维护，还是在作者层共享？
-- Guide 采用文字稿还是大纲；Slides 是否保留原材料顺序，或按作者的方法重新组织同一份材料？
-- Runbook 的提醒如何从理解与练习中形成，以及三份文档如何相互核对、更新。
+## 组织与展示
 
-备课方法的通用入口是 [prep-system.md](../../../../docs/prep-system.md)；本课材料的职责与工作顺序按上述教师意图继续讨论后确定，不直接套用其他课程的课时与台本结构。
+同一作者放在 `authors/<author>/materials/`，每份材料分别维护来源与资源清单。职责名称与阅读器分开登记，可有多份同类文档。
 
-## 当前入口
+“材料笔记”复用 Guide，“方法演示”复用 Slides，“我的提示”复用自由卡片。网站使用公共目录卡片和阅读器；提示卡无需分钟标题或固定课时边界。
 
-课程页使用网站的公共目录卡片样式，配色集中在 `src/styles/tokens.css`；`courseLayout: surface-study` 暂作兼容字段。`organization: materials` 目前仅用于空课程入口，不预先规定作者目录下的材料层级，也尚未实现材料资源路由。讨论确定后，再建立实际作者、材料与对应文档。
+备课顺序与放行单位见 [课程材料契约](course-design/README.md)，通用方法以 [prep-system.md](../../../../docs/prep-system.md) 为准。

@@ -1,36 +1,18 @@
 <script setup>
 import { computed, ref, watch, watchEffect } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import { findTopic, findWeek, loadContent } from '../lib/catalog.js'
+import { loadContent } from '../lib/catalog.js'
+import { useResourceContext } from '../lib/useResourceContext.js'
 import { parseSlides } from '../lib/slides.js'
 import SlidesReader from '../components/slides/SlidesReader.vue'
 import NotFoundView from './NotFoundView.vue'
 
-const props = defineProps({ termId: String, courseId: String, weekId: String, topicId: String, page: String })
+const props = defineProps({ termId: String, courseId: String, weekId: String, topicId: String, authorId: String, materialId: String, resourceId: String, page: String })
 const router = useRouter()
-const isTopic = computed(() => Boolean(props.topicId))
-const context = computed(() => (
-  isTopic.value
-    ? findTopic(props.termId, props.courseId, props.topicId)
-    : findWeek(props.termId, props.courseId, props.weekId)
-))
-const unit = computed(() => context.value?.[isTopic.value ? 'topic' : 'week'])
-const sourcePath = computed(() => unit.value?.resources.slides)
+const { isMaterial, context, unit, resource, sourcePath, resourceTitle, unitLabel, materialsLabel, tabs, resourceLocation, tabLocation } = useResourceContext(props, 'slides')
 const source = ref(null)
 const loading = ref(false)
 const loadError = ref('')
-
-function resourceLocation(kind, extraParams = {}) {
-  return {
-    name: `${isTopic.value ? 'topic-' : ''}${kind}`,
-    params: {
-      termId: props.termId,
-      courseId: props.courseId,
-      [isTopic.value ? 'topicId' : 'weekId']: isTopic.value ? props.topicId : props.weekId,
-      ...extraParams,
-    },
-  }
-}
 
 const parsed = computed(() => {
   if (source.value === null) return { deck: null, error: '' }
@@ -60,7 +42,7 @@ const visiblePage = computed(() => currentLesson.value
   : currentPage.value)
 
 function routeToPage(page) {
-  router.replace(resourceLocation('slides', { page }))
+  router.replace(resourceLocation(resource.value.id, { page }))
 }
 
 function routeToVisiblePage(page) {
@@ -96,7 +78,7 @@ watch([deck, () => props.page], ([value]) => {
 
 watchEffect(() => {
   document.title = context.value && sourcePath.value
-    ? `${unit.value.label} · ${currentLesson.value ? `${currentLesson.value.label} · ` : ''}Slides ${visiblePage.value} · Teaching Hub`
+    ? `${unitLabel.value} · ${currentLesson.value ? `${currentLesson.value.label} · ` : ''}${resourceTitle.value} ${visiblePage.value} · Teaching Hub`
     : '未找到课件 · Teaching Hub'
 })
 </script>
@@ -107,18 +89,15 @@ watchEffect(() => {
       <nav class="breadcrumbs" aria-label="当前位置">
         <RouterLink to="/">首页</RouterLink><span aria-hidden="true">/</span>
         <RouterLink :to="{ name: 'course', params: { termId, courseId } }">{{ context.course.title }}</RouterLink><span aria-hidden="true">/</span>
-        <span>{{ unit.label }}</span><span aria-hidden="true">/</span><span aria-current="page">Slides</span>
+        <span>{{ unitLabel }}</span><span aria-hidden="true">/</span><span aria-current="page">{{ resourceTitle }}</span>
       </nav>
-      <nav class="resource-tabs" :aria-label="isTopic ? '本专题材料' : '本周材料'">
-        <RouterLink v-if="unit.resources.runbook" :to="resourceLocation('runbook')">台本</RouterLink>
-        <RouterLink :to="resourceLocation('slides', { page: currentPage })">Slides</RouterLink>
-        <RouterLink v-if="unit.resources.guide" :to="resourceLocation('guide')">学生指南</RouterLink>
-        <RouterLink v-if="isTopic && unit.resources.exams" :to="resourceLocation('exams')">真题</RouterLink>
+      <nav class="resource-tabs" :aria-label="materialsLabel">
+        <RouterLink v-for="tab in tabs" :key="tab.id" :to="tabLocation(tab, tab.id === resource.id ? currentPage : 1)">{{ tab.title }}</RouterLink>
       </nav>
     </div>
-    <p v-if="loading" class="reader-loading" role="status">正在打开课件…</p>
+    <p v-if="loading" class="reader-loading" role="status">正在打开{{ isMaterial ? resourceTitle : '课件' }}…</p>
     <section v-else-if="loadError || parsed.error" class="error-state" role="alert">
-      <h1>课件暂时无法读取</h1><p>{{ loadError || parsed.error }}</p>
+      <h1>{{ isMaterial ? resourceTitle : '课件' }}暂时无法读取</h1><p>{{ loadError || parsed.error }}</p>
     </section>
     <SlidesReader
       v-else-if="visibleDeck"
