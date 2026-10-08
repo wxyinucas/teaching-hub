@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watchEffect } from 'vue'
 import { RouterLink } from 'vue-router'
 import { findTopic, findWeek } from '../lib/catalog.js'
+import DerivativesDemo from '../components/demos/DerivativesDemo.vue'
 import FunctionLimitDemo from '../components/demos/FunctionLimitDemo.vue'
 import SequenceLimitDemo from '../components/demos/SequenceLimitDemo.vue'
 import NotFoundView from './NotFoundView.vue'
@@ -15,6 +16,7 @@ const props = defineProps({
 })
 
 const demoComponents = {
+  derivatives: DerivativesDemo,
   'function-limit': FunctionLimitDemo,
   'sequence-limit': SequenceLimitDemo,
 }

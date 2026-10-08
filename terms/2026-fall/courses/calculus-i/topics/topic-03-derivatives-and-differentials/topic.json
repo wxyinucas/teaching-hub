@@ -5,6 +5,13 @@
   "summary": "建立导数概念与求导系统，处理高阶导数、隐函数求导与微分，并完成 Topic 03 整合。",
   "lessonCount": 6,
   "order": 4,
+  "demos": [
+    {
+      "id": "derivatives",
+      "title": "导数与变化率",
+      "summary": "在同一入口切换局部变化显微镜与参数曲线，观察差商、导函数、左右导数及参数变化率。"
+    }
+  ],
   "resources": {
     "runbook": "runbook.md",
     "slides": "slides.md",

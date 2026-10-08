@@ -115,4 +115,29 @@ describe('demo fullscreen reader', () => {
 
     expect(wrapper.find('.demo-fullscreen').exists()).toBe(false)
   })
+
+  it('renders every demo declared by calculus topic T03', () => {
+    const term = catalog.terms.find((item) => item.id === '2026-fall')
+    const course = term?.courses.find((item) => item.id === 'calculus-i')
+    const topic = course?.topics.find((item) => item.id === 'topic-03-derivatives-and-differentials')
+    const selectors = {
+      derivatives: '.derivatives-demo',
+    }
+
+    expect(topic?.demos?.map((demo) => demo.id)).toEqual(Object.keys(selectors))
+
+    topic.demos.forEach((demo) => {
+      const demoWrapper = mount(DemoView, {
+        props: {
+          termId: term.id,
+          courseId: course.id,
+          topicId: topic.id,
+          demoId: demo.id,
+        },
+        global: { stubs: { RouterLink: RouterLinkStub } },
+      })
+      expect(demoWrapper.find(selectors[demo.id]).exists()).toBe(true)
+      demoWrapper.unmount()
+    })
+  })
 })
