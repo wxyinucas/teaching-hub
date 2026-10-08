@@ -15,6 +15,7 @@
   "resources": {
     "runbook": "runbook.md",
     "slides": "slides.md",
+    "guide": "guide.md",
     "exams": {
       "scope": "course",
       "file": "exams/topics/topic-03-derivatives-and-differentials.tex"
