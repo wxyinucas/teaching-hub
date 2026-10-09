@@ -1642,9 +1642,10 @@ $$
     $$
     \left\{
     \begin{aligned}
+    u&=g(x),\\
     \Delta u&=g(x+\Delta x)-g(x),\\
-    \Delta y&=f(u+\Delta u)-f(u),
-    \qquad u=g(x).
+    \Delta y&=f(u+\Delta u)-f(u)\\
+    &=f(g(x+\Delta x))-f(g(x)).
     \end{aligned}
     \right.
     $$
@@ -1658,7 +1659,18 @@ $$
     \quad\text{时的极限}.
     $$
 
-    但复合结构天然给出了两段差商：外层函数对应 $\Delta y/\Delta u$，内层函数对应 $\Delta u/\Delta x$。为了把外层差商的分母从 $\Delta u$ 接回原变量的增量 $\Delta x$，当 $\Delta u\ne0$ 时，将两段差商相乘：
+  - 但复合结构天然给出了两段差商：
+
+    $$
+    \left\{
+    \begin{aligned}
+    \frac{\Delta y}{\Delta u}&:\quad\text{外层函数的差商},\\
+    \frac{\Delta u}{\Delta x}&:\quad\text{内层函数的差商}.
+    \end{aligned}
+    \right.
+    $$
+
+    为了把外层差商的分母从 $\Delta u$ 接回原变量的增量 $\Delta x$，当 $\Delta u\ne0$ 时，将两段差商相乘：
 
     $$
     \frac{\Delta y}{\Delta u}
@@ -1669,7 +1681,12 @@ $$
 
     中间的 $\Delta u$ 在这个差商恒等式中消去，于是两段变化率连接成总变化率。不过，$\Delta x\ne0$ 时仍可能出现 $\Delta u=0$，此时不能写 $\Delta y/\Delta u$，所以还需要补全这一种情况。
 
-  - **严格补全：处理 $\Delta u=0$**。定义辅助函数
+  - **严格补全：处理 $\Delta u=0$**。
+    - 思路：本质上，
+      - 是因为 $\Delta u=0$时，函数$\frac{\Delta y}{\Delta u}$ 不连续（定义域非法）了；
+      - 那么我们把它连续化。
+
+    - 定义辅助函数
 
     $$
     \Phi(t)=
