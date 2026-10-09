@@ -610,47 +610,342 @@ $$
     \boxed{\theta=\arctan\frac34}.
     $$
 
-### 积法则与商法则
+### 积、复合与商的求导
 
-19. **2020 年真题的第一步**　设 $y=x^2e^x$，先求一阶导数；完整的高阶导数问题留到第四次课。
+三类结构对应三条运算法则。以下公式默认所涉及的函数在当前点可导，且表达式在当前点有定义：
+
+$$
+\left\{
+\begin{aligned}
+(fg)'(x)
+  &=f'(x)g(x)+f(x)g'(x),\\
+\bigl(f(g(x))\bigr)'
+  &=f'(g(x))g'(x),\\
+\left(\frac fg\right)'(x)
+  &=\frac{f'(x)g(x)-f(x)g'(x)}{[g(x)]^2},
+  \qquad g(x)\ne0.
+\end{aligned}
+\right.
+$$
+
+其中，复合函数求导还要求内层函数值 $g(x)$ 落在外层函数 $f$ 的可导范围内。
+
+#### 函数的乘积
+
+积法则处理两个因子同时随 $x$ 变化的情形。求导时，一个因子求导、另一个因子保留原样；交换角色再做一次，最后相加。
+
+19. **教材第 68 页例 2**　设
+
+    $$
+    f(x)=e^x(\cos x+\sin x),
+    $$
+
+    求 $f'(1)$。
+
+    参考解答：
+
+    $$
+    \begin{aligned}
+    f'(x)
+    &=e^x(\cos x+\sin x)
+      +e^x(\cos x-\sin x)\\
+    &=2e^x\cos x,
+    \end{aligned}
+    $$
+
+    因此
+
+    $$
+    \boxed{f'(1)=2e\cos1}.
+    $$
+
+20. **教材习题 2-2 第 1 题选做（第 73 页）**　先圈出每个乘积的两个因子，再求导。
+
+    $$
+    \left\{
+    \begin{aligned}
+    \text{(6)}\quad y&=\sin x\cos x,\\
+    \text{(7)}\quad y&=x^3\ln x,\\
+    \text{(9)}\quad y&=(1+x)(2-3x).
+    \end{aligned}
+    \right.
+    $$
 
     参考结果：
 
     $$
-    y'=e^x(x^2+2x).
+    \left\{
+    \begin{aligned}
+    \text{(6)}\quad y'&=\cos^2x-\sin^2x,\\
+    \text{(7)}\quad y'&=x^2(3\ln x+1),\qquad x>0,\\
+    \text{(9)}\quad y'&=-1-6x.
+    \end{aligned}
+    \right.
     $$
 
-20. **课堂练习**　仿照 $\tan x=\sin x/\cos x$ 的推导，由商法则求 $\cot x$ 的导数，并写出定义域条件。
+    第 (9) 题也可以先展开为多项式再求导，两种路线结果相同。
+
+回看第 13 题：积法则给出的是方便调用的充分条件。如果某个因子不可导，不能直接调用积法则，但具体的乘积仍可能在该点可导，此时应回到导数定义。
+
+#### 复合函数
+
+把复合函数写成
+
+$$
+x\longrightarrow u=g(x)
+\longrightarrow y=f(u)=f(g(x)).
+$$
+
+链式法则说明，变化率沿这条路径逐段传递并相乘：
+
+$$
+\frac{dy}{dx}
+=\frac{dy}{du}\frac{du}{dx}
+=f'(g(x))g'(x).
+$$
+
+21. **先辨认“相乘”还是“复合”**　比较
+
+    $$
+    \left\{
+    \begin{aligned}
+    y_1&=2\sin x,\\
+    y_2&=\sin2x.
+    \end{aligned}
+    \right.
+    $$
+
+    $y_1$ 是常数与函数相乘；$y_2$ 是 $u=2x$ 与 $y=\sin u$ 的复合。因此
+
+    $$
+    \left\{
+    \begin{aligned}
+    y_1'&=2\cos x,\\
+    y_2'&=2\cos2x.
+    \end{aligned}
+    \right.
+    $$
+
+22. **教材第 71 页例 7**　求
+
+    $$
+    y=\sin(\cos x)
+    $$
+
+    的导数。
+
+    令 $u=\cos x$，则 $y=\sin u$。因此
+
+    $$
+    \boxed{
+    y'=\cos u\,u'
+      =-\sin x\cos(\cos x)
+    }.
+    $$
+
+23. **教材第 71 页例 9：实数次数的幂函数**　设 $\alpha\in\mathbb R$。当 $x>0$ 时，
+
+    $$
+    x^\alpha=e^{\alpha\ln x}.
+    $$
+
+    由链式法则，
+
+    $$
+    \begin{aligned}
+    (x^\alpha)'
+    &=(e^{\alpha\ln x})'\\
+    &=e^{\alpha\ln x}\frac\alpha x\\
+    &=\alpha x^{\alpha-1}.
+    \end{aligned}
+    $$
+
+    因此
+
+    $$
+    \boxed{(x^\alpha)'=\alpha x^{\alpha-1}},
+    \qquad x>0.
+    $$
+
+    条件 $x>0$ 来自表示式中的 $\ln x$。正整数幂的公式在全体实数上成立；某个具体指数若允许更大的实数定义域，应按该函数本身另行判断。
+
+24. **教材习题 2-2 第 5 题选做（第 73 页）**　先写出每题的内函数与外函数，再求导。
+
+    $$
+    \left\{
+    \begin{aligned}
+    \text{(1)}\quad y&=\ln(4+x^2),\\
+    \text{(2)}\quad y&=\sin(3x+2),\\
+    \text{(3)}\quad y&=(2x+5)^{100}.
+    \end{aligned}
+    \right.
+    $$
 
     参考结果：
 
     $$
-    (\cot x)'=-\csc^2x,
-    \qquad x\ne k\pi.
+    \left\{
+    \begin{aligned}
+    \text{(1)}\quad y'&=\frac{2x}{4+x^2},\\[.4em]
+    \text{(2)}\quad y'&=3\cos(3x+2),\\
+    \text{(3)}\quad y'&=200(2x+5)^{99}.
+    \end{aligned}
+    \right.
     $$
 
-21. **独立代表题**　设
+#### 函数的商
+
+商法则可以看成积法则与链式法则的组合。先写成
+
+$$
+\frac{f(x)}{g(x)}
+=f(x)\cdot\frac1{g(x)},
+$$
+
+再把第二个因子理解为“先算 $g(x)$，再取倒数”。
+
+25. **教材第 68 页例 3：比较求导路线**　求
 
     $$
-    F(x)=\frac{(x^2+1)\sin x}{e^x}.
+    y=\frac{x-1}{x+1}
     $$
 
-    先写出表达式的结构路径，再求导。
+    的导数。
 
-    参考结果：最外层是商，分子是积，$x^2+1$ 是线性组合，并且
+    可以直接使用商法则，也可以先写成
 
     $$
-    F'(x)
-    =\frac{2x\sin x+(x^2+1)(\cos x-\sin x)}{e^x}.
+    y=(x-1)\frac1{x+1},
     $$
 
-回看第 13 题：积法则提供一组方便的充分条件，但具体乘积仍可能在某个因子不可导时可导。公式的条件不满足时，应回到定义。
+    再使用积法则和链式法则。两条路线均得到
+
+    $$
+    \boxed{y'=\frac2{(x+1)^2}},
+    \qquad x\ne-1.
+    $$
+
+    商法则还可以直接由定义得到。记
+
+    $$
+    \Delta f=f(x+\Delta x)-f(x),
+    \qquad
+    \Delta g=g(x+\Delta x)-g(x),
+    $$
+
+    则
+
+    $$
+    \frac{\Delta(f/g)}{\Delta x}
+    =
+    \frac{
+      g(x)\dfrac{\Delta f}{\Delta x}
+      -f(x)\dfrac{\Delta g}{\Delta x}
+    }{g(x)[g(x)+\Delta g]}.
+    $$
+
+    当 $\Delta x\to0$ 时，上式趋于
+
+    $$
+    \frac{f'(x)g(x)-f(x)g'(x)}{[g(x)]^2}.
+    $$
+
+    两种方法的起点不同：运算法则把商拆成“乘积＋倒数复合”，定义法直接追踪函数增量；它们得到的是同一结果。
+
+26. **教材第 68 页例 4**　由 $\tan x=\sin x/\cos x$，
+
+    $$
+    \begin{aligned}
+    (\tan x)'
+    &=\frac{\cos x\cos x-\sin x(-\sin x)}{\cos^2x}\\
+    &=\sec^2x,
+    \end{aligned}
+    $$
+
+    其中 $x\ne\pi/2+k\pi$，$k\in\mathbb Z$。同理，
+
+    $$
+    \left\{
+    \begin{aligned}
+    (\cot x)'&=-\csc^2x,\\
+    (\sec x)'&=\sec x\tan x,\\
+    (\csc x)'&=-\csc x\cot x.
+    \end{aligned}
+    \right.
+    $$
+
+    $\cot x,\csc x$ 要求 $x\ne k\pi$；$\tan x,\sec x$ 要求 $x\ne\pi/2+k\pi$。
+
+27. **教材习题 2-2 第 1 题选做（第 73 页）**　求下列函数的导数，并在第一步保留商法则的分子顺序与分母平方：
+
+    $$
+    \left\{
+    \begin{aligned}
+    \text{(10)}\quad y&=\frac{1-e^x}{1+e^x},\\[.5em]
+    \text{(11)}\quad y&=\frac{1+\sin x}{x+\cos x}.
+    \end{aligned}
+    \right.
+    $$
+
+    参考结果：
+
+    $$
+    \left\{
+    \begin{aligned}
+    \text{(10)}\quad y'&=-\frac{2e^x}{(1+e^x)^2},\\[.7em]
+    \text{(11)}\quad y'&=\frac{x\cos x}{(x+\cos x)^2},
+      \qquad x+\cos x\ne0.
+    \end{aligned}
+    \right.
+    $$
+
+#### 截至本次课可调用的公式
+
+基本初等函数的导数公式为
+
+$$
+\begin{array}{c|c|c}
+\text{函数} & \text{导数} & \text{条件}\\
+\hline
+C & 0 & x\in\mathbb R\\
+x^n\ (n\in\mathbb N^+) & nx^{n-1} & x\in\mathbb R\\
+x^\alpha\ (\alpha\in\mathbb R) & \alpha x^{\alpha-1} & x>0\\
+1/x & -1/x^2 & x\ne0\\
+\sqrt x & 1/(2\sqrt x) & x>0\\
+\sin x & \cos x & x\in\mathbb R\\
+\cos x & -\sin x & x\in\mathbb R\\
+\tan x & \sec^2x & \cos x\ne0\\
+\cot x & -\csc^2x & \sin x\ne0\\
+\sec x & \sec x\tan x & \cos x\ne0\\
+\csc x & -\csc x\cot x & \sin x\ne0\\
+a^x & a^x\ln a & a>0,\ a\ne1\\
+e^x & e^x & x\in\mathbb R\\
+\log_a x & 1/(x\ln a) & x>0,\ a>0,\ a\ne1\\
+\ln x & 1/x & x>0
+\end{array}
+$$
+
+基本公式给出各个基本函数的导数，运算法则负责把它们连接起来：
+
+$$
+\left\{
+\begin{aligned}
+(af+bg)'&=af'+bg',\\
+(fg)'&=f'g+fg',\\
+\bigl(f(g(x))\bigr)'&=f'(g(x))g'(x),\\
+\left(\frac fg\right)'&=\frac{f'g-fg'}{g^2},
+\qquad g(x)\ne0.
+\end{aligned}
+\right.
+$$
+
+其中 $a,b$ 为常数。调用公式时仍须核对当前点的定义域与可导条件；反三角函数的导数将在反函数求导之后补入。
 
 ## 第三次课：题目
 
-### 链式法则与混合结构
+### 链式法则的进一步应用与混合结构
 
-课前先恢复一次积法则：
+第二次课已经建立链式法则与实数次数幂函数的导数公式。本节先恢复一次积法则：
 
 $$
 F(x)=(x^2+1)e^x,
@@ -658,52 +953,7 @@ F(x)=(x^2+1)e^x,
 F'(x)=e^x(x^2+2x+1).
 $$
 
-链式法则建立后，一般实数幂函数的公式才统一进入工具箱。这里调用的前提只有第二次课已经得到的
-
-$$
-(e^v)'=e^v,
-\qquad
-(\ln x)'=\frac1x,
-$$
-
-以及刚刚建立的链式法则。对 $x>0$，正底数的实数幂具有指数—对数表示
-
-$$
-x^\alpha=e^{\alpha\ln x},
-$$
-
-其中 $\alpha\in\mathbb R$ 是常数。令
-
-$$
-u=\ln x,
-\qquad
-v=\alpha u,
-\qquad
-y=e^v,
-$$
-
-则
-
-$$
-u'=\frac1x,
-\qquad
-v'=\frac\alpha x,
-$$
-
-再沿复合路径使用链式法则：
-
-$$
-\begin{aligned}
-(x^\alpha)'
-&=(e^{\alpha\ln x})'\\
-&=e^{\alpha\ln x}\cdot\frac{\alpha}{x}\\
-&=\alpha x^{\alpha-1}.
-\end{aligned}
-$$
-
-这里的 $x>0$ 来自 $\ln x$ 的定义域。正整数幂在全体实数上的公式仍由二项式展开保证；其他具体指数若允许更大的实数定义域，应按函数本身另行判断，不能由上述含 $\ln x$ 的表示自动覆盖。
-
-22. **基础练习**　求下列函数的导数，并标出每一层的内、外函数：
+28. **基础练习**　求下列函数的导数，并标出每一层的内、外函数：
 
     1. $y=\sin2x$；
     2. $y=\ln(1+x)$；
@@ -731,7 +981,7 @@ $$
     =3x\sqrt{1+x^2}.
     $$
 
-23. **独立代表题**　设
+29. **独立代表题**　设
 
     $$
     H(x)=e^{x^2}\sin(1+x).
@@ -749,7 +999,7 @@ $$
 
 ### 反函数求导
 
-24. **例题**　设
+30. **例题**　设
 
     $$
     f(x)=x^3+x.
@@ -763,7 +1013,7 @@ $$
     \boxed{(f^{-1})'(2)=\frac1{f'(1)}=\frac14}.
     $$
 
-25. **2024 年选择题**　设
+31. **2024 年选择题**　设
 
     $$
     y=f(x)=\sin x-2x,
@@ -787,7 +1037,7 @@ $$
 
 ### 对数求导
 
-26. **2021 年计算题的第一阶部分**　设 $x>0$，
+32. **2021 年计算题的第一阶部分**　设 $x>0$，
 
     $$
     y=x^x.
@@ -801,7 +1051,7 @@ $$
     \boxed{y'=x^x(\ln x+1)}.
     $$
 
-27. **独立代表题**　求
+33. **独立代表题**　求
 
     $$
     y=(1+x^2)^{\sin x}
@@ -822,7 +1072,7 @@ $$
     }.
     $$
 
-28. **选做**　设 $x>1$，
+34. **选做**　设 $x>1$，
 
     $$
     y=
@@ -845,7 +1095,7 @@ $$
 
 ### 分段函数综合题
 
-29. **2024 年计算题**　确定常数 $a,b$，使
+35. **2024 年计算题**　确定常数 $a,b$，使
 
     $$
     f(x)=
