@@ -48,7 +48,7 @@ $$
 \begin{gathered}
 \boxed{
   \begin{gathered}
-  C,\ x^\alpha,\ \sin x,\ \cos x,\ a^x,\ \ln x\\[-.15em]
+  C,\ x^n,\ x^{-1},\ \sqrt x,\ \sin x,\ a^x,\ \ln x\\[-.15em]
   \text{基本部件（叶子）}
   \end{gathered}}
 \longrightarrow
@@ -78,32 +78,34 @@ $$
 与连续性的组织方式相同：先固定基本部件，再依靠运算法则覆盖具体表达式。
 
 ---
-# 四个极限锚点
-
-当 $u\to0$ 时：
+# 基本公式的两条来源线
 
 $$
-\begin{array}{rcl}
-\dfrac{(1+u)^\alpha-1}{u}\to\alpha
-&\Longrightarrow&
-(x^\alpha)'=\alpha x^{\alpha-1}
-\\[.9em]
-\dfrac{\sin u}{u}\to1
-&\Longrightarrow&
-(\sin x)'=\cos x
-\\[.9em]
-\dfrac{a^u-1}{u}\to\ln a
-&\Longrightarrow&
-(a^x)'=a^x\ln a
-\\[.9em]
-\dfrac{\ln(1+u)}{u}\to1
-&\Longrightarrow&
-(\ln x)'=\dfrac1x
+\begin{array}{c@{\qquad\qquad}c}
+\begin{gathered}
+\text{第一重要极限}\\[.25em]
+\boxed{\dfrac{\sin u}{u}\to1}\\[.7em]
+\Downarrow\\[.45em]
+\sin x,\cos x\text{ 的导数}
+\end{gathered}
+&
+\begin{gathered}
+\text{第二重要极限}\\[.25em]
+\boxed{(1+u)^{1/u}\to e}\\[.55em]
+\Downarrow\ {\scriptstyle \ln\text{ 连续}}\\[.35em]
+\boxed{\dfrac{\ln(1+u)}u\to1}\\[.55em]
+\Downarrow\ {\scriptstyle \exp,\ln\text{ 互逆}}\\[.35em]
+\boxed{\dfrac{e^u-1}u\to1}\\[.55em]
+\Downarrow\ {\scriptstyle a^u=e^{u\ln a}}\\[.35em]
+\boxed{\dfrac{a^u-1}u\to\ln a}\\[.55em]
+\Downarrow\\[.35em]
+\ln x,\ e^x,\ a^x\text{ 的导数}
+\end{gathered}
 \end{array}
 $$
 
 <!-- footer -->
-极限锚点只说明基本公式从哪里来。形成公式表以后，具体函数按照表达式结构递归求导。
+右侧只使用函数型第二重要极限，以及指数、对数函数连续、互逆和满足运算律的既有理论；没有调用导数。
 
 ---
 <!-- lesson: 第三次课 -->
@@ -133,6 +135,28 @@ $$
 
 <!-- footer -->
 每经过一层，乘上这一层的局部变化率；沿同一关系反向走时，在原导数非零处取倒数。
+
+---
+# 一般实数幂：现在再来证明
+
+对 $x>0$，
+
+$$
+\begin{aligned}
+x^\alpha&=e^{\alpha\ln x},\\[.35em]
+(x^\alpha)'
+&=(e^{\alpha\ln x})'\\
+&=e^{\alpha\ln x}\cdot\frac{\alpha}{x}\\
+&=\alpha x^{\alpha-1}.
+\end{aligned}
+$$
+
+$$
+\boxed{(x^\alpha)'=\alpha x^{\alpha-1}\qquad(x>0)}
+$$
+
+<!-- footer -->
+指数函数、对数函数与链式法则已经齐备；正整数幂在全体实数上的结论仍由二项式展开保证。
 
 ---
 # 对数求导：先改写结构
