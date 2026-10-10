@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import DerivativeMicroscopeDemo from './DerivativeMicroscopeDemo.vue'
+import InverseDerivativeDemo from './InverseDerivativeDemo.vue'
 import ParametricDerivativeDemo from './ParametricDerivativeDemo.vue'
 
 const scene = ref(1)
@@ -21,9 +22,16 @@ const scene = ref(1)
         :aria-current="scene === 2 ? 'page' : undefined"
         @click="scene = 2"
       >2 · 参数曲线的斜率</button>
+      <button
+        type="button"
+        :class="{ 'is-active': scene === 3 }"
+        :aria-current="scene === 3 ? 'page' : undefined"
+        @click="scene = 3"
+      >3 · 反函数与斜率</button>
     </nav>
 
     <DerivativeMicroscopeDemo v-if="scene === 1" />
-    <ParametricDerivativeDemo v-else />
+    <ParametricDerivativeDemo v-else-if="scene === 2" />
+    <InverseDerivativeDemo v-else />
   </section>
 </template>
