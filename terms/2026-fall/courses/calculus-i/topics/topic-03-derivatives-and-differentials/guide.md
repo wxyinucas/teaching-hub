@@ -610,9 +610,9 @@ $$
     \boxed{\theta=\arctan\frac34}.
     $$
 
-### 积、复合与商的求导
+### 积与复合的求导
 
-三类结构对应三条运算法则。以下公式默认所涉及的函数在当前点可导，且表达式在当前点有定义：
+两类结构对应两条运算法则。以下公式默认所涉及的函数在当前点可导，且表达式在当前点有定义：
 
 $$
 \left\{
@@ -620,10 +620,7 @@ $$
 (fg)'(x)
   &=f'(x)g(x)+f(x)g'(x),\\
 \bigl(f(g(x))\bigr)'
-  &=f'(g(x))g'(x),\\
-\left(\frac fg\right)'(x)
-  &=\frac{f'(x)g(x)-f(x)g'(x)}{[g(x)]^2},
-  \qquad g(x)\ne0.
+  &=f'(g(x))g'(x).
 \end{aligned}
 \right.
 $$
@@ -793,7 +790,87 @@ $$
     \right.
     $$
 
-#### 函数的商
+## 第三次课：题目
+
+本次把已经证明的复合函数求导法则正式命名为链式法则，补齐实数幂公式在负底数上的适用边界；随后依次处理商法则、反函数与反三角函数，并把已有法则递归用于更多因子、更多复合层次和幂指函数。
+
+### 开场工具箱：链式法则与负底数有理数次幂
+
+设
+
+$$
+u=g(x),
+\qquad
+y=f(u)=f(g(x)).
+$$
+
+若内层函数 $g$ 在 $x_0$ 处可导，外层函数 $f$ 在 $u_0=g(x_0)$ 处可导，则复合函数 $f\circ g$ 在 $x_0$ 处可导，并且
+
+$$
+\boxed{
+(f\circ g)'(x_0)
+=f'(g(x_0))g'(x_0)
+}.
+$$
+
+这条结论称为**链式法则**。变化沿
+
+$$
+x\longrightarrow u=g(x)\longrightarrow y=f(u)
+$$
+
+逐层传递，总变化率等于每一段变化率的乘积。常用记法
+
+$$
+\frac{dy}{dx}
+=\frac{dy}{du}\frac{du}{dx}
+$$
+
+用于提示“沿链条逐层求导并相乘”；其中的 $d$ 不是普通数，不能只把上式理解为分数的机械约分。
+
+对一般实数 $\alpha$，表示式
+
+$$
+x^\alpha=e^{\alpha\ln x}
+$$
+
+统一覆盖 $x>0$。当
+
+$$
+\alpha=\frac pq,
+\qquad
+p\in\mathbb Z,
+\quad
+q\in\mathbb N^+,
+\quad
+p,q\text{ 互质},
+$$
+
+且 $q$ 为奇数时，负数有唯一的实 $q$ 次方根，因此对 $x<0$ 可以定义
+
+$$
+x^{p/q}=\left(\sqrt[q]{x}\right)^p.
+$$
+
+此时
+
+$$
+x^{p/q}=(-1)^p(-x)^{p/q},
+$$
+
+由正底数幂函数公式和链式法则仍可得到
+
+$$
+\boxed{
+\left(x^{p/q}\right)'
+=\frac pqx^{p/q-1}
+},
+\qquad x<0,\quad q\text{ 为奇数}.
+$$
+
+判断定义域时必须先把 $p/q$ 约成最简分数。例如 $1/3=2/6$，不能根据非最简形式中的偶数分母 $6$ 得出错误结论。若最简分数的分母为偶数，或指数为无理数，负底数通常不定义为实值函数；$x=0$ 是否有定义、是否可导，需要按具体指数另行判断。
+
+### 函数的商
 
 商法则可以看成积法则与链式法则的组合。先写成
 
@@ -803,6 +880,15 @@ $$
 $$
 
 再把第二个因子理解为“先算 $g(x)$，再取倒数”。
+
+若 $f,g$ 在当前点可导且 $g(x)\ne0$，则
+
+$$
+\boxed{
+\left(\frac fg\right)'(x)
+=\frac{f'(x)g(x)-f(x)g'(x)}{[g(x)]^2}
+}.
+$$
 
 25. **教材第 68 页例 3：比较求导路线**　求
 
@@ -899,107 +985,20 @@ $$
     \right.
     $$
 
-#### 截至本次课可调用的公式
+### 反函数与反三角函数
 
-基本初等函数的导数公式为
-
-$$
-\begin{array}{c|c|c}
-\text{函数} & \text{导数} & \text{条件}\\
-\hline
-C & 0 & x\in\mathbb R\\
-x^n\ (n\in\mathbb N^+) & nx^{n-1} & x\in\mathbb R\\
-x^\alpha\ (\alpha\in\mathbb R) & \alpha x^{\alpha-1} & x>0\\
-1/x & -1/x^2 & x\ne0\\
-\sqrt x & 1/(2\sqrt x) & x>0\\
-\sin x & \cos x & x\in\mathbb R\\
-\cos x & -\sin x & x\in\mathbb R\\
-\tan x & \sec^2x & \cos x\ne0\\
-\cot x & -\csc^2x & \sin x\ne0\\
-\sec x & \sec x\tan x & \cos x\ne0\\
-\csc x & -\csc x\cot x & \sin x\ne0\\
-a^x & a^x\ln a & a>0,\ a\ne1\\
-e^x & e^x & x\in\mathbb R\\
-\log_a x & 1/(x\ln a) & x>0,\ a>0,\ a\ne1\\
-\ln x & 1/x & x>0
-\end{array}
-$$
-
-基本公式给出各个基本函数的导数，运算法则负责把它们连接起来：
+若函数 $f$ 在区间 $I$ 上连续且严格单调，$x_0$ 是 $I$ 的内点，并且 $f$ 在 $x_0$ 处可导、$f'(x_0)\ne0$，令 $y_0=f(x_0)$，则
 
 $$
-\left\{
-\begin{aligned}
-(af+bg)'&=af'+bg',\\
-(fg)'&=f'g+fg',\\
-\bigl(f(g(x))\bigr)'&=f'(g(x))g'(x),\\
-\left(\frac fg\right)'&=\frac{f'g-fg'}{g^2},
-\qquad g(x)\ne0.
-\end{aligned}
-\right.
+\boxed{
+(f^{-1})'(y_0)
+=\frac1{f'(x_0)}
+}.
 $$
 
-其中 $a,b$ 为常数。调用公式时仍须核对当前点的定义域与可导条件；反三角函数的导数将在反函数求导之后补入。
+原函数的导数在 $x_0$ 处计算，反函数的导数在对应的输出位置 $y_0$ 处计算；两个横坐标通常不是同一个数。
 
-## 第三次课：题目
-
-### 链式法则的进一步应用与混合结构
-
-第二次课已经建立链式法则与实数次数幂函数的导数公式。本节先恢复一次积法则：
-
-$$
-F(x)=(x^2+1)e^x,
-\qquad
-F'(x)=e^x(x^2+2x+1).
-$$
-
-28. **基础练习**　求下列函数的导数，并标出每一层的内、外函数：
-
-    1. $y=\sin2x$；
-    2. $y=\ln(1+x)$；
-    3. $y=e^{\sin(x^2)}$；
-    4. $y=(1+x^2)^{3/2}$。
-
-    参考结果：
-
-    $$
-    (\sin2x)'=2\cos2x,
-    $$
-
-    $$
-    \bigl(\ln(1+x)\bigr)'=\frac1{1+x},
-    \qquad x>-1,
-    $$
-
-    $$
-    \left(e^{\sin(x^2)}\right)'
-    =2xe^{\sin(x^2)}\cos(x^2).
-    $$
-
-    $$
-    \left((1+x^2)^{3/2}\right)'
-    =3x\sqrt{1+x^2}.
-    $$
-
-29. **独立代表题**　设
-
-    $$
-    H(x)=e^{x^2}\sin(1+x).
-    $$
-
-    先说明最外层及两个分支的结构，再求导。
-
-    参考结果：
-
-    $$
-    H'(x)
-    =e^{x^2}
-    \bigl[2x\sin(1+x)+\cos(1+x)\bigr].
-    $$
-
-### 反函数求导
-
-30. **例题**　设
+28. **例题**　设
 
     $$
     f(x)=x^3+x.
@@ -1013,7 +1012,7 @@ $$
     \boxed{(f^{-1})'(2)=\frac1{f'(1)}=\frac14}.
     $$
 
-31. **2024 年选择题**　设
+29. **2024 年选择题**　设
 
     $$
     y=f(x)=\sin x-2x,
@@ -1035,7 +1034,235 @@ $$
 
     右侧的 $x$ 表示与当前 $y$ 对应的原变量位置；不需要先把反函数显式解出。
 
-### 对数求导
+正弦、余弦和正切在整个实数轴上并非一一对应，必须先限制到单调区间，再把反函数求导公式用于对应的主值区间。例如，把 $F(t)=\sin t$ 限制在 $[-\pi/2,\pi/2]$ 上，令 $t=\arcsin x$，则当 $|x|<1$ 时，
+
+$$
+(\arcsin x)'
+=\frac1{\cos t}
+=\frac1{\sqrt{1-x^2}}.
+$$
+
+把 $F(t)=\tan t$ 限制在 $(-\pi/2,\pi/2)$ 上，则
+
+$$
+(\arctan x)'
+=\frac1{\sec^2t}
+=\frac1{1+x^2}.
+$$
+
+四个反三角函数的导数为
+
+$$
+\begin{array}{rcll}
+(\arcsin x)'&=&\dfrac1{\sqrt{1-x^2}},&|x|<1,\\[.8em]
+(\arccos x)'&=&-\dfrac1{\sqrt{1-x^2}},&|x|<1,\\[.8em]
+(\arctan x)'&=&\dfrac1{1+x^2},&x\in\mathbb R,\\[.8em]
+(\operatorname{arccot}x)'&=&-\dfrac1{1+x^2},&x\in\mathbb R.
+\end{array}
+$$
+
+这里余弦限制在 $[0,\pi]$ 上定义反余弦；本课程把余切限制在 $(0,\pi)$ 上定义反余切。
+
+### 截至本次课可调用的公式
+
+基本初等函数的导数公式为
+
+$$
+\begin{array}{c|c|c}
+\text{函数} & \text{导数} & \text{条件}\\
+\hline
+C & 0 & x\in\mathbb R\\
+x^n\ (n\in\mathbb N^+) & nx^{n-1} & x\in\mathbb R\\
+x^\alpha\ (\alpha\in\mathbb R) & \alpha x^{\alpha-1} & x>0\\
+x^{p/q} & \dfrac pqx^{p/q-1}
+  & x<0,\ p,q\text{ 互质},\ q\text{ 为正奇数}\\
+1/x & -1/x^2 & x\ne0\\
+\sqrt x & 1/(2\sqrt x) & x>0\\
+\sin x & \cos x & x\in\mathbb R\\
+\cos x & -\sin x & x\in\mathbb R\\
+\tan x & \sec^2x & \cos x\ne0\\
+\cot x & -\csc^2x & \sin x\ne0\\
+\sec x & \sec x\tan x & \cos x\ne0\\
+\csc x & -\csc x\cot x & \sin x\ne0\\
+\arcsin x & 1/\sqrt{1-x^2} & |x|<1\\
+\arccos x & -1/\sqrt{1-x^2} & |x|<1\\
+\arctan x & 1/(1+x^2) & x\in\mathbb R\\
+\operatorname{arccot}x & -1/(1+x^2) & x\in\mathbb R\\
+a^x & a^x\ln a & a>0,\ a\ne1\\
+e^x & e^x & x\in\mathbb R\\
+\log_a x & 1/(x\ln a) & x>0,\ a>0,\ a\ne1\\
+\ln x & 1/x & x>0
+\end{array}
+$$
+
+第一条实数幂公式用 $e^{\alpha\ln x}$ 统一处理任意实数指数，因此要求 $x>0$；下一行单独登记负底数且最简分母为奇数的有理数指数。$x=0$ 仍须按具体指数另行判断。
+
+基本公式给出各个基本函数的导数，运算法则负责把它们连接起来：
+
+$$
+\left\{
+\begin{aligned}
+(af+bg)'&=af'+bg',\\
+(fg)'&=f'g+fg',\\
+\left(\frac fg\right)'&=\frac{f'g-fg'}{g^2},
+\qquad g(x)\ne0,\\
+(f\circ g)'&=(f'\circ g)g'.
+\end{aligned}
+\right.
+$$
+
+其中 $a,b$ 为常数。调用公式时仍须核对当前点的定义域与可导条件；复合时，内层函数值还必须落在外层函数的可导范围内。
+
+### 旧法则的递归：三个因子与三层复合
+
+三个因子的乘积可先分组为 $(fg)h$，连续使用两次积法则：
+
+$$
+\boxed{
+(fgh)'=f'gh+fg'h+fgh'
+}.
+$$
+
+三层复合则沿唯一的输入路径逐层使用链式法则：
+
+$$
+\boxed{
+\bigl(f(g(h(x)))\bigr)'
+=f'(g(h(x)))g'(h(x))h'(x)
+}.
+$$
+
+30. **三个函数相乘**　求
+
+    $$
+    y=xe^x\sin x
+    $$
+
+    的导数。先保留三项结构，再整理结果：
+
+    $$
+    \begin{aligned}
+    y'
+    &=e^x\sin x+xe^x\sin x+xe^x\cos x\\
+    &=\boxed{
+    e^x\bigl[(1+x)\sin x+x\cos x\bigr]
+    }.
+    \end{aligned}
+    $$
+
+31. **三层复合函数**　求
+
+    $$
+    y=e^{\sin(x^2)}
+    $$
+
+    的导数。输入路径为
+
+    $$
+    x\longrightarrow x^2
+    \longrightarrow\sin(x^2)
+    \longrightarrow e^{\sin(x^2)},
+    $$
+
+    因而
+
+    $$
+    \boxed{
+    y'=e^{\sin(x^2)}\cos(x^2)\cdot2x
+    }.
+    $$
+
+### 幂指函数的指数—对数恒等改写
+
+设 $f,g$ 在所讨论的区间上可导，并且 $f(x)>0$。利用
+
+$$
+\boxed{
+[f(x)]^{g(x)}
+=e^{g(x)\ln f(x)}
+}
+$$
+
+可以把幂指函数还原成“复合—乘积—复合”的已有结构。令
+
+$$
+w(x)=g(x)\ln f(x),
+$$
+
+则
+
+$$
+w'(x)
+=g'(x)\ln f(x)
++g(x)\frac{f'(x)}{f(x)},
+$$
+
+从而
+
+$$
+\boxed{
+\frac{d}{dx}[f(x)]^{g(x)}
+=[f(x)]^{g(x)}
+\left[
+g'(x)\ln f(x)
++g(x)\frac{f'(x)}{f(x)}
+\right]
+}.
+$$
+
+用两个退化情形比较这个通式与旧结论：
+
+- **固定指数，只有底数变化**。令
+
+  $$
+  g(x)\equiv\alpha,
+  \qquad
+  y=[f(x)]^{g(x)}=[f(x)]^\alpha,
+  \qquad
+  g'(x)=0.
+  $$
+
+  将整个对象代入通式：
+
+  $$
+  \begin{aligned}
+  y'
+  &=[f(x)]^\alpha
+  \left[
+  0\cdot\ln f(x)
+  +\alpha\frac{f'(x)}{f(x)}
+  \right]\\
+  &=\alpha[f(x)]^{\alpha-1}f'(x).
+  \end{aligned}
+  $$
+
+  这与对 $y=u^\alpha$ 使用实数幂公式和链式法则得到的旧结论一致。
+
+- **固定底数，只有指数变化**。令
+
+  $$
+  f(x)\equiv a>0,
+  \qquad
+  y=[f(x)]^{g(x)}=a^{g(x)},
+  \qquad
+  f'(x)=0.
+  $$
+
+  将整个对象代入通式：
+
+  $$
+  \begin{aligned}
+  y'
+  &=a^{g(x)}
+  \left[
+  g'(x)\ln a
+  +g(x)\frac0a
+  \right]\\
+  &=a^{g(x)}\ln a\,g'(x).
+  \end{aligned}
+  $$
+
+  这与对 $y=a^u$ 使用指数函数公式和链式法则得到的旧结论一致。
 
 32. **2021 年计算题的第一阶部分**　设 $x>0$，
 
@@ -1043,7 +1270,13 @@ $$
     y=x^x.
     $$
 
-    使用对数求导求 $y'$。原题中的 $y''$ 留到高阶导数部分继续完成。
+    先恒等改写为
+
+    $$
+    x^x=e^{x\ln x},
+    $$
+
+    再使用指数函数、积法则和链式法则。原题中的 $y''$ 留到高阶导数部分继续完成。
 
     参考结果：
 
@@ -1059,7 +1292,13 @@ $$
 
     的导数。
 
-    因为 $1+x^2>0$，可以直接取对数。参考结果为
+    因为 $1+x^2>0$，可以改写为
+
+    $$
+    y=e^{\sin x\,\ln(1+x^2)}.
+    $$
+
+    参考结果为
 
     $$
     \boxed{
@@ -1080,7 +1319,14 @@ $$
          {e^x(x-1)^2}.
     $$
 
-    使用对数求导，保留原式的因子结构。
+    把原函数恒等改写为 $y=e^{w(x)}$，其中
+
+    $$
+    w(x)
+    =3\ln(x^2+1)
+     +\frac12\ln(x+1)
+     -x-2\ln(x-1).
+    $$
 
     参考结果：
 
