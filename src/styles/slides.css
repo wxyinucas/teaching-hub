@@ -57,6 +57,8 @@
 .slide-heading h1 { margin: 0; color: var(--purple-dark); font-size: clamp(calc(26px * var(--slide-font-scale, 1)), calc(3.35cqw * var(--slide-font-scale, 1)), calc(56px * var(--slide-font-scale, 1))); line-height: 1.2; font-weight: 700; }
 .slide-content-body { display: grid; align-content: center; height: 78%; font-size: clamp(calc(22px * var(--slide-font-scale, 1)), calc(2.05cqw * var(--slide-font-scale, 1)), calc(36px * var(--slide-font-scale, 1))); }
 .slide-content-body > :first-child { margin-top: 0; }
+.slide-content-body > p:has(> img:only-child) { display: flex; justify-content: center; align-items: center; min-height: 0; margin: 0; }
+.slide-content-body > p > img:only-child { display: block; max-width: 100%; max-height: 40cqw; object-fit: contain; }
 .slide-content-body ul, .slide-content-body ol { margin: 0 auto; padding-left: 1.6em; line-height: 1.85; }
 .slide-content-body li + li { margin-top: .45em; }
 .slide-content-body blockquote { margin: 1.6cqw 0; padding: 1.2cqw 1.6cqw; border-left: .3cqw solid var(--purple); background: var(--purple-light); color: var(--purple-dark); }
