@@ -297,7 +297,14 @@ assert experiment.crosses_line(distance, angle) is expected
 
 **测试先行，是先确定验收依据，不是先敲一条测试命令。** `pytest` 执行测试、报告失败，不替我们决定正确答案；测试可以由 Agent 写，答案仍要有独立理由。
 
-课上教师会用另一个故障副本展示：把触线判据的 `<=` 写成 `<`，同一份测试如何拒绝它；只修实现、不改测试后再检查。**学生先观察，不需要在自己的项目中造错。** 当前目录还没有 `experiment.py`，此时运行测试可能只得到导入失败，不能把它当作测试抓到了算法错误。
+课上教师会用另一个故障副本展示：把触线判据的 `<=` 写成 `<`，同一份测试如何拒绝它。**学生先观察，不需要在自己的项目中造错。** 定点测试中的五个针位应有两个失败、三个通过：
+
+- `distance=0.25、angle=π/2`：针尖恰好触线，预期 `True`；错误判据算的是 `0.25 < 0.25`，实际为 `False`。
+- `distance=0、angle=0`：针平行且落在线上，同样应为 `True`；错误判据算的是 `0 < 0`，仍为 `False`。
+
+其余三例没有卡在相等边界。失败结果应为 `2 failed, 3 passed, 15 deselected`；`deselected` 是另外十五项本次未运行，不是失败。只将实现中的 `<` 改成 `<=`、保持测试不变，重跑同一组应为 `5 passed, 15 deselected`，再跑整套应为 `20 passed`。这支持接受该处修复，还不能证明整个实验与报告正确。
+
+当前目录还没有 `experiment.py`，此时运行测试可能只得到导入失败，不能把它当作测试抓到了算法错误。
 
 ### 5. 委托实现自己的实验
 
@@ -520,6 +527,8 @@ W3 目录属于上周的 Git 仓库，已经有 W2 的 commit。先让 Agent 整
 
 通常需要忽略 `.venv/`、`__pycache__/`、`.pytest_cache/`、`*.aux`、`*.log`、`*.out`、`*.synctex.gz`、`*.fdb_latexmk`、`*.fls`。不要忽略 `.tex` 源文件，也不要把包含 Key 的文件上传。
 
+若现有 `.gitignore` 还列着 `results.csv`、`results-table.tex`、`results-params.tex`、`results.png`，先移除这些结果文件的忽略条目，才能把本次结果保存进 Git。想一并保存 PDF 时，也移除 `report.pdf` 条目；凭据、环境、缓存和编译中间文件仍排除。
+
 以下操作仍在 `week-03/` 的终端执行：
 
 ~~~bash
@@ -535,10 +544,10 @@ git config user.name "YOUR_PUBLIC_NAME"
 git config user.email "YOUR_GITHUB_EMAIL"
 ~~~
 
-在 Source Control 核对文件，再执行：
+在 Source Control 逐个核对文件，只暂存决定保存的内容：已跟踪文件看 diff，新文件看完整内容，图片与 PDF 亲自打开。若已有暂存文件，也一并核对；然后执行：
 
 ~~~bash
-git add -- .
+git diff --cached --stat
 git diff --cached
 git commit -m "Complete W3 Buffon report"
 ~~~

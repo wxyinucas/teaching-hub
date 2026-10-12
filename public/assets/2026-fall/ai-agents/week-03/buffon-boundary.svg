@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="400" viewBox="0 0 1440 400" role="img" aria-labelledby="title description">
+  <title id="title">触线的已知答案</title>
+  <desc id="description">三幅图使用相同比例：每单位长度为200像素，垂直针长0.5，半针伸出0.25。最近的平行线在同一高度，针中心距线分别为0.4、0.25、0.1，对应够不到、恰好触线和越过。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 8 8" refX="4" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 8 4 L 0 8 Z" fill="#625969"/>
+    </marker>
+  </defs>
+  <rect width="1440" height="400" fill="#fff"/>
+  <g font-family="PingFang SC, Microsoft YaHei, sans-serif" text-anchor="middle" fill="#34283e">
+    <g transform="translate(20 0)">
+      <text x="230" y="40" font-size="30" font-weight="600">够不到线</text>
+      <text x="230" y="72" font-size="22">最近的平行线</text>
+      <path d="M 35 135 H 425" stroke="#49414f" stroke-width="4"/>
+      <path d="M 100 215 H 350" stroke="#bbb3c1" stroke-width="2" stroke-dasharray="5 5"/>
+      <path d="M 230 165 V 265" stroke="#7436a8" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="230" cy="215" r="7" fill="#7436a8"/>
+      <g fill="none" stroke="#625969" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)">
+        <path d="M 100 135 V 215"/>
+        <path d="M 350 165 V 215"/>
+      </g>
+      <text x="67" y="183" font-size="23">0.4</text>
+      <text x="391" y="198" font-size="23">0.25</text>
+      <text x="100" y="303" font-size="23">中心到线的距离</text>
+      <text x="350" y="303" font-size="23">半针伸出距离</text>
+      <text x="230" y="348" font-size="28" font-weight="600">False</text>
+    </g>
+    <g transform="translate(490 0)">
+      <text x="230" y="40" font-size="30" font-weight="600">恰好触线</text>
+      <text x="230" y="72" font-size="22">最近的平行线</text>
+      <path d="M 35 135 H 425" stroke="#49414f" stroke-width="4"/>
+      <path d="M 100 185 H 350" stroke="#bbb3c1" stroke-width="2" stroke-dasharray="5 5"/>
+      <path d="M 230 135 V 235" stroke="#7436a8" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="230" cy="185" r="7" fill="#7436a8"/>
+      <circle cx="230" cy="135" r="10" fill="#fff" stroke="#7436a8" stroke-width="3"/>
+      <g fill="none" stroke="#625969" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)">
+        <path d="M 100 135 V 185"/>
+        <path d="M 350 135 V 185"/>
+      </g>
+      <text x="57" y="168" font-size="23">0.25</text>
+      <text x="391" y="168" font-size="23">0.25</text>
+      <text x="100" y="303" font-size="23">中心到线的距离</text>
+      <text x="350" y="303" font-size="23">半针伸出距离</text>
+      <text x="230" y="348" font-size="28" font-weight="600" fill="#7436a8">True</text>
+    </g>
+    <g transform="translate(960 0)">
+      <text x="230" y="40" font-size="30" font-weight="600">越过线</text>
+      <text x="230" y="72" font-size="22">最近的平行线</text>
+      <path d="M 35 135 H 425" stroke="#49414f" stroke-width="4"/>
+      <path d="M 100 155 H 350" stroke="#bbb3c1" stroke-width="2" stroke-dasharray="5 5"/>
+      <path d="M 230 105 V 205" stroke="#7436a8" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="230" cy="155" r="7" fill="#7436a8"/>
+      <g fill="none" stroke="#625969" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)">
+        <path d="M 100 135 V 155"/>
+        <path d="M 350 105 V 155"/>
+      </g>
+      <text x="67" y="182" font-size="23">0.1</text>
+      <text x="391" y="119" font-size="23">0.25</text>
+      <text x="100" y="303" font-size="23">中心到线的距离</text>
+      <text x="350" y="303" font-size="23">半针伸出距离</text>
+      <text x="230" y="348" font-size="28" font-weight="600" fill="#7436a8">True</text>
+    </g>
+    <text x="720" y="390" font-size="24">针长 L = 0.5；针垂直于线；紫色实心点为针中心。</text>
+  </g>
+</svg>
