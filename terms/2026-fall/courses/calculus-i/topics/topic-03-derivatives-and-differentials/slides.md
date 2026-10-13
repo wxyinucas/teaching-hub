@@ -764,3 +764,567 @@ $$
 
 <!-- footer -->
 幂指通式在两个退化情形下，分别回到“幂函数＋链式法则”与“指数函数＋链式法则”。
+
+---
+<!-- lesson: 第四次课 -->
+# 从“再求一次”走向第 n 阶导数
+
+设 $x>0$，复习 $y=x^x=e^{x\ln x}$，再对导函数求导。
+
+$$
+\begin{aligned}
+y'&=x^x(\ln x+1),\\[.5em]
+y''&=x^x(\ln x+1)^2+x^x\frac1x\\
+&=\boxed{x^x\left[(\ln x+1)^2+\frac1x\right]}.
+\end{aligned}
+$$
+
+<!-- footer -->
+2021 年计算题：继续把积法则与链式法则作用在导函数上。
+
+---
+<!-- layout: agenda -->
+# 本次课 Roadmap：反复求导
+
+1. 导数还能再求：变化率本身的变化
+2. 重复求导怎样找规律：写成第 n 阶公式
+3. 乘积的高阶求导怎样压缩：莱布尼茨公式
+4. 函数换一种表示怎样求导：方程与参数（后续）
+5. 导数怎样用于附近的估计：微分（后续）
+
+---
+# 定义：高阶导数及其记号
+
+$$
+\begin{gathered}
+f''(x)=[f'(x)]',
+\qquad
+\frac{d^2y}{dx^2}=\frac d{dx}\left(\frac{dy}{dx}\right),
+\\[.8em]
+f^{(0)}=f,\qquad f^{(1)}=f',
+\qquad f^{(n)}=[f^{(n-1)}]',
+\\[.8em]
+y''',\quad y^{(4)},\quad\ldots,\quad y^{(n)}
+\qquad\text{或}\qquad
+\frac{d^ny}{dx^n}.
+\end{gathered}
+$$
+
+<!-- footer -->
+教材第 74 页。$n\in\mathbb N^+$；$f^{(2)}$ 与 $f^2$、$d^2y/dx^2$ 与 $(dy/dx)^2$ 分别是不同的对象。
+
+---
+<!-- layout: columns -->
+# 补充：光滑与 n 阶光滑
+
+设 $f$ 定义在开区间 $I$ 上，$n\in\mathbb N^+$。
+
+<!-- column -->
+## n 阶光滑
+
+$$
+f,\ f',\ \ldots,\ f^{(n)}
+$$
+
+都存在且连续，记作 $f\in C^n(I)$。
+
+也称 $n$ 阶连续可导。
+
+<!-- column -->
+## 光滑
+
+任意正整数 $n$ 都满足
+
+$$
+f\in C^n(I),
+$$
+
+记作 $f\in C^\infty(I)$。
+
+<!-- footer -->
+$n$ 阶可导要求导数存在；$n$ 阶光滑还要求这些导数连续。
+
+---
+# 题型：判断一阶与二阶可导性
+
+设 $f(x)=x|x|$。先自行求导，再判断能否继续求导。
+
+$$
+f(x)=\begin{cases}
+x^2,&x\ge0,\\
+-x^2,&x<0.
+\end{cases}
+$$
+
+$$
+f'(0)=\lim_{\Delta x\to0}
+\frac{\Delta x|\Delta x|}{\Delta x}=0,
+\qquad
+\boxed{f'(x)=2|x|}.
+$$
+
+<!-- footer -->
+导函数连续，故 $f\in C^1(\mathbb R)$。画出 $f'$ 的草图：尖点出现在哪里？
+
+---
+# 导函数的尖点与二阶导数
+
+$$
+\frac{f'(\Delta x)-f'(0)}{\Delta x}
+=\frac{2|\Delta x|}{\Delta x}
+=\begin{cases}
+2,&\Delta x>0,\\
+-2,&\Delta x<0.
+\end{cases}
+$$
+
+$$
+\boxed{f''(0)\text{ 不存在}},
+\qquad
+f\in C^1(\mathbb R),\quad f\notin C^2(\mathbb R).
+$$
+
+<!-- footer -->
+$|x|$ 在零点不能求一阶导数；$x|x|$ 的障碍出现在第二次求导。
+
+---
+# 题型：由运动规律求速度与加速度
+
+教材习题 2-3 第 2 题，第 77 页。
+
+$$
+\left\{
+\begin{aligned}
+s(t)&=A\sin\omega t,\\[.3em]
+v(t)=s'(t)&=A\omega\cos\omega t,\\[.3em]
+a(t)=s''(t)&=-A\omega^2\sin\omega t.
+\end{aligned}
+\right.
+$$
+
+$$
+\boxed{s''+\omega^2s=0}.
+$$
+
+<!-- footer -->
+位置的变化率是速度，速度的变化率是加速度。比较 $s$ 与 $s''$ 的函数形式。
+
+---
+# 题型：从连续求导中发现第 n 阶规律
+
+1. 写出前几阶导数。
+2. 比较系数、符号、指数与函数形式。
+3. 识别终止、稳定、循环或阶乘规律。
+4. 猜出第 $n$ 阶公式，再求导检查第 $n+1$ 阶。
+
+<!-- footer -->
+先预告结构，再自行推导；归纳证明还需要核对起始阶。
+
+---
+# 幂函数与多项式最终终止
+
+教材第 74 页例 1、例 2。先写前三阶，再比较一般实数幂与正整数幂。
+
+$$
+(x^\mu)^{(n)}
+=\mu(\mu-1)\cdots(\mu-n+1)x^{\mu-n},
+\quad x>0.
+$$
+
+$$
+\begin{gathered}
+P_m(x)=a_mx^m+\cdots+a_1x+a_0,\\[.4em]
+\boxed{P_m^{(m)}=m!a_m},
+\qquad \boxed{P_m^{(n)}=0\quad(n>m)}.
+\end{gathered}
+$$
+
+<!-- footer -->
+$\mu\in\mathbb R$；一般实数幂未必终止，多项式的结论则适用于全体实数。
+
+---
+# 指数函数保持同一种形式
+
+教材第 75 页例 3。设 $a>0$、$a\ne1$，自行写前三阶并猜通式。
+
+$$
+\begin{gathered}
+(a^x)'=a^x\ln a,
+\qquad (a^x)''=a^x(\ln a)^2,\\[.8em]
+\boxed{(a^x)^{(n)}=a^x(\ln a)^n},\\[.8em]
+\boxed{(e^x)^{(n)}=e^x}.
+\end{gathered}
+$$
+
+<!-- footer -->
+每次求导新增一个常数因子 $\ln a$。
+
+---
+# 正弦、余弦形成周期
+
+教材第 75 页例 4。分别求导直到回到原函数，再用相位表示。
+
+$$
+\begin{aligned}
+\sin x&\longrightarrow\cos x\longrightarrow-\sin x
+\longrightarrow-\cos x\longrightarrow\sin x,\\[.5em]
+\cos x&\longrightarrow-\sin x\longrightarrow-\cos x
+\longrightarrow\sin x\longrightarrow\cos x.
+\end{aligned}
+$$
+
+$$
+\left\{
+\begin{aligned}
+(\sin x)^{(n)}&=\sin\left(x+\frac{n\pi}{2}\right),\\[.3em]
+(\cos x)^{(n)}&=\cos\left(x+\frac{n\pi}{2}\right).
+\end{aligned}
+\right.
+$$
+
+<!-- footer -->
+比较 $n$ 除以 $4$ 的余数；每次求导使相位增加 $\pi/2$。
+
+---
+<!-- layout: columns -->
+# 符号、阶乘与分母次数
+
+教材第 75 页例 5、例 6。各写前三阶，再比较为什么相差一阶。
+
+<!-- column -->
+## 倒数函数
+
+$a+x\ne0$。
+
+$$
+\left(\frac1{a+x}\right)^{(n)}
+=(-1)^n\frac{n!}{(a+x)^{n+1}}.
+$$
+
+<!-- column -->
+## 对数函数
+
+$a+x>0$。
+
+$$
+[\ln(a+x)]^{(n)}
+=(-1)^{n-1}\frac{(n-1)!}{(a+x)^n}.
+$$
+
+<!-- footer -->
+$[\ln(a+x)]'=1/(a+x)$；对数的第 $n$ 阶对应倒数函数的第 $n-1$ 阶。
+
+---
+# 课堂检查：把参数带回已有结构
+
+$$
+\left\{
+\begin{aligned}
+[\sin(ax+b)]^{(n)}
+&=a^n\sin\left(ax+b+\frac{n\pi}{2}\right),\\[.6em]
+\left(\frac1{ax+b}\right)^{(n)}
+&=(-1)^n\frac{n!a^n}{(ax+b)^{n+1}},\\[.6em]
+[\ln(ax+b)]^{(n)}
+&=(-1)^{n-1}\frac{(n-1)!a^n}{(ax+b)^n}.
+\end{aligned}
+\right.
+$$
+
+<!-- footer -->
+按现场选择。$a,b$ 为常数；倒数函数要求 $ax+b\ne0$，对数函数要求 $ax+b>0$。
+
+---
+# 结论：线性组合不会制造新的求导结构
+
+若 $u,v$ 都 $n$ 阶可导，$A,B$ 为常数，则
+
+$$
+\boxed{(Au+Bv)^{(n)}=Au^{(n)}+Bv^{(n)}}.
+$$
+
+<!-- footer -->
+先恒等变形，再分别调用已有的第 $n$ 阶公式。
+
+---
+# 题型：用线性组合求三角函数幂的高阶导数
+
+教材第 76 页例 8。求 $y=\sin^3x$ 的 $n$ 阶导数。
+
+$$
+\sin3x=3\sin x-4\sin^3x,
+$$
+
+$$
+\sin^3x=\frac34\sin x-\frac14\sin3x.
+$$
+
+<!-- footer -->
+自行写出 $\sin3x$ 的前两阶与第 $n$ 阶导数，再按线性法则组合。
+
+---
+# 三角函数幂的高阶导数：讲评
+
+$$
+(\sin3x)^{(n)}
+=3^n\sin\left(3x+\frac{n\pi}{2}\right).
+$$
+
+$$
+\boxed{
+\begin{aligned}
+(\sin^3x)^{(n)}
+={}&\frac34\sin\left(x+\frac{n\pi}{2}\right)\\[.4em]
+&-\frac{3^n}{4}\sin\left(3x+\frac{n\pi}{2}\right).
+\end{aligned}}
+$$
+
+<!-- footer -->
+第二项为什么出现 $3^n$？比较直接逐阶求导与先化成线性组合两条路线。
+
+---
+# 从乘积的反复求导发现莱布尼茨公式
+
+$$
+\left\{
+\begin{aligned}
+(uv)'&=u'v+uv',\\[.4em]
+(uv)''&=u''v+2u'v'+uv'',\\[.4em]
+(uv)'''&=u'''v+3u''v'+3u'v''+uv'''.
+\end{aligned}
+\right.
+$$
+
+$$
+1,1;\qquad 1,2,1;\qquad 1,3,3,1.
+$$
+
+<!-- footer -->
+每项求导次数之和等于总阶数。系数记录把求导次数分配给两个因子的方式数。
+
+---
+# 定理：“函数的乘积”求 n 阶导
+
+若 $u,v$ 都 $n$ 阶可导，则
+
+$$
+\begin{gathered}
+\boxed{(uv)^{(n)}
+=\sum_{k=0}^n C_n^k u^{(n-k)}v^{(k)}},
+\\[.8em]
+C_n^k=\frac{n!}{k!(n-k)!},
+\qquad u^{(0)}=u,\quad v^{(0)}=v,
+\\[.8em]
+C_n^{k-1}+C_n^k=C_{n+1}^k,
+\qquad 1\le k\le n.
+\end{gathered}
+$$
+
+<!-- footer -->
+莱布尼茨公式。$n=1$ 时回到普通积法则；继续求导时，相邻项按二项式系数合并。
+
+---
+# 题型：多项式乘熟悉函数的高阶导数
+
+1. 把会终止的多项式记作 $v$。
+2. 列出 $v,v',v'',\ldots$，找到恒为 $0$ 的起点。
+3. 写出另一因子 $u$ 的高阶通式。
+4. 在莱布尼茨公式中保留非零项并整理。
+
+<!-- footer -->
+低次多项式使需要计算的项数减少。
+
+---
+# 课堂检查：一次多项式乘指数函数
+
+教材习题 2-3 第 6(1) 题。求 $y=xe^x$ 的 $n$ 阶导数。
+
+$$
+u=e^x,\quad v=x,
+\qquad v'=1,\quad v^{(k)}=0\ (k\ge2).
+$$
+
+$$
+\begin{aligned}
+y^{(n)}&=e^xx+ne^x\\[.4em]
+&=\boxed{(x+n)e^x}.
+\end{aligned}
+$$
+
+<!-- footer -->
+求和中只剩 $k=0,1$ 两项。
+
+---
+# 二次多项式乘指数函数
+
+教材第 76—77 页例 9。设 $y=x^2e^{2x}$，求 $y^{(20)}$。
+
+$$
+\begin{gathered}
+u=e^{2x},\qquad u^{(r)}=2^re^{2x},\\[.5em]
+v=x^2,\quad v'=2x,\quad v''=2,\quad v^{(k)}=0\ (k\ge3).
+\end{gathered}
+$$
+
+$$
+\boxed{y^{(20)}=2^{20}e^{2x}(x^2+20x+95)}.
+$$
+
+<!-- footer -->
+只有 $k=0,1,2$ 三项。分别说明 $20x$ 与 $95$ 怎样得到。
+
+---
+# 独立代表题：二次多项式乘正弦函数
+
+教材第 77 页例 10。设
+
+$$
+y=x^2\sin x,
+$$
+
+求 $y^{(n)}$，$n\in\mathbb N^+$。
+
+<!-- footer -->
+先独立列出需要保留的项并整理结果，再说明每项中两个因子的求导次数。
+
+---
+# 二次多项式乘正弦函数：讲评
+
+$$
+\begin{aligned}
+y^{(n)}
+={}&x^2\sin\left(x+\frac{n\pi}{2}\right)\\[.5em]
+&+2nx\sin\left(x+\frac{(n-1)\pi}{2}\right)\\[.5em]
+&+n(n-1)\sin\left(x+\frac{(n-2)\pi}{2}\right).
+\end{aligned}
+$$
+
+<!-- footer -->
+至多三项；$n=1$ 时第三项系数为 $0$。相位中的阶数依次为 $n,n-1,n-2$。
+
+---
+# 当堂测试：在指定点计算高阶导数
+
+教材习题 2-3 第 8 题。设
+
+$$
+f(x)=x^2\ln(1+x),
+$$
+
+求 $f^{(n)}(0)$，其中 $n\ge3$。
+
+<!-- footer -->
+先独立完成，再说明哪些项被删去：是恒为 $0$，还是只在指定点取值为 $0$？
+
+---
+# 指定点高阶导数：讲评
+
+令 $u=\ln(1+x)$、$v=x^2$。在 $x=0$ 处，只有 $v''(0)=2$ 非零。
+
+$$
+\begin{aligned}
+f^{(n)}(0)&=2C_n^2u^{(n-2)}(0)\\[.5em]
+&=n(n-1)(-1)^{n-3}(n-3)!\\[.5em]
+&=\boxed{(-1)^{n-3}\frac{n!}{n-2}}.
+\end{aligned}
+$$
+
+<!-- footer -->
+$u^{(r)}(0)=(-1)^{r-1}(r-1)!$（$r\ge1$）。$v,v'$ 在指定点为 $0$，$v^{(k)}$（$k\ge3$）恒为 $0$。
+
+---
+# 补充：复合函数的二阶导数
+
+设 $f,g$ 在相应区间二阶可导，$y=f(g(x))$。
+
+$$
+\begin{aligned}
+y'&=f'(g(x))g'(x),\\[.5em]
+y''&=[f'(g(x))]'g'(x)+f'(g(x))g''(x)\\[.5em]
+&=\boxed{f''(g(x))[g'(x)]^2+f'(g(x))g''(x)}.
+\end{aligned}
+$$
+
+<!-- footer -->
+可选补充。$f''(g(x))$ 表示先对外层函数求两次导数，再代入内层值。
+
+---
+<!-- layout: columns -->
+# 复合二阶导数：比较内层结构
+
+<!-- column -->
+## 线性内层
+
+$g(x)=ax+b$，$g''=0$。
+
+$$
+[f(ax+b)]''=a^2f''(ax+b).
+$$
+
+若 $f$ 为 $n$ 阶可导，
+
+$$
+[f(ax+b)]^{(n)}=a^nf^{(n)}(ax+b).
+$$
+
+<!-- column -->
+## 平方内层
+
+教材习题 2-3 第 4(1) 题。
+
+$y=f(x^2)$，$g''=2$。
+
+$$
+\begin{aligned}
+y'&=2xf'(x^2),\\[.4em]
+y''&=4x^2f''(x^2)\\
+&\quad+2f'(x^2).
+\end{aligned}
+$$
+
+<!-- footer -->
+可选补充。比较内层变化率是否还在变化，决定第二项是否保留。
+
+---
+# 复合二阶导数：具体外层函数
+
+教材习题 2-3 第 1(2) 题。求 $y=e^{-x^2}$ 的二阶导数。
+
+$$
+\begin{aligned}
+y'&=-2xe^{-x^2},\\[.5em]
+y''&=-2e^{-x^2}+4x^2e^{-x^2}\\
+&=\boxed{(4x^2-2)e^{-x^2}}.
+\end{aligned}
+$$
+
+$$
+y'''=(12x-8x^3)e^{-x^2}.
+$$
+
+<!-- footer -->
+可选补充。先完成二阶，再按余量求三阶；结果保持多项式乘指数函数的结构。
+
+---
+# 备选：主线完成后，打开隐函数的一阶求导入口
+
+在圆 $x^2+y^2=1$ 的可微局部分支上，把 $y$ 看作 $y(x)$。
+
+$$
+2x+2yy'=0,
+\qquad
+\boxed{y'=-\frac xy\quad(y\ne0)}.
+$$
+
+<!-- footer -->
+可选入口。$y^2$ 是 $[y(x)]^2$，仍然使用链式法则；完整讨论留到下一次课。
+
+---
+# 收束：从重复操作中识别可以复用的结构
+
+- 高阶导数继续对导函数求导。
+- 熟悉函数的高阶公式来自前几阶中的规律。
+- 线性组合允许先改写再分别计算。
+- 莱布尼茨公式整理乘积的反复求导。
+
+<!-- footer -->
+下一次改变函数的表示方式：方程与共同参数。
