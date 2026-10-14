@@ -31,7 +31,7 @@
 
 > 先看代码由哪个进程执行，再在 Notebook 中复现第一次污染，分清对象身份与内容。
 
-**工作版状态：** 新版作业已在本稿中约定，函数壳、故障程序、测试入口、演示 Notebook 与保存步骤尚待落实。现有仓库的 W4 作业及本站 Slides／Guide 仍对应旧版，本轮只整理台本，不标为课堂冻结。
+**工作版状态：** 新版实验包在 `ai-agents/week-04/`，独立环境、参考与故障测试、Notebook 真实 kernel 输出已在本地核验；Guide 与 Slides 已同步。Windows／VS Code 的实际界面与投影仍需课前检查，本稿暂不标为课堂冻结。
 
 **整周目标与收口**
 
@@ -44,7 +44,7 @@
 > 启动 Python → 退出重进 → 在 Notebook 查询与修改 → 重跑旧观察 → 重启 kernel。
 
 - [ ] 课前：确认 W2 的 `uv.lock` 有效，终端中能用 `uv run --locked python` 进入与退出 Python。
-- [ ] 课前：准备 VS Code 的 Python／Jupyter 扩展、Python 3.12／ipykernel 环境与开场四个 cell，选好实际演示的 kernel；不改 W3 项目或锁文件。
+- [ ] 课前：在 `ai-agents/week-04/` 执行 `uv sync --locked`，打开 `demo.ipynb`；确认 VS Code 的 Python／Jupyter 扩展可用，选好本周 `.venv` 的 kernel，不改 W3 项目或锁文件。
 
 - **从 Bash 启动 Python，查询 probe。** 在 VS Code 的 WSL Terminal 执行：
 
@@ -72,7 +72,7 @@
   - “刚才那个进程结束了，新进程没有保留它的普通名字。”输入 `exit()` 回 Bash。
 
 - **打开准备好的 Notebook，顺序运行四个 cell。**
-  - 新建备用入口：命令面板运行 `Create: New Jupyter Notebook`。
+  - 从 Explorer 打开本周 `demo.ipynb`；自己新建时，备用入口为命令面板的 `Create: New Jupyter Notebook`。
   - 指认代码 cell、下方输出与右上角已选好的 kernel。
   - “Notebook 是界面，kernel 是执行代码、保留变量的进程；它与刚才终端中的 Python 分开。”
   - 初始化 cell：`probe = 42`。
@@ -449,22 +449,39 @@
   - R 普通向量的复制由实现管理，另一绑定观察到的值保持；Bash 本例赋的是文本。
   - 问：“熟悉一种语言，能否直接担保另一种语言里这行代码的结果？”
 
-#### 本周实操：保留旧方案，生成追加实验
+### 100-150 | 与 Agent 完成本周大作业，验收两版实验
+
+> 背景与目的 → 先测试后实现 → 检查两份候选 → 导读依据 → 保存与回顾。
+
+#### 本周大作业：给导师维护可独立修改的实验方案
 
 > 读懂约定 → 与 Agent 先写测试 → 拒绝两种故障 → 实现与导读。
 
-- [ ] 课前：落实学生实验目录、已知输入、make_variant 函数壳与测试入口；把实际路径和运行命令补到本段，不改 W3 项目。
+- [ ] 课前：确认教师材料已发布；在学生已有仓库取得 `week-04/`，核对 `EXPERIMENT.txt`、`variant.py`、测试与锁文件，不改 W3 项目。
 
-- **给出本周任务：让导师反复生成追加方案，旧配置一直保留。**
-  - 必做：实现配置生成函数、与 Agent 写测试、核验两种故障与修复，再说明一个依据。
-  - 沿用投针实验的参数，不重写投针算法、不改 W3 的报告；本周验收的是配置隔离，不是估计值更接近 π。
+- **打开本周目录，建立已经给定的独立环境。** 更新步骤使用 Guide，在 WSL Terminal 执行：
 
-- **打开函数壳与任务说明，读输入输出。**
+  ~~~bash
+  cd ~/course/w02-workbench/week-04
+  uv sync --locked
+  code .
+  ~~~
+
+- **交代背景：论文已经有一版结果，导师要求追加实验。**
+  - “旧图和旧表使用 seed=42、三组投针数。导师要换种子、增加最大投针数；昨天的方案仍要能重跑，不能被今天的试验覆盖。”
+  - “接下来还要从同一组参数生成两份候选，分别继续调整。起始内容可以一样，后续修改不能互相串扰。”
+
+- **交代目的：把一次手工修复变成可反复使用的功能。**
+  - 实现 `make_variant`，让每次追加方案都保留基线、隔离需要修改的关系。
+  - 与 Agent 合作设计测试，证明测试能拒绝共享错误，再核验实现与后续修改。
+  - 不重写投针算法、不改 W3 报告；本周验收配置隔离，不验收估计值更接近 π。
+
+- **并排打开 `variant.py` 与 `EXPERIMENT.txt`，读输入输出。**
 
   ~~~text
   make_variant(source, seed, index, replacement)
 
-  source：含 seed 与 sample_sizes 的普通字典，sample_sizes 是正整数样本量列表。
+  source：只含整数 seed 与 sample_sizes 的普通字典，sample_sizes 是非空正整数样本量列表。
   其余三个参数：新 seed、sample_sizes 中要改的位置、新的正整数样本量。
   本题输入结构、数值与 index 都合法。
   返回：修改后的独立方案。
@@ -481,6 +498,8 @@
   旧配置：仍是 {"seed": 42, "sample_sizes": [1000, 10000, 100000]}
   ~~~
 
+  - 必做中，学生再换一组合法输入；用相同参数生成两份候选，先预测值与身份，再修改其中一份核对另外两份。
+
 - **逐条对应五项验收，不指定代码写法。**
 
   - 更新指定参数与位置，其他内容保留；对照独立预期。
@@ -493,6 +512,8 @@
 
   ~~~text
   请先读实验说明和 make_variant 函数壳，与我一起写测试，暂不修改实现。
+  测试写在 tests/test_student.py，通过函数参数 make_variant 接收课程 fixture，
+  不直接 import 候选实现；--impl 是教师提供的切换开关。
   先检查给定输入的结果、原始内容、外层身份和 sample_sizes 身份。
   解释预期答案从哪里来；保存原始内容时，不要留下共享的可变数据。
   分别运行教师的直接共享、浅复制两份故障，指出哪项断言拒绝了它们。
@@ -500,17 +521,25 @@
   ~~~
 
   - 每人先留下一个预测，再开始 Agent 对话；测试的预期不能由候选程序自己的输出充当。
-  - 示范到这里即可开始做，不等第二课时结束。先做一次调用，再增加后续修改与两次调用；后面的第三课时段落供实操检查与诊断，不再整段重复示范。
-
-### 100-150 | 与 Agent 完成本周实操，验收两版实验
-
-> 学生继续测试与实现 → 检查后续修改 → 导读依据 → 保存与回顾。
+  - 本块是完整作业路线，不要求从第 100 分钟才开始；前两块示范结束即可交接，教师按实际失败巡视与诊断。
 
 #### 先让测试拒绝两种已知错误
 
 > 核对输入与答案 → 对同一份测试切换故障 → 找出实际失败的断言。
 
 - [ ] 课前：备好可分别运行的直接共享、浅复制两份故障及参考实现；同一组测试拒绝两份故障、接受参考实现，每次重新建立输入，保留实际输出。
+
+- **在教师公开验收上示范开关，再交给学生自己的测试。**
+
+  ~~~bash
+  uv run --locked pytest -q tests/test_acceptance.py --impl=reference
+  uv run --locked pytest -q tests/test_acceptance.py --impl=direct
+  uv run --locked pytest -q tests/test_acceptance.py --impl=shallow
+  ~~~
+
+  - 参考通过，两份故障断言失败；打开 `examples.py` 看实际切到哪一份。
+  - 学生用自己的 `tests/test_student.py` 按同样顺序核验，先接受参考，再拒绝故障。
+  - 初始学生测试只有说明，`no tests ran` 不算通过；教师测试通过也不替代学生自己写测试。
 
 - **打开一次调用的测试，先核对独立答案。** 从实验包加载候选 make_variant 后，检查这些断言：
 
@@ -562,7 +591,13 @@
   ~~~
 
 - **在学生自己的 Terminal 重跑测试。**
-  - 使用本周实验包已核验的入口，看实际输出，再对照 Agent 工具记录。
+
+  ~~~bash
+  uv run --locked pytest -q tests/test_student.py --impl=student
+  uv run --locked pytest -q tests/test_acceptance.py --impl=student
+  ~~~
+
+  - 第一条检查学生测试，第二条是教师公开验收；看真实输出，再对照 Agent 工具记录。
   - 仍失败：回到具体断言修实现；通过后继续检查文件。
 
 - **打开实现和 diff，定位独立关系与指定修改。**
@@ -591,24 +626,25 @@
 
   - 断言通过：source 仍是基线。学生把这个后续操作加入自己的测试。
 
-- **再开一组实验，连续生成两份候选，只改 first。**
+- **再开一组实验，用相同参数生成两份候选，只改 first。**
 
   ~~~python
   source = {"seed": 42, "sample_sizes": [1000, 10000, 100000]}
   expected_source = {"seed": 42, "sample_sizes": [1000, 10000, 100000]}
   first = make_variant(source, 2026, 2, 500000)
-  second = make_variant(source, 2027, 0, 2000)
+  second = make_variant(source, 2026, 2, 500000)
 
+  assert first == second
   assert first is not second
   assert first["sample_sizes"] is not second["sample_sizes"]
 
   first["seed"] = 2028
   first["sample_sizes"][1] = 250000
-  assert second == {"seed": 2027, "sample_sizes": [2000, 10000, 100000]}
+  assert second == {"seed": 2026, "sample_sizes": [1000, 10000, 500000]}
   assert source == expected_source
   ~~~
 
-  - 断言通过：second 保留自己的结果，source 保留基线。把两次调用的检查也加入测试。
+  - 初始值相等，身份不同；改 first 后，second 保持候选参数，source 保持基线。把这组检查加入自己的测试。
 
 - **换一组合法输入，先写答案，再核验。**
   - 仍按同一接口，不增加新功能；确认实现没有把课堂示例写死。
@@ -652,19 +688,22 @@
   - 仍有失败：保存候选版本、失败输出和未完成条件，不写“已经完成”。
   - 使用教师记录：说明自己核对了哪一段，自己的项目仍停在哪一步。
 
-- **核对实验仓库，再按实验包步骤保存。**
+- **回到已有仓库，检查并保存本周文件。**
 
-  - [ ] 课前：准备实验分支、恢复副本与已核验的保存步骤；若启用模拟 push，另行准备模拟远端，不修改正式 remote。
+  - [ ] 课前：准备本地演示副本，核对只暂存本周实现与学生测试的步骤；沿用原 Git 历史，不另建实验分支或模拟远端。
 
   ~~~bash
+  cd ~/course/w02-workbench
   git rev-parse --show-toplevel
-  git branch --show-current
   git status -sb
-  git diff
+  git diff -- week-04/variant.py week-04/tests/test_student.py
+  git add -- week-04/variant.py week-04/tests/test_student.py
+  git diff --cached
+  git commit -m "Complete W4 configuration isolation exercise"
   ~~~
 
-  - 核对实验路径和分支，查看 diff，新文件打开看完整内容；再按实验包步骤保存实现、测试与简短证据。
-  - 模拟 push 仅在课前已准备、主线已完成时追加：核对本地与模拟远端是否同一版本，不改正式 remote 或 W3 历史。
+  - 核对仓库、diff 与已有暂存内容，新文件打开看完整内容；自己的证据文件按实际路径另行选择加入。
+  - 本周不新增 push、PR、分支或 CI 要求；仍有失败时，commit 说明写真实进度。
 
 - **回到根问题，只问三件事。**
 
@@ -675,9 +714,15 @@
   - “导师要的是追加一组实验，不是让旧方案悄悄变成新方案。看清修改落在哪一层，再用独立证据验收。”
   - 配置隔离不等于实验结论可靠：估计值是否稳定仍需真实模拟；同时换 seed 与样本量，也不能把结果差异单独归因于其中一个因素。
 
-#### 主线完成后的备用反例
+#### 选做挑战与备用反例
 
 > 按剩余时间选一个实验，不要求全做，也不挤占本周实操。
+
+- **选做：新参数与原参数相同，还需要独立吗？**
+  - 使用 source 原来的 seed，把 replacement 也设为原位置的数。
+  - 先预测：直接共享的故障版本能通过哪些内容检查？再运行验证。
+  - 增加身份检查或后续修改，证明“这次值没变”不等于“两份方案可以独立维护”。
+  - 与 Agent 找到对应实现和断言，留下真实结果，不增加新接口。
 
 - **字符串能原地改字符吗？** 先预测，单独运行失败例：
 
