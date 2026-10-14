@@ -48,6 +48,8 @@ const fullscreenFeedback = ref('')
 const fontScale = ref(readStoredFontScale())
 const slideMayClip = ref(false)
 let feedbackTimer
+let slideResizeObserver
+let readerMounted = false
 
 const slide = computed(() => props.deck.slides[props.page - 1])
 const canPrevious = computed(() => props.page > 1)
@@ -122,20 +124,58 @@ async function inspectSlideOverflow() {
   }
   const clipsVertically = element.clientHeight > 0 && element.scrollHeight > element.clientHeight + 1
   const clipsHorizontally = element.clientWidth > 0 && element.scrollWidth > element.clientWidth + 1
-  slideMayClip.value = clipsVertically || clipsHorizontally
+  const rectangle = element.getBoundingClientRect()
+  const style = getComputedStyle(element)
+  const content = {
+    top: rectangle.top + parseFloat(style.borderTopWidth) + parseFloat(style.paddingTop),
+    right: rectangle.right - parseFloat(style.borderRightWidth) - parseFloat(style.paddingRight),
+    bottom: rectangle.bottom - parseFloat(style.borderBottomWidth) - parseFloat(style.paddingBottom),
+    left: rectangle.left + parseFloat(style.borderLeftWidth) + parseFloat(style.paddingLeft),
+  }
+  const groups = Array.from(element.children).filter((child) => getComputedStyle(child).position !== 'absolute')
+  const outsideContent = groups.some((child) => {
+    const bounds = child.getBoundingClientRect()
+    return bounds.top < content.top - 2 || bounds.bottom > content.bottom + 2
+      || bounds.left < content.left - 2 || bounds.right > content.right + 2
+  })
+  const overlappingGroups = groups.some((child, index) => index > 0
+    && groups[index - 1].getBoundingClientRect().bottom > child.getBoundingClientRect().top + 2)
+  const localOverflow = Array.from(element.querySelectorAll(
+    '.slide-content-body, .slide-tree-body, .slide-column, .prompt-copy, pre, .katex-display',
+  )).some((child) => child.scrollHeight > child.clientHeight + 2 || child.scrollWidth > child.clientWidth + 2)
+  slideMayClip.value = clipsVertically || clipsHorizontally || outsideContent || overlappingGroups || localOverflow
 }
 
-watch([fontScale, slide], inspectSlideOverflow, { flush: 'post' })
+async function observeSlideSize() {
+  await nextTick()
+  slideResizeObserver?.disconnect()
+  if (slideCanvas.value && slideResizeObserver) {
+    slideResizeObserver.observe(slideCanvas.value)
+    slideCanvas.value.querySelectorAll('.slide-heading, .slide-footer, .slide-column-grid, pre, img')
+      .forEach((element) => slideResizeObserver.observe(element))
+  }
+  inspectSlideOverflow()
+}
+
+watch(fontScale, inspectSlideOverflow, { flush: 'post' })
+watch(slide, observeSlideSize, { flush: 'post' })
 
 onMounted(() => {
+  readerMounted = true
+  if (typeof ResizeObserver !== 'undefined') slideResizeObserver = new ResizeObserver(inspectSlideOverflow)
   fullscreenSupported.value = Boolean(reader.value?.requestFullscreen && document.exitFullscreen)
   syncFullscreen()
   window.addEventListener('keydown', handleKey)
   window.addEventListener('resize', inspectSlideOverflow)
   document.addEventListener('fullscreenchange', syncFullscreen)
-  inspectSlideOverflow()
+  reader.value?.addEventListener('load', inspectSlideOverflow, true)
+  document.fonts?.ready.then(() => { if (readerMounted) inspectSlideOverflow() })
+  observeSlideSize()
 })
 onBeforeUnmount(() => {
+  readerMounted = false
+  slideResizeObserver?.disconnect()
+  reader.value?.removeEventListener('load', inspectSlideOverflow, true)
   window.removeEventListener('keydown', handleKey)
   window.removeEventListener('resize', inspectSlideOverflow)
   document.removeEventListener('fullscreenchange', syncFullscreen)

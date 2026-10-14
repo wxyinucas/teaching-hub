@@ -513,6 +513,44 @@ describe('slides reader', () => {
     expect(wrapper.find('.slide-font-scale input').element.value).toBe('125')
   })
 
+  it('detects locally clipped code even when the outer canvas fits, and clears the warning after resize', async () => {
+    const deck = parseSlides('<!-- layout: tree -->\n# 关系图\n\n```text\nsource → 字典 → 列表\n```')
+    wrapper = mount(SlidesReader, { attachTo: document.body, props: { deck, page: 1 } })
+    const canvas = wrapper.find('.slide-canvas').element
+    Object.defineProperties(canvas, {
+      clientHeight: { configurable: true, value: 400 },
+      scrollHeight: { configurable: true, value: 400 },
+      clientWidth: { configurable: true, value: 700 },
+      scrollWidth: { configurable: true, value: 700 },
+    })
+    Object.defineProperties(wrapper.find('.slide-tree-body').element, {
+      clientHeight: { configurable: true, value: 300 },
+      scrollHeight: { configurable: true, value: 300 },
+      clientWidth: { configurable: true, value: 700 },
+      scrollWidth: { configurable: true, value: 700 },
+    })
+    const rectangle = (x, y, width, height) => ({ x, y, width, height, left: x, top: y, right: x + width, bottom: y + height })
+    vi.spyOn(canvas, 'getBoundingClientRect').mockReturnValue(rectangle(0, 0, 700, 400))
+    vi.spyOn(wrapper.find('.slide-heading').element, 'getBoundingClientRect').mockReturnValue(rectangle(20, 20, 660, 60))
+    vi.spyOn(wrapper.find('.slide-tree-body').element, 'getBoundingClientRect').mockReturnValue(rectangle(20, 100, 660, 280))
+    const code = wrapper.find('pre').element
+    Object.defineProperties(code, {
+      clientHeight: { configurable: true, value: 200 },
+      scrollHeight: { configurable: true, value: 246 },
+      clientWidth: { configurable: true, value: 500 },
+      scrollWidth: { configurable: true, value: 500 },
+    })
+    window.dispatchEvent(new Event('resize'))
+    await flushPromises()
+    expect(wrapper.find('.slide-overflow-warning').exists()).toBe(true)
+    expect(wrapper.find('.slide-font-scale input').element.value).toBe('100')
+
+    Object.defineProperty(code, 'scrollHeight', { configurable: true, value: 200 })
+    window.dispatchEvent(new Event('resize'))
+    await flushPromises()
+    expect(wrapper.find('.slide-overflow-warning').exists()).toBe(false)
+  })
+
   it('renders a vertical content list with a separate closing line', () => {
     const deck = parseSlides(slidesSource)
     const page = deck.slides.findIndex((slide) => slide.layout === 'content') + 1
