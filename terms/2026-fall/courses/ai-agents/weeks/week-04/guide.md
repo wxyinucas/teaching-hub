@@ -1,113 +1,111 @@
-# W4 学生行动指南：看见程序怎样运行
+# W4 学生探索指南：修改副本，保留原始记录
 
-> 衔接待更新：本页保留旧行情系统的练习与依赖。当前 W3 完成的是独立投针报告，不会自动生成下文的 `market-check`；正式系统的起点和接续步骤需在 W4 迭代时明确。
+> 工作版：本周独立实验包的实际仓库入口、取得方式、允许修改范围、测试命令、预设分支和模拟远端待落实。开始前以教师发布并验证的实验说明为准。W3 投针报告独立保留，不作为本周实验仓库。
 
-本周先比较同一件小事在不同语言中的运行路径，再让你自己的 `market-check` 留下两处可开关的追踪。你不需要手写 Rust 或 C，也不需要为了本周安装 R、Rust 或 C；它们由教师演示，用来对照概念。后续持续维护的仍是你唯一的 Python 项目。
+本周围绕一个问题：**赋值以后，我究竟改了名字的指向、对象的内容，还是两者都改了？我凭什么判断？** 主要实践使用 Python；R／Bash 用于概念对照，Rust／C 若有展示，由教师准备，不要求本地编译执行。
 
-正式项目仓库：<https://github.com/wxyinucas/ai-agents-project>。本周只用本地教学 CSV，不连接行情或账户，不读取凭证，不发起交易，也不配置 CI。
+## 先留下一次自己的预测
 
-## 课前：确认 Python 项目和任务已经到手
+对照以下两个版本，先遮住输出，预测 `a`、`b` 的内容和 `a is b`，再分别从干净状态运行。
 
-W3 已经在自己的 fork 中完成、提交并 push，且本地没有未保存修改时，先在 GitHub 的个人 fork 页面使用 **Sync fork → Update branch**，再从 WSL Bash 更新本地项目：
-
-```bash
-cd ~/course/ai-agents-project
-git status --short --branch
-git remote -v
-git pull --ff-only origin main
-ls course/week-04
+```python
+a = [1, 2]
+b = a
+a += [3]
+print(a, b, a is b)
 ```
 
-确认 `origin` 是自己的 fork，`course/week-04/` 中已有本周任务书和测试。如果本地有未提交的 W3 改动、同步产生冲突，或 `pull --ff-only` 失败，先停下保存状态，不要强制 push、删除目录或覆盖文件；带着完整信息请 Agent 协助判断。
-
-从自己的 `system/` 确认项目使用的 Python：
-
-```bash
-cd students/s07/system
-uv run --locked python --version
-uv run --locked python -c 'rows=4; print(f"[trace] rows={rows}")'
+```python
+a = [1, 2]
+b = a
+a = a + [3]
+print(a, b, a is b)
 ```
 
-把 `s07` 换成自己的公开代号。能看到 Python 版本与 `[trace] rows=4`，就已经有本周所需的 Python 环境；不必另装一个全局 Python。若 W3 项目还不能运行，保留原尝试与错误，不把教师画面记成本人的运行结果。教师的 W3 标准版按 W3 约定，在第三课时展示和判断结束后才发布；需要恢复时先保留个人版本，再在本人 `system/` 中采用，不直接覆盖旧文件。
+画出名字到对象的箭头，说明是哪一个对象的内容变了、哪一个名字的绑定变了。`is` 检查是否同一个对象，`==` 检查值是否相等；两个检查回答不同问题。
 
-## 第一课时：看同一个结果的不同来路
+## 探索任务与已知答案
 
-教师会展示 Python、R、Rust、C 四份极小程序。请只抓住两组区别：
-
-- 源码文件保存在磁盘上；一次命令会发起一次新的运行。
-- `python3 rows.py` 把源码交给 Python；`rustc` 或 `cc` 在本例中先生成本机可执行文件，再运行它。`cargo run` 把“需要时构建、然后运行”合在一个命令里。
-
-教师还会用 `file`、只读 Vim、`xxd` 查看编译产物，并用一段 Python 程序把普通结果写到 `stdout`，把追踪写到 `stderr`。这里不用背四门语言的语法、二进制字节或机器指令。下课后若想重看演示源码，可在[教学网站仓库的 W4 demo](https://github.com/wxyinucas/teaching-hub/tree/main/terms/2026-fall/courses/ai-agents/weeks/week-04/demo)中查看。
-
-## 第二课时：只在自己的持续项目里加追踪
-
-从仓库根目录初始化本周报告；脚本不会覆盖你的 `system/`：
-
-```bash
-cd ~/course/ai-agents-project
-bash course/week-04/init-week.sh s07
-cd students/s07/system
-```
-
-如果报告目录已存在，不要删除后重来；打开已有的 `students/s07/weeks/week-04/report.md` 即可。尚无可运行的 W3 `system/` 时，先保留旧尝试，再按课堂公布的教师基线无损接续；不要直接复制文件覆盖个人目录。
-
-先读 `course/week-04/PROJECT_BRIEF.txt`。再打开本人 `pyproject.toml` 的 `[project.scripts]`，沿 `market-check` 找到自己程序的入口。标出“开始处理输入路径”和“CSV 已成功读入”两处位置。每个人的文件名、模块和函数可以不同，不必照抄教师的实现。
-
-如需让 Agent 修改，可复制下面的请求；先替换 `s07`，再核对它要修改的实际路径：
+在教师提供的函数壳中实现：
 
 ```text
-请只修改我的 students/s07/system/ 中已有的 market-check 程序，不改教师区、公共区、报告、根文件或其他学生目录，也不要提交 Git。
-
-增加一个可选的 --trace 开关：不带它时，W3 命令的 stdout、stderr、退出状态和成功／失败行为都保持不变；带上它时，用 print 和 f-string 向 stderr 输出两处简短追踪——开始处理输入路径时，以及成功读入 CSV 后（包含行数）。不要打印 CSV 正文、环境变量或凭证。
-
-完成后停下，列出真实改动，给出从我自己的 system/ 中运行的验证命令，等我审查。
+make_variant(source, alpha, index, replacement)
 ```
 
-本周改动只落在本人 `system/`；`students/s07/weeks/week-04/report.md` 由你本人填写。Agent 申请越界、联网、读取凭证或替你提交时，不授权。
+- `source` 是含 `alpha` 和 `data` 的普通字典；`data` 是数字列表。
+- 本周给定的输入结构、数值与 `index` 均合法；不扩展非法输入处理。
+- 返回修改后的独立方案：更新 `alpha` 和 `data[index]`，其他内容保持规格。
+- `source` 保持原始内容，结果与原始记录可独立修改。
 
-## 自己核对三种输入和旧合同
+一组可独立核算的例子：
 
-以下命令从本人 `students/s07/system/` 运行；先预测每次会有几条追踪，再看实际输出：
+```python
+source = {"alpha": 0.05, "data": [10, 20, 30]}
+result = make_variant(source, alpha=0.01, index=2, replacement=99)
 
-```bash
-uv run --locked market-check ../../../course/week-03/data/sample_prices.csv
-uv run --locked market-check ../../../course/week-03/data/sample_prices.csv --trace
-uv run --locked market-check ../../../course/week-03/data/missing.csv --trace
-echo "MISSING_EXIT=$?"
-uv run --locked market-check ../../../course/week-03/tests/fixtures/missing_close.csv --trace
-echo "MISSING_COLUMN_EXIT=$?"
-uv run --locked pytest -q ../../../course/week-03/tests ../../../course/week-04/tests
+# result 应为 {"alpha": 0.01, "data": [10, 20, 99]}
+# source 仍为 {"alpha": 0.05, "data": [10, 20, 30]}
 ```
 
-最低预期：未打开 `--trace` 时没有新追踪，W3 可见结果不变；正常输入有两条追踪并仍通过；不存在的文件只有第一条追踪并失败；缺少 `close` 列的文件有两条追踪但仍失败。**追踪表示程序到过某处，不表示数据或结果正确。** `echo` 要紧跟对应的失败命令，才能读到那次运行的退出状态。
+索引从 0 开始，因此 `index=2` 修改第三项。预期答案来自任务条件与输入，不从候选实现的输出反推。
 
-需要分别看两个输出通道时，可把一次正常运行的输出写到系统临时目录，不在个人项目里留下待提交的诊断文件：
+## 验收条件
 
-```bash
-check_dir="$(mktemp -d)"
-uv run --locked market-check ../../../course/week-03/data/sample_prices.csv --trace > "$check_dir/result.txt" 2> "$check_dir/trace.txt"
-echo "EXIT=$?"
-cat "$check_dir/result.txt"
-cat "$check_dir/trace.txt"
+| 条件 | 核验依据 |
+| --- | --- |
+| 结果中的 `alpha`、`data[index]` 正确，其他内容保持规格 | 已知输入与独立预期结果 |
+| `source` 内容保持不变 | 调用前的独立内容快照 |
+| 结果字典与 `source` 不是同一个对象 | `is` 检查 |
+| 结果 `data` 与原始 `data` 不是同一个列表 | `is` 检查 |
+| 后续修改结果，不影响 `source` | 修改后的实际观察 |
+| 两次产生的结果互不干扰 | 第二次调用及后续修改检查 |
+
+先建立单次调用的前四项检查，再补后续修改和两次结果的检查。外层字典与需要独立修改的列表必须隔离；不可变数字、字符串不必拥有不同身份。
+
+**`before = source` 只是另一个名字，不能充当独立内容快照。** 本周普通字典、数字与列表可用独立基准记录或 `copy.deepcopy` 保存修改前内容；保留旧引用用于身份比较，保留独立快照用于内容比较。
+
+## 与 Agent 先写测试，再实现
+
+### 第一步：让测试拒绝故障版本
+
+```text
+请先读本周实验说明和现有函数壳，与我一起设计 make_variant 的测试，暂不修改实现。
+
+测试要覆盖正确结果、原始内容不变、外层与 data 列表的独立性，以及两次结果互不干扰。每个预期值先解释依据。
+
+先运行教师给的直接共享与浅复制故障版本，确认测试能拒绝错误。记录实际失败，再停下来让我检查。
 ```
 
-公开测试只是检查合同的一部分；还要检查 `git status --short` 和实际 diff。确认没有改教师区、公共区或其他学生目录，没有把完整 CSV、密钥、`.venv` 或临时输出加入提交。
+教师准备的两份错误版本分别使用直接共享 `variant = source`、只复制外层 `variant = source.copy()` 后修改嵌套 `data`。检查同一组测试能指出它们违反了哪些条件；不要修改预期答案来迁就故障版本。
 
-## 第三课时：用证据修正自己的判断
+### 第二步：实现并说明对象关系
 
-先对 `missing_close.csv --trace` 写下预测，再运行并比较。若个人程序的追踪位置与教师演示不同，先解释自己的插入点；不要把教师输出当成本人必然的结果。
+```text
+根据已检查的测试，在本周允许修改的实验范围内实现 make_variant。
 
-把四件事写进 `students/s07/weeks/week-04/report.md`：命令怎样到达项目入口；一次输入的事前预测；真实追踪、结果与退出状态；这些证据还不能证明什么。状态按实际填写：可以接受当前候选版本、需要暂缓，或本周只能跟随教师证据。跟随教师的部分必须标明来源。
-
-只有在本人检查过路径、diff、W3 和 W4 测试，且决定接受时，才从仓库根目录精确暂存个人系统与本人报告，然后检查 staged diff、提交并 push 自己的 `origin/main`：
-
-```bash
-cd ~/course/ai-agents-project
-git add -- students/s07/system students/s07/weeks/week-04/report.md
-git diff --cached --name-only
-git diff --cached
-git commit -m "Add optional W4 trace output"
-git push origin main
+请说明 source、结果字典和两份 data 列表之间的关系；选择能满足验收的复制或重建方式。运行测试，列出实际改动和结果，再停下让我检查。
 ```
 
-`s07` 只是示例。若仍有越界、失败或无法解释的改动，就先保留现场和下一步，不用一个“绿色”结果掩盖它；本周不提交 upstream PR。
+可以按层级复制、重建容器，或在本例中使用 `deepcopy`。验收看行为与关系。亲自运行已发布的测试，打开实际改动，指出“建立独立结果”和“修改指定内容”分别发生在哪里。
+
+还有失败时，先记录哪项条件被破坏、哪两个对象仍共享，再与 Agent 依据证据修改。Agent 的“已完成”需要实际结果支持。
+
+## 实验分支与模拟远端
+
+按本周实验说明检查实际仓库、分支和远端，在独立实验分支保存已检查的测试与实现。核验四项状态：
+
+1. 改动位于本次实验分支。
+2. 基准分支仍指向教师准备的初始状态。
+3. 本地提交包含已检查的实现与测试。
+4. 模拟远端的对应分支与本地提交一致。
+
+本周 Git 实验使用教师准备的模拟远端，不覆盖 W3 正式仓库的 remote。若实验未通过，保存真实候选状态；成功 push 不能替代程序验收。第三课时第 40 分钟停止新增改动与排障，剩余时间用于核验、保存和说明。
+
+## 最后留下四行证据
+
+- 原来的预测。
+- 哪一层关系或内容改变。
+- `is`／`==`／独立快照的实际证据。
+- 这些证据仍不能证明什么。
+
+状态按真实情况写：已满足已发布条件、仍有某项失败，或跟随教师证据判读。使用教师记录时注明来源，不把教师运行记为本人成功。

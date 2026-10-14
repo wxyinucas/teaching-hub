@@ -11,6 +11,9 @@
 .notes-content > p.notes-emphasis > em { font-style: normal; font-weight: 550; overflow-wrap: anywhere; }
 .notes-content blockquote { margin: 14px 0; padding: 8px 14px; background: var(--purple-light); border-left: 2px solid var(--purple); color: var(--purple-dark); }
 .notes-content blockquote p { margin: 0; }
+.notes-content table { width: 100%; margin: 14px 0; border-collapse: collapse; }
+.notes-content th, .notes-content td { padding: 9px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+.notes-content th { background: var(--surface-muted); color: var(--purple-dark); font-weight: 650; }
 .notes-content code { background: var(--surface-muted); border-radius: 3px; padding: .12em .3em; font-size: .88em; }
 .code-block { border: 1px solid var(--border); border-radius: 5px; margin: 14px 0; background: var(--surface-muted); overflow: hidden; }
 .code-toolbar { display: flex; justify-content: space-between; align-items: center; padding: 5px 12px; background: var(--purple-light); font-size: 10px; color: var(--purple-dark); }

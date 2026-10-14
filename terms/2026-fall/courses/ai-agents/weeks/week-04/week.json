@@ -1,8 +1,9 @@
 {
   "id": "week-04",
-  "label": "W4 · 程序怎样运行",
-  "title": "一段代码怎样运行？",
-  "summary": "用 Python、R、Rust、C 对照源码与可执行文件的运行路径，再沿熟悉的命令找到入口并用追踪输出观察执行。",
+  "runbookLayout": "lesson-cards",
+  "label": "W4 · 名字、对象与可变性",
+  "title": "赋值以后，到底改了什么？",
+  "summary": "区分名字的绑定、对象身份与内容，用 is、== 和独立快照取得证据；与 Agent 先写测试，再生成不污染原始记录的分析方案。",
   "order": 4,
   "resources": {
     "runbook": "runbook.md",
