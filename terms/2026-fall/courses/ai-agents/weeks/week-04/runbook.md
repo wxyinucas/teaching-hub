@@ -37,7 +37,7 @@
 
 - 根问题：赋值以后，我究竟改了名字的指向、对象的内容，还是两者都改了？我凭什么判断？
 - 本周至少：解释两次污染；与 Agent 写出能拒绝两份故障的测试，核验修复、后续修改与两次调用，并留下自己的判断。
-- 教师示范结束即可交接本周实操，不等课时边界、不补满 100 分钟；第三课时以学生操作为主，最后 10 分钟保存状态并回顾。
+- 前两课时的演示内容结束后，进入作业说明，再示范一条测试；随后交给学生按 Guide 操作，不等课时边界、不补满 100 分钟。交接后不再逐段讲授，最后 10 分钟一起保存状态并回顾。
 
 #### 从 Bash 到 Notebook：代码在哪里执行？
 
@@ -71,9 +71,10 @@
   - 在新的 `>>>` 输入 `print(probe)` → `NameError`。
   - “刚才那个进程结束了，新进程没有保留它的普通名字。”输入 `exit()` 回 Bash。
 
-- **打开准备好的 Notebook，顺序运行四个 cell。**
+- **打开准备好的 Notebook，从“初始化 → 第一次观察 → 修改 → 再次观察”标题下开始。**
   - 从 Explorer 打开本周 `demo.ipynb`；自己新建时，备用入口为命令面板的 `Create: New Jupyter Notebook`。
   - 指认代码 cell、下方输出与右上角已选好的 kernel。
+  - 跳过该标题前、故意报错的 `print(probe)` 格；不点击 Run All。只顺序运行标题下的四个 cell。
   - “Notebook 是界面，kernel 是执行代码、保留变量的进程；它与刚才终端中的 Python 分开。”
   - 初始化 cell：`probe = 42`。
   - 第一次观察 cell：`print(probe)` → `42`。
@@ -89,7 +90,7 @@
   - [ ] 课前：亲自核对旧输出不刷新、重跑观察得 `2026`、重启后查询得 `NameError`；保存真实输出备用。
   - 重启后运行 `print(probe)` → `NameError`。
   - “清空输出只清显示；重启 kernel 才重置运行状态。”
-  - 从上至下重跑开场四个 cell → 两次观察分别得到 `42`、`2026`。
+  - 回到“初始化 → 第一次观察 → 修改 → 再次观察”标题下，只重跑这四个 cell → 两次观察分别得到 `42`、`2026`。
   - 后续每个独立实验各用一组 cell：初始化 → 修改 → 观察；只在新实验开始时恢复输入，不在观察前重新初始化。
   - 代码与输出仍在 VS Code；需要导读时，可选中代码让现有 Agent 解释。
 
@@ -451,11 +452,11 @@
 
 ### 100-150 | 与 Agent 完成本周大作业，验收两版实验
 
-> 背景与目的 → 先测试后实现 → 检查两份候选 → 导读依据 → 保存与回顾。
+> 交代任务 → 示范一条测试 → 学生按 Guide 独立推进 → 最后 10 分钟共同收口。
 
 #### 本周大作业：给导师维护可独立修改的实验方案
 
-> 读懂约定 → 与 Agent 先写测试 → 拒绝两种故障 → 实现与导读。
+> 背景与目的 → 输入输出 → 五项验收。
 
 - [ ] 课前：确认教师材料已发布；在学生已有仓库取得 `week-04/`，核对 `EXPERIMENT.txt`、`variant.py`、测试与锁文件，不改 W3 项目。
 
@@ -508,65 +509,51 @@
   - 再修改结果，不影响 source。
   - 调用两次产生两份结果，修改其中一份不影响另一份。
 
-- **交接学生与 Agent，先只写测试。**
+#### 先让测试拒绝两种已知错误
+
+> 读一条真实测试 → 切换参考与两份故障 → 解释失败 → 交接学生。
+
+- [ ] 课前：备好可分别运行的直接共享、浅复制两份故障及参考实现；同一组测试拒绝两份故障、接受参考实现，每次重新建立输入，保留实际输出。
+
+- **打开 `tests/test_acceptance.py`，搜索 `test_keeps_original_content`。只读文件，不复制到 Notebook。**
+
+  - 向上看 `CASES` 第一组：旧 seed 为 `42`、样本量为 `[1000, 10000, 100000]`；新 seed 为 `2026`，第三项改为 `500000`。
+  - 回到函数：`before = deepcopy(source)` 保存独立基准；调用 `make_variant(...)` 后，`assert source == before` 检查旧配置。
+  - “预期不是程序算出来的：导师明确要求旧方案不变，所以调用前后应相等。”
+  - 函数参数 `make_variant` 接收课程 fixture，具体候选由 `--impl` 选择；不在 Notebook 中临时导入实现。
+
+- **在本周 Terminal 中运行同一条测试，只切换候选。**
+
+  ~~~bash
+  uv run --locked pytest -q tests/test_acceptance.py -k 'keeps_original_content and baseline' --impl=reference
+  uv run --locked pytest -q tests/test_acceptance.py -k 'keeps_original_content and baseline' --impl=direct
+  uv run --locked pytest -q tests/test_acceptance.py -k 'keeps_original_content and baseline' --impl=shallow
+  ~~~
+
+  - `-k` 只选第一组输入的“旧配置保持”测试：参考 `1 passed`，两份故障各 `1 failed`；其余测试显示 `23 deselected`。
+  - 打开故障输出：失败的是 `assert source == before`；预期第三项 `100000`，实际已变为 `500000`。
+  - 到 `examples.py` 搜索 `direct`、`shallow`：前者共享字典，后者仍共享列表，都改坏了旧样本量。
+  - “同一个检查，能接受正确实现，也能拒绝我们已经看懂的错误。接下来请你们用自己的输入写检查。”
+  - 导入或环境报错：保留输出求助；尚未执行断言，不算测试已经拒绝了共享故障。
+
+- **打开 Guide 的“与 Agent 先写测试，再实现”，交接学生。**
+
+  - “接下来按 Guide 自己推进：先写测试，接受参考、拒绝两份故障，再让 Agent 实现。我会巡视；最后 10 分钟一起收尾。”
+  - 每人先写一个预测，再把下面的 Prompt 交给 Agent。
 
   ~~~text
   请先读实验说明和 make_variant 函数壳，与我一起写测试，暂不修改实现。
   测试写在 tests/test_student.py，通过函数参数 make_variant 接收课程 fixture，
   不直接 import 候选实现；--impl 是教师提供的切换开关。
-  先检查给定输入的结果、原始内容、外层身份和 sample_sizes 身份。
-  解释预期答案从哪里来；保存原始内容时，不要留下共享的可变数据。
-  分别运行教师的直接共享、浅复制两份故障，指出哪项断言拒绝了它们。
-  给我实际输出，等我检查后再实现。
+  解释预期答案从哪里来，检查结果、原始内容、字典与列表身份，以及后续修改和两次调用。
+  用同一份测试接受 reference、拒绝 direct 和 shallow，指出实际失败的断言。
+  给我真实输出，等我核对后再实现。
   ~~~
 
-  - 每人先留下一个预测，再开始 Agent 对话；测试的预期不能由候选程序自己的输出充当。
-  - 本块是完整作业路线，不要求从第 100 分钟才开始；前两块示范结束即可交接，教师按实际失败巡视与诊断。
-
-#### 先让测试拒绝两种已知错误
-
-> 核对输入与答案 → 对同一份测试切换故障 → 找出实际失败的断言。
-
-- [ ] 课前：备好可分别运行的直接共享、浅复制两份故障及参考实现；同一组测试拒绝两份故障、接受参考实现，每次重新建立输入，保留实际输出。
-
-- **在教师公开验收上示范开关，再交给学生自己的测试。**
-
-  ~~~bash
-  uv run --locked pytest -q tests/test_acceptance.py --impl=reference
-  uv run --locked pytest -q tests/test_acceptance.py --impl=direct
-  uv run --locked pytest -q tests/test_acceptance.py --impl=shallow
-  ~~~
-
-  - 参考通过，两份故障断言失败；打开 `examples.py` 看实际切到哪一份。
-  - 学生用自己的 `tests/test_student.py` 按同样顺序核验，先接受参考，再拒绝故障。
   - 初始学生测试只有说明，`no tests ran` 不算通过；教师测试通过也不替代学生自己写测试。
+  - 下方“根据同一份测试实现修复”到“带着证据看代码”供巡视时按需查阅，不再逐段全班示范；第 140 分钟直接进入“保存状态与本次课回顾”。
 
-- **打开一次调用的测试，先核对独立答案。** 从实验包加载候选 make_variant 后，检查这些断言：
-
-  ~~~python
-  source = {"seed": 42, "sample_sizes": [1000, 10000, 100000]}
-  expected_source = {"seed": 42, "sample_sizes": [1000, 10000, 100000]}
-  expected_result = {"seed": 2026, "sample_sizes": [1000, 10000, 500000]}
-
-  result = make_variant(source, 2026, 2, 500000)
-
-  assert result == expected_result
-  assert source == expected_source
-  assert result is not source
-  assert result["sample_sizes"] is not source["sample_sizes"]
-  ~~~
-
-  - 前两条比较值，后两条比较身份；预期记录各自建立。
-  - 问：“为什么这两个预期正确？为什么不写 expected_source = source？”
-
-- **用同一组测试分别运行直接共享、浅复制故障。** 每份重新建立输入。
-
-  - 直接共享：结果可能正确，旧配置已变，字典和列表也不独立。
-  - 浅复制：字典独立，旧样本量已变，列表仍共享。
-  - 只打开一条真实失败：输入 → 预期 → 实际 → 失败断言。一次运行可能只报告最先失败的断言。
-  - 导入或环境报错：保留输出求助；尚未执行断言，不算测试已经拒绝了共享故障。
-
-- **把真实输出交给 Agent，只定位这一处。**
+- **学生卡在失败输出时，把这一处交给 Agent。**
 
   ~~~text
   这是刚才的真实测试输出：……
@@ -581,7 +568,7 @@
 
 > 委托实现 → 本人重跑 → 看实现与 diff，确认修的是程序。
 
-- **保留刚才的测试，委托 Agent 实现。**
+- **学生保留刚才的测试，委托 Agent 实现。**
 
   ~~~text
   根据刚才核验过的测试，实现 make_variant。
@@ -600,7 +587,7 @@
   - 第一条检查学生测试，第二条是教师公开验收；看真实输出，再对照 Agent 工具记录。
   - 仍失败：回到具体断言修实现；通过后继续检查文件。
 
-- **打开实现和 diff，定位独立关系与指定修改。**
+- **学生打开实现和 diff，定位独立关系与指定修改。**
   - 核对 source 与 result 的内容、字典身份和列表身份。
   - 看失败断言仍在，预期仍是原来的工作要求。
   - “按层复制、重建容器或 deepcopy 都可以；不按出现了哪个关键词评分，也不要求不可变整数有不同身份。”
@@ -611,40 +598,18 @@
 
 - [ ] 课前：用参考实现核对本段的后续修改、两次调用；再准备另一组合法输入，避免只验收写死的示例。
 
-- **追加导师的要求，在新实验组中修改返回结果。**
+- **学生补充“后续修改”的测试。**
   - “下午导师又说：最小样本量也改一下，基线仍要保留。首次返回正确，能保证后续不串吗？”
+  - 只读 `tests/test_acceptance.py` 的 `test_later_result_changes_do_not_change_source`，不把片段接到 Notebook 中运行。
+  - 用自己的输入保存独立基准 → 调用函数 → 再改结果的 seed 与列表 → 检查 source 保持原样。
+  - 把这组行为加入 `tests/test_student.py`，通过 pytest 的 `--impl=student` 核验。
 
-  ~~~python
-  source = {"seed": 42, "sample_sizes": [1000, 10000, 100000]}
-  expected_source = {"seed": 42, "sample_sizes": [1000, 10000, 100000]}
-  result = make_variant(source, 2026, 2, 500000)
+- **学生补充“同参数两次调用”的测试。**
 
-  result["seed"] = 2027
-  result["sample_sizes"][0] = 2000
-  assert source == expected_source
-  ~~~
-
-  - 断言通过：source 仍是基线。学生把这个后续操作加入自己的测试。
-
-- **再开一组实验，用相同参数生成两份候选，只改 first。**
-
-  ~~~python
-  source = {"seed": 42, "sample_sizes": [1000, 10000, 100000]}
-  expected_source = {"seed": 42, "sample_sizes": [1000, 10000, 100000]}
-  first = make_variant(source, 2026, 2, 500000)
-  second = make_variant(source, 2026, 2, 500000)
-
-  assert first == second
-  assert first is not second
-  assert first["sample_sizes"] is not second["sample_sizes"]
-
-  first["seed"] = 2028
-  first["sample_sizes"][1] = 250000
-  assert second == {"seed": 2026, "sample_sizes": [1000, 10000, 500000]}
-  assert source == expected_source
-  ~~~
-
-  - 初始值相等，身份不同；改 first 后，second 保持候选参数，source 保持基线。把这组检查加入自己的测试。
+  - 对照同文件的 `test_two_calls_can_be_modified_separately`，用自己的输入写检查。
+  - 同样参数生成 first、second：起始值相等，两个字典不同，两个列表也不同。
+  - 只改 first 的 seed 与列表，second 保持候选参数，source 保持基线。
+  - “检查的是你自己项目中的函数；Notebook 后段明确演示的是 reference，不能替代学生实现的验收。”
 
 - **换一组合法输入，先写答案，再核验。**
   - 仍按同一接口，不增加新功能；确认实现没有把课堂示例写死。
@@ -654,9 +619,9 @@
 
 > 选一项验收承诺 → 让 Agent 指路 → 在源码与测试中核对 → 留下自己的解释。
 
-- [ ] 课前：在参考实现中定位独立字典、独立 sample_sizes 和指定修改的位置，打开对应测试与实际 diff。
+- [ ] 课前：在 `examples.py` 的 `reference` 中定位独立字典、独立 sample_sizes 和指定修改的位置，对照 `tests/test_acceptance.py`；学生函数与 diff 在巡视时查看。
 
-- **选“旧配置保持”这项承诺，让 Agent 指路。**
+- **学生选“旧配置保持”这项承诺，让 Agent 指路。**
 
   ~~~text
   只读我的 make_variant 和相关测试。
@@ -665,13 +630,13 @@
   再指出一项这些测试尚不能证明的性质，不修改代码。
   ~~~
 
-- **打开 Agent 指出的几行，再打开对应断言。**
+- **学生打开 Agent 指出的几行，再打开对应断言。**
 
   - 指出哪层不再共享，后续修改会沿哪条路径到达哪个对象。
   - “用了 deepcopy”还不够；结合实际文件说出它在本题兑现了什么。
   - 再说一项没有证明的事：这份配置测试不证明投针估计一定更准确。
 
-- **在自己的记录里留下四行，完成本周实操证据。**
+- **学生在自己的记录里留下四行，完成本周实操证据。**
 
   - 开场预测。
   - 一次被证据推翻的解释。

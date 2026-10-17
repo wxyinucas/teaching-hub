@@ -7,6 +7,7 @@
 .demo-reader .derivatives-demo,
 .demo-reader .derivative-microscope-demo,
 .demo-reader .parametric-derivative-demo,
+.demo-reader .polar-coordinates-demo,
 .demo-reader .inverse-derivative-demo { margin-top: 0; }
 
 .sequence-limit-demo,
@@ -14,6 +15,7 @@
 .derivatives-demo,
 .derivative-microscope-demo,
 .parametric-derivative-demo,
+.polar-coordinates-demo,
 .inverse-derivative-demo {
   max-width: 1180px;
   margin: 28px auto 0;
@@ -30,6 +32,7 @@
 
 .derivatives-demo > .derivative-microscope-demo,
 .derivatives-demo > .parametric-derivative-demo,
+.derivatives-demo > .polar-coordinates-demo,
 .derivatives-demo > .inverse-derivative-demo {
   max-width: none;
   margin: 0;
@@ -267,6 +270,10 @@
 .inverse-playback button:disabled { opacity: .56; }
 
 .microscope-layout { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(270px, .8fr); gap: 28px; align-items: start; }
+.microscope-view-control { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-bottom: 8px; color: var(--ink-muted); font-size: 12px; }
+.microscope-view-control button { padding: 5px 9px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); color: var(--purple-dark); font: inherit; }
+.microscope-view-control button[aria-pressed="true"] { border-color: var(--purple); background: var(--purple-light); }
+.microscope-view-note { margin: 8px 0; color: var(--ink-muted); font-size: 12px; line-height: 1.7; }
 .derivative-plot,
 .parametric-plot { min-width: 0; }
 .derivative-plot > svg,
@@ -275,17 +282,34 @@
 .derivative-axes line,
 .parametric-axes line,
 .map-axis { stroke: var(--ink-subtle); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
-.derivative-function-curve { fill: none; stroke: var(--ink); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
-.derivative-secant { stroke: var(--purple); stroke-width: 2.5; vector-effect: non-scaling-stroke; }
+.derivative-microscope-demo .derivative-axes line { stroke-width: 1; }
+.derivative-function-curve { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.derivative-secant { stroke: var(--ink-muted); stroke-width: 1.5; stroke-dasharray: 3 4; vector-effect: non-scaling-stroke; }
 .derivative-observation.is-left .derivative-secant { stroke: var(--ink-muted); stroke-dasharray: 9 7; }
-.derivative-delta { stroke: var(--purple); stroke-width: 3; vector-effect: non-scaling-stroke; }
+.derivative-delta { stroke: var(--ink); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.derivative-delta-x { stroke: var(--ink-muted); stroke-width: 1.2; stroke-dasharray: 3 4; }
 .derivative-observation.is-left .derivative-delta { stroke: var(--ink-muted); stroke-dasharray: 7 5; }
-.derivative-tangent { stroke: var(--accent-solid); stroke-width: 5; stroke-dasharray: 15 8; vector-effect: non-scaling-stroke; }
+.derivative-tangent { stroke: var(--purple); stroke-width: 2; stroke-dasharray: 9 6; vector-effect: non-scaling-stroke; }
+.derivative-differential { stroke: var(--purple); stroke-width: 1.5; stroke-dasharray: 5 4; vector-effect: non-scaling-stroke; }
+.derivative-remainder { stroke: var(--ink-muted); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.derivative-model-guide { stroke: var(--ink-subtle); stroke-width: 1; stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
+.derivative-prediction { fill: var(--surface); stroke: var(--purple); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.derivative-prediction-label { fill: var(--purple-dark); font-family: "KaTeX_Main", Georgia, serif; font-size: 18px; font-weight: 600; }
+.differential-legend { display: flex; flex-wrap: wrap; gap: 10px 20px; margin: 8px 0 0; color: var(--ink-muted); font-size: 12px; line-height: 1.7; }
+.differential-legend > span { display: inline-flex; align-items: center; gap: 8px; }
+.differential-key { display: inline-block; flex: 0 0 auto; width: 10px; height: 10px; }
+.differential-key.is-actual { border: 1.5px solid var(--ink); border-radius: 50%; }
+.differential-key.is-prediction { width: 8px; height: 8px; margin-inline: 1px; border: 1.5px solid var(--purple); transform: rotate(45deg); }
+.differential-key.is-remainder { width: 2px; height: 14px; margin-inline: 4px; background: var(--ink-muted); }
+.differential-note { margin: 12px 0 0; color: var(--ink-muted); font-size: 12px; line-height: 1.8; }
+.differential-readout .math-display + .math-display { margin-top: 13px; }
+.differential-readout .katex { font-size: clamp(.95em, 1.4vw, 1.12em); }
 .derivative-p-focus,
 .parametric-point-focus { fill: var(--purple-light); stroke: none; }
 .derivative-p,
 .parametric-point { fill: var(--accent-solid); stroke: var(--surface); stroke-width: 2; vector-effect: non-scaling-stroke; }
-.derivative-q { fill: var(--surface); stroke: var(--purple); stroke-width: 3; vector-effect: non-scaling-stroke; }
+.derivative-microscope-demo .derivative-p { stroke-width: 1.5; }
+.derivative-q { fill: var(--surface); stroke: var(--ink); stroke-width: 1.7; vector-effect: non-scaling-stroke; }
 .derivative-observation.is-left .derivative-q { stroke: var(--ink-muted); }
 .derivative-p-label,
 .derivative-q-label,
@@ -323,6 +347,8 @@
 .derivative-map-card .katex { font-size: .94em; }
 .map-frame { fill: var(--surface-muted); stroke: var(--border); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .map-curve { fill: none; stroke: var(--purple); stroke-width: 3; vector-effect: non-scaling-stroke; }
+.derivative-map-card .map-curve { stroke-width: 1.8; }
+.derivative-map-card .map-axis { stroke-width: 1; }
 .map-current-point { fill: var(--accent-solid); stroke: var(--surface); stroke-width: 2; vector-effect: non-scaling-stroke; }
 .map-open-point { fill: var(--surface-muted); stroke: var(--purple); stroke-width: 2.5; vector-effect: non-scaling-stroke; }
 .map-label { fill: var(--ink-muted); font-size: 13px; }
@@ -391,6 +417,37 @@
 .inverse-slope-product { margin-top: 12px; padding-top: 16px; border-top: 3px double var(--border); color: var(--ink); }
 .inverse-slope-warning { margin: 12px 0 0; color: var(--purple-dark); font-size: 13px; font-weight: 650; line-height: 1.7; }
 
+.polar-mode-controls { display: flex; flex-wrap: wrap; gap: 18px 28px; align-items: end; margin-top: 28px; }
+.polar-curve-choice { display: grid; gap: 8px; color: var(--ink-muted); font-size: 12px; font-weight: 650; }
+.polar-curve-choice select { min-height: 42px; padding: 8px 32px 8px 12px; border: 1px solid var(--border); border-radius: 5px; background: var(--surface); color: var(--ink); font: inherit; }
+.polar-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 28px; margin: 22px 0; padding: 18px 0; border-block: 1px solid var(--border); }
+.polar-parameter-control { grid-column: 1 / -1; }
+.polar-angle-presets { grid-column: 1 / -1; justify-self: end; }
+.polar-layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(260px, .85fr); gap: 30px; align-items: center; }
+.polar-plot { min-width: 0; }
+.polar-plot > svg { display: block; width: 100%; height: auto; }
+.polar-plot > svg.is-draggable { touch-action: none; cursor: crosshair; }
+.polar-cartesian-grid line { stroke: var(--border); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.polar-grid circle, .polar-grid line { fill: none; stroke: var(--ink-subtle); stroke-width: 1; stroke-dasharray: 3 6; opacity: .6; vector-effect: non-scaling-stroke; }
+.polar-axes line { stroke: var(--ink-subtle); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.polar-axes text { fill: var(--ink-muted); font: 17px "KaTeX_Main", Georgia, serif; }
+.polar-whole-curve, .polar-traced-curve { fill: none; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.polar-whole-curve { stroke: var(--ink-subtle); stroke-width: 1.5; }
+.polar-traced-curve { stroke: var(--purple); stroke-width: 3.5; }
+.polar-coordinate-guides line { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 6 5; vector-effect: non-scaling-stroke; }
+.polar-radius { stroke: var(--purple); stroke-width: 2; stroke-dasharray: 9 5; vector-effect: non-scaling-stroke; }
+.polar-angle-arc { fill: none; stroke: var(--purple-dark); stroke-width: 2.5; vector-effect: non-scaling-stroke; }
+.polar-measure-labels text { fill: var(--purple-dark); font: 600 19px "KaTeX_Main", Georgia, serif; }
+.polar-point-focus { fill: var(--purple-light); }
+.polar-point { fill: var(--accent-solid); stroke: var(--surface); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.polar-point-label { fill: var(--ink); font: 600 21px "KaTeX_Main", Georgia, serif; }
+.polar-plot-hint { margin: 6px 0 0; color: var(--ink-muted); text-align: center; font-size: 12px; line-height: 1.7; }
+.polar-readout { min-width: 0; border-top: 3px solid var(--accent-solid); }
+.polar-readout .katex { font-size: 1.15em; }
+.polar-readout .math-display + .math-display { margin-top: 16px; }
+.polar-convention, .polar-origin-note { margin: 14px 0 0; color: var(--ink-muted); font-size: 13px; line-height: 1.8; }
+.polar-origin-note { color: var(--purple-dark); }
+
 @keyframes inverse-reveal {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -415,6 +472,7 @@
 .demo-reader:fullscreen .derivatives-demo { max-width: 1180px; }
 .demo-reader:fullscreen .derivative-microscope-demo { max-width: 1180px; }
 .demo-reader:fullscreen .parametric-derivative-demo { max-width: 1180px; }
+.demo-reader:fullscreen .polar-coordinates-demo { max-width: 1180px; }
 .demo-reader:fullscreen .inverse-derivative-demo { max-width: 1180px; }
 
 @media (max-width: 1040px) {
@@ -430,6 +488,7 @@
   .inverse-playback { grid-column: 1 / -1; justify-self: end; min-width: 180px; }
   .inverse-readout { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; border-top: 1px solid var(--border); }
   .inverse-readout .readout-block { border-top: 3px solid var(--accent-solid); }
+  .polar-layout { grid-template-columns: minmax(0, 1.4fr) minmax(230px, 1fr); gap: 20px; }
 }
 
 @media (max-width: 680px) {
@@ -439,9 +498,11 @@
   .derivatives-demo,
   .derivative-microscope-demo,
   .parametric-derivative-demo,
+  .polar-coordinates-demo,
   .inverse-derivative-demo { padding: 22px 16px; }
   .derivatives-demo > .derivative-microscope-demo,
   .derivatives-demo > .parametric-derivative-demo,
+  .derivatives-demo > .polar-coordinates-demo,
   .derivatives-demo > .inverse-derivative-demo { padding: 0; }
   .demo-scene-nav { margin: -8px 0 24px; }
   .demo-scene-nav button { padding-inline: 8px; font-size: 12px; }
@@ -475,6 +536,8 @@
   .microscope-readout { display: block; }
   .inverse-playback { grid-column: auto; justify-self: stretch; }
   .inverse-readout { display: block; }
+  .polar-controls, .polar-layout { grid-template-columns: 1fr; }
+  .polar-readout { margin-top: 10px; }
   .readout-block { border-top: 0; }
 }
 

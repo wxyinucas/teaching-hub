@@ -14,7 +14,7 @@ describe('derivatives topic demo', () => {
     wrapper = mount(DerivativesDemo)
 
     const tabs = wrapper.findAll(':scope > .demo-scene-nav button')
-    expect(tabs).toHaveLength(3)
+    expect(tabs).toHaveLength(4)
     expect(wrapper.find('.derivative-microscope-demo').exists()).toBe(true)
     expect(wrapper.find('.parametric-derivative-demo').exists()).toBe(false)
     expect(wrapper.find('.inverse-derivative-demo').exists()).toBe(false)
@@ -27,6 +27,10 @@ describe('derivatives topic demo', () => {
     expect(wrapper.find('.derivative-microscope-demo').exists()).toBe(false)
     expect(wrapper.find('.parametric-derivative-demo').exists()).toBe(false)
     expect(wrapper.find('.inverse-derivative-demo').exists()).toBe(true)
+
+    await tabs[3].trigger('click')
+    expect(wrapper.find('.inverse-derivative-demo').exists()).toBe(false)
+    expect(wrapper.find('.polar-coordinates-demo').exists()).toBe(true)
 
     await tabs[0].trigger('click')
     expect(wrapper.find('.derivative-microscope-demo').exists()).toBe(true)
