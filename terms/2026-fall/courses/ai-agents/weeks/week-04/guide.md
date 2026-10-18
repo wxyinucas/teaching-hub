@@ -77,6 +77,93 @@ code .
 
 Notebook 是观察工具，不是额外的提交门槛。安装受阻时先跟看教师输出，作业测试仍可在 Terminal 执行。
 
+## 先认识列表、字典与 type()
+
+在 `demo.ipynb` 末尾新增几格代码 cell，沿用本周 kernel，按下面的顺序执行。这组练习使用 `sizes` 和 `config`；后续课堂实验会各自重新初始化 `source`。
+
+### 创建列表，按位置取值
+
+列表 list 按顺序放一组值，用方括号创建：
+
+```python
+sizes = [1000, 10000, 100000]
+print(sizes[0], sizes[2])
+print(type(sizes), type(sizes[2]))
+```
+
+预期输出：
+
+```text
+1000 100000
+<class 'list'> <class 'int'>
+```
+
+位置编号叫索引，Python 从 `0` 开始编号，所以 `sizes[2]` 是第 3 项。`type()` 查看对象的类型；先看输出引号里的名字：整个 `sizes` 是 `list`，取出的这一项是整数 `int`。
+
+### 修改列表中的一项
+
+在下一格执行：
+
+```python
+sizes[2] = 500000
+print(sizes)
+```
+
+输出应为 `[1000, 10000, 500000]`。等号右侧给出新值，左侧指出要修改的位置；前两项保持原样。
+
+### 用字典组织配置，按字段取值
+
+另建一份练习配置：
+
+```python
+config = {"seed": 42, "sample_sizes": [1000, 10000, 100000]}
+print(type(config))
+print(config["seed"])
+print(config["sample_sizes"])
+```
+
+预期输出：
+
+```text
+<class 'dict'>
+42
+[1000, 10000, 100000]
+```
+
+字典 dict 用 `字段名: 值` 组成记录，字段名也叫键 key，对应的内容叫值 value。这里 `"seed"`、`"sample_sizes"` 是文字键，保留引号；它们不是位置编号。
+
+同样写方括号：列表中填位置，字典中填键。
+
+### 先找字段，再找第 3 项
+
+把两组连续的方括号拆开看：
+
+```python
+print(config["sample_sizes"])
+print(config["sample_sizes"][2])
+print(type(config["sample_sizes"]), type(config["sample_sizes"][2]))
+```
+
+预期输出：
+
+```text
+[1000, 10000, 100000]
+100000
+<class 'list'> <class 'int'>
+```
+
+`config["sample_sizes"]` 先取出列表，后面的 `[2]` 再取这个列表的第 3 项。按同一条路径也能修改：
+
+```python
+config["seed"] = 2026
+config["sample_sizes"][2] = 500000
+print(config)
+```
+
+预期为 `{'seed': 2026, 'sample_sizes': [1000, 10000, 500000]}`：第一行改字典字段的值，第二行改字段内列表的一项。
+
+`type()` 只回答“是哪类对象”，不回答“是不是同一个对象”。后续用 `is` 比较身份、用 `==` 比较内容。
+
 ## 本周大作业：维护独立的追加方案
 
 ### 固定入口与已知答案
