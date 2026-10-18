@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+  <title id="title">替换列表第三项：列表共享，旧整数不变</title>
+  <desc id="desc">l 和 other 始终指向同一个列表。执行 l 的索引 2 赋值为 500000 后，第三项解除到旧整数 100000 的指向，改为指向新整数 500000。saved_item 的指向不变，仍指向旧整数 100000。</desc>
+  <defs>
+    <marker id="purple-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#5e33bf"/>
+    </marker>
+    <marker id="ink-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#191919"/>
+    </marker>
+    <marker id="gray-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#777777"/>
+    </marker>
+    <style>
+      text { fill: #191919; font-family: "Kaiti SC", STKaiti, KaiTi, serif; }
+      .code { font-family: ui-monospace, Menlo, Consolas, monospace; }
+      .edge { fill: none; stroke-width: 4; stroke-linejoin: round; }
+      .name { fill: #f1ecfa; stroke: #291344; stroke-width: 2.5; }
+      .purple { fill: #291344; }
+      .old { fill: #777777; }
+    </style>
+  </defs>
+
+  <text class="code" x="20" y="32" font-size="26">l = [1000, 10000, 100000]; other = l; saved_item = l[2]</text>
+  <text class="code purple" x="20" y="75" font-size="34">l[2] = 500000</text>
+
+  <!-- 名字标签：两条箭头都落在列表本身，而非某一项。 -->
+  <rect class="name" x="20" y="110" width="245" height="60" rx="7"/>
+  <text class="code" x="142.5" y="152" text-anchor="middle" font-size="38">l</text>
+  <rect class="name" x="20" y="190" width="245" height="60" rx="7"/>
+  <text class="code" x="142.5" y="232" text-anchor="middle" font-size="38">other</text>
+  <path class="edge" d="M265 140 H320 V145 H360" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M265 220 H300 V170 H360" stroke="#191919" marker-end="url(#ink-arrow)"/>
+
+  <!-- 展开当前讨论的唯一层级：列表第三项的指向。 -->
+  <rect x="360" y="110" width="260" height="220" rx="9" fill="#ffffff" stroke="#291344" stroke-width="3"/>
+  <text class="purple" x="490" y="153" text-anchor="middle" font-size="36">同一个列表</text>
+  <text x="490" y="191" text-anchor="middle" font-size="28">索引 0、1 省略</text>
+  <rect x="390" y="215" width="210" height="78" rx="6" fill="#f1ecfa" stroke="#5e33bf" stroke-width="3"/>
+  <text class="purple" x="495" y="246" text-anchor="middle" font-size="31">索引 2</text>
+  <text class="purple" x="495" y="280" text-anchor="middle" font-size="31">（第 3 项）</text>
+
+  <!-- 新指向保持实线；已解除的旧指向用虚线并就地说明。 -->
+  <path class="edge" d="M600 250 H655 V190 H800" stroke="#777777" stroke-dasharray="9 8" marker-end="url(#gray-arrow)"/>
+  <text class="old" x="735" y="137" text-anchor="middle" font-size="30">原指向</text>
+  <text class="old" x="735" y="170" text-anchor="middle" font-size="30">已解除</text>
+  <path class="edge" d="M600 265 H710 V360 H800" stroke="#5e33bf" marker-end="url(#purple-arrow)"/>
+  <text class="purple" x="735" y="320" text-anchor="middle" font-size="31">新指向</text>
+
+  <rect x="800" y="155" width="174" height="70" rx="7" fill="#ffffff" stroke="#191919" stroke-width="2.5"/>
+  <text class="code" x="887" y="203" text-anchor="middle" font-size="38">100000</text>
+  <rect x="800" y="325" width="174" height="70" rx="7" fill="#f1ecfa" stroke="#5e33bf" stroke-width="3"/>
+  <text class="code purple" x="887" y="373" text-anchor="middle" font-size="38">500000</text>
+
+  <!-- saved_item 没有指向列表槽位；它直接保留旧整数。 -->
+  <rect class="name" x="20" y="350" width="245" height="60" rx="7"/>
+  <text class="code" x="142.5" y="392" text-anchor="middle" font-size="36">saved_item</text>
+  <path class="edge" d="M265 380 H290 V405 H990 V245 H887 V225" stroke="#191919" marker-end="url(#ink-arrow)"/>
+
+  <text x="530" y="431" text-anchor="middle" font-size="31">列表第 3 项被替换，旧整数不变</text>
+</svg>

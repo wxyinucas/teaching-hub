@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+  <title id="title">浅复制字典：只替换新字典的 seed</title>
+  <desc id="desc">variant 是 source 的浅复制，两个名字指向不同字典。修改 variant 的 seed，只替换字典 B 的 seed 指向。字典 A 仍指向上方的整数 42，字典 B 指向下方的新整数 2026。图只展开 seed 字段。</desc>
+  <defs>
+    <marker id="ink-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10Z" fill="#191919"/></marker>
+    <marker id="purple-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10Z" fill="#5e33bf"/></marker>
+    <marker id="gray-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10Z" fill="#777777"/></marker>
+    <style>
+      text { fill:#191919; font-family:"Kaiti SC",STKaiti,KaiTi,serif; }
+      .code { font-family:ui-monospace,Menlo,Consolas,monospace; }
+      .edge { fill:none; stroke-width:4; stroke-linejoin:round; }
+      .name { fill:#f1ecfa; stroke:#291344; stroke-width:2.5; }
+      .purple { fill:#291344; }
+      .old { fill:#777777; }
+    </style>
+  </defs>
+  <text class="code" x="20" y="31" font-size="28">variant = source.copy()</text>
+  <text class="code purple" x="20" y="77" font-size="32">variant["seed"] = 2026</text>
+
+  <rect class="name" x="20" y="155" width="180" height="60" rx="7"/>
+  <text class="code" x="110" y="196" font-size="32" text-anchor="middle">source</text>
+  <rect class="name" x="20" y="305" width="180" height="60" rx="7"/>
+  <text class="code" x="110" y="346" font-size="32" text-anchor="middle">variant</text>
+  <path class="edge" d="M200 185 H280" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M200 335 H280" stroke="#191919" marker-end="url(#ink-arrow)"/>
+
+  <rect x="280" y="120" width="270" height="115" rx="9" fill="#ffffff" stroke="#291344" stroke-width="3"/>
+  <text class="purple" x="415" y="153" font-size="30" text-anchor="middle">字典 A</text>
+  <rect x="300" y="168" width="230" height="50" rx="6" fill="#ffffff" stroke="#291344" stroke-width="2.5"/>
+  <text class="code" x="415" y="203" font-size="31" text-anchor="middle">seed</text>
+  <rect x="280" y="270" width="270" height="115" rx="9" fill="#ffffff" stroke="#291344" stroke-width="3"/>
+  <text class="purple" x="415" y="303" font-size="30" text-anchor="middle">字典 B</text>
+  <rect x="300" y="318" width="230" height="50" rx="6" fill="#f1ecfa" stroke="#5e33bf" stroke-width="3"/>
+  <text class="code purple" x="415" y="353" font-size="31" text-anchor="middle">seed</text>
+  <text x="415" y="257" font-size="24" text-anchor="middle">仅展开 seed 字段</text>
+
+  <path class="edge" d="M530 185 H820" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M530 330 H635 V210 H785 V200 H820" stroke="#777777" stroke-dasharray="9 8" marker-end="url(#gray-arrow)"/>
+  <text class="old" x="721" y="265" font-size="28" text-anchor="middle">原指向</text>
+  <text class="old" x="721" y="298" font-size="28" text-anchor="middle">已解除</text>
+  <path class="edge" d="M530 350 H820" stroke="#5e33bf" marker-end="url(#purple-arrow)"/>
+
+  <rect x="820" y="150" width="154" height="70" rx="7" fill="#ffffff" stroke="#191919" stroke-width="2.5"/>
+  <text class="code" x="897" y="198" font-size="42" text-anchor="middle">42</text>
+  <rect x="820" y="315" width="154" height="70" rx="7" fill="#f1ecfa" stroke="#5e33bf" stroke-width="3"/>
+  <text class="code purple" x="897" y="363" font-size="40" text-anchor="middle">2026</text>
+  <text x="500" y="426" font-size="29" text-anchor="middle">只替换字典 B 的 seed，source 仍为 42</text>
+</svg>

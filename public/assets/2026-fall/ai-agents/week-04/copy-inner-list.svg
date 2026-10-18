@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+  <title id="title">复制内层列表：两个字典分别引用各自的列表</title>
+  <desc id="desc">先浅复制外层字典，再复制 sample_sizes 列表并替换 variant 对应字段。source 仍指向上方旧列表，variant 改为指向下方新列表。两个列表内容相等，身份不同。灰色虚线是已经解除的原指向。</desc>
+  <defs>
+    <marker id="ink-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 Z" fill="#191919"/></marker>
+    <marker id="purple-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 Z" fill="#5e33bf"/></marker>
+    <marker id="gray-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 Z" fill="#777777"/></marker>
+    <style>
+      text { fill:#191919; font-family:"Kaiti SC",STKaiti,KaiTi,serif; }
+      .code { font-family:ui-monospace,Menlo,Consolas,monospace; }
+      .name { fill:#f1ecfa; stroke:#291344; stroke-width:2.5; }
+      .box { fill:white; stroke:#291344; stroke-width:2.5; }
+      .edge { fill:none; stroke-width:4; stroke-linejoin:round; }
+      .purple { fill:#291344; }
+      .old { fill:#777777; }
+    </style>
+  </defs>
+  <text class="code" x="20" y="32" font-size="31">variant = source.copy()</text>
+  <text class="code purple" x="20" y="75" font-size="27">variant["sample_sizes"] = source["sample_sizes"].copy()</text>
+
+  <rect class="name" x="20" y="140" width="185" height="60" rx="7"/>
+  <text class="code" x="112.5" y="182" text-anchor="middle" font-size="34">source</text>
+  <rect class="name" x="20" y="300" width="185" height="60" rx="7"/>
+  <text class="code" x="112.5" y="342" text-anchor="middle" font-size="34">variant</text>
+  <path class="edge" d="M205 170 H275" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M205 330 H275" stroke="#191919" marker-end="url(#ink-arrow)"/>
+
+  <rect class="box" x="275" y="120" width="310" height="100" rx="7"/>
+  <text x="430" y="155" text-anchor="middle" font-size="31">字典 A</text>
+  <text class="code" x="430" y="199" text-anchor="middle" font-size="31">sample_sizes</text>
+  <rect class="box" x="275" y="280" width="310" height="100" rx="7"/>
+  <text x="430" y="315" text-anchor="middle" font-size="31">字典 B</text>
+  <text class="code" x="430" y="359" text-anchor="middle" font-size="31">sample_sizes</text>
+  <path class="edge" d="M585 190 H740" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M585 338 H635 V200 H740" stroke="#777777" stroke-dasharray="9 8" marker-end="url(#gray-arrow)"/>
+  <text class="old" x="654" y="248" font-size="27">原指向</text>
+  <text class="old" x="654" y="281" font-size="27">已解除</text>
+  <path class="edge" d="M585 350 H740" stroke="#5e33bf" marker-end="url(#purple-arrow)"/>
+
+  <rect class="box" x="740" y="130" width="235" height="90" rx="7"/>
+  <text x="857.5" y="163" text-anchor="middle" font-size="31">旧列表</text>
+  <text x="857.5" y="202" text-anchor="middle" font-size="27">第 3 项：100000</text>
+  <rect x="740" y="290" width="235" height="90" rx="7" fill="#f1ecfa" stroke="#5e33bf" stroke-width="3"/>
+  <text class="purple" x="857.5" y="323" text-anchor="middle" font-size="31">新列表</text>
+  <text class="purple" x="857.5" y="362" text-anchor="middle" font-size="27">第 3 项：100000</text>
+
+  <text x="500" y="426" text-anchor="middle" font-size="31">两份列表内容相等，身份不同</text>
+</svg>

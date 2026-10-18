@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+  <title id="title">R 普通向量：修改 b，a 的值保持</title>
+  <desc id="desc">a 最初为 1000、10000、100000，b 从 a 赋值得到。执行 b 的第三项赋值为 500000 后，a 仍是原值，b 的第三项改变。这里只展示可观察的值，不表示物理内存如何分配。</desc>
+  <defs>
+    <style>
+      text { fill: #191919; font-family: "Kaiti SC", STKaiti, KaiTi, serif; }
+      .code { font-family: ui-monospace, Menlo, Consolas, monospace; }
+      .purple { fill: #291344; }
+      .name { fill: #f1ecfa; stroke: #291344; stroke-width: 2.5; }
+    </style>
+  </defs>
+  <text class="code" x="20" y="32" font-size="29">a &lt;- c(1000, 10000, 100000); b &lt;- a</text>
+  <text class="code purple" x="20" y="75" font-size="34">b[3] &lt;- 500000</text>
+
+  <text x="550" y="124" text-anchor="middle" font-size="29">普通数值向量的值</text>
+  <rect class="name" x="20" y="155" width="160" height="65" rx="7"/>
+  <text class="code" x="100" y="201" text-anchor="middle" font-size="38">a</text>
+  <text x="225" y="199" text-anchor="middle" font-size="32">值</text>
+  <rect x="285" y="155" width="680" height="65" rx="7" fill="#ffffff" stroke="#191919" stroke-width="2.5"/>
+  <path d="M485 155 V220 M685 155 V220" stroke="#191919" stroke-width="2"/>
+  <text class="code" x="385" y="199" text-anchor="middle" font-size="34">1000</text>
+  <text class="code" x="585" y="199" text-anchor="middle" font-size="34">10000</text>
+  <text class="code" x="825" y="199" text-anchor="middle" font-size="34">100000</text>
+
+  <rect class="name" x="20" y="300" width="160" height="65" rx="7"/>
+  <text class="code" x="100" y="346" text-anchor="middle" font-size="38">b</text>
+  <text x="225" y="344" text-anchor="middle" font-size="32">值</text>
+  <rect x="285" y="300" width="680" height="65" rx="7" fill="#ffffff" stroke="#191919" stroke-width="2.5"/>
+  <rect x="685" y="300" width="280" height="65" rx="7" fill="#f1ecfa" stroke="#5e33bf" stroke-width="3"/>
+  <path d="M485 300 V365" stroke="#191919" stroke-width="2"/>
+  <text class="code" x="385" y="344" text-anchor="middle" font-size="34">1000</text>
+  <text class="code" x="585" y="344" text-anchor="middle" font-size="34">10000</text>
+  <text class="code purple" x="825" y="344" text-anchor="middle" font-size="34">500000</text>
+  <text class="purple" x="825" y="282" text-anchor="middle" font-size="29">第 3 项改变</text>
+  <text x="500" y="425" text-anchor="middle" font-size="31">修改 b，a 的值保持</text>
+</svg>

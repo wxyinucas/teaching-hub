@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+  <title id="title">独立写出的基准能发现污染</title>
+  <desc id="desc">expected_source 独立写出原配置，其中 seed 为 42，sample_sizes 为 1000、10000、100000。source 与 variant 关联另一个字典和列表。variant 将自己的列表第三项改为 500000 后，独立基准仍保留 100000，source 与 expected_source 内容比较为 False。图只展开 sample_sizes 字段，两个 seed 始终为 42。</desc>
+  <defs>
+    <marker id="ink-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#191919"/></marker>
+    <marker id="purple-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#5e33bf"/></marker>
+    <marker id="gray-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#777777"/></marker>
+    <style>
+      text { fill:#191919; font-family:"Kaiti SC",STKaiti,KaiTi,serif; }
+      .code { font-family:ui-monospace,Menlo,Consolas,monospace; }
+      .edge { fill:none; stroke-width:4; stroke-linejoin:round; }
+      .name { fill:#f1ecfa; stroke:#291344; stroke-width:2.5; }
+      .object { fill:#ffffff; stroke:#291344; stroke-width:3; }
+      .purple { fill:#291344; }
+      .gray { fill:#777777; }
+    </style>
+  </defs>
+
+  <text class="code" x="20" y="30" font-size="23">expected_source = {"seed": 42, "sample_sizes": [1000, 10000, 100000]}</text>
+  <text class="code purple" x="20" y="73" font-size="31">variant["sample_sizes"][2] = 500000</text>
+
+  <rect class="name" x="20" y="130" width="270" height="58" rx="7"/>
+  <text class="code" x="155" y="169" text-anchor="middle" font-size="29">expected_source</text>
+  <rect class="name" x="20" y="250" width="205" height="58" rx="7"/>
+  <text class="code" x="122.5" y="290" text-anchor="middle" font-size="34">source</text>
+  <rect class="name" x="20" y="330" width="205" height="58" rx="7"/>
+  <text class="code" x="122.5" y="370" text-anchor="middle" font-size="34">variant</text>
+  <path class="edge" d="M290 159 H330" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M225 279 H330" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M225 359 H285 V318 H330" stroke="#191919" marker-end="url(#ink-arrow)"/>
+
+  <rect class="object" x="330" y="112" width="220" height="100" rx="9"/>
+  <text class="purple" x="440" y="149" text-anchor="middle" font-size="30">独立字典</text>
+  <text class="code" x="440" y="190" text-anchor="middle" font-size="25">sample_sizes</text>
+  <rect class="object" x="330" y="248" width="220" height="100" rx="9"/>
+  <text class="purple" x="440" y="285" text-anchor="middle" font-size="30">被测字典</text>
+  <text class="code" x="440" y="326" text-anchor="middle" font-size="25">sample_sizes</text>
+
+  <path class="edge" d="M550 182 H620" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M550 318 H620" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <rect class="object" x="620" y="127" width="170" height="85" rx="9"/>
+  <text x="705" y="160" text-anchor="middle" font-size="29">独立列表</text>
+  <text class="code" x="705" y="195" text-anchor="middle" font-size="23">[2]: 100000</text>
+  <rect class="object" x="620" y="263" width="170" height="85" rx="9"/>
+  <text x="705" y="296" text-anchor="middle" font-size="29">被测列表</text>
+  <text class="purple" x="705" y="331" text-anchor="middle" font-size="27">第 3 项</text>
+
+  <rect x="850" y="145" width="130" height="68" rx="7" fill="#ffffff" stroke="#777777" stroke-width="2.5"/>
+  <text class="code gray" x="915" y="190" text-anchor="middle" font-size="32">100000</text>
+  <path class="edge" d="M790 305 H815 V200 H850" stroke="#777777" stroke-dasharray="8 7" marker-end="url(#gray-arrow)"/>
+  <text class="gray" x="895" y="247" text-anchor="middle" font-size="23">原指向已解除</text>
+  <path class="edge" d="M790 328 H850" stroke="#5e33bf" marker-end="url(#purple-arrow)"/>
+  <rect x="850" y="294" width="130" height="68" rx="7" fill="#f1ecfa" stroke="#5e33bf" stroke-width="3"/>
+  <text class="code purple" x="915" y="339" text-anchor="middle" font-size="32">500000</text>
+
+  <text class="gray" x="500" y="388" text-anchor="middle" font-size="24">只展开列表字段，两个 seed 始终为 42</text>
+  <text class="code purple" x="500" y="430" text-anchor="middle" font-size="31">source == expected_source: False</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+  <title id="title">直接引用不是独立基准</title>
+  <desc id="desc">before、source、variant 三个名字指向同一字典，字典关联一个样本量列表。variant 将列表第三项从指向整数 100000 改为指向整数 500000 后，source 和 before 仍是同一个已污染字典，内容比较为 True。图只展开 sample_sizes 字段，seed 始终为 42。</desc>
+  <defs>
+    <marker id="ink-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#191919"/></marker>
+    <marker id="purple-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#5e33bf"/></marker>
+    <marker id="gray-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#777777"/></marker>
+    <style>
+      text { fill:#191919; font-family:"Kaiti SC",STKaiti,KaiTi,serif; }
+      .code { font-family:ui-monospace,Menlo,Consolas,monospace; }
+      .edge { fill:none; stroke-width:4; stroke-linejoin:round; }
+      .name { fill:#f1ecfa; stroke:#291344; stroke-width:2.5; }
+      .object { fill:#ffffff; stroke:#291344; stroke-width:3; }
+      .purple { fill:#291344; }
+      .gray { fill:#777777; }
+    </style>
+  </defs>
+
+  <text class="code" x="20" y="30" font-size="31">before = source; variant = source</text>
+  <text class="code purple" x="20" y="73" font-size="31">variant["sample_sizes"][2] = 500000</text>
+
+  <rect class="name" x="20" y="130" width="205" height="58" rx="7"/>
+  <text class="code" x="122.5" y="170" text-anchor="middle" font-size="34">before</text>
+  <rect class="name" x="20" y="220" width="205" height="58" rx="7"/>
+  <text class="code" x="122.5" y="260" text-anchor="middle" font-size="34">source</text>
+  <rect class="name" x="20" y="310" width="205" height="58" rx="7"/>
+  <text class="code" x="122.5" y="350" text-anchor="middle" font-size="34">variant</text>
+  <path class="edge" d="M225 159 H265 V215 H300" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M225 249 H300" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M225 339 H265 V280 H300" stroke="#191919" marker-end="url(#ink-arrow)"/>
+
+  <rect class="object" x="300" y="180" width="240" height="150" rx="9"/>
+  <text class="purple" x="420" y="220" text-anchor="middle" font-size="33">同一个字典</text>
+  <text class="code" x="420" y="284" text-anchor="middle" font-size="27">sample_sizes</text>
+  <path class="edge" d="M540 270 H620" stroke="#191919" marker-end="url(#ink-arrow)"/>
+
+  <rect class="object" x="620" y="180" width="170" height="150" rx="9"/>
+  <text x="705" y="220" text-anchor="middle" font-size="33">列表</text>
+  <rect x="637" y="244" width="136" height="59" rx="5" fill="#f1ecfa" stroke="#5e33bf" stroke-width="2.5"/>
+  <text class="purple" x="705" y="283" text-anchor="middle" font-size="29">第 3 项</text>
+
+  <path class="edge" d="M773 260 H815 V184 H850" stroke="#777777" stroke-dasharray="8 7" marker-end="url(#gray-arrow)"/>
+  <text class="gray" x="800" y="126" text-anchor="middle" font-size="25">原指向</text>
+  <text class="gray" x="800" y="154" text-anchor="middle" font-size="25">已解除</text>
+  <rect x="850" y="150" width="130" height="68" rx="7" fill="#ffffff" stroke="#777777" stroke-width="2.5"/>
+  <text class="code gray" x="915" y="195" text-anchor="middle" font-size="32">100000</text>
+
+  <path class="edge" d="M773 287 H815 V339 H850" stroke="#5e33bf" marker-end="url(#purple-arrow)"/>
+  <rect x="850" y="305" width="130" height="68" rx="7" fill="#f1ecfa" stroke="#5e33bf" stroke-width="3"/>
+  <text class="code purple" x="915" y="350" text-anchor="middle" font-size="32">500000</text>
+
+  <text class="gray" x="420" y="373" text-anchor="middle" font-size="24">只展开列表字段，seed 始终为 42</text>
+  <text x="500" y="425" text-anchor="middle" font-size="32"><tspan class="code">source == before: True</tspan><tspan>　对照也变了</tspan></text>
+</svg>

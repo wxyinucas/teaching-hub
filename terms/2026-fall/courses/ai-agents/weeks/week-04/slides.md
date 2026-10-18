@@ -1,282 +1,113 @@
 <!-- lesson: 第一课时 -->
-<!-- layout: cover -->
-# W4：赋值以后，到底改了什么？
-> 导师要求追加实验，旧方案还在吗？
-
-AI Agents · 王晓宇 · 中国海洋大学 · 2026 秋
-
----
-<!-- section: 第一课时：只改新方案，旧配置却变了 -->
-
----
-<!-- layout: columns -->
-# 从 Bash 到 Notebook：代码在哪里执行？
-
-<!-- column -->
-## Terminal
-**启动另一个进程**
-
-Bash → Python → `>>>`
-
-退出重进：旧名字不在
-
-<!-- column -->
-## Notebook
-**多个 cell，同一 kernel**
-
-界面组织代码与输出
-
-kernel 执行并保留状态
-
-<!-- footer -->
-终端里的 Python 与 Notebook kernel，不是同一个进程。
-
----
-<!-- layout: columns -->
-# 旧输出，不是当前状态
-
-<!-- column -->
-## 屏幕上的 42
-**历史输出**
-
-`probe = 42`
-
-`print(probe)` → `42`
-
-<!-- column -->
-## kernel 中的 2026
-**修改之后**
-
-`probe = 2026`
-
-重跑观察 → `2026`
-
-<!-- footer -->
-修改变量不会刷新旧输出；清空输出不等于重启 kernel。
-
----
-<!-- layout: columns -->
-# 导师要追加实验，旧配置却变了
-
-<!-- column -->
-## 昨天的基线
-**保留旧图与旧表**
-
-seed：`42`
-
-投针数：`1000 · 10000 · 100000`
-
-<!-- column -->
-## 今天的追加
-**两版同时存在**
-
-seed：`2026`
-
-最大投针数：`500000`
-
-<!-- footer -->
-`variant = source`：新名字，真的代表新方案吗？
-
----
-<!-- layout: columns -->
 # 内容相等，是不是同一对象？
 
-<!-- column -->
-## ==
-**比较内容**
-
-`source == variant` → `True`
-
-`source == same_content` → `True`
-
-<!-- column -->
-## is
-**比较身份**
-
-`source is variant` → `True`
-
-`source is same_content` → `False`
+| 比较对象 | == 内容 | is 身份 |
+| --- | --- | --- |
+| `source`、`variant` | `True` | `True` |
+| `source`、`same_content` | `True` | `False` |
 
 <!-- footer -->
-内容相同，可以是不同对象；起新名字，不会自动复制对象。
+`variant = source`；`same_content` 是另建的同内容字典。
 
 ---
-<!-- layout: tree -->
 # 数字没跟着变：名字重新绑定
 
-```text
-原先：seed、old_seed → 42
-后来：seed → 2026
-      old_seed → 42
-```
-
-<!-- footer -->
-`seed = 2026`：seed 换了指向；旧整数没有被改写。
+![seed 原来与 old_seed 都指向整数 42。执行 seed = 2026，只改变 seed 的指向，old_seed 仍指向旧整数 42。灰色虚线表示已解除的原指向。](assets/2026-fall/ai-agents/week-04/integer-rebinding.svg)
 
 ---
-<!-- layout: tree -->
 # 列表跟着变：对象内容被修改
 
-```text
-l、other → 同一列表
-第三项：100000 → 500000
-saved_item → 100000
-```
+![l 和 other 指向同一列表。执行 l[2] = 500000，替换列表第 3 项的指向。saved_item 仍直接指向旧整数 100000。灰色虚线表示已解除的原指向。](assets/2026-fall/ai-agents/week-04/list-slot-replacement.svg)
 
-<!-- footer -->
-`l[2] = 500000`：改的是列表内容，不是 l 的绑定。
+---
+# 回到旧配置：这次改了哪一层？
+
+![variant = source 后，两个名字指向同一个字典。执行 variant["seed"] = 2026，替换共享字典中 seed 的值关联，两个名字都看到 2026，旧整数 42 没有被改写。](assets/2026-fall/ai-agents/week-04/shared-dict-seed.svg)
+
+---
+# 只改第三项，谁的列表变了？
+
+![source 与 variant 仍指向同一字典，沿 sample_sizes 到达同一列表。替换索引 2，也就是第 3 项的关联后，两条路径都看到 500000。](assets/2026-fall/ai-agents/week-04/shared-dict-list.svg)
 
 ---
 <!-- layout: columns -->
-# 回到旧配置：这次改了哪一层？
+# 名字换了指向，还是对象内容变了？
 
 <!-- column -->
-## 名字 → 字典
-**增加入口**
+## 名字换了指向
 
-`variant = source`
+`seed = 2026`
 
-字典没有复制
-
-<!-- column -->
-## 字典 → 值
-**替换关联**
-
-`variant["seed"] = 2026`
-
-共享字典中的 seed 改变
+old_seed 仍是 `42`
 
 <!-- column -->
-## 字典 → 列表
-**修改第三项**
+## 共享对象内容改变
 
-sample_sizes 第三项换值
+`l[2] = 500000`
 
-两条路径到达同一列表
+other 的第三项也变为 `500000`
 
 <!-- footer -->
-保留旧方案，不能只给它起一个新名字。
+先看具体改了哪一层，再判断谁会跟着变化。
 
 ---
 <!-- lesson: 第二课时 -->
-<!-- section: 第二课时：复制了外层，里面仍会共享 -->
-
----
-<!-- layout: columns -->
 # 复制以后，先分别改两项
 
-`variant = source.copy()`
-
-<!-- column -->
-## 先改 seed
-**旧值保持**
-
-source：`42`
-
-variant：`2026`
-
-<!-- column -->
-## 再改 sample_sizes
-**旧列表也变了**
-
-source：第三项 `500000`
-
-variant：第三项 `500000`
-
-<!-- footer -->
-`source is variant` 为 False，为什么仍然互相影响？
+![variant = source.copy() 建立不同的外层字典。执行 variant["seed"] = 2026，只改变新字典的 seed 关联，source 仍为 42。](assets/2026-fall/ai-agents/week-04/shallow-dict-seed.svg)
 
 ---
-<!-- layout: tree -->
+# 浅复制以后，再改列表第三项
+
+![外层字典虽然不同，sample_sizes 仍指向同一个列表。执行 variant["sample_sizes"][2] = 500000，source 与 variant 都看到第三项改变。](assets/2026-fall/ai-agents/week-04/shallow-dict-list.svg)
+
+---
 # 沿关系再查一层
 
-```text
-source  → 字典 A ─┐
-                  ├→ 列表 L
-variant → 字典 B ─┘
-```
-
-<!-- footer -->
-字典不同，sample_sizes 仍是同一列表；浅复制只建立新外层。
+![浅复制产生两个不同字典，但两份 sample_sizes 仍引用同一个列表。外层 is 为 False，内层 is 为 True。](assets/2026-fall/ai-agents/week-04/shallow-relations.svg)
 
 ---
-<!-- layout: columns -->
 # “旧配置没变”的检查也可能被骗
 
-<!-- column -->
-## before = source
-**一起被修改**
+![before = source、variant = source 后，三个名字进入同一字典。修改共享列表第三项，before 也看到 500000，所以 source == before 仍为 True，无法证明原始内容保持。](assets/2026-fall/ai-agents/week-04/baseline-direct.svg)
 
-事后 `source == before`
+---
+# before 也浅复制，检查就可靠吗？
 
-仍为 `True`
+![before 是 source 的浅复制，外层字典不同，但 sample_sizes 仍共享。第三项被修改后，两边一起变成 500000，source == before 仍为 True。](assets/2026-fall/ai-agents/week-04/baseline-shallow.svg)
 
-<!-- column -->
-## 独立写出的旧配置
-**不随程序改变**
+---
+# 独立基准：谁没有跟着变？
 
-事后比较原始内容
-
-污染被发现：`False`
-
-<!-- footer -->
-浅复制快照仍可能共享列表；“预期答案”也需要独立。
+![独立写出的 expected_source 使用独立列表，仍保留第三项 100000。variant 污染 source 后，source 的第三项变成 500000，与独立基准的内容比较为 False，污染得以暴露。](assets/2026-fall/ai-agents/week-04/baseline-independent.svg)
 
 ---
 # 怎样让两版配置真正独立？
 
-```python
-variant = source.copy()
-variant["sample_sizes"] = (
-    source["sample_sizes"].copy()
-)
-```
-
-<!-- footer -->
-新字典配新列表；本题列表里是不可变整数，复制到这一层足够。
+![先复制外层字典，再复制内层 sample_sizes 并替换 variant 的列表关联。source 保留旧列表，variant 改指新列表；两列表内容相等，身份不同。](assets/2026-fall/ai-agents/week-04/copy-inner-list.svg)
 
 ---
-<!-- layout: columns -->
+# 两层独立以后，修改 seed
+
+![沿用两个独立字典与两个独立列表的状态。修改 variant 的 seed 关联，只让 variant 看到 2026，source 的 seed 保持 42。](assets/2026-fall/ai-agents/week-04/independent-seed.svg)
+
+---
+# 两层独立以后，修改列表第三项
+
+![沿用两个独立列表的状态。修改 variant 列表索引 2 的关联，仅新列表的第三项变成 500000；source 的第三项仍为 100000。](assets/2026-fall/ai-agents/week-04/independent-list.svg)
+
+---
 # 换一种语言，赋值的行为相同吗？
 
-<!-- column -->
-## Python 列表
-**共享可变对象**
+![R 普通数值向量：a 初始化为 c(1000, 10000, 100000)，b 从 a 赋值。修改 b 的第三项为 500000 后，a 保持原值。只比较可观察的值，不表示物理内存分配。](assets/2026-fall/ai-agents/week-04/r-vector-values.svg)
 
-`other = l`
+---
+# Bash 文本赋值：后来改的是谁？
 
-改 l 的第三项
-
-other 也看见
-
-<!-- column -->
-## R 普通向量
-**另一绑定的值保持**
-
-`b <- a`
-
-改 b 的第三项
-
-a 保持原值
-
-<!-- column -->
-## Bash 普通文本
-**保存展开后的值**
-
-`b="$a"`
-
-后来 a 改为 `2026`
-
-b 仍为 `42`
-
-<!-- footer -->
-相近的赋值外观，不保证相同的修改行为。
+![Bash 中 a=42 后令 b="$a"，b 保存当时展开的文本 42。随后 a=2026，b 仍是文本 42，不会随 a 更新。](assets/2026-fall/ai-agents/week-04/bash-text-values.svg)
 
 ---
 <!-- lesson: 第三课时 -->
-<!-- section: 第三课时：与 Agent 实现，并用证据验收 -->
-
----
 <!-- layout: columns -->
 # 本周大作业：给导师维护可独立修改的实验方案
 

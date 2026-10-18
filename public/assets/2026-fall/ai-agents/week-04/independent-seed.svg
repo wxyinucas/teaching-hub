@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+  <title id="title">两层独立以后：只替换追加方案的 seed</title>
+  <desc id="desc">外层字典与内层列表均已独立。执行 variant 的 seed 赋值为 2026，只替换字典 B 中 seed 字段的引用。source 的字典 A 仍引用整数 42。灰色虚线是字典 B 已解除的旧引用。</desc>
+  <defs>
+    <marker id="ink-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 Z" fill="#191919"/></marker>
+    <marker id="purple-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 Z" fill="#5e33bf"/></marker>
+    <marker id="gray-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 Z" fill="#777777"/></marker>
+    <style>
+      text { fill:#191919; font-family:"Kaiti SC",STKaiti,KaiTi,serif; }
+      .code { font-family:ui-monospace,Menlo,Consolas,monospace; }
+      .name { fill:#f1ecfa; stroke:#291344; stroke-width:2.5; }
+      .box { fill:white; stroke:#291344; stroke-width:2.5; }
+      .edge { fill:none; stroke-width:4; stroke-linejoin:round; }
+      .purple { fill:#291344; }
+      .old { fill:#777777; }
+    </style>
+  </defs>
+  <text class="code" x="20" y="32" font-size="27">variant["sample_sizes"] = source["sample_sizes"].copy()</text>
+  <text class="code purple" x="20" y="75" font-size="31">variant["seed"] = 2026</text>
+
+  <rect class="name" x="20" y="140" width="185" height="60" rx="7"/>
+  <text class="code" x="112.5" y="182" text-anchor="middle" font-size="34">source</text>
+  <rect class="name" x="20" y="300" width="185" height="60" rx="7"/>
+  <text class="code" x="112.5" y="342" text-anchor="middle" font-size="34">variant</text>
+  <path class="edge" d="M205 170 H275" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M205 330 H275" stroke="#191919" marker-end="url(#ink-arrow)"/>
+
+  <rect class="box" x="275" y="120" width="310" height="100" rx="7"/>
+  <text x="430" y="155" text-anchor="middle" font-size="31">字典 A</text>
+  <text class="code" x="430" y="199" text-anchor="middle" font-size="34">seed</text>
+  <rect class="box" x="275" y="280" width="310" height="100" rx="7"/>
+  <text x="430" y="315" text-anchor="middle" font-size="31">字典 B</text>
+  <text class="code purple" x="430" y="359" text-anchor="middle" font-size="34">seed</text>
+  <path class="edge" d="M585 190 H800" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M585 338 H650 V200 H800" stroke="#777777" stroke-dasharray="9 8" marker-end="url(#gray-arrow)"/>
+  <text class="old" x="682" y="248" font-size="27">原指向</text>
+  <text class="old" x="682" y="281" font-size="27">已解除</text>
+  <path class="edge" d="M585 350 H800" stroke="#5e33bf" marker-end="url(#purple-arrow)"/>
+
+  <rect class="box" x="800" y="145" width="174" height="75" rx="7"/>
+  <text class="code" x="887" y="197" text-anchor="middle" font-size="42">42</text>
+  <rect x="800" y="305" width="174" height="75" rx="7" fill="#f1ecfa" stroke="#5e33bf" stroke-width="3"/>
+  <text class="code purple" x="887" y="357" text-anchor="middle" font-size="42">2026</text>
+
+  <text x="500" y="426" text-anchor="middle" font-size="31">只替换字典 B 的 seed，source 保持 42</text>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+  <title id="title">Bash 普通文本赋值：b 保留展开时的文本</title>
+  <desc id="desc">初始 a 是文本 42，b 取得当时展开的文本 42。之后把 a 赋值为文本 2026，b 仍是文本 42。这里展示文本值，不是 Python 对象引用。</desc>
+  <defs>
+    <style>
+      text { fill: #191919; font-family: "Kaiti SC", STKaiti, KaiTi, serif; }
+      .code { font-family: ui-monospace, Menlo, Consolas, monospace; }
+      .purple { fill: #291344; }
+      .name { fill: #f1ecfa; stroke: #291344; stroke-width: 2.5; }
+    </style>
+  </defs>
+  <text class="code" x="20" y="32" font-size="30">a=42; b="$a"</text>
+  <text class="code purple" x="20" y="75" font-size="34">a=2026</text>
+
+  <rect class="name" x="20" y="135" width="210" height="70" rx="7"/>
+  <text class="code" x="125" y="184" text-anchor="middle" font-size="40">b</text>
+  <text x="500" y="160" text-anchor="middle" font-size="31">保存当时展开的文本</text>
+  <path d="M270 190 H700" stroke="#191919" stroke-width="2.5"/>
+  <rect x="760" y="135" width="215" height="70" rx="7" fill="#ffffff" stroke="#191919" stroke-width="2.5"/>
+  <text class="code" x="867.5" y="184" text-anchor="middle" font-size="40">"42"</text>
+
+  <rect class="name" x="20" y="300" width="210" height="70" rx="7"/>
+  <text class="code" x="125" y="349" text-anchor="middle" font-size="40">a</text>
+  <text class="purple" x="500" y="325" text-anchor="middle" font-size="31">本次赋的新文本</text>
+  <path d="M270 355 H700" stroke="#5e33bf" stroke-width="3"/>
+  <rect x="760" y="300" width="215" height="70" rx="7" fill="#f1ecfa" stroke="#5e33bf" stroke-width="3"/>
+  <text class="code purple" x="867.5" y="349" text-anchor="middle" font-size="40">"2026"</text>
+  <text x="500" y="425" text-anchor="middle" font-size="31">后来改 a，b 不会跟着更新</text>
+</svg>

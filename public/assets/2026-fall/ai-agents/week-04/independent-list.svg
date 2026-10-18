@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+  <title id="title">两层独立以后：只替换追加方案列表的第三项</title>
+  <desc id="desc">source 与 variant 各自引用不同的字典和列表。执行 variant 的 sample_sizes 索引 2 赋值为 500000，只替换新列表的第三项。source 的旧列表第三项仍引用整数 100000。灰色虚线是新列表已解除的原指向。</desc>
+  <defs>
+    <marker id="ink-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 Z" fill="#191919"/></marker>
+    <marker id="purple-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 Z" fill="#5e33bf"/></marker>
+    <marker id="gray-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L10,5 L0,10 Z" fill="#777777"/></marker>
+    <style>
+      text { fill:#191919; font-family:"Kaiti SC",STKaiti,KaiTi,serif; }
+      .code { font-family:ui-monospace,Menlo,Consolas,monospace; }
+      .name { fill:#f1ecfa; stroke:#291344; stroke-width:2.5; }
+      .box { fill:white; stroke:#291344; stroke-width:2.5; }
+      .edge { fill:none; stroke-width:4; stroke-linejoin:round; }
+      .purple { fill:#291344; }
+      .old { fill:#777777; }
+    </style>
+  </defs>
+  <text class="code" x="20" y="32" font-size="27">variant["sample_sizes"] = source["sample_sizes"].copy()</text>
+  <text class="code purple" x="20" y="75" font-size="31">variant["sample_sizes"][2] = 500000</text>
+
+  <rect class="name" x="20" y="140" width="185" height="60" rx="7"/>
+  <text class="code" x="112.5" y="182" text-anchor="middle" font-size="34">source</text>
+  <rect class="name" x="20" y="300" width="185" height="60" rx="7"/>
+  <text class="code" x="112.5" y="342" text-anchor="middle" font-size="34">variant</text>
+  <path class="edge" d="M205 170 H250" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M205 330 H250" stroke="#191919" marker-end="url(#ink-arrow)"/>
+
+  <rect class="box" x="250" y="120" width="190" height="100" rx="7"/>
+  <text x="345" y="155" text-anchor="middle" font-size="31">字典 A</text>
+  <text class="code" x="345" y="199" text-anchor="middle" font-size="23">sample_sizes</text>
+  <rect class="box" x="250" y="280" width="190" height="100" rx="7"/>
+  <text x="345" y="315" text-anchor="middle" font-size="31">字典 B</text>
+  <text class="code" x="345" y="359" text-anchor="middle" font-size="23">sample_sizes</text>
+  <path class="edge" d="M440 190 H490" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M440 350 H490" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <rect class="box" x="490" y="120" width="190" height="100" rx="7"/>
+  <text x="585" y="150" text-anchor="middle" font-size="29">旧列表</text>
+  <text x="585" y="181" text-anchor="middle" font-size="27">索引 2</text>
+  <text x="585" y="211" text-anchor="middle" font-size="27">（第 3 项）</text>
+  <rect class="box" x="490" y="280" width="190" height="100" rx="7"/>
+  <text x="585" y="310" text-anchor="middle" font-size="29">新列表</text>
+  <text class="purple" x="585" y="341" text-anchor="middle" font-size="27">索引 2</text>
+  <text class="purple" x="585" y="371" text-anchor="middle" font-size="27">（第 3 项）</text>
+  <path class="edge" d="M680 190 H800" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <path class="edge" d="M680 338 H730 V200 H800" stroke="#777777" stroke-dasharray="9 8" marker-end="url(#gray-arrow)"/>
+  <text class="old" x="746" y="248" font-size="26">原指向</text>
+  <text class="old" x="746" y="281" font-size="26">已解除</text>
+  <path class="edge" d="M680 350 H800" stroke="#5e33bf" marker-end="url(#purple-arrow)"/>
+
+  <rect class="box" x="800" y="145" width="174" height="75" rx="7"/>
+  <text class="code" x="887" y="197" text-anchor="middle" font-size="38">100000</text>
+  <rect x="800" y="305" width="174" height="75" rx="7" fill="#f1ecfa" stroke="#5e33bf" stroke-width="3"/>
+  <text class="code purple" x="887" y="357" text-anchor="middle" font-size="38">500000</text>
+
+  <text x="500" y="426" text-anchor="middle" font-size="31">只替换新列表第 3 项，旧列表保持 100000</text>
+</svg>
