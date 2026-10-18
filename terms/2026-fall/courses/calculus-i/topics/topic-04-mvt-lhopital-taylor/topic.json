@@ -6,6 +6,7 @@
   "lessonCount": 4,
   "order": 5,
   "resources": {
+    "runbook": "runbook.md",
     "exams": {
       "scope": "course",
       "file": "exams/topics/topic-04-mvt-lhopital-taylor.tex"
