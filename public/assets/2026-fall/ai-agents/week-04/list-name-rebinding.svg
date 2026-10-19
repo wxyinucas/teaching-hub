@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+  <title id="title">列表重新绑定：只有 l 改为关联新列表</title>
+  <desc id="desc">初始 l 和 other 都绑定列表 L，内容为 1000、10000、100000。执行 l = [1000, 10000, 500000] 后，新建列表 M，l 改为绑定 M；other 仍绑定原列表 L。灰色虚线表示 l 已解除的原绑定。</desc>
+  <defs>
+    <marker id="purple-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#5e33bf"/>
+    </marker>
+    <marker id="ink-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#191919"/>
+    </marker>
+    <marker id="gray-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#777777"/>
+    </marker>
+    <style>
+      text { fill: #191919; font-family: "Kaiti SC", STKaiti, KaiTi, serif; }
+      .code { font-family: ui-monospace, Menlo, Consolas, monospace; }
+      .purple { fill: #291344; }
+      .old { fill: #777777; }
+      .edge { fill: none; stroke-width: 4; stroke-linejoin: round; }
+    </style>
+  </defs>
+  <text class="code" x="20" y="32" font-size="29">l = [1000, 10000, 100000]; other = l</text>
+  <text class="code purple" x="20" y="76" font-size="33">l = [1000, 10000, 500000]</text>
+  <rect x="20" y="120" width="180" height="60" rx="7" fill="#f1ecfa" stroke="#291344" stroke-width="2.5"/>
+  <text class="code" x="110" y="162" text-anchor="middle" font-size="36">other</text>
+  <rect x="20" y="300" width="180" height="60" rx="7" fill="#f1ecfa" stroke="#291344" stroke-width="2.5"/>
+  <text class="code" x="110" y="342" text-anchor="middle" font-size="38">l</text>
+  <path class="edge" d="M200 150 H565" stroke="#191919" marker-end="url(#ink-arrow)"/>
+  <text x="380" y="134" text-anchor="middle" font-size="28">绑定不变</text>
+  <path class="edge" d="M200 310 H280 V218 H525 V166 H565" stroke="#777777" stroke-dasharray="9 8" marker-end="url(#gray-arrow)"/>
+  <text class="old" x="392" y="259" text-anchor="middle" font-size="27">原绑定已解除</text>
+  <path class="edge" d="M200 330 H565" stroke="#5e33bf" marker-end="url(#purple-arrow)"/>
+  <text class="purple" x="380" y="365" text-anchor="middle" font-size="28">新绑定</text>
+  <text x="770" y="113" text-anchor="middle" font-size="28">原列表 L</text>
+  <rect x="565" y="125" width="415" height="65" rx="7" fill="#ffffff" stroke="#191919" stroke-width="2.5"/>
+  <text class="code" x="772" y="168" text-anchor="middle" font-size="27">[1000, 10000, 100000]</text>
+  <text class="purple" x="770" y="293" text-anchor="middle" font-size="28">新列表 M</text>
+  <rect x="565" y="305" width="415" height="65" rx="7" fill="#f1ecfa" stroke="#5e33bf" stroke-width="3"/>
+  <text class="code purple" x="772" y="348" text-anchor="middle" font-size="27">[1000, 10000, 500000]</text>
+  <text x="500" y="425" text-anchor="middle" font-size="29">l 换了绑定；other 仍能找到原列表</text>
+</svg>

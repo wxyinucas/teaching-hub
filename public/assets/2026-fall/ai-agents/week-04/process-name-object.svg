@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 440" role="img" aria-labelledby="title desc">
+  <title id="title">进程内存中的名字、绑定与对象</title>
+  <desc id="desc">执行 probe = 42 后，名字 probe 绑定到整数对象 42。名字、绑定和对象都由当前 Python 或 kernel 进程维护。图的左右排布只表示关系，不代表堆栈分区或实际地址。</desc>
+  <defs>
+    <marker id="binding-arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#5e33bf"/>
+    </marker>
+    <style>
+      text { fill: #191919; font-family: "Kaiti SC", STKaiti, KaiTi, serif; }
+      .code { font-family: ui-monospace, Menlo, Consolas, monospace; }
+      .purple { fill: #291344; }
+      .muted { fill: #666; }
+    </style>
+  </defs>
+  <text class="code purple" x="30" y="42" font-size="34">probe = 42</text>
+  <rect x="20" y="70" width="960" height="285" rx="12" fill="#ffffff" stroke="#291344" stroke-width="2.5"/>
+  <text class="purple" x="500" y="113" text-anchor="middle" font-size="32">当前 Python / kernel 进程的内存</text>
+  <text x="170" y="170" text-anchor="middle" font-size="29">名字</text>
+  <rect x="55" y="195" width="230" height="72" rx="7" fill="#f1ecfa" stroke="#291344" stroke-width="2.5"/>
+  <text class="code" x="170" y="244" text-anchor="middle" font-size="39">probe</text>
+  <path d="M285 231 H650" fill="none" stroke="#5e33bf" stroke-width="4" marker-end="url(#binding-arrow)"/>
+  <text class="purple" x="465" y="210" text-anchor="middle" font-size="30">绑定到</text>
+  <text x="805" y="170" text-anchor="middle" font-size="29">整数对象</text>
+  <rect x="650" y="190" width="310" height="112" rx="7" fill="#f1ecfa" stroke="#5e33bf" stroke-width="3"/>
+  <text class="code purple" x="805" y="237" text-anchor="middle" font-size="39">42</text>
+  <text x="805" y="277" text-anchor="middle" font-size="26">有身份、类型和值</text>
+  <text class="muted" x="500" y="332" text-anchor="middle" font-size="27">名字、绑定和对象，都属于这个进程的运行状态</text>
+  <text class="muted" x="500" y="410" text-anchor="middle" font-size="28">这是关系示意，不表示实际地址或内存分区</text>
+</svg>

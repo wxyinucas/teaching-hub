@@ -1,4 +1,113 @@
 <!-- lesson: 第一课时 -->
+<!-- layout: cover -->
+# W4：赋值以后，到底改了什么？
+> 名字、对象与可变性
+
+AI Agents · 王晓宇 · 中国海洋大学 · 2026 秋
+
+---
+<!-- layout: columns -->
+# 从 Bash 到 Notebook：代码在哪里执行？
+
+<!-- column -->
+## 进程与内存
+**运行的场地**
+
+解释器执行代码
+
+内存中保存对象与绑定
+
+<!-- column -->
+## 名字与绑定
+**找到对象的入口**
+
+`probe = 42`
+
+名字 probe → 整数对象 42
+
+<!-- column -->
+## 对象与关联
+**具体的数据**
+
+整数 · 列表 · 字典
+
+容器中的条目还关联其他对象
+
+<!-- footer -->
+每一步都问：改了哪个名字的绑定，还是哪个对象的内容？
+
+---
+# 进程内存中的名字与对象
+
+![当前 Python 或 kernel 进程的内存中，probe 这个名字绑定整数对象 42。名字、绑定和对象都属于该进程的运行状态；左右排布只表示关系，不表示堆栈分区。](assets/2026-fall/ai-agents/week-04/process-name-object.svg)
+
+---
+<!-- layout: columns -->
+# 旧输出，不是当前状态
+
+<!-- column -->
+## 屏幕上的 42
+**先前的输出**
+
+`probe = 42`
+
+`print(probe)` → `42`
+
+<!-- column -->
+## 当前绑定到 2026
+**再次运行才查询**
+
+`probe = 2026`
+
+重跑 `print(probe)` → `2026`
+
+<!-- footer -->
+cell 共用一个 kernel 的运行状态；重启后直接查询 probe → NameError。
+
+---
+<!-- layout: columns -->
+# 先认识实验材料：列表、字典与类型
+
+<!-- column -->
+## list：按位置
+**从 0 开始编号**
+
+```python
+sizes = [1000, 10000, 100000]
+sizes[2]        # 100000
+type(sizes)     # list
+type(sizes[2])  # int
+```
+
+<!-- column -->
+## dict：按键
+**用字段组织记录**
+
+```python
+config = {"seed": 42,
+          "sample_sizes":
+              [1000, 10000, 100000]}
+config["seed"]  # 42
+type(config)    # dict
+```
+
+<!-- footer -->
+type() 查看对象类型；is 比较身份，== 比较内容。
+
+---
+<!-- layout: tree -->
+# 先找字段，再找第 3 项
+
+```text
+config → 字典
+         "sample_sizes" → 列表
+                          [2] → 整数 100000
+```
+
+<!-- footer -->
+`config["seed"] = 2026` 改字典条目；`config["sample_sizes"][2] = 500000` 改列表项。
+
+---
 # 内容相等，是不是同一对象？
 
 | 比较对象 | == 内容 | is 身份 |
@@ -15,7 +124,37 @@
 ![seed 原来与 old_seed 都指向整数 42。执行 seed = 2026，只改变 seed 的指向，old_seed 仍指向旧整数 42。灰色虚线表示已解除的原指向。](assets/2026-fall/ai-agents/week-04/integer-rebinding.svg)
 
 ---
-# 列表跟着变：对象内容被修改
+<!-- layout: columns -->
+# 同一列表：重新绑定名字，还是修改内容？
+
+两组各从 `l = [1000, 10000, 100000]`、`other = l` 开始。
+
+<!-- column -->
+## 重新绑定 l
+**名字改为关联新列表**
+
+`l = [1000, 10000, 500000]`
+
+other 的第三项仍是 `100000`
+
+<!-- column -->
+## 修改列表内容
+**两个名字仍关联同一列表**
+
+`l[2] = 500000`
+
+other 的第三项也变为 `500000`
+
+<!-- footer -->
+两组中 other 的绑定都没有改变；第二组观察到的对象内容变了。
+
+---
+# 只给 l 重新赋值，other 仍找到谁？
+
+![l 与 other 原来绑定同一列表 L。执行 l = [1000, 10000, 500000] 建立新列表 M，只有 l 改为绑定 M；other 仍绑定 L，第三项保持 100000。](assets/2026-fall/ai-agents/week-04/list-name-rebinding.svg)
+
+---
+# 修改同一个列表的第三项
 
 ![l 和 other 指向同一列表。执行 l[2] = 500000，替换列表第 3 项的指向。saved_item 仍直接指向旧整数 100000。灰色虚线表示已解除的原指向。](assets/2026-fall/ai-agents/week-04/list-slot-replacement.svg)
 
@@ -28,27 +167,6 @@
 # 只改第三项，谁的列表变了？
 
 ![source 与 variant 仍指向同一字典，沿 sample_sizes 到达同一列表。替换索引 2，也就是第 3 项的关联后，两条路径都看到 500000。](assets/2026-fall/ai-agents/week-04/shared-dict-list.svg)
-
----
-<!-- layout: columns -->
-# 名字换了指向，还是对象内容变了？
-
-<!-- column -->
-## 名字换了指向
-
-`seed = 2026`
-
-old_seed 仍是 `42`
-
-<!-- column -->
-## 共享对象内容改变
-
-`l[2] = 500000`
-
-other 的第三项也变为 `500000`
-
-<!-- footer -->
-先看具体改了哪一层，再判断谁会跟着变化。
 
 ---
 <!-- lesson: 第二课时 -->
