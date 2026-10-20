@@ -5,8 +5,16 @@
   "summary": "连接微分中值定理、洛必达法则与泰勒公式，并在期中节点前完成相应范围。",
   "lessonCount": 4,
   "order": 5,
+  "demos": [
+    {
+      "id": "mean-value",
+      "title": "区间测速与中值定理",
+      "summary": "用同一时间滑块联动路程图的切线与速度图，比较区间平均变化率和瞬时变化率。"
+    }
+  ],
   "resources": {
     "runbook": "runbook.md",
+    "guide": "guide.md",
     "exams": {
       "scope": "course",
       "file": "exams/topics/topic-04-mvt-lhopital-taylor.tex"
