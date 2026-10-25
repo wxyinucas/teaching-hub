@@ -17,6 +17,7 @@
 > 认识四类对象的组织方式，执行基本操作，并分别观察原对象与返回值。
 
 - [ ] 课前：在 `week-05/` 执行 `uv sync --locked`，VS Code 打开 `demo.ipynb` 并选本周 `.venv`；重启 kernel 后 Run All。
+- [ ] 课前：`challenges/demo.ipynb` 跑过准备展示的综合题，课堂打开时停在该题的题目 Markdown。
 - [ ] 课前：Terminal 停在 `week-05/`，准备下文的参考与故障测试命令；浏览器打开课程仓库的 W5 Actions 记录。
 - 材料：[demo.ipynb](https://github.com/wxyinucas/ai-agents/blob/main/week-05/demo.ipynb)；[小练习答案](https://github.com/wxyinucas/ai-agents/blob/main/week-05/TEACHER-NOTES.md)。
 - 演示直接运行 Notebook 已写好的分段代码；停在“小练习”处，让学生预测、运行、修改一处并核对。
@@ -171,7 +172,8 @@ new_array = np.array([x ** 2 for x in a if x > 0])
 
 > 组合已有操作，先确定结果，再实现、核验和解释；按进度选一题，约 20～30 分钟。
 
-- 打开 `week-05/challenges/README.md`，三题独立：顺序去重与频数统计／应用一批记录修改／比较两次测量。
+- 打开 `week-05/challenges/demo.ipynb`，三题独立：顺序去重与频数统计／应用一批记录修改／比较两次测量。
+- 先展示题目 Markdown 和输入示例，停下来让学生与 Agent 合作；再往下展示“参考解答”的完整 Python 代码、运行结果与边界核对。
 - 前 5 分钟：核对题目示例，再选一份不同输入，写下预期结果。
 - 中间 10～15 分钟：Agent 协助实现、补测试，本人运行；完成得快就进入下一步。
 - 最后 5～10 分钟：用一条边界或反例核对规则，沿一个元素解释它如何进入结果。
