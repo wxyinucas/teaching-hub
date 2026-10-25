@@ -1,0 +1,12 @@
+{
+  "id": "week-05",
+  "runbookLayout": "lesson-cards",
+  "label": "W5 · 数据操作与遍历",
+  "title": "数据操作与遍历",
+  "summary": "比较 list、dict、set 与一维数值数组的基本操作，用循环和推导式完成变换与筛选，分别核对原对象、返回值及测试结果。",
+  "order": 5,
+  "resources": {
+    "runbook": "runbook.md",
+    "guide": "guide.md"
+  }
+}
