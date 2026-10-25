@@ -20,6 +20,7 @@
 - [ ] 课前：`challenges/demo.ipynb` 跑过准备展示的综合题，课堂打开时停在该题的题目 Markdown。
 - [ ] 课前：Terminal 停在 `week-05/`，准备下文的参考与故障测试命令；浏览器打开课程仓库的 W5 Actions 记录。
 - 材料：[demo.ipynb](https://github.com/wxyinucas/ai-agents/blob/main/week-05/demo.ipynb)；[小练习答案](https://github.com/wxyinucas/ai-agents/blob/main/week-05/TEACHER-NOTES.md)。
+- 默认路线：主 Notebook 从头到小练习 8 → 综合 Notebook 的 A 题 → 第三课时回 `operations.py` 与 Terminal；B、C 留给提前完成者。
 - 演示直接运行 Notebook 已写好的分段代码；停在“小练习”处，让学生预测、运行、修改一处并核对。
 
 #### 用一次 deepcopy 接续上周
@@ -70,6 +71,7 @@ a = np.array([1, 2, 2, -1])
 - dict：`record["b"] = 20` 更新已有键；`record["e"] = 5` 增加新键。
 - set：`unique.add(5)`；再次加入 `2` 不增加重复元素。
 - 数组：`a[0] = 10` 原地修改；`grown = np.append(a, 5)` 得到新数组，a 的长度不变。
+- 小练习 3：将 append 换成 pop，同时看原列表和返回值。
 
 #### 删除与取出
 
@@ -79,6 +81,7 @@ a = np.array([1, 2, 2, -1])
 - dict：`removed = record.pop("b")` 删除键值对，返回值 `2`。
 - set：`unique.discard(2)` 删除指定元素；`unique.pop()` 取出任意元素，不预设取到谁。
 - 数组：`remaining = np.delete(a, 0)` 得到删去第 1 项的新数组；a 保持原样。
+- 小练习 4：改变数组追加的值，核对原数组、新数组和两个长度。
 
 #### 同时看原对象与返回值
 
@@ -87,7 +90,6 @@ a = np.array([1, 2, 2, -1])
 - `len(xs)` 是内置函数；`xs.append(5)` 是列表的方法；`np.append(a, 5)` 是模块中的函数。
 - `xs.append(5)` 改原对象，返回 `None`；`np.append(a, 5)` 不改原数组，返回新数组。
 - `xs.pop()` 既改原对象，也返回被删除的元素。函数／方法的写法不能直接决定这两种行为。
-- 小练习 3、4：将 append 换成 pop；改变数组追加的值。每次都看原对象和返回值。
 
 ### 50-100 | 怎样把一次操作推广到一组数据？
 
@@ -172,7 +174,7 @@ new_array = np.array([x ** 2 for x in a if x > 0])
 
 > 组合已有操作，先确定结果，再实现、核验和解释；按进度选一题，约 20～30 分钟。
 
-- 打开 `week-05/challenges/demo.ipynb`，三题独立：顺序去重与频数统计／应用一批记录修改／比较两次测量。
+- 打开 `week-05/challenges/demo.ipynb`，默认展示 A：顺序去重与频数统计；B 应用修改、C 比较测量留作继续探索。
 - 先展示题目 Markdown 和输入示例，停下来让学生与 Agent 合作；再往下展示“参考解答”的完整 Python 代码、运行结果与边界核对。
 - 前 5 分钟：核对题目示例，再选一份不同输入，写下预期结果。
 - 中间 10～15 分钟：Agent 协助实现、补测试，本人运行；完成得快就进入下一步。
