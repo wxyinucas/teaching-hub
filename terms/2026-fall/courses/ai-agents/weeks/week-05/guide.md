@@ -2,6 +2,8 @@
 
 本周继续使用已有的 `ai-agents` 仓库，在 `week-05/` 练习。材料、Notebook 和测试只维护在[课程仓库](https://github.com/wxyinucas/ai-agents/tree/main/week-05)，不改 W2～W4 的环境与成果。
 
+> **本周 CI 重点操作：先在自己的 GitHub 仓库启用 Actions。** 三道基础题的改动提交并 push 后，进入 **Actions → W5 data operations**，核对本次提交的 **student** 检查结果。具体步骤见下文“重点操作：启用 Actions，提交并查看 CI”；教师仓库的绿色结果不能代替自己的验收。
+
 ## 开场 5 分钟：确认 uv 环境，安装 NumPy
 
 课堂开始先完成下面的核验：uv 工具可调用，本周 Python 环境正确，NumPy 能导入并生成数组。
@@ -170,7 +172,11 @@ uv run --locked pytest -q
 
 这条命令默认检查 `student`，包含教师验收和自己的测试。不要用 `--impl=reference` 的绿色结果代替自己的完成情况。循环或推导式都可以，不按源码关键词评分。
 
-## 保存到个人远端，查看 CI
+## 重点操作：启用 Actions，提交并查看 CI
+
+> **按顺序完成：个人仓库启用 Actions → 提交并 push 作业 → 查看本次提交的 CI。** 开始三道基础题前先启用，完成代码后再回来读结果。
+
+### 1. 确认个人远端，先启用 Actions
 
 回仓库根目录检查：
 
@@ -183,6 +189,14 @@ git diff -- week-05/operations.py week-05/tests/test_student.py
 
 `origin` 应指向你自己的 GitHub 仓库；教师仓库保留为 `upstream`。如果 origin 仍指向 `wxyinucas/ai-agents`，沿用 W3 的个人远端接续方式，让 Agent 帮你核对后配置，不要向教师仓库直接 push。
 
+在浏览器打开**自己的 GitHub 仓库**，确认地址中是自己的用户名，然后：
+
+1. 点击 **Actions**；首次使用 fork 时，若出现启用提示，按页面提示启用工作流。
+2. 在左侧选择 **W5 data operations**；如果显示禁用，点击 **Enable workflow**。
+3. 找不到这个工作流时，先确认个人仓库已同步本周材料，包含 `.github/workflows/week-05.yml`，请 Agent 协助核对。
+
+### 2. 提交并 push 本周作业
+
 确认文件属于自己的作业后：
 
 ```bash
@@ -192,12 +206,17 @@ git commit -m "Complete W5 data operations exercises"
 git push origin main
 ```
 
+`week-05/` 的作业改动 push 后会自动触发检查。
+
+### 3. 打开对应提交，核对 student 结果
+
 在个人仓库的 **Actions → W5 data operations** 中打开与本次提交一致的运行：
 
 - 学生仓库默认检查 `student`；教师原仓库默认检查 `reference`，两种绿色结果含义不同。
-- 查看运行中标明的验收模式、提交编号，以及测试步骤的通过／失败。
+- **核对提交编号，打开 W5 acceptance，确认测试步骤为 Run student acceptance tests，再查看通过／失败。**
 - 红色时打开失败步骤，找到一条具体断言或环境错误；修改后重新提交，再看新的运行。
-- 如果 Actions 尚未启用或工作流被禁用，先按 GitHub 页面的提示启用；不要向 Agent 提供密码或 token。
+
+**已经 push，但启用后没有本次提交的运行？** 在该工作流页面点击 **Run workflow**，Branch 选择 `main`，implementation 选择 `student`，再点击 **Run workflow**；打开新运行并核对提交编号。不要向 Agent 提供密码或 token。
 
 CI 是在远端重复本地的锁定环境和同一套检查，不会替你修改代码，也不证明未被测试覆盖的行为都正确。
 

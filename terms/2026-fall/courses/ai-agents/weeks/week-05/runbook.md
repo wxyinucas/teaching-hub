@@ -196,6 +196,8 @@ new_array = np.array([x ** 2 for x in a if x > 0])
 
 > 将数据操作用于明确任务，读懂失败反馈，核对修复前后的结果。
 
+- 开始练习前投屏 Guide 的“重点操作”：让学生先在自己的 GitHub 仓库启用 Actions，确认能找到 **W5 data operations**；作业提交并 push 后回来查看同一提交的 student 检查。
+
 #### 题组与验收约定
 
 > 先明确要完成的操作、原输入是否允许改变，以及应返回什么。
@@ -230,11 +232,14 @@ uv run --locked pytest -q 'tests/test_acceptance.py::test_pop_last_returns_item_
 - 选一段实现，用输入、逐项处理与最终结果解释它在做什么。
 - 在 `tests/test_student.py` 增加一组自己的输入，再亲自运行 `uv run --locked pytest -q`。
 
-#### 提交到远端，查看 CI
+#### 重点操作：启用 Actions，提交并查看 CI
 
 > 让远端重复本地检查，并找到具体失败位置。
 
-- 按 Guide 提交并 push 到个人远端；在 **Actions → W5 data operations** 找到本次提交的检查。
+- 按 Guide 依次完成：**个人仓库启用 Actions → 提交并 push 作业 → 查看本次提交的 CI**。
+- 首次进入自己的仓库 **Actions**，按页面提示启用工作流；若 **W5 data operations** 单独显示禁用，先点 **Enable workflow**。
+- push 后打开对应提交的运行，确认测试步骤为 **Run student acceptance tests**，再读通过或具体失败结果。
+- 启用后没有本次提交的运行时，在 **Run workflow** 中选择 `main` 和 `student` 手动运行，核对提交编号。
 - CI 使用与本地相同的锁定环境和测试命令；教师提前配置，不展开 YAML。
 - 学生仓库默认检查 student；教师原仓库默认检查 reference。查看提交编号与模式，教师的绿色不代表学生作业完成。
 - 检查失败时区分环境／启动失败与断言失败；修复后重新提交，核对对应的新结果。
