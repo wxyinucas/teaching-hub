@@ -76,7 +76,34 @@ uv 找不到、更新冲突或下载受阻时，保留当前目录、命令和�
 
 ## 先用 Notebook 跟练
 
+下面两种方式任选一种，均使用本周的 Python 环境。
+
+### 方式一：在 VS Code 中打开
+
 在 Explorer 打开 `demo.ipynb`，右上角选择 `week-05/.venv` 对应的 kernel。使用已有的 Python／Jupyter 扩展；找不到环境时，给 Agent 看实际界面。
+
+### 方式二：用 uv 启动 Jupyter 网页版
+
+先完成前面的 `uv sync --locked`。首次使用网页版时，在本周目录登记一个 kernel，让网页使用本周 `.venv`：
+
+```bash
+cd ~/course/w02-workbench/week-05
+uv run --locked python -m ipykernel install --user --name ai-agents-w5 --display-name "W5 Python 3.12"
+```
+
+之后每次在 `week-05/` 启动网页，只需：
+
+```bash
+uv run --locked --with notebook jupyter notebook
+```
+
+`--with notebook` 会临时提供网页程序，保留本周的依赖配置和锁文件。首次可能需要下载；浏览器未自动打开时，打开终端打印的完整本机网址，以实际显示的端口为准。
+
+在网页文件列表打开 `demo.ipynb`，点击右上角的 kernel 名称，选择 **W5 Python 3.12**；`challenges/demo.ipynb` 也选择它。首次可在临时代码 cell 运行 `import sys; print(sys.executable)`，核对路径仍位于 `week-05/.venv/`。
+
+授课期间保持这个终端运行；结束时回到终端按 **Ctrl+C**，并按提示确认关闭服务。
+
+### 运行与小练习
 
 终端导入成功后，Notebook 也要选择同一个本周环境；若 Notebook 仍报找不到 NumPy，先核对右上角的 kernel。
 

@@ -16,7 +16,7 @@
 
 > 认识四类对象的组织方式，执行基本操作，并分别观察原对象与返回值。
 
-- [ ] 课前：在 `week-05/` 执行 `uv sync --locked`，VS Code 打开 `demo.ipynb` 并选本周 `.venv`；重启 kernel 后 Run All。
+- [ ] 课前：在 `week-05/` 执行 `uv sync --locked`，按 Guide 任选 VS Code 或用 uv 启动 Jupyter 网页版，打开 `demo.ipynb` 并选本周 `.venv` 的 kernel；重启 kernel 后 Run All。
 - [ ] 课前：`challenges/demo.ipynb` 跑过准备展示的综合题，课堂打开时停在该题的题目 Markdown。
 - [ ] 课前：Terminal 停在 `week-05/`，准备下文的参考与故障测试命令；浏览器打开课程仓库的 W5 Actions 记录。
 - 材料：[demo.ipynb](https://github.com/wxyinucas/ai-agents/blob/main/week-05/demo.ipynb)；[小练习答案](https://github.com/wxyinucas/ai-agents/blob/main/week-05/TEACHER-NOTES.md)。
@@ -31,6 +31,7 @@
 - 先用 `uv --version` 确认工具，再取得本周材料，核对当前目录为 `week-05/`。
 - 说明：“NumPy 用来处理数组和数值运算。本周已把它写进项目依赖与锁文件，`uv sync --locked` 会把它和其他依赖安装到本周 `.venv`。”
 - 按 Guide 运行验证命令，核对解释器路径位于 `week-05/.venv`、Python 为 `3.12.x`，并看到 NumPy 版本与数组结果；随后打开 Notebook，选择同一本周环境。
+- 网页版首次按 Guide 登记本周 kernel，再用 uv 临时加载 Notebook 启动网页；选择“W5 Python 3.12”，授课期间保持启动终端运行。
 - uv 缺失、更新冲突或下载受阻者保留实际输出，先跟看演示，个别问题在练习时处理；第 5 分钟进入下段。
 
 #### 用一次 deepcopy 接续上周
