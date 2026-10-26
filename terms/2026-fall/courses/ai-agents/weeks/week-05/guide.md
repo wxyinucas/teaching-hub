@@ -2,7 +2,21 @@
 
 本周继续使用已有的 `ai-agents` 仓库，在 `week-05/` 练习。材料、Notebook 和测试只维护在[课程仓库](https://github.com/wxyinucas/ai-agents/tree/main/week-05)，不改 W2～W4 的环境与成果。
 
-## 取得材料，打开本周环境
+## 开场 5 分钟：确认 uv 环境，安装 NumPy
+
+课堂开始先完成下面的核验：uv 工具可调用，本周 Python 环境正确，NumPy 能导入并生成数组。
+
+### 1. 确认 uv 工具可调用
+
+在 VS Code 的 WSL Terminal 中执行（macOS 使用已有终端）：
+
+```bash
+uv --version
+```
+
+应看到 `uv` 的版本号。这一步只确认工具可用，后面还要核对实际使用的 Python 环境。
+
+### 2. 更新材料，进入 W5 项目
 
 在已有仓库的 Terminal 中先确认远端：
 
@@ -18,19 +32,53 @@ git remote -v
 
 有本地改动、合并冲突或其他报错时，把实际输出交给 Agent，先解释状态，再保留已有成果并完成更新；不要重新 clone 或删除项目。
 
-更新后执行：
+更新成功后进入本周目录，核对 `pwd` 输出的路径末尾为 `week-05`：
 
 ```bash
 cd ~/course/w02-workbench/week-05
+pwd
+```
+
+### 3. 安装 NumPy 与本周依赖
+
+NumPy 是用于数组和数值运算的 Python 库。本周的 `pyproject.toml` 已声明 NumPy，`uv.lock` 已记录要安装的版本；在刚才的 `week-05/` 执行：
+
+```bash
 uv sync --locked
+```
+
+这条命令按锁文件建立或同步本周自己的 `.venv/`，安装 Python 3.12 对应的依赖，包括 NumPy、pytest 与 Notebook kernel；已经安装的依赖会复用。保留 W2～W4 的独立环境，不用 `uv init` 重建项目。
+
+给新项目首次添加 NumPy 依赖通常用 `uv add numpy`；本周已经声明并锁定，直接同步即可，无须再次执行添加命令。
+
+### 4. 核对 Python 环境，实际导入 NumPy
+
+继续在同一目录执行：
+
+```bash
+uv run --locked python -c "import sys; print(sys.executable); print(sys.version.split()[0])"
+uv run --locked python -c "import numpy as np; print(np.__version__); print(np.array([1, 2, 2, -1]))"
+```
+
+核对三项结果：
+
+- 解释器路径位于本周的 `week-05/.venv/`，而不是 W4 或系统 Python。
+- Python 版本为 `3.12.x`。
+- 能看到 NumPy 的实际版本号和包含 `1、2、2、-1` 的数组，没有导入错误。
+
+完成后打开本周目录：
+
+```bash
 code .
 ```
 
-这会建立本周自己的 `.venv/`，包含 Python 3.12、NumPy、pytest 与 Notebook kernel。不要在 W4 的环境里追加本周依赖，也不用 `uv init` 重建项目。
+uv 找不到、更新冲突或下载受阻时，保留当前目录、命令和实际输出，请 Agent 协助定位。前 5 分钟仍未完成的同学先跟看演示，练习时再处理；不要通过重建仓库、修改锁文件或切到其他周的环境来消除报错。
 
 ## 先用 Notebook 跟练
 
 在 Explorer 打开 `demo.ipynb`，右上角选择 `week-05/.venv` 对应的 kernel。使用已有的 Python／Jupyter 扩展；找不到环境时，给 Agent 看实际界面。
+
+终端导入成功后，Notebook 也要选择同一个本周环境；若 Notebook 仍报找不到 NumPy，先核对右上角的 kernel。
 
 Notebook 已提供完整短例子和明确输出，不需要从空白重新输入整节课的代码。各组代码都重建自己的起始数据，可按段运行，也可重启 kernel 后 Run All。
 
