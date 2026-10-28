@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mount, RouterLinkStub } from '@vue/test-utils'
+import { routeLocationKey } from 'vue-router'
 import { catalog } from '../src/lib/catalog.js'
 import DemoView from '../src/views/DemoView.vue'
 
@@ -165,5 +166,27 @@ describe('demo fullscreen reader', () => {
       expect(document.title).toBe(`${demo.title} · ${topic.label} · Teaching Hub`)
       demoWrapper.unmount()
     })
+  })
+
+  it('keeps the two T04 scenes in one entry and opens Taylor through its scene query', async () => {
+    wrapper = mount(DemoView, {
+      props: {
+        termId: '2026-fall',
+        courseId: 'calculus-i',
+        topicId: 'topic-04-mvt-lhopital-taylor',
+        demoId: 'mean-value',
+      },
+      global: {
+        stubs: { RouterLink: RouterLinkStub },
+        provide: { [routeLocationKey]: { query: { scene: 'taylor' } } },
+      },
+    })
+
+    expect(wrapper.find('.taylor-approximation-demo').exists()).toBe(true)
+    expect(wrapper.find('.mean-value-demo').exists()).toBe(false)
+    await wrapper.find('[data-scene="motion"]').trigger('click')
+    expect(wrapper.find('.mean-value-demo').exists()).toBe(true)
+    await wrapper.find('[data-scene="taylor"]').trigger('click')
+    expect(wrapper.find('.taylor-approximation-demo').exists()).toBe(true)
   })
 })

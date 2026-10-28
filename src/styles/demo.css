@@ -475,6 +475,21 @@
 .demo-reader:fullscreen .polar-coordinates-demo { max-width: 1180px; }
 .demo-reader:fullscreen .inverse-derivative-demo { max-width: 1180px; }
 
+.demo-reader[data-demo="mean-value"]:fullscreen { padding: 16px; }
+.demo-reader:fullscreen .mvt-taylor-demo {
+  max-width: 1180px;
+  padding: 0;
+  border: 0;
+}
+.demo-reader:fullscreen .mvt-taylor-demo .demo-scene-nav { margin: 0 0 14px; }
+.demo-reader:fullscreen .mvt-taylor-demo .taylor-heading > p { display: none; }
+.demo-reader:fullscreen .mvt-taylor-demo .taylor-heading h1 { font-size: 28px; }
+.demo-reader:fullscreen .mvt-taylor-demo .taylor-function-choices { margin-top: 12px; }
+.demo-reader:fullscreen .mvt-taylor-demo .taylor-controls { margin-top: 12px; }
+.demo-reader:fullscreen .mvt-taylor-demo .taylor-input { margin-top: 9px; }
+.demo-reader:fullscreen .mvt-taylor-demo .taylor-legend { margin-top: 10px; }
+.demo-reader:fullscreen .mvt-taylor-demo .taylor-readouts { margin-top: 8px; }
+
 @media (max-width: 1040px) {
   .microscope-controls { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
   .microscope-controls > .demo-slider-control:last-child { grid-column: 1 / -1; }

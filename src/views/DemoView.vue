@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router'
 import { findTopic, findWeek } from '../lib/catalog.js'
 import DerivativesDemo from '../components/demos/DerivativesDemo.vue'
 import FunctionLimitDemo from '../components/demos/FunctionLimitDemo.vue'
-import MeanValueDemo from '../components/demos/MeanValueDemo.vue'
+import MvtTaylorDemo from '../components/demos/MvtTaylorDemo.vue'
 import SequenceLimitDemo from '../components/demos/SequenceLimitDemo.vue'
 import NotFoundView from './NotFoundView.vue'
 
@@ -19,7 +19,7 @@ const props = defineProps({
 const demoComponents = {
   derivatives: DerivativesDemo,
   'function-limit': FunctionLimitDemo,
-  'mean-value': MeanValueDemo,
+  'mean-value': MvtTaylorDemo,
   'sequence-limit': SequenceLimitDemo,
 }
 
@@ -77,7 +77,7 @@ watchEffect(() => {
       <RouterLink :to="{ name: 'course', params: { termId, courseId } }">{{ context.course.title }}</RouterLink><span aria-hidden="true">/</span>
       <span>{{ unit.label }}</span><span aria-hidden="true">/</span><span aria-current="page">{{ declaration.title }}</span>
     </nav>
-    <section ref="reader" class="demo-reader" :aria-label="`${declaration.title}演示`">
+    <section ref="reader" class="demo-reader" :data-demo="demoId" :aria-label="`${declaration.title}演示`">
       <div v-if="fullscreenSupported" class="demo-reader-toolbar">
         <button
           class="demo-fullscreen"
