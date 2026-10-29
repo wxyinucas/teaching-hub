@@ -4,6 +4,7 @@ import SegmentNotes from './SegmentNotes.vue'
 import RoadmapPanel from '../shared/RoadmapPanel.vue'
 import { parseRunbook } from '../../lib/runbook.js'
 import { resolveRunbookNavigation } from '../../lib/runbookNavigation.js'
+import { captureRunbookPosition, resolveRunbookPosition } from '../../lib/runbookReadingPosition.js'
 
 const props = defineProps({
   source: { type: String, required: true },
@@ -51,6 +52,11 @@ const segmentElements = new Map()
 let navigationFrame = null
 let navigationUsesTimeout = false
 let navigationResizeObserver = null
+let positionFrame = null
+let positionUsesTimeout = false
+let positionGeneration = 0
+let restoringPosition = true
+let renderedFile = props.file
 const openStatePrefix = 'teaching-hub:runbook-open:'
 const roadmapStatePrefix = 'teaching-hub:runbook-roadmap-collapsed:'
 
@@ -76,6 +82,10 @@ function durationLabel(section) {
   return section.duration > 50 && section.duration % 50 === 0
     ? `${section.duration / 50} × 50 min`
     : `${section.duration} min`
+}
+
+function segmentStateKey(section, segment) {
+  return segment.stateKey ?? (section.label + '::' + segment.start + '-' + segment.end)
 }
 
 function segmentEntries(book = runbook.value) {
@@ -140,6 +150,72 @@ function restoreOpenSegments(book = runbook.value) {
     [...readOpenSegmentKeys()].map((key) => idByKey.get(key)).filter(Boolean),
   )
   persistOpenSegments(book)
+}
+
+function readReadingPosition(file = props.file) {
+  try {
+    return JSON.parse(window.sessionStorage.getItem('teaching-hub:runbook-position:' + file) ?? 'null')
+  } catch {
+    return null
+  }
+}
+
+function persistReadingPosition(file = renderedFile) {
+  if (!usesPeriodCards.value || restoringPosition || typeof window === 'undefined') return null
+  const position = captureRunbookPosition(readerElement.value, window.innerHeight)
+  if (!position) return null
+  try {
+    window.sessionStorage.setItem('teaching-hub:runbook-position:' + file, JSON.stringify(position))
+  } catch {
+    // In-place updates can still restore the captured position without storage.
+  }
+  return position
+}
+
+function cancelPositionFrame() {
+  if (positionFrame === null) return
+  if (positionUsesTimeout) window.clearTimeout(positionFrame)
+  else window.cancelAnimationFrame(positionFrame)
+  positionFrame = null
+}
+
+function queuePositionFrame(callback) {
+  positionUsesTimeout = !window.requestAnimationFrame
+  positionFrame = positionUsesTimeout
+    ? window.setTimeout(callback, 16)
+    : window.requestAnimationFrame(callback)
+}
+
+async function restoreReadingPosition(position) {
+  const generation = ++positionGeneration
+  cancelPositionFrame()
+  restoringPosition = Boolean(position && usesPeriodCards.value)
+  await nextTick()
+  if (generation !== positionGeneration) return
+  if (!restoringPosition || !readerElement.value) {
+    restoringPosition = false
+    scheduleNavigationUpdate()
+    return
+  }
+  const align = () => {
+    const target = resolveRunbookPosition(readerElement.value, position)
+    if (target) {
+      const delta = target.element.getBoundingClientRect().top - target.offset
+      if (Math.abs(delta) > 1) window.scrollTo({ top: window.scrollY + delta, left: window.scrollX, behavior: 'instant' })
+    }
+  }
+  // Let the route's initial scrolling and restored disclosures settle first.
+  queuePositionFrame(() => {
+    if (generation !== positionGeneration) return
+    align()
+    queuePositionFrame(() => {
+      positionFrame = null
+      if (generation !== positionGeneration) return
+      align()
+      restoringPosition = false
+      updateNavigation()
+    })
+  })
 }
 
 function toggleSegment(id) {
@@ -230,7 +306,7 @@ async function toggleSegmentFromNavigation(id) {
 
 function updateNavigation() {
   navigationFrame = null
-  if (!usesPeriodCards.value || !runbook.value || typeof window === 'undefined') return
+  if (restoringPosition || !usesPeriodCards.value || !runbook.value || typeof window === 'undefined') return
 
   const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 768
   const readingLine = Math.max(88, Math.min(180, viewportHeight * 0.28))
@@ -250,10 +326,11 @@ function updateNavigation() {
   activeSegmentId.value = focus.currentId
   visibleSegmentIds.value = focus.visibleIds
   activeSectionId.value = entries.find(({ segment }) => segment.id === focus.currentId)?.section.id ?? ''
+  persistReadingPosition()
 }
 
 function scheduleNavigationUpdate() {
-  if (!usesPeriodCards.value || typeof window === 'undefined' || navigationFrame !== null) return
+  if (restoringPosition || !usesPeriodCards.value || typeof window === 'undefined' || navigationFrame !== null) return
   if (window.requestAnimationFrame) {
     navigationUsesTimeout = false
     navigationFrame = window.requestAnimationFrame(updateNavigation)
@@ -266,20 +343,36 @@ function scheduleNavigationUpdate() {
 onMounted(() => {
   restoreOpenSegments()
   roadmapExpanded.value = readRoadmapExpanded()
-  if (!usesPeriodCards.value) return
+  if (!usesPeriodCards.value) {
+    restoringPosition = false
+    return
+  }
   window.addEventListener('scroll', scheduleNavigationUpdate, { passive: true })
   window.addEventListener('resize', scheduleNavigationUpdate)
+  window.addEventListener('pagehide', persistBeforeReload)
+  import.meta.hot?.on('vite:beforeUpdate', persistBeforeReload)
+  import.meta.hot?.on('vite:beforeFullReload', persistBeforeReload)
   if (window.ResizeObserver && readerElement.value) {
     navigationResizeObserver = new window.ResizeObserver(scheduleNavigationUpdate)
     navigationResizeObserver.observe(readerElement.value)
   }
-  nextTick(scheduleNavigationUpdate)
+  restoreReadingPosition(readReadingPosition())
 })
+
+function persistBeforeReload() {
+  persistReadingPosition()
+}
 
 onBeforeUnmount(() => {
   if (typeof window === 'undefined') return
+  persistReadingPosition()
+  positionGeneration += 1
+  cancelPositionFrame()
   window.removeEventListener('scroll', scheduleNavigationUpdate)
   window.removeEventListener('resize', scheduleNavigationUpdate)
+  window.removeEventListener('pagehide', persistBeforeReload)
+  import.meta.hot?.off?.('vite:beforeUpdate', persistBeforeReload)
+  import.meta.hot?.off?.('vite:beforeFullReload', persistBeforeReload)
   navigationResizeObserver?.disconnect()
   if (navigationFrame !== null) {
     if (navigationUsesTimeout) window.clearTimeout(navigationFrame)
@@ -287,14 +380,18 @@ onBeforeUnmount(() => {
   }
 })
 
-watch([() => props.source, () => props.file], async () => {
+watch([() => props.source, () => props.file], async ([, file], [, previousFile]) => {
+  const position = persistReadingPosition(previousFile) ?? readReadingPosition(previousFile)
+  const sameFile = file === previousFile
+  renderedFile = file
   restoreOpenSegments()
-  activeSectionId.value = ''
-  activeSegmentId.value = ''
-  visibleSegmentIds.value = []
-  topicNavigationOpen.value = !usesFreeCards.value
-  await nextTick()
-  scheduleNavigationUpdate()
+  if (!sameFile) {
+    activeSectionId.value = ''
+    activeSegmentId.value = ''
+    visibleSegmentIds.value = []
+    topicNavigationOpen.value = !usesFreeCards.value
+  }
+  restoreReadingPosition(sameFile ? position : readReadingPosition(file))
 })
 
 watch(() => props.file, () => {
@@ -347,6 +444,7 @@ watchEffect(() => {
           :key="section.id"
           :ref="(element) => registerElement(sectionElements, section.id, element)"
           class="period"
+          :data-reading-section="section.label"
           :class="{ 'is-dense': section.segments.length >= 6 }"
           :aria-labelledby="section.id"
         >
@@ -367,6 +465,7 @@ watchEffect(() => {
             <article
               :ref="(element) => registerElement(segmentElements, segment.id, element)"
               class="segment"
+              :data-reading-segment="segmentStateKey(section, segment)"
               :class="{ 'is-open': openSegments.has(segment.id) }"
               @keydown.esc="closeOnEscape($event, segment.id)"
             >

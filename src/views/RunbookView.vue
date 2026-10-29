@@ -12,13 +12,14 @@ const source = ref(null)
 const loading = ref(false)
 const error = ref('')
 
-watch([sourcePath, resourceTitle], async ([path], _previous, onCleanup) => {
+watch([sourcePath, resourceTitle], async ([path], previous, onCleanup) => {
   let active = true
   onCleanup(() => { active = false })
-  source.value = null
+  const keepReader = path === previous?.[0] && source.value !== null
+  if (!keepReader) source.value = null
   error.value = ''
   if (!path) return
-  loading.value = true
+  loading.value = !keepReader
   document.title = `${unitLabel.value} · ${resourceTitle.value} · Teaching Hub`
   try {
     const text = await loadContent(path)
