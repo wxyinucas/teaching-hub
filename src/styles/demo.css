@@ -490,6 +490,24 @@
 .demo-reader:fullscreen .mvt-taylor-demo .taylor-legend { margin-top: 10px; }
 .demo-reader:fullscreen .mvt-taylor-demo .taylor-readouts { margin-top: 8px; }
 
+.demo-reader[data-demo="derivative-applications"]:fullscreen { padding: 16px; }
+.demo-reader:fullscreen .monotonicity-demo {
+  max-width: 1180px;
+  padding: 0;
+  border: 0;
+}
+.demo-reader:fullscreen .monotonicity-eyebrow { display: none; }
+.demo-reader:fullscreen .monotonicity-heading h1 { font-size: 28px; }
+
+@media (min-width: 1000px) {
+  .demo-reader:fullscreen .monotonicity-controls {
+    grid-template-columns: minmax(280px, 1fr) auto;
+    align-items: end;
+    column-gap: 28px;
+  }
+  .demo-reader:fullscreen .monotonicity-presets { padding-bottom: 5px; }
+}
+
 @media (max-width: 1040px) {
   .microscope-controls { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
   .microscope-controls > .demo-slider-control:last-child { grid-column: 1 / -1; }

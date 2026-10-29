@@ -5,7 +5,16 @@
   "summary": "用导数分析单调、凹凸、极值与最值，并处理函数图形、曲率和第三章整合。",
   "lessonCount": 5,
   "order": 6,
+  "demos": [
+    {
+      "id": "derivative-applications",
+      "title": "原函数与导函数",
+      "summary": "用同一横坐标联动原函数的切线与导函数上的点，比较导数正负、单调性和升降转换。"
+    }
+  ],
   "resources": {
+    "runbook": "runbook.md",
+    "guide": "guide.md",
     "exams": {
       "scope": "course",
       "file": "exams/topics/topic-05-derivative-applications.tex"

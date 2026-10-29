@@ -168,6 +168,21 @@ describe('demo fullscreen reader', () => {
     })
   })
 
+  it('opens the T05 function-and-derivative demo from its declared topic entry', () => {
+    wrapper = mount(DemoView, {
+      props: {
+        termId: '2026-fall',
+        courseId: 'calculus-i',
+        topicId: 'topic-05-derivative-applications',
+        demoId: 'derivative-applications',
+      },
+      global: { stubs: { RouterLink: RouterLinkStub } },
+    })
+    expect(wrapper.find('.monotonicity-demo').exists()).toBe(true)
+    expect(wrapper.findAll('svg[role="img"]')).toHaveLength(2)
+    expect(document.title).toBe('原函数与导函数 · T05 · Teaching Hub')
+  })
+
   it('keeps the two T04 scenes in one entry and opens Taylor through its scene query', async () => {
     wrapper = mount(DemoView, {
       props: {
