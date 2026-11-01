@@ -1,0 +1,12 @@
+{
+  "id": "week-06",
+  "runbookLayout": "lesson-cards",
+  "label": "W6 · 函数、调用与可见性",
+  "title": "函数、调用与可见性",
+  "summary": "通过六个纠错场景追踪名字查找、闭包与递归调用，核验对象共享、模块配置，以及状态快照与分叉隔离；Guide 提供材料同步与 Notebook 启动步骤。",
+  "order": 6,
+  "resources": {
+    "runbook": "runbook.md",
+    "guide": "guide.md"
+  }
+}
