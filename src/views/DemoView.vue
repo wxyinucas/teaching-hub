@@ -5,7 +5,7 @@ import { findTopic, findWeek } from '../lib/catalog.js'
 import DerivativesDemo from '../components/demos/DerivativesDemo.vue'
 import FunctionLimitDemo from '../components/demos/FunctionLimitDemo.vue'
 import MvtTaylorDemo from '../components/demos/MvtTaylorDemo.vue'
-import MonotonicityDemo from '../components/demos/MonotonicityDemo.vue'
+import DerivativeApplicationsDemo from '../components/demos/DerivativeApplicationsDemo.vue'
 import SequenceLimitDemo from '../components/demos/SequenceLimitDemo.vue'
 import NotFoundView from './NotFoundView.vue'
 
@@ -21,7 +21,7 @@ const demoComponents = {
   derivatives: DerivativesDemo,
   'function-limit': FunctionLimitDemo,
   'mean-value': MvtTaylorDemo,
-  'derivative-applications': MonotonicityDemo,
+  'derivative-applications': DerivativeApplicationsDemo,
   'sequence-limit': SequenceLimitDemo,
 }
 

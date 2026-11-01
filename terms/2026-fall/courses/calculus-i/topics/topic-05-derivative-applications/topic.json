@@ -9,7 +9,7 @@
     {
       "id": "derivative-applications",
       "title": "原函数与导函数",
-      "summary": "用同一横坐标联动原函数的切线与导函数上的点，比较导数正负、单调性和升降转换。"
+      "summary": "联动原函数与导函数，分场景比较单调性与极值、凹凸与拐点。"
     }
   ],
   "resources": {

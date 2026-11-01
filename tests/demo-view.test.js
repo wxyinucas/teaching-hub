@@ -204,4 +204,22 @@ describe('demo fullscreen reader', () => {
     await wrapper.find('[data-scene="taylor"]').trigger('click')
     expect(wrapper.find('.taylor-approximation-demo').exists()).toBe(true)
   })
+
+  it('opens T05 concavity within its existing topic demo entry', () => {
+    wrapper = mount(DemoView, {
+      props: {
+        termId: '2026-fall',
+        courseId: 'calculus-i',
+        topicId: 'topic-05-derivative-applications',
+        demoId: 'derivative-applications',
+      },
+      global: {
+        stubs: { RouterLink: RouterLinkStub },
+        provide: { [routeLocationKey]: { query: { scene: 'concavity' } } },
+      },
+    })
+    expect(wrapper.find('.concavity-demo').exists()).toBe(true)
+    expect(wrapper.find('.monotonicity-demo').exists()).toBe(false)
+    expect(wrapper.findAll('[data-scene]')).toHaveLength(2)
+  })
 })
