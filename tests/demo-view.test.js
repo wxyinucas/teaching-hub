@@ -220,6 +220,7 @@ describe('demo fullscreen reader', () => {
     })
     expect(wrapper.find('.concavity-demo').exists()).toBe(true)
     expect(wrapper.find('.monotonicity-demo').exists()).toBe(false)
-    expect(wrapper.findAll('[data-scene]')).toHaveLength(2)
+    expect(wrapper.findAll('[data-scene]').map((button) => button.attributes('data-scene')))
+      .toEqual(['monotonicity', 'concavity', 'curvature'])
   })
 })

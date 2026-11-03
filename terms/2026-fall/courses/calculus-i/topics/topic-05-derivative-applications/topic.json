@@ -9,7 +9,7 @@
     {
       "id": "derivative-applications",
       "title": "原函数与导函数",
-      "summary": "联动原函数与导函数，分场景比较单调性与极值、凹凸与拐点。"
+      "summary": "联动原函数与导函数观察单调与凹凸，再把一段定长的线弯成整圆，观察曲率。"
     }
   ],
   "resources": {
