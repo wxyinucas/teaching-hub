@@ -4,6 +4,8 @@ import { routeLocationKey, routerKey } from 'vue-router'
 import MonotonicityDemo from './MonotonicityDemo.vue'
 import ConcavityDemo from './ConcavityDemo.vue'
 import CurvatureDemo from './CurvatureDemo.vue'
+import ArcLengthDemo from './ArcLengthDemo.vue'
+import ArcLengthApproximationDemo from './ArcLengthApproximationDemo.vue'
 
 const route = inject(routeLocationKey, null)
 const router = inject(routerKey, null)
@@ -11,6 +13,8 @@ const scenes = [
   { id: 'monotonicity', label: '单调性与极值', component: MonotonicityDemo },
   { id: 'concavity', label: '凹凸与拐点', component: ConcavityDemo },
   { id: 'curvature', label: '从直线到圆', component: CurvatureDemo },
+  { id: 'arc-length', label: '弧长', component: ArcLengthDemo },
+  { id: 'arc-length-approximation', label: '弧长近似', component: ArcLengthApproximationDemo },
 ]
 const defaultScene = scenes[0].id
 const findScene = (id) => scenes.find((entry) => entry.id === id) ?? scenes[0]

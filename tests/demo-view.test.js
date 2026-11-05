@@ -205,7 +205,11 @@ describe('demo fullscreen reader', () => {
     expect(wrapper.find('.taylor-approximation-demo').exists()).toBe(true)
   })
 
-  it('opens T05 concavity within its existing topic demo entry', () => {
+  it.each([
+    ['concavity', '.concavity-demo'],
+    ['arc-length', '.arc-length-demo'],
+    ['arc-length-approximation', '.arc-length-approximation-demo'],
+  ])('opens the T05 %s scene within its existing topic demo entry', (scene, selector) => {
     wrapper = mount(DemoView, {
       props: {
         termId: '2026-fall',
@@ -215,12 +219,12 @@ describe('demo fullscreen reader', () => {
       },
       global: {
         stubs: { RouterLink: RouterLinkStub },
-        provide: { [routeLocationKey]: { query: { scene: 'concavity' } } },
+        provide: { [routeLocationKey]: { query: { scene } } },
       },
     })
-    expect(wrapper.find('.concavity-demo').exists()).toBe(true)
+    expect(wrapper.find(selector).exists()).toBe(true)
     expect(wrapper.find('.monotonicity-demo').exists()).toBe(false)
     expect(wrapper.findAll('[data-scene]').map((button) => button.attributes('data-scene')))
-      .toEqual(['monotonicity', 'concavity', 'curvature'])
+      .toEqual(['monotonicity', 'concavity', 'curvature', 'arc-length', 'arc-length-approximation'])
   })
 })
