@@ -1,0 +1,13 @@
+{
+  "id": "week-07",
+  "runbookLayout": "lesson-cards",
+  "label": "W7 · 调试：找到第一次偏差",
+  "title": "调试：找到第一次偏差",
+  "summary": "用 VS Code 的 Python 调试器复现故障、查看断点处的变量和调用栈，修复后用原用例和变式核验。",
+  "order": 7,
+  "resources": {
+    "runbook": "runbook.md",
+    "slides": "slides.md",
+    "guide": "guide.md"
+  }
+}
