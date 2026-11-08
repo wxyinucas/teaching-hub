@@ -6,6 +6,8 @@
   "lessonCount": 5,
   "order": 7,
   "resources": {
+    "runbook": "runbook.md",
+    "guide": "guide.md",
     "exams": {
       "scope": "course",
       "file": "exams/topics/topic-06-indefinite-integrals.tex"
