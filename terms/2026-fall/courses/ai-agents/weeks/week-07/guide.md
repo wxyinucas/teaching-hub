@@ -1,17 +1,37 @@
 # W7｜调试：找到第一次偏差
 
-这周用 VS Code 的 Notebook 调试器观察程序。每道题已经给出错误版本、固定输入和检查。先定位，再修改。
+这周用 VS Code 的 Notebook 调试器观察 NumPy 数值计算。每道题已经给出错误版本、固定数组和检查。先看中间数组、形状和掩码，再修改。
 
-## 同步材料
+## 获取本周材料
 
-沿用之前 clone 的 [ai-agents 仓库](https://github.com/wxyinucas/ai-agents)。如果你已开始修改材料，先保存个人副本。进入已有工作台的根目录，例如 `~/course/w02-workbench`，查看教师仓库对应的 remote 名称。
+继续使用已经 clone 的 [ai-agents 课程仓库](https://github.com/wxyinucas/ai-agents)，例如 `~/course/w02-workbench`。本周材料随这份仓库更新，保留已有 Git 历史。Windows 用户在 WSL 终端中完成下面的操作。
+
+### 1. 保存自己的工作
+
+如果已经试跑或修改过 Notebook，先另存为个人副本，例如 `exercises-my.ipynb`；已有同名文件时换一个名字。保存后关闭旧版 Notebook 标签页，避免稍后将旧内容覆盖保存回更新后的文件。
+
+进入已有工作台的根目录，查看本地改动和 remote：
 
 ```bash
+cd ~/course/w02-workbench
 git status -sb
 git remote -v
 ```
 
-教师仓库是 `origin` 时运行 `git pull --no-rebase origin main`，是 `upstream` 时运行 `git pull --no-rebase upstream main`。更新成功后，在同一终端执行：
+`git status` 中若还有已跟踪文件的修改，先把要保留的改动 commit，或请 Agent 帮你用 stash 暂存。让它说明保存了哪些文件、个人副本是否包含在内，以及更新后怎样恢复。确认自己的工作已经妥善保存，再拉取教师材料。
+
+### 2. 从教师 remote 更新
+
+在 `git remote -v` 中找出指向 `wxyinucas/ai-agents` 的 remote；SSH 地址是 `git@github.com:wxyinucas/ai-agents.git`，HTTPS 地址也可以。按实际情况执行其中一条：
+
+- `origin` 指向教师仓库：`git pull --no-rebase origin main`
+- `origin` 指向自己的 fork、`upstream` 指向教师仓库：`git pull --no-rebase upstream main`
+
+如果找不到教师 remote，或 pull 因本地改动、未完成的 merge、冲突而停止，把 `git status -sb`、`git remote -v` 和报错交给 Agent，让它先解释当前状态，再帮助保存改动、完成合并并重新检查。解决后继续使用这份工作台和已有历史。
+
+### 3. 建立本周环境并打开目录
+
+拉取成功后，在同一终端运行：
 
 ```bash
 cd week-07
@@ -19,16 +39,55 @@ uv sync --locked
 code .
 ```
 
-Windows 用户在 WSL 中操作。打开 `exercises.ipynb`，选右上角的 Kernel，选择本周目录 `.venv` 的 Python 3.12。`demo.ipynb` 是教师演示，课后也可以自己重跑。
+同步的是整个 `week-07/`，其中各文件的职责如下：
+
+| 文件 | 用途 |
+| --- | --- |
+| `README.md` | 本周材料入口与运行说明。 |
+| `.python-version` | 指定本周使用 Python 3.12。 |
+| `pyproject.toml` | 声明本周依赖，包括新增的 NumPy，以及 Notebook 和 kernel 所需工具。 |
+| `uv.lock` | 锁定依赖版本；`uv sync --locked` 据此创建或更新本周的 `.venv/`。 |
+| `demo.ipynb` | 教师演示：复现两个均值相同的问题，观察变量与调用栈，再修复和检查；课后可以重跑。 |
+| `exercises.ipynb` | 学生练习：六个 NumPy 场景，含固定输入、错误 Playground、函数壳、检查与折叠参考解答。 |
+
+`.venv/` 由上面的命令在本周目录中生成。上周的环境即使能运行旧材料，也不代表包含本周的 NumPy 和依赖版本。
+
+## 选对 kernel 再开始
+
+VS Code 需要 Python 和 Jupyter 扩展。重新打开刚更新的 `exercises.ipynb`，在右上角 **Kernel** 选择 `week-07/.venv` 的 Python 3.12；使用 WSL 时，选择 WSL 中的本周环境。确认打开的是新版后，另存为个人练习副本再修改；已有副本时换一个名字。重启这个 Notebook 的 kernel，从输入格开始逐题运行，旧副本留作对照。
+
+可以在临时代码格中核对：
+
+```python
+import sys
+import numpy as np
+print(sys.executable)
+print(np.__version__)
+```
+
+Python 路径应位于本周的 `week-07/.venv/` 中，NumPy 应能正常导入；不符时先重新选择本周 kernel 并重启。先读练习开头的「开始前：只用到这些 NumPy 记号」，再进入题目；新版使用数组，缺失值用 `np.nan`。
 
 ## 第一次用断点
 
 1. 先运行本题输入格，再普通运行错误 Playground，看到实际输出和预期不同。
 2. 点击 Playground 中目标行的左侧边缘设断点。在运行按钮旁的菜单选 **Debug Cell**。
-3. 停住后看 **Variables** 里的值。需要看谁把这个值传进来时，去 **Call Stack** 选择上一层调用。用 **Continue** 继续到下一次停住。
+3. 停住后看 **Variables** 里的数组、`shape`、掩码或计数。需要看谁把这个值传进来时，去 **Call Stack** 选择上一层调用。用 **Continue** 继续到下一次停住。
 4. 停止调试，改好 Playground，把修复写进给定的函数壳，重跑本题检查，再核对变式输入。
 
 需要重来时先停止调试，从该题输入格重新运行。初始代码有缺陷，按题目逐格跑。
+
+## 在浏览器中重跑演示
+
+在已同步并安装好环境的 `week-07/` 目录中运行：
+
+```bash
+uv run --locked python -m ipykernel install --sys-prefix --name ai-agents-week-07 --display-name "W7 Python 3.12"
+uv run --locked jupyter notebook demo.ipynb
+```
+
+打开这次启动时终端输出的完整本机链接，保留其中的 token；若出现登录页，使用同一次输出中的 token。Notebook 中选择 **W7 Python 3.12**。
+
+浏览器 Jupyter 中，启用顶部工具栏的小虫图标，通过 **View → Debugger Panel** 打开调试面板，在「定义」格的 `return` 行设断点，然后选中「报告」格点击 **▶ 运行**。观察 **VARIABLES** 和 **CALLSTACK**，用 **Continue** 到第二次调用。演示 Notebook 的折叠区也保留了 VS Code 的 **Debug Cell** 步骤。
 
 ## 课堂检查点
 

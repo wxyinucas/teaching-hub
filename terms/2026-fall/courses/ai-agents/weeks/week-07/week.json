@@ -3,7 +3,7 @@
   "runbookLayout": "lesson-cards",
   "label": "W7 · 调试：找到第一次偏差",
   "title": "调试：找到第一次偏差",
-  "summary": "用 VS Code 的 Python 调试器复现故障、查看断点处的变量和调用栈，修复后用原用例和变式核验。",
+  "summary": "用调试器观察 NumPy 数组的形状、掩码、广播、聚合与排序索引，修复后用原用例和变式核验。",
   "order": 7,
   "resources": {
     "runbook": "runbook.md",
