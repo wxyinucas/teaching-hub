@@ -1,0 +1,13 @@
+{
+  "id": "topic-00-generative-models",
+  "label": "T00",
+  "title": "生成模型在学习什么？",
+  "summary": "从应用进入分布、条件与采样，建立数据、模型和生成结果之间的关系。",
+  "lessonCount": 1,
+  "order": 0,
+  "resources": {
+    "runbook": "runbook.md",
+    "slides": "slides.md",
+    "guide": "guide.md"
+  }
+}

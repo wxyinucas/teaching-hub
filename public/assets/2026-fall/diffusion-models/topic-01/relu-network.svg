@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="607.692" viewBox="0 0 1040 790" role="img" aria-labelledby="title description">
+<title id="title">两个 ReLU 单元表示绝对值函数</title>
+<desc id="description">上排分别画 ReLU(x)、ReLU(-x) 和它们的和 |x|。下排网络为一个输入、两个隐藏单元、一个线性输出；展示容量的参数 w为1与负1，b为0，v为1，c为0。</desc>
+<rect width="1040" height="790" fill="#fff"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 0L8 4L0 8Z" fill="#756f7b"/></marker></defs>
+<g font-family="system-ui, -apple-system, BlinkMacSystemFont, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif" font-size="24" fill="#343039">
+<text x="45" y="47" font-size="28" fill="#343039" text-anchor="start" font-weight="600">两个折线部件，可以组成一个 V 形函数</text>
+<text x="180" y="95" font-size="24" fill="#6c3fa0" text-anchor="middle" font-weight="normal">h₁ = ReLU(x)</text>
+<line x1="50" y1="285" x2="315" y2="285" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="180" y1="304" x2="180" y2="132" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="317" y="314" font-size="20" fill="#343039" text-anchor="start" font-weight="normal">x</text>
+<text x="171" y="315" font-size="20" fill="#343039" text-anchor="end" font-weight="normal">0</text>
+<line x1="70" y1="285" x2="70" y2="291" stroke="#756f7b" stroke-width="2"/>
+<text x="70" y="315" font-size="20" fill="#343039" text-anchor="middle" font-weight="normal">−2</text>
+<line x1="290" y1="285" x2="290" y2="291" stroke="#756f7b" stroke-width="2"/>
+<text x="290" y="315" font-size="20" fill="#343039" text-anchor="middle" font-weight="normal">2</text>
+<path d="M70 285 L180 285 L290 165" fill="none" stroke="#6c3fa0" stroke-width="4"/>
+<text x="170" y="172" font-size="20" fill="#343039" text-anchor="end" font-weight="normal">2</text>
+<text x="500" y="95" font-size="24" fill="#207d79" text-anchor="middle" font-weight="normal">h₂ = ReLU(−x)</text>
+<line x1="370" y1="285" x2="635" y2="285" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="500" y1="304" x2="500" y2="132" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="637" y="314" font-size="20" fill="#343039" text-anchor="start" font-weight="normal">x</text>
+<text x="491" y="315" font-size="20" fill="#343039" text-anchor="end" font-weight="normal">0</text>
+<line x1="390" y1="285" x2="390" y2="291" stroke="#756f7b" stroke-width="2"/>
+<text x="390" y="315" font-size="20" fill="#343039" text-anchor="middle" font-weight="normal">−2</text>
+<line x1="610" y1="285" x2="610" y2="291" stroke="#756f7b" stroke-width="2"/>
+<text x="610" y="315" font-size="20" fill="#343039" text-anchor="middle" font-weight="normal">2</text>
+<path d="M390 165 L500 285 L610 285" fill="none" stroke="#207d79" stroke-width="4"/>
+<text x="490" y="172" font-size="20" fill="#343039" text-anchor="end" font-weight="normal">2</text>
+<text x="820" y="95" font-size="24" fill="#a66319" text-anchor="middle" font-weight="normal">ŷ = h₁ + h₂ = |x|</text>
+<line x1="690" y1="285" x2="955" y2="285" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="820" y1="304" x2="820" y2="132" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="957" y="314" font-size="20" fill="#343039" text-anchor="start" font-weight="normal">x</text>
+<text x="811" y="315" font-size="20" fill="#343039" text-anchor="end" font-weight="normal">0</text>
+<line x1="710" y1="285" x2="710" y2="291" stroke="#756f7b" stroke-width="2"/>
+<text x="710" y="315" font-size="20" fill="#343039" text-anchor="middle" font-weight="normal">−2</text>
+<line x1="930" y1="285" x2="930" y2="291" stroke="#756f7b" stroke-width="2"/>
+<text x="930" y="315" font-size="20" fill="#343039" text-anchor="middle" font-weight="normal">2</text>
+<path d="M710 165 L820 285 L930 165" fill="none" stroke="#a66319" stroke-width="4"/>
+<text x="810" y="172" font-size="20" fill="#343039" text-anchor="end" font-weight="normal">2</text>
+<line x1="40" y1="355" x2="960" y2="355" stroke="#e6e0eb" stroke-width="2"/>
+<text x="45" y="402" font-size="26" fill="#343039" text-anchor="start" font-weight="600">同一关系的网络图</text>
+<rect x="55" y="527" width="100" height="62" rx="12" fill="#faf7fd" stroke="#d9cbe8" stroke-width="2"/>
+<text x="105.0" y="566.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">x</text>
+<rect x="310" y="450" width="250" height="82" rx="12" fill="#faf7fd" stroke="#d9cbe8" stroke-width="2"/>
+<text x="435.0" y="484.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">h₁ = ReLU(x)</text>
+<text x="435.0" y="514.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">w₁ = 1，b₁ = 0</text>
+<rect x="310" y="585" width="250" height="82" rx="12" fill="#f3faf9" stroke="#b9d8d4" stroke-width="2"/>
+<text x="435.0" y="619.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">h₂ = ReLU(−x)</text>
+<text x="435.0" y="649.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">w₂ = −1，b₂ = 0</text>
+<rect x="775" y="527" width="165" height="62" rx="12" fill="#fff9f0" stroke="#e4cdab" stroke-width="2"/>
+<text x="857.5" y="566.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">ŷ = h₁ + h₂</text>
+<path d="M155 558H220V491H300" fill="none" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M220 558V626H300" fill="none" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M560 491H665V548H765" fill="none" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M560 626H665V568H765" fill="none" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="615" y="474" font-size="22" fill="#6c3fa0" text-anchor="middle" font-weight="normal">v₁ = 1</text>
+<text x="615" y="655" font-size="22" fill="#207d79" text-anchor="middle" font-weight="normal">v₂ = 1</text>
+<text x="857" y="625" font-size="22" fill="#a66319" text-anchor="middle" font-weight="normal">c = 0</text>
+<text x="45" y="728" font-size="23" fill="#343039" text-anchor="start" font-weight="normal">这组参数证明“能表示”；学习过程仍须从给定起点寻找参数。</text>
+<text x="45" y="761" font-size="23" fill="#756f7b" text-anchor="start" font-weight="normal">图中给的是容量示例，不是后面手算采用的训练初值。</text>
+</g>
+</svg>

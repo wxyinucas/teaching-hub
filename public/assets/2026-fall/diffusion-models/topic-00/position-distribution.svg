@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="410" viewBox="0 0 1000 410" role="img" aria-labelledby="title description">
+  <title id="title">六个等可能位置与均值</title>
+  <desc id="description">位置负三、负二、负一、一、二、三的概率都为六分之一。均值零位于两组位置之间，零处的概率为零。</desc>
+  <rect width="1000" height="410" fill="#fff"/>
+  <g font-family="Kaiti SC, STKaiti, KaiTi, Georgia, serif" font-size="27" fill="#343039">
+    <text x="58" y="65">P(X = x)</text>
+    <line x1="120" y1="130" x2="925" y2="130" stroke="#d9d1e5" stroke-width="2" stroke-dasharray="6 7"/>
+    <text x="75" y="139" text-anchor="middle">1/6</text>
+    <text x="85" y="298" text-anchor="middle">0</text>
+    <path d="M120 290V91 M114 101L120 89L126 101 M120 290H929 M917 284L931 290L917 296" fill="none" stroke="#756f7b" stroke-width="2.5"/>
+    <text x="950" y="299">x</text>
+    <g stroke="#6c3fa0" stroke-width="4" fill="#6c3fa0">
+      <path d="M180 290V130 M290 290V130 M400 290V130 M620 290V130 M730 290V130 M840 290V130" fill="none"/>
+      <circle cx="180" cy="130" r="5"/>
+      <circle cx="290" cy="130" r="5"/>
+      <circle cx="400" cy="130" r="5"/>
+      <circle cx="620" cy="130" r="5"/>
+      <circle cx="730" cy="130" r="5"/>
+      <circle cx="840" cy="130" r="5"/>
+    </g>
+    <g text-anchor="middle">
+      <text x="180" y="326">−3</text>
+      <text x="290" y="326">−2</text>
+      <text x="400" y="326">−1</text>
+      <text x="510" y="326" fill="#a66319">0</text>
+      <text x="620" y="326">1</text>
+      <text x="730" y="326">2</text>
+      <text x="840" y="326">3</text>
+    </g>
+    <circle cx="510" cy="290" r="5" fill="#fff" stroke="#a66319" stroke-width="2.5"/>
+    <text x="510" y="374" text-anchor="middle" fill="#a66319">均值为 0，0 处的概率为 0</text>
+  </g>
+</svg>

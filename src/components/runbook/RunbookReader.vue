@@ -11,6 +11,7 @@ const props = defineProps({
   file: { type: String, required: true },
   variant: { type: String, default: '' },
   format: { type: String, default: 'runbook' },
+  isCourseRunbook: { type: Boolean, default: false },
   pageTitle: { type: String, default: '' },
 })
 
@@ -26,16 +27,21 @@ const variantClass = computed(() => {
 const isCalculusTopic = computed(() => props.variant === 'calculus-topic')
 const usesLessonCards = computed(() => props.variant === 'lesson-cards')
 const usesFreeCards = computed(() => props.format === 'cards')
+const usesPersonalCards = computed(() => usesFreeCards.value && !props.isCourseRunbook)
 const usesPeriodCards = computed(() => isCalculusTopic.value || usesLessonCards.value || usesFreeCards.value)
 const routeTitle = computed(() => {
-  if (usesFreeCards.value) return '提示卡片'
+  if (usesPersonalCards.value) return '提示卡片'
   if (isCalculusTopic.value) return '专题路线'
+  if (usesFreeCards.value) return '学习路线'
   if (usesLessonCards.value) return '本次课路线'
   return '课堂路线'
 })
-const roadmapTitle = computed(() => (usesFreeCards.value ? '材料路线' : usesLessonCards.value ? '知识地图' : 'Road map'))
-const navigationLabel = computed(() => (usesFreeCards.value ? '提示卡片导航' : usesLessonCards.value ? '本周台本导航' : '专题台本导航'))
-const segmentUnit = computed(() => (usesFreeCards.value ? '张卡片' : usesPeriodCards.value ? '个课时卡片' : '个教学动作段'))
+const roadmapTitle = computed(() => (usesPersonalCards.value ? '材料路线' : usesLessonCards.value ? '知识地图' : 'Road map'))
+const navigationLabel = computed(() => (usesPersonalCards.value ? '提示卡片导航' : usesLessonCards.value ? '本周台本导航' : '专题台本导航'))
+const segmentUnit = computed(() => {
+  if (usesFreeCards.value) return usesPersonalCards.value ? '张卡片' : '个学习单元'
+  return usesPeriodCards.value ? '个课时卡片' : '个教学动作段'
+})
 const sectionUnit = computed(() => (
   runbook.value?.sections.every((section) => /次课$/.test(section.label)) ? '次课' : '个教学区段'
 ))
@@ -414,7 +420,7 @@ watchEffect(() => {
       </p>
     </section>
 
-    <dl v-if="!usesPeriodCards || (usesFreeCards && runbook.overview.length)" class="anchors" :aria-label="usesFreeCards ? '材料的方向' : '台本的方向'">
+    <dl v-if="!usesPeriodCards || (usesFreeCards && runbook.overview.length)" class="anchors" :aria-label="usesPersonalCards ? '材料的方向' : '台本的方向'">
       <div v-for="(anchor, index) in runbook.overview" :key="anchor.label" class="anchor" :class="{ 'anchor-close': index === runbook.overview.length - 1 }">
         <dt>{{ anchor.label }}</dt><dd>{{ anchor.text }}</dd>
       </div>
@@ -482,7 +488,7 @@ watchEffect(() => {
                 <span class="disclosure-icon" aria-hidden="true">{{ openSegments.has(segment.id) ? '−' : '+' }}</span>
               </button>
               <div v-show="openSegments.has(segment.id)" :id="`${segment.id}-notes`" class="segment-notes" role="region" :aria-labelledby="`${segment.id}-trigger`">
-                <div class="notes-heading"><span>{{ usesFreeCards ? '个人提示' : '教师提示' }}</span><span>卡片内按 Esc 收起</span></div>
+                <div class="notes-heading"><span>{{ usesPersonalCards ? '个人提示' : '教师提示' }}</span><span>卡片内按 Esc 收起</span></div>
                 <SegmentNotes :source="segment.notes" :outline="segment.outline" />
                 <button class="close-inline" @click="closeSegment(segment.id, true)">收起本段 ↑</button>
               </div>

@@ -35,6 +35,8 @@ describe('published content contract', () => {
           ['topics', course.topics],
         ]) {
           for (const item of items) {
+            expect(['runbook', 'cards'], '未支持的台本格式：' + item.runbookFormat)
+              .toContain(item.runbookFormat ?? 'runbook')
             expect(item.resources.draft).toBeUndefined()
             expect(hasContent(
               term.id + '/courses/' + course.id + '/' + collection + '/' + item.id + '/draft.md',
@@ -45,7 +47,8 @@ describe('published content contract', () => {
               expect(hasContent(path), '资源不存在：' + path).toBe(true)
               const source = await loadContent(path)
               expect(source.trim(), '资源为空：' + path).not.toBe('')
-              expect(() => parsers[kind](source), '资源无法解析：' + path).not.toThrow()
+              const options = kind === 'runbook' ? { format: item.runbookFormat ?? 'runbook' } : undefined
+              expect(() => parsers[kind](source, options), '资源无法解析：' + path).not.toThrow()
               if (kind === 'exams') expect(parseExamCollection(source).questionCount).toBeGreaterThan(0)
             }
           }

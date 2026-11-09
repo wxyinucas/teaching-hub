@@ -109,6 +109,8 @@ describe('runbook disclosure', () => {
     const props = { source, file: 'materials/cues.md', format: 'cards' }
     wrapper = mount(RunbookReader, { props })
     expect(wrapper.classes()).toContain('runbook-reader--cards')
+    expect(wrapper.find('#route-title').text()).toContain('提示卡片')
+    expect(wrapper.find('.notes-heading').text()).toContain('个人提示')
     expect(wrapper.find('.segment-time').exists()).toBe(false)
     expect(wrapper.find('.period-duration').exists()).toBe(false)
     expect(wrapper.find('.topic-side-nav').text()).toContain('分组')

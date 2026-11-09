@@ -34,6 +34,12 @@
 | 交互 Demo | [`DemoView.vue`](../../../src/views/DemoView.vue)、[`demos/`](../../../src/components/demos/)；新增演示需要实现并注册组件 |
 | 真题语法与浏览 | [`exams.js`](../../../src/lib/exams.js)、[`ExamsView.vue`](../../../src/views/ExamsView.vue) |
 
+## 不绑定时长的台本
+
+专题需要按 Section 和小段组织、暂不指定课时长度时，可在 `topic.json` 中设置 `"runbookFormat": "cards"`，并照常登记 `"resources": { "runbook": "runbook.md" }`。正文用 `##` 分组、`###` 写小段标题、`####` 写段内目录，不填写分钟范围；网站复用卡片展开与目录定位，隐藏时长。
+
+省略 `runbookFormat` 时仍使用原有计时台本格式；此设置只作用于当前专题，不改变同课程其他专题。`runbookLayout` 负责布局，不能替代格式设置。总览的三个锚点与 Road map 语法保持不变。
+
 ## Slides 布局与标记
 
 单独一行 `---` 分页；代码围栏内的 `---` 不分页。当前 `layout` 支持七种值：

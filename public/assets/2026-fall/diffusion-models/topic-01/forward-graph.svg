@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="638.462" viewBox="0 0 1040 830" role="img" aria-labelledby="title description">
+<title id="title">同一次前向计算的依赖图</title>
+<desc id="description">输入x等于1，第一支路z1等于2、h1等于2，第二支路z2等于1、h2等于1；输出权重均为1，偏置c为0，所以预测3。减去目标y等于1得到误差2，再计算一半误差平方得到损失2。</desc>
+<rect width="1040" height="830" fill="#fff"/>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0 0L8 4L0 8Z" fill="#756f7b"/></marker></defs>
+<g font-family="system-ui, -apple-system, BlinkMacSystemFont, &quot;PingFang SC&quot;, &quot;Microsoft YaHei&quot;, sans-serif" font-size="24" fill="#343039">
+<text x="45" y="47" font-size="28" fill="#343039" text-anchor="start" font-weight="600">前向计算：沿依赖关系，把已知量算成损失</text>
+<text x="45" y="87" font-size="23" fill="#756f7b" text-anchor="start" font-weight="normal">训练起点：w = (1, −1)，b = (1, 2)，v = (1, 1)，c = 0</text>
+<rect x="40" y="241" width="110" height="68" rx="12" fill="#faf7fd" stroke="#d9cbe8" stroke-width="2"/>
+<text x="95.0" y="283.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">x = 1</text>
+<rect x="260" y="140" width="200" height="88" rx="12" fill="#faf7fd" stroke="#d9cbe8" stroke-width="2"/>
+<text x="360.0" y="177.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">z₁ = w₁x + b₁</text>
+<text x="360.0" y="207.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">z₁ = 2</text>
+<rect x="260" y="322" width="200" height="88" rx="12" fill="#f3faf9" stroke="#b9d8d4" stroke-width="2"/>
+<text x="360.0" y="359.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">z₂ = w₂x + b₂</text>
+<text x="360.0" y="389.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">z₂ = 1</text>
+<rect x="560" y="140" width="195" height="88" rx="12" fill="#faf7fd" stroke="#d9cbe8" stroke-width="2"/>
+<text x="657.5" y="177.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">h₁ = ReLU(z₁)</text>
+<text x="657.5" y="207.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">h₁ = 2</text>
+<rect x="560" y="322" width="195" height="88" rx="12" fill="#f3faf9" stroke="#b9d8d4" stroke-width="2"/>
+<text x="657.5" y="359.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">h₂ = ReLU(z₂)</text>
+<text x="657.5" y="389.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">h₂ = 1</text>
+<path d="M150 275H200V184H250" fill="none" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M200 275V366H250" fill="none" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="460" y1="184" x2="550" y2="184" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<line x1="460" y1="366" x2="550" y2="366" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="360" y="123" font-size="22" fill="#6c3fa0" text-anchor="middle" font-weight="normal">w₁ = 1，b₁ = 1</text>
+<text x="360" y="445" font-size="22" fill="#207d79" text-anchor="middle" font-weight="normal">w₂ = −1，b₂ = 2</text>
+<path d="M755 184H850V482" fill="none" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M755 366H900V482" fill="none" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="811" y="168" font-size="22" fill="#6c3fa0" text-anchor="middle" font-weight="normal">v₁ = 1</text>
+<text x="809" y="350" font-size="22" fill="#207d79" text-anchor="middle" font-weight="normal">v₂ = 1</text>
+<rect x="725" y="492" width="235" height="88" rx="12" fill="#fff9f0" stroke="#e4cdab" stroke-width="2"/>
+<text x="842.5" y="529.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">ŷ = v₁h₁ + v₂h₂ + c</text>
+<text x="842.5" y="559.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">ŷ = 3</text>
+<text x="840" y="613" font-size="22" fill="#a66319" text-anchor="middle" font-weight="normal">c = 0</text>
+<rect x="390" y="492" width="200" height="88" rx="12" fill="#fff9f0" stroke="#e4cdab" stroke-width="2"/>
+<text x="490.0" y="529.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">e = ŷ − y</text>
+<text x="490.0" y="559.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">e = 2</text>
+<line x1="725" y1="536" x2="602" y2="536" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="65" y="492" width="200" height="88" rx="12" fill="#fff9f0" stroke="#e4cdab" stroke-width="2"/>
+<text x="165.0" y="529.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">ℓ = ½e²</text>
+<text x="165.0" y="559.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">ℓ = 2</text>
+<line x1="390" y1="536" x2="277" y2="536" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="435" y="664" width="110" height="60" rx="12" fill="#f7f6f8" stroke="#e6e0eb" stroke-width="2"/>
+<text x="490.0" y="702.0" font-size="24" fill="#343039" text-anchor="middle" font-weight="normal">y = 1</text>
+<line x1="490" y1="664" x2="490" y2="592" stroke="#756f7b" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="45" y="786" font-size="23" fill="#343039" text-anchor="start" font-weight="normal">参数和数据先固定；这张图只计算预测与损失，还没有求导或更新。</text>
+</g>
+</svg>

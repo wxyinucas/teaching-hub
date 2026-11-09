@@ -3,6 +3,7 @@
 .notes-content { font-size: 14px; line-height: 1.85; overflow-wrap: anywhere; }
 .notes-content > :first-child { margin-top: 0; }
 .notes-content p { margin: 10px 0; }
+.notes-content img { max-width: 100%; height: auto; }
 .notes-content h1, .notes-content h2, .notes-content h3, .notes-content h4, .notes-content h5 { font-size: 13px; font-weight: 650; margin: 20px 0 8px; color: var(--purple-dark); letter-spacing: 0; }
 .notes-content ul, .notes-content ol { padding-left: 1.45em; margin: 8px 0 14px; }
 .notes-content li { padding-left: 3px; margin: 4px 0; }

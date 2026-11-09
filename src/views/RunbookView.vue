@@ -52,7 +52,8 @@ watch([sourcePath, resourceTitle], async ([path], previous, onCleanup) => {
       :source="source"
       :file="sourcePath"
       :variant="isMaterial ? 'cards' : unit.runbookLayout ?? context.course.runbookLayout ?? ''"
-      :format="isMaterial ? 'cards' : 'runbook'"
+      :format="isMaterial ? 'cards' : unit.runbookFormat ?? 'runbook'"
+      :is-course-runbook="!isMaterial"
       :page-title="isMaterial ? `${unitLabel} · ${resourceTitle} · Teaching Hub` : ''"
     />
   </div>

@@ -1,0 +1,55 @@
+{
+  "id": "diffusion-models",
+  "title": "Diffusion Models",
+  "description": "以 Understanding Deep Learning 为教材主线，按建立直观、比较模型、科研迁移三个阶段选读；按专题逐步展开讲解、数学与程序的对应。",
+  "order": 4,
+  "organization": "topics",
+  "courseLayout": "surface-study",
+  "runbookLayout": "calculus-topic",
+  "topicMap": [
+    {
+      "id": "topic-00-generative-models",
+      "label": "T00",
+      "title": "生成模型在学习什么？",
+      "summary": "第一轮 · 第 1、14 章与 §18.1 概览：区分点预测、分布与采样，建立训练和生成两条路径。",
+      "lessonCount": 1,
+      "order": 0
+    },
+    {
+      "id": "topic-01-network-representation-and-learning",
+      "label": "T01",
+      "title": "网络的表示能力与如何学习",
+      "summary": "第一轮 · 第 2–7 章核心选读：连接函数表示、参数学习与程序建模；用同一例子对应图、公式、前向计算和训练。",
+      "lessonCount": 6,
+      "order": 1
+    },
+    {
+      "id": "topic-02-denoising-and-generation",
+      "label": "T02",
+      "title": "去噪：从学习问题到生成过程",
+      "summary": "第一轮 · 第 18 章与附录 C 按需选读：为什么引入去噪，怎样构造学习问题，怎样从噪声逐步生成；保留训练与采样的理解检查点。",
+      "order": 2
+    },
+    {
+      "id": "topic-03-diffusion-architecture",
+      "label": "T03",
+      "title": "实际扩散模型的结构与设计动机",
+      "summary": "第一轮 · §18.6 与第 10–12 章部件选读：理解 U-Net、卷积、残差、注意力以及时间和条件输入的设计动机。",
+      "order": 3
+    },
+    {
+      "id": "topic-04-model-comparisons",
+      "label": "T04",
+      "title": "比较：其他生成模型与扩散内部范式",
+      "summary": "比较阶段占位 · 第 14–18 章、§12.7 与后续材料：先比较生成建模路线，再比较扩散内部的预测目标、采样、条件引导和表示。",
+      "order": 4
+    },
+    {
+      "id": "topic-05-research-transfer",
+      "label": "T05",
+      "title": "迁移：怎样进入新的研究问题",
+      "summary": "科研阶段占位 · 围绕具体问题回读建模、泛化与结构章节并引入论文，判断哪些假设可沿用、哪些需要改变。",
+      "order": 5
+    }
+  ]
+}

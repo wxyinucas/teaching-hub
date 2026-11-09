@@ -1,0 +1,12 @@
+{
+  "id": "topic-01-network-representation-and-learning",
+  "label": "T01",
+  "title": "网络的表示能力与如何学习",
+  "summary": "用同一组一维散点，连接网络结构、平方损失、梯度与 CPU 训练循环；6 个 section 对应 6 次课，课末集中复习与自检。",
+  "lessonCount": 6,
+  "order": 1,
+  "runbookFormat": "cards",
+  "resources": {
+    "runbook": "runbook.md"
+  }
+}
