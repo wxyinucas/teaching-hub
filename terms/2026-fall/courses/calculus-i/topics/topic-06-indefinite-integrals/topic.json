@@ -3,10 +3,11 @@
   "label": "T06",
   "title": "不定积分",
   "summary": "建立不定积分的概念与性质，组织换元、分部及代表性的特殊积分，并完成第四章整合。",
-  "lessonCount": 5,
+  "lessonCount": 6,
   "order": 7,
   "resources": {
     "runbook": "runbook.md",
+    "slides": "slides.md",
     "guide": "guide.md",
     "exams": {
       "scope": "course",

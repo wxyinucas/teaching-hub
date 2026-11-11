@@ -1,7 +1,7 @@
 import { renderSlideMarkdown } from './markdown.js'
 
-const directivePattern = /<!--\s*(layout|section|subsection|column|footer|lead|lesson)\s*(?::\s*([^>]*?))?\s*-->/gi
-const allowedLayouts = new Set(['cover', 'question', 'columns', 'prompt', 'agenda', 'tree', 'content'])
+const directivePattern = /<!--\s*(layout|section|subsection|column|footer|lead|lesson|timer|formulas)\s*(?::\s*([^>]*?))?\s*-->/gi
+const allowedLayouts = new Set(['cover', 'question', 'columns', 'prompt', 'agenda', 'tree', 'exercise', 'content'])
 
 function splitPages(source) {
   const pages = []
@@ -99,6 +99,32 @@ function readContent(raw, index, sectionIndex) {
   }
 }
 
+function readExercise(raw, index, sectionIndex) {
+  const formulaParts = raw.split(/<!--\s*formulas\s*-->/i)
+  if (formulaParts.length !== 2) throw new Error('课堂题页面须使用一个 formulas 注释分隔题目与积分表。')
+
+  const clean = stripDirectives(formulaParts[0])
+  const { title, body } = readTitle(clean)
+  const formulaSource = stripDirectives(formulaParts[1])
+  if (!formulaSource) throw new Error('课堂题页面的积分表不能为空。')
+
+  const timerSource = directive(raw, 'timer')
+  const timerSeconds = Number(timerSource)
+  if (!timerSource || !Number.isInteger(timerSeconds) || timerSeconds < 30 || timerSeconds > 3600) {
+    throw new Error('课堂题倒计时须为 30 到 3600 之间的整数秒。')
+  }
+
+  return {
+    number: index + 1,
+    layout: 'exercise',
+    sectionIndex,
+    title,
+    html: renderSlideMarkdown(body),
+    formulaHtml: renderSlideMarkdown(formulaSource),
+    timerSeconds,
+  }
+}
+
 export function parseSlides(source) {
   const rawPages = splitPages(source)
   if (!rawPages.length) throw new Error('课件至少需要一页。')
@@ -129,6 +155,7 @@ export function parseSlides(source) {
     if (layout === 'columns') {
       return { number: index + 1, layout, sectionIndex, ...readColumns(raw) }
     }
+    if (layout === 'exercise') return readExercise(raw, index, sectionIndex)
     if (layout === 'content') return readContent(raw, index, sectionIndex)
     if (layout === 'tree') return { ...readContent(raw, index, sectionIndex), layout }
 

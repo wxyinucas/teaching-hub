@@ -47,17 +47,69 @@ const isFullscreen = ref(false)
 const fullscreenFeedback = ref('')
 const fontScale = ref(readStoredFontScale())
 const slideMayClip = ref(false)
+const exerciseTimeRemaining = ref(0)
+const exerciseTimerRunning = ref(false)
 let feedbackTimer
 let slideResizeObserver
 let readerMounted = false
+let exerciseTimer
+let exerciseDeadline = 0
 
 const slide = computed(() => props.deck.slides[props.page - 1])
 const canPrevious = computed(() => props.page > 1)
 const canNext = computed(() => props.page < props.deck.count)
 const slideFontStyle = computed(() => ({ '--slide-font-scale': fontScale.value / 100 }))
+const exerciseTimeLabel = computed(() => {
+  const minutes = Math.floor(exerciseTimeRemaining.value / 60)
+  const seconds = exerciseTimeRemaining.value % 60
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+})
+const exerciseTimerDone = computed(() => slide.value?.layout === 'exercise' && exerciseTimeRemaining.value === 0)
+const exerciseTimerUrgent = computed(() => exerciseTimerRunning.value && exerciseTimeRemaining.value <= 10)
 
 function go(page) {
   emit('change', Math.min(props.deck.count, Math.max(1, page)))
+}
+
+function clearExerciseTimer() {
+  clearInterval(exerciseTimer)
+  exerciseTimer = undefined
+  exerciseDeadline = 0
+  exerciseTimerRunning.value = false
+}
+
+function updateExerciseTimer() {
+  if (!exerciseTimerRunning.value) return
+  exerciseTimeRemaining.value = Math.max(0, Math.ceil((exerciseDeadline - Date.now()) / 1000))
+  if (exerciseTimeRemaining.value === 0) clearExerciseTimer()
+}
+
+function resetExerciseTimer() {
+  clearExerciseTimer()
+  exerciseTimeRemaining.value = slide.value?.layout === 'exercise' ? slide.value.timerSeconds : 0
+}
+
+function toggleExerciseTimer() {
+  if (exerciseTimerRunning.value) {
+    updateExerciseTimer()
+    clearExerciseTimer()
+    return
+  }
+  if (exerciseTimeRemaining.value <= 0) return
+  exerciseDeadline = Date.now() + exerciseTimeRemaining.value * 1000
+  exerciseTimerRunning.value = true
+  exerciseTimer = setInterval(updateExerciseTimer, 250)
+}
+
+function adjustExerciseTimer(seconds) {
+  if (slide.value?.layout !== 'exercise') return
+  if (exerciseTimerRunning.value) updateExerciseTimer()
+  exerciseTimeRemaining.value = Math.min(3600, Math.max(0, exerciseTimeRemaining.value + seconds))
+  if (exerciseTimeRemaining.value === 0) {
+    clearExerciseTimer()
+  } else if (exerciseTimerRunning.value) {
+    exerciseDeadline = Date.now() + exerciseTimeRemaining.value * 1000
+  }
 }
 
 function handleKey(event) {
@@ -141,8 +193,11 @@ async function inspectSlideOverflow() {
   const overlappingGroups = groups.some((child, index) => index > 0
     && groups[index - 1].getBoundingClientRect().bottom > child.getBoundingClientRect().top + 2)
   const localOverflow = Array.from(element.querySelectorAll(
-    '.slide-content-body, .slide-tree-body, .slide-column, .prompt-copy, pre, .katex-display',
-  )).some((child) => child.scrollHeight > child.clientHeight + 2 || child.scrollWidth > child.clientWidth + 2)
+    '.slide-content-body, .slide-tree-body, .slide-column, .prompt-copy, .exercise-grid, .exercise-problem, .exercise-formulas, pre, .katex-display',
+  )).some((child) => {
+    const tolerance = child.classList.contains('katex-display') ? 4 : 2
+    return child.scrollHeight > child.clientHeight + tolerance || child.scrollWidth > child.clientWidth + tolerance
+  })
   slideMayClip.value = clipsVertically || clipsHorizontally || outsideContent || overlappingGroups || localOverflow
 }
 
@@ -151,7 +206,7 @@ async function observeSlideSize() {
   slideResizeObserver?.disconnect()
   if (slideCanvas.value && slideResizeObserver) {
     slideResizeObserver.observe(slideCanvas.value)
-    slideCanvas.value.querySelectorAll('.slide-heading, .slide-footer, .slide-column-grid, pre, img')
+    slideCanvas.value.querySelectorAll('.slide-heading, .slide-footer, .slide-column-grid, .exercise-grid, .exercise-problem, .exercise-formulas, pre, img')
       .forEach((element) => slideResizeObserver.observe(element))
   }
   inspectSlideOverflow()
@@ -159,6 +214,7 @@ async function observeSlideSize() {
 
 watch(fontScale, inspectSlideOverflow, { flush: 'post' })
 watch(slide, observeSlideSize, { flush: 'post' })
+watch(slide, resetExerciseTimer, { immediate: true })
 
 onMounted(() => {
   readerMounted = true
@@ -180,6 +236,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', inspectSlideOverflow)
   document.removeEventListener('fullscreenchange', syncFullscreen)
   clearTimeout(feedbackTimer)
+  clearExerciseTimer()
 })
 </script>
 
@@ -243,6 +300,36 @@ onBeforeUnmount(() => {
       <article v-else-if="slide.layout === 'agenda'" ref="slideCanvas" class="slide-canvas slide-agenda">
         <header class="slide-heading"><h1>{{ slide.title }}</h1></header>
         <div class="slide-agenda-body" v-html="slide.html"></div>
+      </article>
+
+      <article v-else-if="slide.layout === 'exercise'" ref="slideCanvas" class="slide-canvas slide-exercise">
+        <header class="exercise-heading">
+          <div class="exercise-title">
+            <span>课堂题目</span>
+            <h1>{{ slide.title }}</h1>
+          </div>
+          <div
+            class="exercise-timer"
+            :class="{ 'is-running': exerciseTimerRunning, 'is-urgent': exerciseTimerUrgent, 'is-done': exerciseTimerDone }"
+          >
+            <output aria-label="剩余作答时间" aria-live="polite">{{ exerciseTimeLabel }}</output>
+            <div class="exercise-timer-controls">
+              <button type="button" :disabled="exerciseTimerDone" @click="toggleExerciseTimer">
+                {{ exerciseTimerRunning ? '暂停' : '开始' }}
+              </button>
+              <button type="button" @click="resetExerciseTimer">重置</button>
+              <button type="button" @click="adjustExerciseTimer(-30)">−30 秒</button>
+              <button type="button" @click="adjustExerciseTimer(30)">+30 秒</button>
+            </div>
+          </div>
+        </header>
+        <div class="exercise-grid">
+          <section class="exercise-problem" aria-label="题目" v-html="slide.html"></section>
+          <aside class="exercise-formulas" aria-label="可能用到的积分表">
+            <h2>可能用到的积分表</h2>
+            <div v-html="slide.formulaHtml"></div>
+          </aside>
+        </div>
       </article>
 
       <article v-else-if="slide.layout === 'tree'" ref="slideCanvas" class="slide-canvas slide-tree" :class="{ 'has-footer': slide.footerHtml }">

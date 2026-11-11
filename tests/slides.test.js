@@ -69,6 +69,42 @@ describe('static slides Markdown parser', () => {
     expect(deck.slides[0].copyText).toContain('$$\n\\int_0^1 x^2\\,dx\n$$')
   })
 
+  it('parses a timed classroom exercise with a separate integration table', () => {
+    const source = [
+      '<!-- layout: exercise -->',
+      '<!-- timer: 150 -->',
+      '# 教材第 140 页例 1',
+      '',
+      '$$\\int x^2e^{x^3}\\,dx$$',
+      '',
+      '<!-- formulas -->',
+      '',
+      '- **（5）** $\\displaystyle\\int e^x\\,dx=e^x+C$',
+    ].join('\n')
+    const slide = parseSlides(source).slides[0]
+
+    expect(slide).toMatchObject({
+      layout: 'exercise',
+      title: '教材第 140 页例 1',
+      timerSeconds: 150,
+    })
+    expect(slide.html).toContain('class="katex-display"')
+    expect(slide.formulaHtml).toContain('class="katex"')
+    expect(slide.html).not.toContain('timer')
+    expect(slide.formulaHtml).not.toContain('formulas')
+  })
+
+  it('rejects incomplete exercise metadata', () => {
+    expect(() => parseSlides('<!-- layout: exercise -->\n<!-- timer: 90 -->\n# 题目'))
+      .toThrow('formulas')
+    expect(() => parseSlides('<!-- layout: exercise -->\n# 题目\n<!-- formulas -->\n- （2）幂公式'))
+      .toThrow('30 到 3600')
+    expect(() => parseSlides('<!-- layout: exercise -->\n<!-- timer: 12.5 -->\n# 题目\n<!-- formulas -->\n- （2）幂公式'))
+      .toThrow('30 到 3600')
+    expect(() => parseSlides('<!-- layout: exercise -->\n<!-- timer: 90 -->\n# 题目\n<!-- formulas -->\n一次\n<!-- formulas -->\n两次'))
+      .toThrow('一个 formulas')
+  })
+
   it('parses a dedicated tree layout without changing ordinary content slides', () => {
     const deck = parseSlides('<!-- layout: tree -->\n# 目录树\n\n```text\n~/course/\n└── cli-lab/\n```')
     expect(deck.slides[0]).toMatchObject({ layout: 'tree', title: '目录树' })

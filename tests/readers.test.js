@@ -47,6 +47,7 @@ afterEach(() => {
   restoreScrollIntoView = null
   restoreLocalStorage?.()
   restoreLocalStorage = null
+  vi.useRealTimers()
   vi.restoreAllMocks()
   vi.unstubAllGlobals()
   window.sessionStorage.clear()
@@ -433,6 +434,55 @@ describe('runbook disclosure', () => {
 })
 
 describe('slides reader', () => {
+  it('runs, pauses, adjusts and resets an exercise timer when slides change', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-11-10T08:00:00Z'))
+    const deck = parseSlides([
+      '<!-- layout: exercise -->',
+      '<!-- timer: 90 -->',
+      '# 第一题',
+      '$$\\int e^x\\,dx$$',
+      '<!-- formulas -->',
+      '- **（5）** $\\displaystyle\\int e^x\\,dx=e^x+C$',
+      '---',
+      '<!-- layout: exercise -->',
+      '<!-- timer: 60 -->',
+      '# 第二题',
+      '$$\\int x^2\\,dx$$',
+      '<!-- formulas -->',
+      '- **（2）** $\\displaystyle\\int x^\\alpha\\,dx=\\frac{x^{\\alpha+1}}{\\alpha+1}+C$',
+    ].join('\n'))
+    wrapper = mount(SlidesReader, { attachTo: document.body, props: { deck, page: 1 } })
+
+    expect(wrapper.find('.exercise-timer output').text()).toBe('01:30')
+    await wrapper.find('.exercise-timer-controls button').trigger('click')
+    await vi.advanceTimersByTimeAsync(1000)
+    expect(wrapper.find('.exercise-timer output').text()).toBe('01:29')
+
+    await wrapper.find('.exercise-timer-controls button').trigger('click')
+    await vi.advanceTimersByTimeAsync(1000)
+    expect(wrapper.find('.exercise-timer output').text()).toBe('01:29')
+
+    const controls = wrapper.findAll('.exercise-timer-controls button')
+    await controls[3].trigger('click')
+    expect(wrapper.find('.exercise-timer output').text()).toBe('01:59')
+    await controls[2].trigger('click')
+    expect(wrapper.find('.exercise-timer output').text()).toBe('01:29')
+    await controls[1].trigger('click')
+    expect(wrapper.find('.exercise-timer output').text()).toBe('01:30')
+
+    await controls[0].trigger('click')
+    await wrapper.setProps({ page: 2 })
+    expect(wrapper.find('.exercise-timer output').text()).toBe('01:00')
+    expect(wrapper.find('.exercise-timer').classes()).not.toContain('is-running')
+
+    await wrapper.find('.exercise-timer-controls button').trigger('click')
+    await vi.advanceTimersByTimeAsync(60000)
+    expect(wrapper.find('.exercise-timer output').text()).toBe('00:00')
+    expect(wrapper.find('.exercise-timer').classes()).toContain('is-done')
+    expect(wrapper.find('.exercise-timer-controls button').attributes('disabled')).toBeDefined()
+  })
+
   it('uses controls and keyboard events to request page changes', async () => {
     const deck = parseSlides(slidesSource)
     wrapper = mount(SlidesReader, { attachTo: document.body, props: { deck, page: 1 } })
