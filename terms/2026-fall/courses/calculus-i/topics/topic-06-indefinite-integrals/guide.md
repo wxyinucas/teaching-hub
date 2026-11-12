@@ -1070,26 +1070,114 @@
   \int\frac{dx}{(1+x)^2\sqrt{\dfrac{2-x}{1+x}}}.
   $$
 
-  在 $-1<x<2$ 上取
+  - **先从一次具体尝试出发**。在定义域 $-1<x<2$ 上，原积分也可以写成
 
-  $$
-  u=\frac{2-x}{1+x},
-  \qquad
-  du=-\frac{3}{(1+x)^2}\,dx.
-  $$
+    $$
+    I=\int\frac{dx}{(1+x)^{3/2}(2-x)^{1/2}}.
+    $$
 
-  根式与根式外的因子可以同时换成 $u$ 和 $du$：
+    因为 $1+x$ 在分母中承担了较高的次幂，而它的倒数求微分会产生平方分母，先令
 
-  $$
-  \begin{aligned}
-  \int\frac{dx}{(1+x)^2\sqrt{\dfrac{2-x}{1+x}}}
-  &=-\frac13\int u^{-1/2}\,du\\
-  &=-\frac23\sqrt{u}+C\\
-  &=-\frac23\sqrt{\frac{2-x}{1+x}}+C.
-  \end{aligned}
-  $$
+    $$
+    v=\frac1{1+x},
+    \qquad
+    dx=-\frac1{v^2}\,dv.
+    $$
 
-  取根号内部的分式作整体，才能让它的导数与根式外的 $(1+x)^{-2}$ 同时配套。
+    由
+
+    $$
+    1+x=\frac1v,
+    \qquad
+    2-x=\frac{3v-1}{v},
+    $$
+
+    得到
+
+    $$
+    (1+x)^{3/2}(2-x)^{1/2}
+    =\frac{\sqrt{3v-1}}{v^2}.
+    $$
+
+    因而
+
+    $$
+    \begin{aligned}
+    I
+    &=-\int(3v-1)^{-1/2}\,dv\\
+    &=-\frac13\int(3v-1)^{-1/2}\,d(3v-1)\\
+    &=-\frac23\sqrt{3v-1}+C\\
+    &=-\frac23\sqrt{\frac{2-x}{1+x}}+C.
+    \end{aligned}
+    $$
+
+  - **把两步计算压缩成一个整体**。令
+
+    $$
+    P=1+x,
+    \qquad
+    Q=2-x.
+    $$
+
+    计算中出现的 $3v-1$ 就是
+
+    $$
+    3v-1=\frac QP.
+    $$
+
+    所以也可以把两步换元压缩成
+
+    $$
+    u=\frac QP=\frac{2-x}{1+x},
+    \qquad
+    du=-\frac3{(1+x)^2}\,dx.
+    $$
+
+  - **一般规律**。设
+
+    $$
+    P=ax+b,
+    \qquad
+    Q=cx+d=\lambda P+\mu,
+    $$
+
+    其中 $a\ne0$，$P,Q$ 不成比例，因而 $\mu\ne0$。在幂的拆分合法的区间内，考察
+
+    $$
+    I=\int\frac{dx}{P^mQ^n}.
+    $$
+
+    先让 $m,n$ 保持自由。取 $u=Q/P$，则
+
+    $$
+    du=-\frac{a\mu}{P^2}\,dx,
+    \qquad
+    P=\frac\mu{u-\lambda}.
+    $$
+
+    因而换元后的通式为
+
+    $$
+    I
+    =-\frac1{a\mu}
+      \int
+      \left(\frac\mu{u-\lambda}\right)^{2-m-n}
+      u^{-n}\,du.
+    $$
+
+    若进一步满足
+
+    $$
+    m+n=2,
+    $$
+
+    含有 $u-\lambda$ 的因子完全消失，只剩
+
+    $$
+    I=-\frac1{a\mu}\int u^{-n}\,du.
+    $$
+
+    本题中 $a=1$、$\lambda=-1$、$\mu=3$，并且 $m=3/2$、$n=1/2$，恰好满足 $m+n=2$。这就是比值换元能够把原积分化成单一幂函数的结构原因。
 
 - **2025 年计算题 4（10 分）**。计算
 
@@ -1097,31 +1185,128 @@
   I=\int\frac{dx}{x^2\sqrt{x^2-9}}.
   $$
 
-  在 $|x|>3$ 的每个区间上，取
+  - **先在正半轴尝试倒数换元**。定义域是 $x>3$ 或 $x<-3$。先看 $x>3$，由
 
-  $$
-  u=\frac{\sqrt{x^2-9}}{x}.
-  $$
+    $$
+    d\!\left(\frac1x\right)=-\frac1{x^2}\,dx
+    $$
 
-  对候选整体求导：
+    令
 
-  $$
-  \begin{aligned}
-  u'
-  &=\frac1{\sqrt{x^2-9}}-\frac{\sqrt{x^2-9}}{x^2}\\
-  &=\frac{x^2-(x^2-9)}{x^2\sqrt{x^2-9}}\\
-  &=\frac9{x^2\sqrt{x^2-9}}.
-  \end{aligned}
-  $$
+    $$
+    v=\frac1x,
+    \qquad
+    dv=-\frac1{x^2}\,dx.
+    $$
 
-  因此
+    因为 $v>0$，
 
-  $$
-  I=\frac19\int du
-  =\frac{\sqrt{x^2-9}}{9x}+C.
-  $$
+    $$
+    \sqrt{x^2-9}
+    =\frac{\sqrt{1-9v^2}}v,
+    $$
 
-  这道题先根据分母结构猜测整体，再用求导验证；它适合作为“整体必须接受导数检验”的选做题。
+    所以
+
+    $$
+    \begin{aligned}
+    I
+    &=-\int\frac{v}{\sqrt{1-9v^2}}\,dv\\
+    &=\frac1{18}\int(1-9v^2)^{-1/2}\,d(1-9v^2)\\
+    &=\frac19\sqrt{1-9v^2}+C\\
+    &=\frac{\sqrt{x^2-9}}{9x}+C,
+    \qquad x>3.
+    \end{aligned}
+    $$
+
+  - **把两步换元压缩成一个整体**。第一次代换后出现的结构是
+
+    $$
+    1-9v^2
+    =\frac{x^2-9}{x^2}.
+    $$
+
+    因此可以直接取
+
+    $$
+    u=\frac{x^2-9}{x^2},
+    \qquad
+    du=\frac{18}{x^3}\,dx.
+    $$
+
+    在 $x>3$ 上有 $\sqrt{x^2-9}=x\sqrt u$，从而
+
+    $$
+    I=\frac1{18}\int u^{-1/2}\,du
+    =\frac19\sqrt u+C.
+    $$
+
+  - **一般规律**。设 $a>0$，在 $x>a$ 上先让 $m,n$ 保持自由：
+
+    $$
+    I_{m,n}(a)
+    =\int\frac{dx}{x^m(x^2-a^2)^n}.
+    $$
+
+    取
+
+    $$
+    u=\frac{x^2-a^2}{x^2}
+    =1-\frac{a^2}{x^2},
+    $$
+
+    则
+
+    $$
+    x^2-a^2=x^2u,
+    \qquad
+    du=\frac{2a^2}{x^3}\,dx.
+    $$
+
+    换元后的通式为
+
+    $$
+    I_{m,n}(a)
+    =\frac1{2a^2}
+      \int
+      \left(\frac{a^2}{1-u}\right)^{\frac{3-m-2n}{2}}
+      u^{-n}\,du.
+    $$
+
+    若进一步满足
+
+    $$
+    m+2n=3,
+    $$
+
+    含有 $1-u$ 的因子完全消失，于是
+
+    $$
+    I_{m,n}(a)=\frac1{2a^2}\int u^{-n}\,du.
+    $$
+
+    本题中 $a=3$、$m=2$、$n=1/2$，恰好满足 $m+2n=3$。
+
+  - **负半轴与验算**。当 $x<-3$ 时，
+
+    $$
+    \sqrt{x^2-9}=|x|\sqrt u=-x\sqrt u.
+    $$
+
+    换元时相应地多出一个负号，最后仍得到
+
+    $$
+    I=\frac{\sqrt{x^2-9}}{9x}+C.
+    $$
+
+    两个定义区间上的积分常数可以分别取值。求导可以统一核对：
+
+    $$
+    \left(\frac{\sqrt{x^2-9}}{9x}\right)'
+    =\frac1{x^2\sqrt{x^2-9}}.
+    $$
+
+  这两道题都先用一次朴素换元暴露新结构，再把两步计算压缩成整体换元；特殊的指数关系解释了为什么压缩后的积分恰好只剩一个基本幂函数。
 
 ### 先改写成和，再逐项积分
 
@@ -1214,46 +1399,84 @@
     \int\frac{7\cos x-3\sin x}{5\cos x+2\sin x}\,dx.
     $$
 
-  - **先比较分母与它的导数**。设 $g(x)=5\cos x+2\sin x$，则
+  - **先确定希望得到的两个可积部件**。记
 
     $$
-    g'(x)=2\cos x-5\sin x.
+    D(x)=5\cos x+2\sin x,
+    \qquad
+    D'(x)=2\cos x-5\sin x.
     $$
 
-    分子与 $g'$ 不成比例，但二者相减恰好剩下 $g$：
+    对于分母为 $D$ 的分式，下面两个部件都能直接积分：
 
     $$
-    \begin{aligned}
-    (7\cos x-3\sin x)-g'(x)
-    &=7\cos x-3\sin x-(2\cos x-5\sin x)\\
-    &=5\cos x+2\sin x=g(x).
-    \end{aligned}
+    \frac DD=1,
+    \qquad
+    \frac{D'}D.
     $$
 
-    所以分子为 $g'+g$。
-  - **比较系数也能找到同一个拆法**。尝试把分子写成分母与其导数的线性组合：
+    它们的积分分别产生 $x$ 与 $\ln|D|$。因此目标是把原式写成
 
     $$
-    7\cos x-3\sin x
-    =A(5\cos x+2\sin x)+B(2\cos x-5\sin x).
+    \frac{7\cos x-3\sin x}{D}
+    =A+B\frac{D'}D,
     $$
 
-    比较余弦项、正弦项：
+    即把分子写成 $AD+BD'$。
+  - **把拆分问题变成系数组合**。把三个式子的余弦与正弦系数并列：
+
+    $$
+    \begin{array}{c|cc}
+      & \cos x & \sin x\\ \hline
+    D  & 5 & 2\\
+    D' & 2 & -5\\
+    \text{分子} & 7 & -3
+    \end{array}
+    $$
+
+    因为
+
+    $$
+    (7,-3)=(5,2)+(2,-5),
+    $$
+
+    所以
+
+    $$
+    7\cos x-3\sin x=D+D'.
+    $$
+
+    若不能直接看出系数关系，就令分子等于 $AD+BD'$，比较系数：
 
     $$
     \begin{cases}
     5A+2B=7,\\
-    2A-5B=-3.
+    2A-5B=-3,
     \end{cases}
+    \qquad
+    A=B=1.
     $$
 
-    解得 $A=B=1$。
+    比较系数是稳定的保底算法。
+  - **为什么这种拆分总能完成**。更一般地，若
+
+    $$
+    D=c\cos x+d\sin x,
+    $$
+
+    则
+
+    $$
+    D'=d\cos x-c\sin x.
+    $$
+
+    二者的系数对 $(c,d)$ 与 $(d,-c)$ 互相垂直，并且在 $c,d$ 不全为零时都不是零向量。因此，任意同类分子 $p\cos x+q\sin x$ 都能唯一写成 $AD+BD'$；展开后比较系数，就是不使用向量语言时的同一个算法。
   - **先拆项，再凑微分**。
 
     $$
     \begin{aligned}
     \int\frac{7\cos x-3\sin x}{5\cos x+2\sin x}\,dx
-    &=\int\left(1+\frac{g'(x)}{g(x)}\right)\,dx\\
+    &=\int\left(1+\frac{D'(x)}{D(x)}\right)\,dx\\
     &=x+\int\frac{d(5\cos x+2\sin x)}{5\cos x+2\sin x}\\
     &=x+\ln|5\cos x+2\sin x|+C.
     \end{aligned}
