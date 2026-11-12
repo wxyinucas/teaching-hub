@@ -1,6 +1,6 @@
 import { renderSlideMarkdown } from './markdown.js'
 
-const directivePattern = /<!--\s*(layout|section|subsection|column|footer|lead|lesson|timer|formulas)\s*(?::\s*([^>]*?))?\s*-->/gi
+const directivePattern = /<!--\s*(layout|section|subsection|column|footer|lead|lesson|timer|formulas-title|formulas)\s*(?::\s*([^>]*?))?\s*-->/gi
 const allowedLayouts = new Set(['cover', 'question', 'columns', 'prompt', 'agenda', 'tree', 'exercise', 'content'])
 
 function splitPages(source) {
@@ -114,6 +114,8 @@ function readExercise(raw, index, sectionIndex) {
     throw new Error('课堂题倒计时须为 30 到 3600 之间的整数秒。')
   }
 
+  const formulaTitle = directive(raw, 'formulas-title') || '可能用到的积分表'
+
   return {
     number: index + 1,
     layout: 'exercise',
@@ -121,6 +123,7 @@ function readExercise(raw, index, sectionIndex) {
     title,
     html: renderSlideMarkdown(body),
     formulaHtml: renderSlideMarkdown(formulaSource),
+    formulaTitle,
     timerSeconds,
   }
 }

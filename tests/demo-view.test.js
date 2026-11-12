@@ -142,6 +142,27 @@ describe('demo fullscreen reader', () => {
     })
   })
 
+  it('opens the T00 Rolle-to-Lagrange teaching-competition demo', async () => {
+    wrapper = mount(DemoView, {
+      props: {
+        termId: '2026-fall',
+        courseId: 'calculus-i',
+        topicId: 'topic-00-entering-calculus',
+        demoId: 'rolle-lagrange',
+      },
+      global: { stubs: { RouterLink: RouterLinkStub } },
+    })
+
+    expect(wrapper.find('.rolle-lagrange-demo').exists()).toBe(true)
+    expect(wrapper.findAll('[data-stage]')).toHaveLength(3)
+    expect(wrapper.findAll('svg[role="img"]')).toHaveLength(1)
+    expect(document.title).toBe('从罗尔到拉格朗日 · T00 · Teaching Hub')
+
+    await wrapper.find('[data-stage="flatten"]').trigger('click')
+    expect(wrapper.find('#rolle-progress-range').exists()).toBe(true)
+    expect(wrapper.text()).toContain('压平证明')
+  })
+
   it('renders every demo declared by calculus topic T04', () => {
     const term = catalog.terms.find((item) => item.id === '2026-fall')
     const course = term?.courses.find((item) => item.id === 'calculus-i')

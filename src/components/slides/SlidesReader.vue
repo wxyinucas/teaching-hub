@@ -325,8 +325,8 @@ onBeforeUnmount(() => {
         </header>
         <div class="exercise-grid">
           <section class="exercise-problem" aria-label="题目" v-html="slide.html"></section>
-          <aside class="exercise-formulas" aria-label="可能用到的积分表">
-            <h2>可能用到的积分表</h2>
+          <aside class="exercise-formulas" :aria-label="slide.formulaTitle">
+            <h2>{{ slide.formulaTitle }}</h2>
             <div v-html="slide.formulaHtml"></div>
           </aside>
         </div>

@@ -86,12 +86,33 @@ describe('static slides Markdown parser', () => {
     expect(slide).toMatchObject({
       layout: 'exercise',
       title: '教材第 140 页例 1',
+      formulaTitle: '可能用到的积分表',
       timerSeconds: 150,
     })
     expect(slide.html).toContain('class="katex-display"')
     expect(slide.formulaHtml).toContain('class="katex"')
     expect(slide.html).not.toContain('timer')
     expect(slide.formulaHtml).not.toContain('formulas')
+  })
+
+  it('allows an exercise to rename its reference panel without leaking the directive', () => {
+    const source = [
+      '<!-- layout: exercise -->',
+      '<!-- timer: 90 -->',
+      '<!-- formulas-title: 可能用到的求导法则 -->',
+      '# 中值定理证明题',
+      '',
+      '证明存在 $\\xi$。',
+      '',
+      '<!-- formulas -->',
+      '',
+      '- **乘积法则** $\\displaystyle(uv)\'=u\'v+uv\'$ ',
+    ].join('\n')
+    const slide = parseSlides(source).slides[0]
+
+    expect(slide.formulaTitle).toBe('可能用到的求导法则')
+    expect(slide.html).not.toContain('formulas-title')
+    expect(slide.formulaHtml).not.toContain('formulas-title')
   })
 
   it('rejects incomplete exercise metadata', () => {

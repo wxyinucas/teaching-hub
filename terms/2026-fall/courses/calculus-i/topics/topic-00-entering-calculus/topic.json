@@ -7,13 +7,19 @@
   "order": 1,
   "resources": {
     "runbook": "runbook.md",
-    "slides": "slides.md"
+    "slides": "slides.md",
+    "guide": "guide.md"
   },
   "demos": [
     {
       "id": "sequence-limit",
       "title": "数列极限：ε 与 N",
       "summary": "调整 ε，观察数列从哪一项起进入给定范围。"
+    },
+    {
+      "id": "rolle-lagrange",
+      "title": "从罗尔到拉格朗日",
+      "summary": "旋转图形并压平割线，观察水平切线如何推广为与首尾割线平行的切线。"
     }
   ]
 }

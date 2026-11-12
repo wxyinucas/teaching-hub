@@ -7,6 +7,7 @@ import FunctionLimitDemo from '../components/demos/FunctionLimitDemo.vue'
 import MvtTaylorDemo from '../components/demos/MvtTaylorDemo.vue'
 import DerivativeApplicationsDemo from '../components/demos/DerivativeApplicationsDemo.vue'
 import SequenceLimitDemo from '../components/demos/SequenceLimitDemo.vue'
+import RolleLagrangeDemo from '../components/demos/RolleLagrangeDemo.vue'
 import NotFoundView from './NotFoundView.vue'
 
 const props = defineProps({
@@ -23,6 +24,7 @@ const demoComponents = {
   'mean-value': MvtTaylorDemo,
   'derivative-applications': DerivativeApplicationsDemo,
   'sequence-limit': SequenceLimitDemo,
+  'rolle-lagrange': RolleLagrangeDemo,
 }
 
 const isTopic = computed(() => Boolean(props.topicId))

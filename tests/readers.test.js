@@ -440,6 +440,7 @@ describe('slides reader', () => {
     const deck = parseSlides([
       '<!-- layout: exercise -->',
       '<!-- timer: 90 -->',
+      '<!-- formulas-title: 可能用到的求导法则 -->',
       '# 第一题',
       '$$\\int e^x\\,dx$$',
       '<!-- formulas -->',
@@ -455,6 +456,8 @@ describe('slides reader', () => {
     wrapper = mount(SlidesReader, { attachTo: document.body, props: { deck, page: 1 } })
 
     expect(wrapper.find('.exercise-timer output').text()).toBe('01:30')
+    expect(wrapper.find('.exercise-formulas h2').text()).toBe('可能用到的求导法则')
+    expect(wrapper.find('.exercise-formulas').attributes('aria-label')).toBe('可能用到的求导法则')
     await wrapper.find('.exercise-timer-controls button').trigger('click')
     await vi.advanceTimersByTimeAsync(1000)
     expect(wrapper.find('.exercise-timer output').text()).toBe('01:29')
@@ -474,6 +477,7 @@ describe('slides reader', () => {
     await controls[0].trigger('click')
     await wrapper.setProps({ page: 2 })
     expect(wrapper.find('.exercise-timer output').text()).toBe('01:00')
+    expect(wrapper.find('.exercise-formulas h2').text()).toBe('可能用到的积分表')
     expect(wrapper.find('.exercise-timer').classes()).not.toContain('is-running')
 
     await wrapper.find('.exercise-timer-controls button').trigger('click')
