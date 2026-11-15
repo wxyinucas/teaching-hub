@@ -1,0 +1,13 @@
+{
+  "id": "week-08",
+  "runbookLayout": "lesson-cards",
+  "label": "W8 · 从新项目到数据分析",
+  "title": "从新项目到数据分析",
+  "summary": "在 VS Code 中与 Agent 建立并维护分析项目，配置 R／MATLAB 工作台，再接续 PostgreSQL 数据；Notebook 用于教师演示。",
+  "order": 8,
+  "resources": {
+    "runbook": "runbook.md",
+    "slides": "slides.md",
+    "guide": "guide.md"
+  }
+}
