@@ -524,31 +524,9 @@ $a_m a_k b_n b_e\ne0$。
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 180 -->
-<!-- formulas-title: 可能用到的恒等式 -->
-# T01 · Exercise 04
-
-确定常数 $a,b$，使得
-
-$$
-\lim_{x\to+\infty}
-\left(\sqrt[3]{1-x^6}-ax^2-b\right)=0.
-$$
-
-<!-- formulas -->
-
-- **先看主部**：比较 $\sqrt[3]{1-x^6}$ 与 $x^2$ 的增长。
-- **立方和**：
-
-  $$
-  p+q=\frac{p^3+q^3}{p^2-pq+q^2}.
-  $$
-
----
-<!-- layout: exercise -->
 <!-- timer: 300 -->
 <!-- formulas-title: 可能用到的结论 -->
-# T02 · Exercise 05
+# T02 · Exercise 04
 
 1. 证明：当 $a_i>0$ 时，
 
@@ -580,30 +558,33 @@ $$
 ---
 <!-- layout: exercise -->
 <!-- timer: 120 -->
-<!-- formulas-title: 可能用到的结论 -->
-# T03 · Exercise 06
+<!-- formulas-title: 可能用到的定义与结论 -->
+# T03 · Exercise 05
 
 已知 $f$ 在 $x=1$ 处可导，并且
 
 $$
-f(1+x)-3f(1-x)=8x+o(x)qquad(x\to0).
+f(1+x)-3f(1-x)=8x+o(x)\qquad(x\to0).
 $$
 
 求 $f'(1)$。
 
 <!-- formulas -->
 
-- **一点处可导**：
+- **一阶展开**：
 
   $$
-  f(x_0+h)=f(x_0)+f'(x_0)h+o(h).
+  f(1\pm x)=f(1)\pm f'(1)x+o(x).
   $$
+
+- **直接凑定义**：可导先推出连续；令 $x\to0$ 得 $f(1)=0$。
+- 注意 $\displaystyle\frac{f(1-x)-f(1)}x\to-f'(1)$。
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 240 -->
 <!-- formulas-title: 可能用到的定义 -->
-# T03 · Exercise 07
+# T03 · Exercise 06
 
 设 $f(0)=0$。判断哪些条件足以推出 $f$ 在 $0$ 处可导，并说明理由。
 
@@ -622,7 +603,7 @@ $$
 <!-- layout: exercise -->
 <!-- timer: 150 -->
 <!-- formulas-title: 可能用到的定义 -->
-# T03 · Exercise 08
+# T03 · Exercise 07
 
 设 $f$ 处处可导，令
 
@@ -640,8 +621,8 @@ $$
 ---
 <!-- layout: exercise -->
 <!-- timer: 120 -->
-<!-- formulas-title: 可能用到的结论 -->
-# T03 · Exercise 09
+<!-- formulas-title: 可能用到的恒等式与展开式 -->
+# T03 · Exercise 08
 
 设 $f$ 在 $x=0$ 的邻域内连续可导，且
 
@@ -657,15 +638,15 @@ $$
 
 <!-- formulas -->
 
-- $f(t)=f(0)+f'(0)t+o(t)$。
+- $\displaystyle u^v=\mathrm e^{v\ln u}$。
+- $f(t)=1+4t+o(t)$，$\sin x=x+o(x)$。
 - $\ln(1+u)=u+o(u)$。
-- 幂指型极限可以先取对数。
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 240 -->
 <!-- formulas-title: 可能用到的求导公式 -->
-# T03 · Exercise 10
+# T03 · Exercise 09
 
 函数 $y=y(x)$ 由
 
@@ -693,8 +674,8 @@ $$
 ---
 <!-- layout: exercise -->
 <!-- timer: 180 -->
-<!-- formulas-title: 可能用到的定理 -->
-# T04 · Exercise 11
+<!-- formulas-title: 可能用到的定理与构造 -->
+# T04 · Exercise 10
 
 设 $f$ 在 $[a,b]$ 上连续、在 $(a,b)$ 内可导，且
 
@@ -710,19 +691,16 @@ $$
 
 <!-- formulas -->
 
-- **拉格朗日中值定理**：
-
-  $$
-  \frac{F(b)-F(a)}{b-a}=F'(\zeta).
-  $$
-
-- $(\mathrm e^x f(x))'=\mathrm e^x[f(x)+f'(x)]$。
+- **中值定理**：导数值等于区间上的割线斜率。
+- 令 $\varphi(x)=\mathrm e^x f(x)$，$\psi(x)=\mathrm e^x$。
+- **相同区间增量**：$\Delta\varphi=\Delta\psi=\mathrm e^b-\mathrm e^a$。
+- $\varphi'(\eta)=\mathrm e^\eta[f(\eta)+f'(\eta)]$，$\psi'(\xi)=\mathrm e^\xi$。
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 180 -->
 <!-- formulas-title: 可能用到的定理 -->
-# T04 · Exercise 12
+# T04 · Exercise 11
 
 设 $f$ 定义在 $(1,+\infty)$ 上，且 $f',f''$ 存在。证明：若
 
@@ -736,8 +714,39 @@ $$
 
 <!-- formulas -->
 
-- 在远端固定长度的区间 $[x,x+1]$ 上使用拉格朗日中值定理。
-- 得到中间点后，再对 $f'$ 使用一次中值定理。
+- 在 $[x,x+1]$ 上对 $f$ 使用中值定理，先得到
+
+  $$
+  f'(\eta_x)=f(x+1)-f(x)\longrightarrow0.
+  $$
+
+- 由 $0<\eta_x-x<1$，再对 $f'$ 使用中值定理；利用 $f''(x)\to0$ 把结论拉回 $f'(x)$。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 180 -->
+<!-- formulas-title: 可能用到的展开式 -->
+# T04 · Exercise 12
+
+确定常数 $a,b$，使得
+
+$$
+\lim_{x\to+\infty}
+\left(\sqrt[3]{1-x^6}-ax^2-b\right)=0.
+$$
+
+<!-- formulas -->
+
+- 令 $t=1/x$，则 $x\to+\infty$ 时 $t\to0^+$。
+- 在实数立方根下，
+
+  $$
+  \sqrt[3]{1-x^6}
+  =-\frac1{t^2}(1-t^6)^{1/3}.
+  $$
+
+- $\displaystyle(1+u)^\alpha=1+\alpha u+o(u)$。
+- 先消去 $t^{-2}$ 项，再消去常数项。
 
 ---
 <!-- layout: exercise -->
@@ -807,7 +816,7 @@ $$
 ---
 <!-- layout: exercise -->
 <!-- timer: 240 -->
-<!-- formulas-title: 可能用到的结论 -->
+<!-- formulas-title: 可能用到的两种思路 -->
 # T05 · Exercise 16
 
 设 $f$ 在 $[a,b]$ 上连续、在 $(a,b)$ 内二阶可导，且 $f''(x)>0$。证明
@@ -823,7 +832,8 @@ $$
 <!-- formulas -->
 
 - $f''>0$ 推出 $f'$ 严格递增。
-- **切线支撑**：增量 $f(x)-f(x_0)$ 不小于线性主部 $f'(x_0)(x-x_0)$。
+- **二点加权与归纳**：先建立任意两点的加权不等式，再按点的个数归纳。
+- **切线支撑**：在所有点的平均值处作切线；求和时线性项抵消。
 
 ---
 <!-- layout: exercise -->
