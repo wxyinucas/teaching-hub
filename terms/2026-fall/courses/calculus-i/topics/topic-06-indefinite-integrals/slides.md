@@ -453,3 +453,392 @@ $$
   $\alpha\ne-1$
 - **（3）** $\displaystyle\int\frac1x\,dx=\ln|x|+C\quad(x\ne0)$
 - **（13）** $\displaystyle\int\frac{dx}{1+x^2}=\arctan x+C$
+
+---
+<!-- lesson: 第四次课 -->
+<!-- layout: exercise -->
+<!-- timer: 180 -->
+<!-- formulas-title: 可能用到的定义 -->
+# T01 · Exercise 01
+
+利用函数极限的定义，证明
+
+$$
+\lim_{x\to\frac12}\frac{1-4x^2}{2x-1}=-2.
+$$
+
+<!-- formulas -->
+
+- **函数极限**：任给 $\varepsilon>0$，存在 $\delta>0$，使得
+
+  $$
+  \begin{gathered}
+  0<|x-x_0|<\delta,\\
+  \Longrightarrow\\
+  |f(x)-A|<\varepsilon.
+  \end{gathered}
+  $$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 180 -->
+<!-- formulas-title: 可能用到的定义与结论 -->
+# T01 · Exercise 02
+
+判断四个命题的真假，并说明理由；错误命题给出反例。
+
+1. $f(x)\to A$，则 $f$ 在定义域内有界；
+2. $f(n)\to A$，当且仅当 $f(x)\to A$；
+3. $f(x)>0$ 且 $f(x)\to A$，则 $A>0$；
+4. $f(x)>0$ 且 $f(x)\to A$，则 $A\ge0$。
+
+以上函数极限均指 $x\to+\infty$。
+
+<!-- formulas -->
+
+- **无穷远极限**只直接控制充分靠后的函数值。
+- **海涅定理**要求任意满足 $x_n\to+\infty$ 的序列都给出同一函数值极限。
+- **极限保号**保留非严格不等式；严格正的函数可以趋于零。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 240 -->
+<!-- formulas-title: 可能用到的算法 -->
+# T01 · Exercise 03
+
+讨论极限
+
+$$
+\lim_{x\to0}
+\frac{a_mx^m+\cdots+a_kx^k}
+{b_nx^n+\cdots+b_ex^e},
+$$
+
+其中 $m>k$、$n>e$，$m,k,n,e$ 均为正整数，且
+$a_m a_k b_n b_e\ne0$。
+
+<!-- formulas -->
+
+- 分子、分母分别提出最低次幂 $x^k$ 与 $x^e$。
+- 若出现 $x^{-d}$，继续检查 $d$ 的奇偶性以及左右极限的符号。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 180 -->
+<!-- formulas-title: 可能用到的恒等式 -->
+# T01 · Exercise 04
+
+确定常数 $a,b$，使得
+
+$$
+\lim_{x\to+\infty}
+\left(\sqrt[3]{1-x^6}-ax^2-b\right)=0.
+$$
+
+<!-- formulas -->
+
+- **先看主部**：比较 $\sqrt[3]{1-x^6}$ 与 $x^2$ 的增长。
+- **立方和**：
+
+  $$
+  p+q=\frac{p^3+q^3}{p^2-pq+q^2}.
+  $$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 300 -->
+<!-- formulas-title: 可能用到的结论 -->
+# T02 · Exercise 05
+
+1. 证明：当 $a_i>0$ 时，
+
+   $$
+   \lim_{n\to\infty}\sqrt[n]{a_1^n+\cdots+a_m^n}
+   =\max_{1\le i\le m}a_i.
+   $$
+
+2. 求
+
+   $$
+   f(x)=\lim_{n\to\infty}
+   \sqrt[n]{1+x^n+\left(\frac{x^2}{2}\right)^n},
+   \quad x\ge0,
+   $$
+
+   并讨论其连续性。
+
+<!-- formulas -->
+
+- 若 $M=\max a_i$，则
+
+  $$
+  M^n\le\sum_{i=1}^m a_i^n\le mM^n.
+  $$
+
+- 得到分段表达式后，只需重点检查拼接点与定义域端点。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 120 -->
+<!-- formulas-title: 可能用到的结论 -->
+# T03 · Exercise 06
+
+已知 $f$ 在 $x=1$ 处可导，并且
+
+$$
+f(1+x)-3f(1-x)=8x+o(x)qquad(x\to0).
+$$
+
+求 $f'(1)$。
+
+<!-- formulas -->
+
+- **一点处可导**：
+
+  $$
+  f(x_0+h)=f(x_0)+f'(x_0)h+o(h).
+  $$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 240 -->
+<!-- formulas-title: 可能用到的定义 -->
+# T03 · Exercise 07
+
+设 $f(0)=0$。判断哪些条件足以推出 $f$ 在 $0$ 处可导，并说明理由。
+
+1. $\displaystyle\lim_{h\to0}\frac{f(3h)-f(h)}{2h}$ 存在；
+2. $\displaystyle\lim_{h\to0}\frac{f(h)-f(-h)}{2h}$ 存在；
+3. $\displaystyle\lim_{h\to0}\frac{f(h^3)}{h^3}$ 存在；
+4. $\displaystyle\lim_{h\to0}\frac{f(h^2)}{h^2}$ 存在。
+
+<!-- formulas -->
+
+- **导数定义**：$\displaystyle f'(0)=\lim_{t\to0}\frac{f(t)-f(0)}t$。
+- $t=h^3$ 覆盖零点两侧；$t=h^2$ 只从右侧趋近零。
+- 条件不足时，可以构造反例。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 150 -->
+<!-- formulas-title: 可能用到的定义 -->
+# T03 · Exercise 08
+
+设 $f$ 处处可导，令
+
+$$
+F(x)=f(x)\bigl(1+|\sin x|\bigr).
+$$
+
+求 $F$ 在 $x=0$ 处可导的充要条件，并证明。
+
+<!-- formulas -->
+
+- 函数在一点可导，当且仅当左右导数都存在且相等。
+- $\displaystyle\frac{|\sin h|}{h}$ 的左右极限分别为 $1$ 与 $-1$。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 120 -->
+<!-- formulas-title: 可能用到的结论 -->
+# T03 · Exercise 09
+
+设 $f$ 在 $x=0$ 的邻域内连续可导，且
+
+$$
+f(0)=1,\qquad f'(0)=4.
+$$
+
+求
+
+$$
+\lim_{x\to0}[f(\sin x)]^{\frac1{2x}}.
+$$
+
+<!-- formulas -->
+
+- $f(t)=f(0)+f'(0)t+o(t)$。
+- $\ln(1+u)=u+o(u)$。
+- 幂指型极限可以先取对数。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 240 -->
+<!-- formulas-title: 可能用到的求导公式 -->
+# T03 · Exercise 10
+
+函数 $y=y(x)$ 由
+
+$$
+xy-\mathrm e^x+\mathrm e^y=0
+$$
+
+确定。已知 $f$ 二阶可导且 $f'(1)=1$，令
+
+$$
+z=f(\mathrm e^y-\sin x).
+$$
+
+求 $z''(0)$。
+
+<!-- formulas -->
+
+- 隐函数方程两边同时对 $x$ 求导。
+- 若 $z=f(u(x))$，则
+
+  $$
+  z''=f''(u)(u')^2+f'(u)u''.
+  $$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 180 -->
+<!-- formulas-title: 可能用到的定理 -->
+# T04 · Exercise 11
+
+设 $f$ 在 $[a,b]$ 上连续、在 $(a,b)$ 内可导，且
+
+$$
+f(a)=f(b)=1.
+$$
+
+证明：存在 $\xi,\eta\in(a,b)$，使得
+
+$$
+\mathrm e^{\eta-\xi}\bigl[f(\eta)+f'(\eta)\bigr]=1.
+$$
+
+<!-- formulas -->
+
+- **拉格朗日中值定理**：
+
+  $$
+  \frac{F(b)-F(a)}{b-a}=F'(\zeta).
+  $$
+
+- $(\mathrm e^x f(x))'=\mathrm e^x[f(x)+f'(x)]$。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 180 -->
+<!-- formulas-title: 可能用到的定理 -->
+# T04 · Exercise 12
+
+设 $f$ 定义在 $(1,+\infty)$ 上，且 $f',f''$ 存在。证明：若
+
+$$
+\lim_{x\to+\infty}f(x)=0,
+\qquad
+\lim_{x\to+\infty}f''(x)=0,
+$$
+
+则 $\displaystyle\lim_{x\to+\infty}f'(x)=0$。
+
+<!-- formulas -->
+
+- 在远端固定长度的区间 $[x,x+1]$ 上使用拉格朗日中值定理。
+- 得到中间点后，再对 $f'$ 使用一次中值定理。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 240 -->
+<!-- formulas-title: 可能用到的展开式 -->
+# T04 · Exercise 13
+
+求
+
+$$
+\lim_{x\to+\infty}
+\left\{
+\frac{\mathrm e}{2}x
++x^2\left[\left(1+\frac1x\right)^x-\mathrm e\right]
+\right\}.
+$$
+
+<!-- formulas -->
+
+- $\displaystyle\ln(1+t)=t-\frac{t^2}{2}+\frac{t^3}{3}+o(t^3)$。
+- $\displaystyle\mathrm e^u=1+u+\frac{u^2}{2}+o(u^2)$。
+- 可以先令 $t=1/x$。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 150 -->
+<!-- formulas-title: 可能用到的展开式 -->
+# T04 · Exercise 14
+
+求
+
+$$
+\lim_{x\to0}x^{-2}
+\left(1-\cos x\sqrt{\cos2x}\sqrt[3]{\cos3x}\right).
+$$
+
+<!-- formulas -->
+
+- $\displaystyle\cos(kx)=1-\frac{k^2x^2}{2}+o(x^2)$。
+- $\displaystyle(1+u)^\alpha=1+\alpha u+o(u)$。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 240 -->
+<!-- formulas-title: 可能用到的展开式 -->
+# T04 · Exercise 15
+
+设 $f$ 三阶可导且 $f'''(a)\ne0$。若 $0<\theta(x)<1$，并且
+
+$$
+\begin{aligned}
+f(x)
+&=f(a)+f'(a)(x-a)\\
+&\quad+\frac12
+f''\bigl(a+\theta(x)(x-a)\bigr)(x-a)^2,
+\end{aligned}
+$$
+
+证明 $\displaystyle\lim_{x\to a}\theta(x)=\frac13$。
+
+<!-- formulas -->
+
+- **Taylor–Peano 展开**保留到三阶。
+- $f''(a+u)=f''(a)+f'''(a)u+o(u)$
+- 由 $0<\theta<1$ 可知 $\theta(x)(x-a)\to0$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 240 -->
+<!-- formulas-title: 可能用到的结论 -->
+# T05 · Exercise 16
+
+设 $f$ 在 $[a,b]$ 上连续、在 $(a,b)$ 内二阶可导，且 $f''(x)>0$。证明
+
+$$
+\frac{f(x_1)+\cdots+f(x_n)}n
+\ge
+f\left(\frac{x_1+\cdots+x_n}{n}\right),
+$$
+
+其中 $x_1,\ldots,x_n\in[a,b]$。
+
+<!-- formulas -->
+
+- $f''>0$ 推出 $f'$ 严格递增。
+- **切线支撑**：增量 $f(x)-f(x_0)$ 不小于线性主部 $f'(x_0)(x-x_0)$。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 180 -->
+<!-- formulas-title: 可能用到的定义与恒等式 -->
+# T07 · Exercise 17
+
+求
+
+$$
+\lim_{n\to\infty}\frac1n
+\sum_{k=1}^{3n}\sqrt{1+\sin\frac{k\pi}{3n}}.
+$$
+
+<!-- formulas -->
+
+- **黎曼和**：$\displaystyle\sum_{k=1}^N f(x_k)\,\Delta x\to\int_a^b f(x)\,dx$。
+- $\displaystyle1+\sin x=\left(\sin\frac x2+\cos\frac x2\right)^2$。

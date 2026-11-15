@@ -2,8 +2,8 @@
   "id": "topic-06-indefinite-integrals",
   "label": "T06",
   "title": "不定积分",
-  "summary": "建立不定积分的概念与性质，组织换元、分部及代表性的特殊积分，并完成第四章整合。",
-  "lessonCount": 6,
+  "summary": "建立不定积分的概念与性质，组织换元、分部及代表性的特殊积分，并完成第四章整合；另含一次按学生问题组织的跨专题答疑。",
+  "lessonCount": 7,
   "order": 7,
   "resources": {
     "runbook": "runbook.md",
