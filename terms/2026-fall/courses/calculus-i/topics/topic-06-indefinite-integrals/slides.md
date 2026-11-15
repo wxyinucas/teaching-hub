@@ -469,15 +469,10 @@ $$
 
 <!-- formulas -->
 
-- **函数极限**：任给 $\varepsilon>0$，存在 $\delta>0$，使得
-
-  $$
-  \begin{gathered}
-  0<|x-x_0|<\delta,\\
-  \Longrightarrow\\
-  |f(x)-A|<\varepsilon.
-  \end{gathered}
-  $$
+- **任意：** $\varepsilon>0$
+- **存在：** $\delta>0$
+- **只要：** $0<|x-x_0|<\delta$
+- **就有：** $|f(x)-A|<\varepsilon$
 
 ---
 <!-- layout: exercise -->
@@ -496,9 +491,11 @@ $$
 
 <!-- formulas -->
 
-- **无穷远极限**只直接控制充分靠后的函数值。
-- **海涅定理**要求任意满足 $x_n\to+\infty$ 的序列都给出同一函数值极限。
-- **极限保号**保留非严格不等式；严格正的函数可以趋于零。
+- **无穷远极限**只直接控制充分靠后的函数值
+- **海涅定理**要求任意趋近序列都给出同一函数值极限
+- **序列条件：** $x_n\to+\infty$
+- **极限保号**保留非严格不等式
+- 严格正的函数可以趋于零
 
 ---
 <!-- layout: exercise -->
@@ -519,14 +516,42 @@ $a_m a_k b_n b_e\ne0$。
 
 <!-- formulas -->
 
-- 分子、分母分别提出最低次幂 $x^k$ 与 $x^e$。
-- 若出现 $x^{-d}$，继续检查 $d$ 的奇偶性以及左右极限的符号。
+- **分子最低次幂：** $x^k$
+- **分母最低次幂：** $x^e$
+- **若出现负次幂：** $x^{-d}$
+- **继续检查：** 次数奇偶与左右极限符号
+
+---
+<!-- layout: exercise -->
+<!-- timer: 180 -->
+<!-- formulas-title: 可能用到的等价关系 -->
+# T01 · Exercise 04
+
+设
+
+$$
+\lim_{x\to0}
+\frac{\ln\left(1+\dfrac{f(x)}{\sin x}\right)}{a^x-1}
+=A,
+\qquad a>0,\quad a\ne1.
+$$
+
+求 $\displaystyle\lim_{x\to0}\frac{f(x)}{x^2}$。
+
+<!-- formulas -->
+
+- **对数：** $\ln(1+u)\sim u$
+- **指数增量：** $a^x-1\sim x\ln a$
+- **正弦：** $\sin x\sim x$
+- **先确认：** $\displaystyle\ln\left(1+\frac{f(x)}{\sin x}\right)\to0\Rightarrow\frac{f(x)}{\sin x}\to0$
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 300 -->
 <!-- formulas-title: 可能用到的结论 -->
-# T02 · Exercise 04
+# T02 · Exercise 05*
+
+设 $m$ 为正整数。
 
 1. 证明：当 $a_i>0$ 时，
 
@@ -543,23 +568,62 @@ $a_m a_k b_n b_e\ne0$。
    \quad x\ge0,
    $$
 
-   并讨论其连续性。
+   并讨论其连续性，其中 $x=0$ 单独讨论。
 
 <!-- formulas -->
 
-- 若 $M=\max a_i$，则
+- **最大项：** $M=\max a_i$
+- **夹逼：** $M^n\le\sum_{i=1}^m a_i^n\le mM^n$
+- **分段函数：** 重点检查拼接点与定义域端点
 
-  $$
-  M^n\le\sum_{i=1}^m a_i^n\le mM^n.
-  $$
+---
+<!-- layout: exercise -->
+<!-- timer: 240 -->
+<!-- formulas-title: 可能用到的分段讨论 -->
+# T02 · Exercise 06*
 
-- 得到分段表达式后，只需重点检查拼接点与定义域端点。
+讨论函数
+
+$$
+f(x)=\lim_{n\to\infty}\frac{1-x^{2n}}{1+x^{2n}}
+$$
+
+的连续性。
+
+<!-- formulas -->
+
+- **区间一：** $|x|<1$
+- **分界点：** $x=\pm1$
+- **区间二：** $|x|>1$
+- **连续性：** 比较左右极限与函数值
+
+---
+<!-- layout: exercise -->
+<!-- timer: 180 -->
+<!-- formulas-title: 可能用到的定义与极限 -->
+# T03 · Exercise 07*
+
+已知 $f'(a)$ 存在，且 $f(a)\ne0$，求
+
+$$
+\lim_{n\to\infty}
+\left(
+\frac{f\left(a+\dfrac1n\right)}{f(a)}
+\right)^n.
+$$
+
+<!-- formulas -->
+
+- **底数增量：** $\displaystyle u_n=\frac{f\left(a+\frac1n\right)-f(a)}{f(a)}$
+- **导数定义：** $\displaystyle nu_n\to\frac{f'(a)}{f(a)}$
+- **对数：** $\displaystyle\lim_{u\to0}\frac{\ln(1+u)}u=1$
+- **幂指变换：** $\displaystyle(1+u_n)^n=\exp\!\bigl(n\ln(1+u_n)\bigr)$
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 120 -->
 <!-- formulas-title: 可能用到的定义与结论 -->
-# T03 · Exercise 05
+# T03 · Exercise 08
 
 已知 $f$ 在 $x=1$ 处可导，并且
 
@@ -571,20 +635,43 @@ $$
 
 <!-- formulas -->
 
-- **一阶展开**：
+- **一阶展开：** $f(1\pm x)=f(1)\pm f'(1)x+o(x)$
+- **连续性：** 可导先推出连续
+- **令：** $x\to0$
+- **得到：** $f(1)=0$
+- **反向增量：** $\displaystyle\frac{f(1-x)-f(1)}x\to-f'(1)$
 
-  $$
-  f(1\pm x)=f(1)\pm f'(1)x+o(x).
-  $$
+---
+<!-- layout: exercise -->
+<!-- timer: 180 -->
+<!-- formulas-title: 可能用到的极限与定义 -->
+# T03 · Exercise 09
 
-- **直接凑定义**：可导先推出连续；令 $x\to0$ 得 $f(1)=0$。
-- 注意 $\displaystyle\frac{f(1-x)-f(1)}x\to-f'(1)$。
+设 $f$ 在 $x=1$ 处可导，且
+
+$$
+f(1)=0,\qquad f'(1)=2.
+$$
+
+求
+
+$$
+\lim_{x\to0}
+\frac{\ln(1+\sin3x)\,f(\cos x)}{x^3}.
+$$
+
+<!-- formulas -->
+
+- **对数：** $\displaystyle\lim_{u\to0}\frac{\ln(1+u)}u=1$
+- **正弦：** $\displaystyle\lim_{x\to0}\frac{\sin3x}{x}=3$
+- **导数定义：** $\displaystyle\lim_{t\to1}\frac{f(t)-f(1)}{t-1}=f'(1)$
+- **余弦：** $\displaystyle\lim_{x\to0}\frac{\cos x-1}{x^2}=-\frac12$
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 240 -->
 <!-- formulas-title: 可能用到的定义 -->
-# T03 · Exercise 06
+# T03 · Exercise 10
 
 设 $f(0)=0$。判断哪些条件足以推出 $f$ 在 $0$ 处可导，并说明理由。
 
@@ -595,15 +682,16 @@ $$
 
 <!-- formulas -->
 
-- **导数定义**：$\displaystyle f'(0)=\lim_{t\to0}\frac{f(t)-f(0)}t$。
-- $t=h^3$ 覆盖零点两侧；$t=h^2$ 只从右侧趋近零。
-- 条件不足时，可以构造反例。
+- **导数定义：** $\displaystyle f'(0)=\lim_{t\to0}\frac{f(t)-f(0)}t$
+- **双侧覆盖：** $t=h^3$
+- **仅覆盖右侧：** $t=h^2$
+- **条件不足：** 构造反例
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 150 -->
 <!-- formulas-title: 可能用到的定义 -->
-# T03 · Exercise 07
+# T03 · Exercise 11
 
 设 $f$ 处处可导，令
 
@@ -615,14 +703,15 @@ $$
 
 <!-- formulas -->
 
-- 函数在一点可导，当且仅当左右导数都存在且相等。
-- $\displaystyle\frac{|\sin h|}{h}$ 的左右极限分别为 $1$ 与 $-1$。
+- 一点可导等价于左右导数都存在且相等
+- **右侧：** $\displaystyle\lim_{h\to0^+}\frac{|\sin h|}{h}=1$
+- **左侧：** $\displaystyle\lim_{h\to0^-}\frac{|\sin h|}{h}=-1$
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 120 -->
 <!-- formulas-title: 可能用到的恒等式与展开式 -->
-# T03 · Exercise 08
+# T03 · Exercise 12*
 
 设 $f$ 在 $x=0$ 的邻域内连续可导，且
 
@@ -638,15 +727,16 @@ $$
 
 <!-- formulas -->
 
-- $\displaystyle u^v=\mathrm e^{v\ln u}$。
-- $f(t)=1+4t+o(t)$，$\sin x=x+o(x)$。
-- $\ln(1+u)=u+o(u)$。
+- $\displaystyle u^v=\mathrm e^{v\ln u}$
+- $f(t)=1+4t+o(t)$
+- $\sin x=x+o(x)$
+- $\ln(1+u)=u+o(u)$
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 240 -->
 <!-- formulas-title: 可能用到的求导公式 -->
-# T03 · Exercise 09
+# T03 · Exercise 13
 
 函数 $y=y(x)$ 由
 
@@ -664,18 +754,15 @@ $$
 
 <!-- formulas -->
 
-- 隐函数方程两边同时对 $x$ 求导。
-- 若 $z=f(u(x))$，则
-
-  $$
-  z''=f''(u)(u')^2+f'(u)u''.
-  $$
+- **隐式求导：** 方程两边同时对自变量求导
+- **复合函数：** $z=f(u(x))$
+- **二阶导数：** $z''=f''(u)(u')^2+f'(u)u''$
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 180 -->
 <!-- formulas-title: 可能用到的定理与构造 -->
-# T04 · Exercise 10
+# T04 · Exercise 14
 
 设 $f$ 在 $[a,b]$ 上连续、在 $(a,b)$ 内可导，且
 
@@ -691,16 +778,18 @@ $$
 
 <!-- formulas -->
 
-- **中值定理**：导数值等于区间上的割线斜率。
-- 令 $\varphi(x)=\mathrm e^x f(x)$，$\psi(x)=\mathrm e^x$。
-- **相同区间增量**：$\Delta\varphi=\Delta\psi=\mathrm e^b-\mathrm e^a$。
-- $\varphi'(\eta)=\mathrm e^\eta[f(\eta)+f'(\eta)]$，$\psi'(\xi)=\mathrm e^\xi$。
+- **中值定理：** 导数值等于区间上的割线斜率
+- **构造一：** $\varphi(x)=\mathrm e^x f(x)$
+- **构造二：** $\psi(x)=\mathrm e^x$
+- **相同区间增量：** $\Delta\varphi=\Delta\psi=\mathrm e^b-\mathrm e^a$
+- **导数一：** $\varphi'(\eta)=\mathrm e^\eta[f(\eta)+f'(\eta)]$
+- **导数二：** $\psi'(\xi)=\mathrm e^\xi$
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 180 -->
 <!-- formulas-title: 可能用到的定理 -->
-# T04 · Exercise 11
+# T04 · Exercise 15
 
 设 $f$ 定义在 $(1,+\infty)$ 上，且 $f',f''$ 存在。证明：若
 
@@ -714,19 +803,18 @@ $$
 
 <!-- formulas -->
 
-- 在 $[x,x+1]$ 上对 $f$ 使用中值定理，先得到
-
-  $$
-  f'(\eta_x)=f(x+1)-f(x)\longrightarrow0.
-  $$
-
-- 由 $0<\eta_x-x<1$，再对 $f'$ 使用中值定理；利用 $f''(x)\to0$ 把结论拉回 $f'(x)$。
+- **原函数区间：** $[x,x+1]$
+- **中值定理：** $f'(\eta_x)=f(x+1)-f(x)\to0$
+- **导函数区间：** $[x,\eta_x]$
+- **控制距离：** $0<\eta_x-x<1$
+- **控制变化：** $f''(x)\to0$
+- **最终目标：** $f'(x)\to0$
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 180 -->
 <!-- formulas-title: 可能用到的展开式 -->
-# T04 · Exercise 12
+# T04 · Exercise 16*
 
 确定常数 $a,b$，使得
 
@@ -737,22 +825,18 @@ $$
 
 <!-- formulas -->
 
-- 令 $t=1/x$，则 $x\to+\infty$ 时 $t\to0^+$。
-- 在实数立方根下，
-
-  $$
-  \sqrt[3]{1-x^6}
-  =-\frac1{t^2}(1-t^6)^{1/3}.
-  $$
-
-- $\displaystyle(1+u)^\alpha=1+\alpha u+o(u)$。
-- 先消去 $t^{-2}$ 项，再消去常数项。
+- **换元：** $t=1/x$
+- **趋近方向：** $x\to+\infty\Rightarrow t\to0^+$
+- **实数立方根：** $\displaystyle\sqrt[3]{1-x^6}=-\frac1{t^2}(1-t^6)^{1/3}$
+- **展开：** $\displaystyle(1+u)^\alpha=1+\alpha u+o(u)$
+- **先消去：** $t^{-2}$
+- **再消去：** 常数项
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 240 -->
 <!-- formulas-title: 可能用到的展开式 -->
-# T04 · Exercise 13
+# T04 · Exercise 17*
 
 求
 
@@ -766,15 +850,15 @@ $$
 
 <!-- formulas -->
 
-- $\displaystyle\ln(1+t)=t-\frac{t^2}{2}+\frac{t^3}{3}+o(t^3)$。
-- $\displaystyle\mathrm e^u=1+u+\frac{u^2}{2}+o(u^2)$。
-- 可以先令 $t=1/x$。
+- $\displaystyle\ln(1+t)=t-\frac{t^2}{2}+\frac{t^3}{3}+o(t^3)$
+- $\displaystyle\mathrm e^u=1+u+\frac{u^2}{2}+o(u^2)$
+- **换元：** $t=1/x$
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 150 -->
 <!-- formulas-title: 可能用到的展开式 -->
-# T04 · Exercise 14
+# T04 · Exercise 18*
 
 求
 
@@ -785,16 +869,16 @@ $$
 
 <!-- formulas -->
 
-- $\displaystyle\cos(kx)=1-\frac{k^2x^2}{2}+o(x^2)$。
-- $\displaystyle(1+u)^\alpha=1+\alpha u+o(u)$。
+- $\displaystyle\cos(kx)=1-\frac{k^2x^2}{2}+o(x^2)$
+- $\displaystyle(1+u)^\alpha=1+\alpha u+o(u)$
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 240 -->
 <!-- formulas-title: 可能用到的展开式 -->
-# T04 · Exercise 15
+# T04 · Exercise 19
 
-设 $f$ 三阶可导且 $f'''(a)\ne0$。若 $0<\theta(x)<1$，并且
+设 $f$ 三阶可导且 $f'''(a)\ne0$。对于每个充分接近且不等于 $a$ 的 $x$，存在 $\theta(x)\in(0,1)$，使得
 
 $$
 \begin{aligned}
@@ -809,17 +893,18 @@ $$
 
 <!-- formulas -->
 
-- **Taylor–Peano 展开**保留到三阶。
+- **Taylor–Peano 展开**保留到三阶
 - $f''(a+u)=f''(a)+f'''(a)u+o(u)$
-- 由 $0<\theta<1$ 可知 $\theta(x)(x-a)\to0$
+- **中值点：** $0<\theta<1$
+- **因此：** $\theta(x)(x-a)\to0$
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 240 -->
 <!-- formulas-title: 可能用到的两种思路 -->
-# T05 · Exercise 16
+# T05 · Exercise 20
 
-设 $f$ 在 $[a,b]$ 上连续、在 $(a,b)$ 内二阶可导，且 $f''(x)>0$。证明
+设 $f$ 在 $[a,b]$ 上连续、在 $(a,b)$ 内二阶可导，且 $f''(x)>0$。证明：对于任意正整数 $n$ 以及任意 $x_1,\ldots,x_n\in[a,b]$，恒有
 
 $$
 \frac{f(x_1)+\cdots+f(x_n)}n
@@ -827,19 +912,18 @@ $$
 f\left(\frac{x_1+\cdots+x_n}{n}\right),
 $$
 
-其中 $x_1,\ldots,x_n\in[a,b]$。
-
 <!-- formulas -->
 
-- $f''>0$ 推出 $f'$ 严格递增。
-- **二点加权与归纳**：先建立任意两点的加权不等式，再按点的个数归纳。
-- **切线支撑**：在所有点的平均值处作切线；求和时线性项抵消。
+- **凸性条件：** $f''>0$
+- **一阶导数：** 严格递增
+- **二点加权与归纳：** 先建立任意两点的加权不等式并按点的个数归纳
+- **切线支撑：** 在平均值处作切线并在求和时消去线性项
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 180 -->
 <!-- formulas-title: 可能用到的定义与恒等式 -->
-# T07 · Exercise 17
+# T07 · Exercise 21
 
 求
 
@@ -850,5 +934,5 @@ $$
 
 <!-- formulas -->
 
-- **黎曼和**：$\displaystyle\sum_{k=1}^N f(x_k)\,\Delta x\to\int_a^b f(x)\,dx$。
-- $\displaystyle1+\sin x=\left(\sin\frac x2+\cos\frac x2\right)^2$。
+- **黎曼和：** $\displaystyle\sum_{k=1}^N f(x_k)\,\Delta x\to\int_a^b f(x)\,dx$
+- $\displaystyle1+\sin x=\left(\sin\frac x2+\cos\frac x2\right)^2$

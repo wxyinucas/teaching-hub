@@ -176,7 +176,7 @@
 .exercise-timer-controls button:first-child { border-color: var(--purple); background: var(--purple); color: white; }
 .exercise-timer-controls button:disabled { opacity: .45; }
 .exercise-grid { display: grid; flex: 1; grid-template-columns: minmax(0, 1.5fr) minmax(28cqw, 1fr); min-height: 0; gap: 2.6cqw; margin-top: 1.6cqw; }
-.exercise-problem { display: flex; min-width: 0; min-height: 0; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; font-size: clamp(calc(25px * var(--slide-font-scale, 1)), calc(2.45cqw * var(--slide-font-scale, 1)), calc(42px * var(--slide-font-scale, 1))); line-height: 1.6; }
+.exercise-problem { display: flex; min-width: 0; min-height: 0; flex-direction: column; align-items: stretch; justify-content: center; overflow: hidden; font-size: clamp(calc(25px * var(--slide-font-scale, 1)), calc(2.45cqw * var(--slide-font-scale, 1)), calc(42px * var(--slide-font-scale, 1))); line-height: 1.6; text-align: left; }
 .exercise-problem > :first-child { margin-top: 0; }
 .exercise-problem > :last-child { margin-bottom: 0; }
 .exercise-problem p { margin: .7cqw 0; }
