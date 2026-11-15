@@ -456,8 +456,13 @@ $$
 
 ---
 <!-- lesson: 第四次课 -->
+<!-- layout: question -->
+# T01 · 极限
+> 极限的定义与运算
+
+---
 <!-- layout: exercise -->
-<!-- timer: 180 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的定义 -->
 # T01 · Exercise 01
 
@@ -476,7 +481,7 @@ $$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 180 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的定义与结论 -->
 # T01 · Exercise 02
 
@@ -494,12 +499,12 @@ $$
 - **无穷远极限**只直接控制充分靠后的函数值
 - **海涅定理**要求任意趋近序列都给出同一函数值极限
 - **序列条件：** $x_n\to+\infty$
-- **极限保号**保留非严格不等式
+- **极限保序：** 保留非严格不等式
 - 严格正的函数可以趋于零
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 240 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的算法 -->
 # T01 · Exercise 03
 
@@ -522,34 +527,15 @@ $a_m a_k b_n b_e\ne0$。
 - **继续检查：** 次数奇偶与左右极限符号
 
 ---
-<!-- layout: exercise -->
-<!-- timer: 180 -->
-<!-- formulas-title: 可能用到的等价关系 -->
-# T01 · Exercise 04
-
-设
-
-$$
-\lim_{x\to0}
-\frac{\ln\left(1+\dfrac{f(x)}{\sin x}\right)}{a^x-1}
-=A,
-\qquad a>0,\quad a\ne1.
-$$
-
-求 $\displaystyle\lim_{x\to0}\frac{f(x)}{x^2}$。
-
-<!-- formulas -->
-
-- **对数：** $\ln(1+u)\sim u$
-- **指数增量：** $a^x-1\sim x\ln a$
-- **正弦：** $\sin x\sim x$
-- **先确认：** $\displaystyle\ln\left(1+\frac{f(x)}{\sin x}\right)\to0\Rightarrow\frac{f(x)}{\sin x}\to0$
+<!-- layout: question -->
+# T02 · 函数的连续性
+> 从逐点极限到连续性判断
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 300 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的结论 -->
-# T02 · Exercise 05*
+# T02 · Exercise 04*
 
 设 $m$ 为正整数。
 
@@ -578,9 +564,9 @@ $$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 240 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的分段讨论 -->
-# T02 · Exercise 06*
+# T02 · Exercise 05*
 
 讨论函数
 
@@ -598,10 +584,15 @@ $$
 - **连续性：** 比较左右极限与函数值
 
 ---
+<!-- layout: question -->
+# T03 · 导数、求导与微分
+> 可导性与求导
+
+---
 <!-- layout: exercise -->
-<!-- timer: 180 -->
-<!-- formulas-title: 可能用到的定义与极限 -->
-# T03 · Exercise 07*
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的变换与展开 -->
+# T03 · Exercise 06*
 
 已知 $f'(a)$ 存在，且 $f(a)\ne0$，求
 
@@ -614,16 +605,17 @@ $$
 
 <!-- formulas -->
 
-- **底数增量：** $\displaystyle u_n=\frac{f\left(a+\frac1n\right)-f(a)}{f(a)}$
+- **指数对数变换：** $B_n^n=\exp(n\ln B_n)$
+- **底数增量：** $\displaystyle u_n=\frac{f\left(a+\frac1n\right)-f(a)}{f(a)}\to0$
+- **从某项起：** $1+u_n>0$
+- **Taylor–Peano：** $\ln(1+u_n)=u_n+o(u_n)$
 - **导数定义：** $\displaystyle nu_n\to\frac{f'(a)}{f(a)}$
-- **对数：** $\displaystyle\lim_{u\to0}\frac{\ln(1+u)}u=1$
-- **幂指变换：** $\displaystyle(1+u_n)^n=\exp\!\bigl(n\ln(1+u_n)\bigr)$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 120 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的定义与结论 -->
-# T03 · Exercise 08
+# T03 · Exercise 07
 
 已知 $f$ 在 $x=1$ 处可导，并且
 
@@ -643,9 +635,9 @@ $$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 180 -->
-<!-- formulas-title: 可能用到的极限与定义 -->
-# T03 · Exercise 09
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的一阶展开 -->
+# T03 · Exercise 08
 
 设 $f$ 在 $x=1$ 处可导，且
 
@@ -662,16 +654,16 @@ $$
 
 <!-- formulas -->
 
-- **对数：** $\displaystyle\lim_{u\to0}\frac{\ln(1+u)}u=1$
-- **正弦：** $\displaystyle\lim_{x\to0}\frac{\sin3x}{x}=3$
-- **导数定义：** $\displaystyle\lim_{t\to1}\frac{f(t)-f(1)}{t-1}=f'(1)$
-- **余弦：** $\displaystyle\lim_{x\to0}\frac{\cos x-1}{x^2}=-\frac12$
+- **对数外层：** $\ln(1+u)=u+o(u)$
+- **正弦内层：** $\sin3x=3x+o(x)$
+- **函数外层：** $f(1+u)=f(1)+f'(1)u+o(u)$
+- **余弦内层：** $\cos x-1=-\dfrac{x^2}{2}+o(x^2)$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 240 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的定义 -->
-# T03 · Exercise 10
+# T03 · Exercise 09
 
 设 $f(0)=0$。判断哪些条件足以推出 $f$ 在 $0$ 处可导，并说明理由。
 
@@ -689,9 +681,9 @@ $$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 150 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的定义 -->
-# T03 · Exercise 11
+# T03 · Exercise 10
 
 设 $f$ 处处可导，令
 
@@ -709,9 +701,9 @@ $$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 120 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的恒等式与展开式 -->
-# T03 · Exercise 12*
+# T03 · Exercise 11*
 
 设 $f$ 在 $x=0$ 的邻域内连续可导，且
 
@@ -734,9 +726,9 @@ $$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 240 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的求导公式 -->
-# T03 · Exercise 13
+# T03 · Exercise 12
 
 函数 $y=y(x)$ 由
 
@@ -759,10 +751,15 @@ $$
 - **二阶导数：** $z''=f''(u)(u')^2+f'(u)u''$
 
 ---
+<!-- layout: question -->
+# T04 · 中值定理、洛必达与 Taylor 展开
+> 中值定理与局部展开
+
+---
 <!-- layout: exercise -->
-<!-- timer: 180 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的定理与构造 -->
-# T04 · Exercise 14
+# T04 · Exercise 13
 
 设 $f$ 在 $[a,b]$ 上连续、在 $(a,b)$ 内可导，且
 
@@ -787,9 +784,9 @@ $$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 180 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的定理 -->
-# T04 · Exercise 15
+# T04 · Exercise 14
 
 设 $f$ 定义在 $(1,+\infty)$ 上，且 $f',f''$ 存在。证明：若
 
@@ -812,7 +809,31 @@ $$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 180 -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的一阶展开 -->
+# T04 · Exercise 15
+
+设
+
+$$
+\lim_{x\to0}
+\frac{\ln\left(1+\dfrac{f(x)}{\sin x}\right)}{a^x-1}
+=A,
+\qquad a>0,\quad a\ne1.
+$$
+
+求 $\displaystyle\lim_{x\to0}\frac{f(x)}{x^2}$。
+
+<!-- formulas -->
+
+- **先确认：** $\displaystyle\ln\left(1+\frac{f(x)}{\sin x}\right)\to0\Rightarrow\frac{f(x)}{\sin x}\to0$
+- **对数：** $\ln(1+u)=u+o(u)$
+- **指数增量：** $a^x-1=x\ln a+o(x)$
+- **正弦：** $\sin x=x+o(x)$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的展开式 -->
 # T04 · Exercise 16*
 
@@ -834,7 +855,7 @@ $$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 240 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的展开式 -->
 # T04 · Exercise 17*
 
@@ -856,7 +877,7 @@ $$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 150 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的展开式 -->
 # T04 · Exercise 18*
 
@@ -874,7 +895,7 @@ $$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 240 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的展开式 -->
 # T04 · Exercise 19
 
@@ -899,8 +920,13 @@ $$
 - **因此：** $\theta(x)(x-a)\to0$
 
 ---
+<!-- layout: question -->
+# T05 · 导数的应用
+> 凸性与平均值
+
+---
 <!-- layout: exercise -->
-<!-- timer: 240 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的两种思路 -->
 # T05 · Exercise 20
 
@@ -920,8 +946,13 @@ $$
 - **切线支撑：** 在平均值处作切线并在求和时消去线性项
 
 ---
+<!-- layout: question -->
+# T07 · 定积分及其应用
+> 黎曼和
+
+---
 <!-- layout: exercise -->
-<!-- timer: 180 -->
+<!-- timer: 60 -->
 <!-- formulas-title: 可能用到的定义与恒等式 -->
 # T07 · Exercise 21
 
