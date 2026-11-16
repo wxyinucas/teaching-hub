@@ -967,3 +967,241 @@ $$
 
 - **黎曼和：** $\displaystyle\sum_{k=1}^N f(x_k)\,\Delta x\to\int_a^b f(x)\,dx$
 - $\displaystyle1+\sin x=\left(\sin\frac x2+\cos\frac x2\right)^2$
+
+---
+<!-- lesson: 第五次课 -->
+<!-- layout: question -->
+# 小 o 记号与期中复习
+> 余项尺度与跨专题答疑
+
+---
+<!-- layout: content -->
+# o(1) 与 o(u_n)
+
+$$
+\varepsilon_n=o(1)
+\quad\Longleftrightarrow\quad
+\varepsilon_n\to0
+$$
+
+$$
+r_n=o(u_n)
+\quad\Longleftrightarrow\quad
+r_n=u_n\varepsilon_n,\ \varepsilon_n\to0
+$$
+
+- $o(1)$ 表示某个趋于零的量
+- 不同位置的 $o(1)$ 可以表示不同的量
+- $\boxed{o(u_n)=u_n o(1)}$
+- 若 $u_n$ 最终非零，则 $\displaystyle\frac{r_n}{u_n}\to0$
+
+---
+<!-- layout: content -->
+# 小 o 的常见运算
+
+$$
+\begin{aligned}
+o(1)+o(1)&=o(1),\\
+c\,o(1)&=o(1),\\
+o(1)o(1)&=o(1),\\
+o(u_n)+o(u_n)&=o(u_n).
+\end{aligned}
+$$
+
+- $\displaystyle v_n o(u_n)=v_nu_n o(1)$
+- $\displaystyle o(u_n)o(v_n)=o(u_nv_n)$
+- 若 $v_n$ 有界，则 $\displaystyle v_n o(1)=o(1)$
+- 小 $o$ 先改写，再使用普通极限运算
+
+---
+<!-- layout: content -->
+# 为什么这个余项能消失
+
+$$
+\begin{aligned}
+n\ln(1+u_n)
+&=nu_n+n\,o(u_n)\\
+&=nu_n+(nu_n)o(1).
+\end{aligned}
+$$
+
+原题已经证明
+
+$$
+nu_n\to\frac{f'(a)}{f(a)}.
+$$
+
+- $n\,o(u_n)=(nu_n)o(1)$ 是合法尺度改写
+- $nu_n$ 收敛，所以它有界
+- 因此 $\displaystyle(nu_n)o(1)=o(1)\to0$
+
+---
+<!-- layout: content -->
+# 有小 o 还不够
+
+$$
+\begin{aligned}
+u_n&=n^{-1/2},
+&r_n&=n^{-1},\\
+r_n&=o(u_n),
+&nr_n&=1\not\to0.
+\end{aligned}
+$$
+
+- 乘上一个随 $n$ 境长的量后，必须重新检查尺度
+- 原题中余项消失，关键是 $nu_n$ 收敛，而不只是 $r_n=o(u_n)$
+
+---
+<!-- layout: question -->
+# T03 · 导数、求导与微分
+> 主值范围、差商与参数方程
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的恒等式与范围 -->
+# T03 · Exercise 01
+
+证明
+
+$$
+2\arctan x
++\arcsin\frac{2x}{1+x^2}
+=\pi,
+\qquad x\ge1.
+$$
+
+<!-- formulas -->
+
+- $\displaystyle\theta=\arctan x$
+- $\displaystyle\sin2\theta=\frac{2\tan\theta}{1+\tan^2\theta}$
+- $\displaystyle\arctan x\in\left[\frac\pi4,\frac\pi2\right)$
+- $\displaystyle\arcsin y\in\left[-\frac\pi2,\frac\pi2\right]$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的定义与代换 -->
+# T03 · Exercise 02
+
+设 $f(0)=0$。判断哪个条件与 $f'(0)$ 存在等价。
+
+1. $\displaystyle\lim_{h\to0}\frac{f(1-\cos h)}{h^2}$ 存在
+2. $\displaystyle\lim_{h\to0}\frac{f(1-\mathrm e^h)}h$ 存在
+3. $\displaystyle\lim_{n\to\infty}n f\left(\frac1n\right)$ 存在
+4. $\displaystyle\lim_{h\to0}\frac{f(h)-f(-h)}h$ 存在
+
+<!-- formulas -->
+
+- $\displaystyle f'(0)=\lim_{t\to0}\frac{f(t)-f(0)}t$
+- 检查新变量是否覆盖 $t\to0^-$ 与 $t\to0^+$
+- $\displaystyle t=1-\mathrm e^h$
+- $\displaystyle\frac{t}{h}\to-1$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 参数方程求导公式 -->
+# T03 · Exercise 03
+
+设
+
+$$
+\begin{cases}
+x=\cos t,\\
+y=t\cos t-\sin t,
+\end{cases}
+$$
+
+求
+
+$$
+\frac{dy}{dx},
+\qquad
+\frac{d^2y}{dx^2}.
+$$
+
+<!-- formulas -->
+
+- 条件：$\displaystyle\frac{dx}{dt}\ne0$
+- $\displaystyle\frac{dy}{dx}=\frac{dy/dt}{dx/dt}$
+- $\displaystyle\frac{d^2y}{dx^2}
+=\frac{\dfrac d{dt}\left(\dfrac{dy}{dx}\right)}{dx/dt}$
+
+---
+<!-- layout: question -->
+# T04 · 中值定理、洛必达与泰勒
+> Taylor 系数与零端点构造
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的 Taylor–Peano 展开 -->
+# T04 · Exercise 04
+
+设 $f$ 在 $x=0$ 处二阶可导，且
+
+$$
+\lim_{x\to0}
+\frac{\mathrm e^{f(x)}-1}{1-\cos x}=2.
+$$
+
+求 $f''(0)$。
+
+<!-- formulas -->
+
+- $\mathrm e^u-1=u+o(u)$
+- $\displaystyle1-\cos x=\frac{x^2}{2}+o(x^2)$
+- $\displaystyle f(x)=f(0)+f'(0)x+\frac{f''(0)}2x^2+o(x^2)$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的构造 -->
+# T04 · Exercise 05
+
+设 $f$ 在 $[0,1]$ 上连续、在 $(0,1)$ 内可导，且
+
+$$
+f(0)=f(1)=0,
+\qquad
+f\left(\frac12\right)=1.
+$$
+
+证明：
+
+1. 存在 $\eta\in(1/2,1)$，使 $f(\eta)=\eta$
+2. 对任意 $\lambda\in\mathbb R$，存在 $\xi\in(0,\eta)$，使
+   $f'(\xi)-\lambda[f(\xi)-\xi]=1$
+
+<!-- formulas -->
+
+- $g(x)=f(x)-x$
+- 先用介值定理找到 $g(\eta)=0$
+- $\Phi(x)=\mathrm e^{-\lambda x}g(x)$
+- 在 $[0,\eta]$ 上使用罗尔定理
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的构造 -->
+# T04 · Exercise 06
+
+设 $f$ 在 $[0,3]$ 上连续、在 $(0,3)$ 内可导，且
+
+$$
+f(1)+f(2)+f(3)=0.
+$$
+
+证明：
+
+1. 存在 $\eta\in[1,3]$，使 $f(\eta)=0$
+2. 若 $f(0)=0$，则存在 $\xi\in(0,3)$，使
+   $f(\xi)+2f'(\xi)=0$
+
+<!-- formulas -->
+
+- 三个函数值不可能严格同号
+- 先用介值定理找到零点
+- $\Phi(x)=\mathrm e^{x/2}f(x)$
+- 在 $[0,\eta]$ 上使用罗尔定理
