@@ -1303,6 +1303,7 @@ $$
 
 <!-- formulas -->
 
+- [已讲原型：T04 · 2023 年应用与证明题 2](#/terms/2026-fall/courses/calculus-i/topics/topic-04-mvt-lhopital-taylor/runbook)
 - $g(x)=f(x)-x$
 - 先用介值定理找到 $g(\eta)=0$
 - $\Phi(x)=\mathrm e^{-\lambda x}g(x)$

@@ -3581,29 +3581,30 @@
 ##### 算法总结：比较同一余项的两种表达，反推中值点的位置
 
 - 先把同一个一阶泰勒余项写成带 Peano 余项的三阶展开，读出二次项之后的首个非零项。
-- 再展开拉格朗日型余项中的 $f''\bigl(a+\theta(x-a)\bigr)$；由 $0<\theta<1$ 可知中值点随 $x$ 一起趋于 $a$。
-- 比较两种表达在三次项上的系数，反推出 $\theta(x)$ 的极限。
+- **先读懂原题中的 $\theta$**：题目沿用了 Taylor 定理的常见简写。对每个固定的 $x\ne a$，定理给出一个数 $\theta\in(0,1)$，使
+
+  $$
+  \xi=a+\theta(x-a)
+  $$
+
+  是 $a$ 与 $x$ 之间的中间点。真正的中间点是 $\xi$；$\theta$ 只是它在区间中的相对位置。固定 $x$ 时，$\theta$ 是一个数，不是函数；当 $x$ 变化时，每次取得的 $\theta$ 也可能变化，原题中的 $\lim\theta$ 正是考察这些数随 $x\to a$ 的变化。为了在求解中明确这种依赖，我们再把相应的数记作 $\theta_h$。
+- 再展开拉格朗日型余项中的 $f''\bigl(a+\theta(x-a)\bigr)$；由 $0<\theta<1$ 可知中间点随 $x$ 一起趋于 $a$。
+- 比较两种表达在三次项上的系数，证明无论每个 $x$ 选择哪一个符合条件的 $\theta$，这些数都趋于 $1/3$。
 
 ##### Exercise 19｜由泰勒余项反推中值点的极限
 
-- 设 $f(x)$ 三阶可导，且 $f'''(a)\ne0$。对于每个充分接近且不等于 $a$ 的 $x$，存在 $\theta=\theta(x)\in(0,1)$，使得
-
-    $$
-    f(x)
-    =f(a)+f'(a)(x-a)
-    +\frac{f''\bigl(a+\theta(x-a)\bigr)(x-a)^2}{2}.
-    $$
-
-    证明：
-
-    $$
-    \lim_{x\to a}\theta(x)=\frac13.
-    $$
-
-- **求解**：令
+- 设 $f(x)$ 三阶可导，且 $f'''(a) \neq 0$，
 
   $$
-  h=x-a.
+  f(x) = f(a) + f'(a)(x - a) + \frac{f''[a + \theta(x - a)](x - a)^2}{2} \quad (0 < \theta < 1),
+  $$
+
+  证明：$\displaystyle\lim_{x \to a} \theta = \frac{1}{3}$。
+
+- **求解**：令 $h=x-a$。对每个 $h\ne0$，从原题等式中取一个相应的 $\theta$，并把它记作 $\theta_h$。于是
+
+  $$
+  0<\theta_h<1.
   $$
 
   当 $h\to0$ 时，$f$ 在 $a$ 处的 Taylor–Peano 展开为
@@ -3621,49 +3622,51 @@
   $$
   f(a+h)
   =f(a)+f'(a)h
-  +\frac12f''\bigl(a+\theta h\bigr)h^2.
+  +\frac12f''\bigl(a+\theta_h\,h\bigr)h^2.
   $$
 
   比较两式，消去相同项并除以 $h^2/2$，得到
 
   $$
-  f''(a+\theta h)
+  f''(a+\theta_h\,h)
   =f''(a)+\frac13f'''(a)h+o(h).
   $$
 
-  另一方面，因为 $0<\theta<1$，所以 $\theta h\to0$。由 $f''$ 在 $a$ 处可导，
+  另一方面，因为 $0<\theta_h<1$，所以 $\theta_h\,h\to0$。由 $f''$ 在 $a$ 处可导，
 
   $$
-  f''(a+\theta h)
-  =f''(a)+f'''(a)\theta h+o(\theta h).
+  f''(a+\theta_h\,h)
+  =f''(a)+f'''(a)\theta_h\,h+o(\theta_h\,h).
   $$
 
   比较后两式：
 
   $$
-  f'''(a)\theta h+o(\theta h)
+  f'''(a)\theta_h\,h+o(\theta_h\,h)
   =\frac13f'''(a)h+o(h).
   $$
 
-  除以 $h$。由于 $0<\theta<1$，
+  除以 $h$。由于 $0<\theta_h<1$，
 
   $$
-  \frac{o(\theta h)}h
-  =\theta\frac{o(\theta h)}{\theta h}
+  \frac{o(\theta_h\,h)}h
+  =\theta_h\frac{o(\theta_h\,h)}{\theta_h\,h}
   =o(1).
   $$
 
   因而
 
   $$
-  f'''(a)\left(\theta-\frac13\right)=o(1).
+  f'''(a)\left(\theta_h-\frac13\right)=o(1).
   $$
 
   由 $f'''(a)\ne0$，得到
 
   $$
-  \boxed{\lim_{x\to a}\theta(x)=\frac13}.
+  \boxed{\lim_{h\to0}\theta_h=\frac13},
   $$
+
+  这就是原题所写的 $\displaystyle\lim_{x\to a}\theta=1/3$。
 
 #### T05 · 导数的应用
 
@@ -4403,12 +4406,13 @@
 
 #### T03 · 导数、求导与微分
 
-##### 知识点：反三角函数要同时检查恒等式与主值范围
+##### 知识点：把恒等式证明转化为常数函数判定
 
-- 把 $\arctan x$ 记成角度以后，可以用二倍角公式处理 $2x/(1+x^2)$。
-- 但 $\arcsin(\sin\alpha)$ 不会对所有实数 $\alpha$ 都直接等于 $\alpha$；必须先判断 $\alpha$ 落在哪个区间，再把它折回 $[-\pi/2,\pi/2]$。
+- 把等式左边整体记成函数 $F(x)$；若能证明 $F'(x)=0$，就把一个反三角函数恒等式转化成“函数在区间上是常数”。
+- 再选择一个容易计算的点确定常数值；若这个点是区间端点，而求导公式只在开区间内成立，就用连续性把结论接回端点。
+- 反三角函数求导时仍要检查定义域与根号的符号；这里 $\sqrt{(x^2-1)^2}=|x^2-1|$，不能直接去掉绝对值。
 
-##### Exercise 01｜由主值范围证明反三角函数恒等式
+##### Exercise 01｜由导数为零证明反三角函数恒等式
 
 - 证明
 
@@ -4419,13 +4423,68 @@
   \qquad x\ge1.
   $$
 
-- **证明**：令
+- **主解法：证明左边是常数函数**。令
 
   $$
-  \theta=\arctan x.
+  F(x)
+  =2\arctan x
+  +\arcsin\frac{2x}{1+x^2}.
   $$
 
-  当 $x\ge1$ 时，
+  对 $x>1$，令
+
+  $$
+  u(x)=\frac{2x}{1+x^2}.
+  $$
+
+  则
+
+  $$
+  u'(x)=\frac{2(1-x^2)}{(1+x^2)^2},
+  $$
+
+  并且
+
+  $$
+  \begin{aligned}
+  \sqrt{1-u(x)^2}
+  &=\sqrt{1-\frac{4x^2}{(1+x^2)^2}}\\
+  &=\frac{|x^2-1|}{1+x^2}\\
+  &=\frac{x^2-1}{1+x^2}.
+  \end{aligned}
+  $$
+
+  最后一个等号使用了 $x>1$。于是
+
+  $$
+  \begin{aligned}
+  F'(x)
+  &=\frac{2}{1+x^2}
+  +\frac{u'(x)}{\sqrt{1-u(x)^2}}\\
+  &=\frac{2}{1+x^2}
+  +\frac{\dfrac{2(1-x^2)}{(1+x^2)^2}}
+  {\dfrac{x^2-1}{1+x^2}}\\
+  &=\frac{2}{1+x^2}-\frac{2}{1+x^2}\\
+  &=0.
+  \end{aligned}
+  $$
+
+  因此 $F$ 在 $(1,+\infty)$ 上是常数。虽然 $x=1$ 处不能直接使用上面的反正弦求导公式，但 $F$ 在 $x=1$ 处连续，而且
+
+  $$
+  F(1)
+  =2\arctan1+\arcsin1
+  =\frac\pi2+\frac\pi2
+  =\pi.
+  $$
+
+  所以
+
+  $$
+  \boxed{F(x)=\pi\qquad(x\ge1)}.
+  $$
+
+- **补充视角：主值范围与二倍角公式**。令 $\theta=\arctan x$。当 $x\ge1$ 时，
 
   $$
   \theta\in\left[\frac\pi4,\frac\pi2\right),
@@ -4433,7 +4492,7 @@
   2\theta\in\left[\frac\pi2,\pi\right).
   $$
 
-  由二倍角公式改写为正切形式，
+  又有
 
   $$
   \sin2\theta
@@ -4441,23 +4500,13 @@
   =\frac{2x}{1+x^2}.
   $$
 
-  由于 $\arcsin$ 的主值属于 $[-\pi/2,\pi/2]$，而 $2\theta\in[\pi/2,\pi)$，所以
+  因为 $\arcsin$ 的主值属于 $[-\pi/2,\pi/2]$，所以
 
   $$
-  \arcsin(\sin2\theta)=\pi-2\theta.
+  \arcsin(\sin2\theta)=\pi-2\theta,
   $$
 
-  因此
-
-  $$
-  \begin{aligned}
-  2\arctan x
-  +\arcsin\frac{2x}{1+x^2}
-  &=2\theta+\arcsin(\sin2\theta)\\
-  &=2\theta+(\pi-2\theta)\\
-  &=\boxed{\pi}.
-  \end{aligned}
-  $$
+  从而原式仍等于 $\pi$。
 
 ##### 算法总结：代换后的差商必须覆盖原点两侧
 
@@ -4704,6 +4753,8 @@
 - 两个零端点保证 $\mu g$ 的端点值相等，罗尔定理再给出所需的中间点。
 
 ##### Exercise 05｜先找零端点，再处理任意参数
+
+- [已讲原型：T04 · 2023 年应用与证明题 2](#/terms/2026-fall/courses/calculus-i/topics/topic-04-mvt-lhopital-taylor/runbook)
 
 - 设函数 $f(x)$ 在 $[0,1]$ 上连续，在 $(0,1)$ 内可导，并且
 
