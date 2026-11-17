@@ -571,7 +571,8 @@ $a_m a_k b_n b_e\ne0$。
 讨论函数
 
 $$
-f(x)=\lim_{n\to\infty}\frac{1-x^{2n}}{1+x^{2n}}
+f(x)=\lim_{n\to\infty}
+x\frac{1-x^{2n}}{1+x^{2n}}
 $$
 
 的连续性。
@@ -655,9 +656,9 @@ $$
 <!-- formulas -->
 
 - **对数外层：** $\ln(1+u)=u+o(u)$
-- **正弦内层：** $\sin3x=3x+o(x)$
+- **正弦内层：** $\sin3x=3x+o(x)\quad o(\sin3x)=o(x)$
 - **函数外层：** $f(1+u)=f(1)+f'(1)u+o(u)$
-- **余弦内层：** $\cos x-1=-\dfrac{x^2}{2}+o(x^2)$
+- **余弦内层：** $\cos x-1=-\dfrac{x^2}{2}+o(x^2)\quad o(\cos x-1)=o(x^2)$
 
 ---
 <!-- layout: exercise -->
@@ -721,7 +722,7 @@ $$
 
 - $\displaystyle u^v=\mathrm e^{v\ln u}$
 - $f(t)=1+4t+o(t)$
-- $\sin x=x+o(x)$
+- $\sin x=x+o(x)\quad o(\sin x)=o(x)$
 - $\ln(1+u)=u+o(u)$
 
 ---
@@ -826,10 +827,11 @@ $$
 
 <!-- formulas -->
 
-- **先确认：** $\displaystyle\ln\left(1+\frac{f(x)}{\sin x}\right)\to0\Rightarrow\frac{f(x)}{\sin x}\to0$
-- **对数：** $\ln(1+u)=u+o(u)$
+- **两层变量：** $\displaystyle u=\frac{f(x)}{\sin x}\quad w=\ln(1+u)$
+- **已知极限：** $w=[A+o(1)](a^x-1)$
 - **指数增量：** $a^x-1=x\ln a+o(x)$
-- **正弦：** $\sin x=x+o(x)$
+- **解除对数：** $u=\mathrm e^w-1=w+o(w)$
+- **恢复原函数：** $f(x)=u\sin x\quad \sin x=x+o(x)$
 
 ---
 <!-- layout: exercise -->
@@ -848,6 +850,7 @@ $$
 
 - **换元：** $t=1/x$
 - **趋近方向：** $x\to+\infty\Rightarrow t\to0^+$
+- **负号来源：** $\displaystyle1-\frac1{t^6}=-\frac{1-t^6}{t^6}$
 - **实数立方根：** $\displaystyle\sqrt[3]{1-x^6}=-\frac1{t^2}(1-t^6)^{1/3}$
 - **展开：** $\displaystyle(1+u)^\alpha=1+\alpha u+o(u)$
 - **先消去：** $t^{-2}$
@@ -871,9 +874,10 @@ $$
 
 <!-- formulas -->
 
-- $\displaystyle\ln(1+t)=t-\frac{t^2}{2}+\frac{t^3}{3}+o(t^3)$
-- $\displaystyle\mathrm e^u=1+u+\frac{u^2}{2}+o(u^2)$
 - **换元：** $t=1/x$
+- **内层整体：** $\displaystyle\delta(t)=\frac{\ln(1+t)}t-1\to0$
+- **外层展开：** $\displaystyle\mathrm e^\delta-1=\delta+\frac{\delta^2}{2}+o(\delta^2)$
+- 先把 $\delta(t)$ 整体代入并整理，再决定 $\ln(1+t)$ 的展开阶数
 
 ---
 <!-- layout: exercise -->
@@ -892,6 +896,7 @@ $$
 
 - $\displaystyle\cos(kx)=1-\frac{k^2x^2}{2}+o(x^2)$
 - $\displaystyle(1+u)^\alpha=1+\alpha u+o(u)$
+- $\displaystyle u=cx^2+o(x^2),\ c\ne0\Rightarrow o(u)=o(x^2)$
 
 ---
 <!-- layout: exercise -->
@@ -971,47 +976,169 @@ $$
 ---
 <!-- lesson: 第五次课 -->
 <!-- layout: question -->
-# 小 o 记号与期中复习
-> 余项尺度与跨专题答疑
+# O 与 o 记号
+> 余项尺度、嵌套 Taylor 与期中复习
 
 ---
 <!-- layout: content -->
-# o(1) 与 o(u_n)
+# O(1) 与 o(1)
+
+- $c_n=O(1)$：存在 $M>0$，使充分大的 $n$ 都满足 $|c_n|\le M$
+- $\varepsilon_n=o(1)$：$\varepsilon_n\to0$
 
 $$
-\varepsilon_n=o(1)
-\quad\Longleftrightarrow\quad
-\varepsilon_n\to0
+o(1)\subset O(1)
 $$
 
-$$
-r_n=o(u_n)
-\quad\Longleftrightarrow\quad
-r_n=u_n\varepsilon_n,\ \varepsilon_n\to0
-$$
-
-- $o(1)$ 表示某个趋于零的量
-- 不同位置的 $o(1)$ 可以表示不同的量
-- $\boxed{o(u_n)=u_n o(1)}$
-- 若 $u_n$ 最终非零，则 $\displaystyle\frac{r_n}{u_n}\to0$
+- $O(1)$ 只表示有界，不保证收敛
+- 例如 $(-1)^n=O(1)$，但 $(-1)^n$ 没有极限
 
 ---
 <!-- layout: content -->
-# 小 o 的常见运算
+# O(u) 与 o(u)
+
+$$
+O(u)=uO(1),
+\qquad
+o(u)=uo(1)
+$$
+
+- $r=O(u)$：$r/u$ 最终有界
+- $r=o(u)$：$r/u\to0$
+- $o(u)\subset O(u)$，反过来一般不成立
+- $3u=O(u)$，但通常 $3u\ne o(u)$
+
+---
+<!-- layout: content -->
+# 加法规则
 
 $$
 \begin{aligned}
-o(1)+o(1)&=o(1),\\
-c\,o(1)&=o(1),\\
-o(1)o(1)&=o(1),\\
-o(u_n)+o(u_n)&=o(u_n).
+O(u)+O(u)&=O(u),\\
+O(u)+o(u)&=O(u),\\
+o(u)+o(u)&=o(u).
 \end{aligned}
 $$
 
-- $\displaystyle v_n o(u_n)=v_nu_n o(1)$
-- $\displaystyle o(u_n)o(v_n)=o(u_nv_n)$
-- 若 $v_n$ 有界，则 $\displaystyle v_n o(1)=o(1)$
-- 小 $o$ 先改写，再使用普通极限运算
+- 同一位置出现的 $O$、$o$ 可以表示不同的具体量
+- 这些式子描述尺度类别，不是固定函数的恒等式
+
+---
+<!-- layout: content -->
+# 乘法与尺度传递
+
+$$
+\begin{aligned}
+O(u)O(v)&=O(uv),\\
+O(u)o(v)&=o(uv),\\
+o(u)o(v)&=o(uv).
+\end{aligned}
+$$
+
+$$
+r=o(w),\quad w=O(u)
+\quad\Longrightarrow\quad
+r=o(u)
+$$
+
+- Exercise 15：$w=A\ln a\,x+o(x)=O(x)$，所以外层余项 $o(w)$ 可以写成 $o(x)$
+- 除法还要检查分母，不能机械套用上述规则
+
+---
+<!-- layout: content -->
+# 同阶尺度可以替换
+
+$$
+u=cx^m+o(x^m),
+\qquad c\ne0
+$$
+
+$$
+\frac{u}{x^m}\to c
+$$
+
+$$
+\frac{o(u)}{x^m}
+=
+\frac{o(u)}u\cdot\frac{u}{x^m}
+\to0
+$$
+
+$$
+\boxed{o(u)=o(x^m)}
+$$
+
+---
+<!-- layout: content -->
+# 嵌套 Taylor：先保留整体
+
+$$
+\delta(t)
+=
+\frac{\ln(1+t)}t-1
+\to0
+$$
+
+先不展开 $\ln(1+t)$：
+
+$$
+(1+t)^{1/t}
+=
+\mathrm e\,\mathrm e^{\delta(t)}
+$$
+
+$$
+L
+=
+\mathrm e\left[
+\frac1{2t}
++\frac{\mathrm e^{\delta(t)}-1}{t^2}
+\right]
+$$
+
+---
+<!-- layout: content -->
+# 外层展开以后先整理
+
+$$
+\mathrm e^{\delta(t)}-1
+=
+\delta(t)+\frac{\delta(t)^2}{2}+r(t),
+\qquad
+r(t)=o(\delta(t)^2)
+$$
+
+$$
+L
+=
+\mathrm e\left[
+\frac{\delta(t)+t/2}{t^2}
++\frac12\left(\frac{\delta(t)}t\right)^2
++\frac{r(t)}{t^2}
+\right]
+$$
+
+- 到这里不拆开 $\delta(t)$，三个部分都无法继续
+
+---
+<!-- layout: content -->
+# 受阻以后再展开内层
+
+$$
+\frac{\delta(t)+t/2}{t^2}
+=
+\frac{\ln(1+t)-t+t^2/2}{t^3}
+$$
+
+$$
+\ln(1+t)
+=
+t-\frac{t^2}{2}+\frac{t^3}{3}+o(t^3)
+$$
+
+- 此时才确定对数必须展开到三阶
+- $\delta(t)\sim-t/2$，所以 $\displaystyle\frac{r(t)}{t^2}\to0$
+- 最终结果：$\displaystyle L=\frac{11\mathrm e}{24}$
 
 ---
 <!-- layout: content -->
@@ -1037,7 +1164,7 @@ $$
 
 ---
 <!-- layout: content -->
-# 有小 o 还不够
+# 只有小 o 还不够
 
 $$
 \begin{aligned}
