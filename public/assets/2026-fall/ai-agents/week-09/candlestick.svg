@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="500" viewBox="0 0 1440 500" role="img" aria-labelledby="title desc">
+  <title id="title">一根日 K 的开盘、最高、最低与收盘</title>
+  <desc id="desc">合成示例：开盘100、最高102、最低99、收盘101。实体从100到101，影线从99到102；图中标签直接对应四个端点。</desc>
+  <defs><style>
+    text { fill:#191919; font-family:Baskerville,"Kaiti SC",STKaiti,KaiTi,serif; font-weight:600; }
+    .guide { stroke:#d9cbed; stroke-width:2; }
+    .leader { stroke:#291344; stroke-width:3; fill:none; }
+    .purple { fill:#291344; }
+  </style></defs>
+  <text x="260" y="38" text-anchor="middle" font-size="36">价格</text>
+  <path d="M300 55 V400" fill="none" stroke="#291344" stroke-width="3"/>
+  <path class="guide" d="M300 70 H830 M300 170 H830 M300 270 H830 M300 370 H830"/>
+  <path d="M290 70 H310 M290 170 H310 M290 270 H310 M290 370 H310" fill="none" stroke="#291344" stroke-width="3"/>
+  <text x="270" y="85" text-anchor="end" font-size="44">102</text>
+  <text x="270" y="185" text-anchor="end" font-size="44">101</text>
+  <text x="270" y="285" text-anchor="end" font-size="44">100</text>
+  <text x="270" y="385" text-anchor="end" font-size="44">99</text>
+  <path d="M660 70 V370" fill="none" stroke="#291344" stroke-width="8"/>
+  <rect x="600" y="170" width="120" height="100" fill="#5e33bf" stroke="#291344" stroke-width="3"/>
+  <path class="leader" d="M660 70 H855 M720 170 H855 M720 270 H855 M660 370 H855"/>
+  <text class="purple" x="885" y="85" font-size="48">最高 high = 102</text>
+  <text class="purple" x="885" y="185" font-size="48">收盘 close = 101</text>
+  <text class="purple" x="885" y="285" font-size="48">开盘 open = 100</text>
+  <text class="purple" x="885" y="385" font-size="48">最低 low = 99</text>
+  <text x="720" y="465" text-anchor="middle" font-size="36">合成示例 · 实体看开收，影线看高低</text>
+</svg>

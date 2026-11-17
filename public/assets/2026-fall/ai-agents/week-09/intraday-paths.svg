@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="500" viewBox="0 0 1440 500" role="img" aria-labelledby="title desc">
+  <title id="title">两条不同的成交路径，可以得到同一根日 K</title>
+  <desc id="desc">路径A为100、102、99、101；路径B为100、99、102、101。两图使用相同价格坐标；它们的开盘100、最高102、最低99、收盘101完全相同，高低发生的先后次序不同。</desc>
+  <defs><style>
+    text { fill:#191919; font-family:Baskerville,"Kaiti SC",STKaiti,KaiTi,serif; font-weight:600; }
+    .axis { stroke:#291344; stroke-width:3; fill:none; }
+    .grid { stroke:#d9cbed; stroke-width:2; fill:none; }
+    .series { stroke:#5e33bf; stroke-width:8; fill:none; stroke-linejoin:round; }
+    .point { fill:#291344; }
+  </style></defs>
+  <text x="360" y="45" text-anchor="middle" font-size="46">路径 A</text>
+  <text x="1080" y="45" text-anchor="middle" font-size="46">路径 B</text>
+  <path class="grid" d="M100 130 H650 M100 200 H650 M100 270 H650 M100 340 H650 M820 130 H1370 M820 200 H1370 M820 270 H1370 M820 340 H1370"/>
+  <path class="axis" d="M100 90 V365 H650 M820 90 V365 H1370"/>
+  <path class="series" d="M140 270 L290 130 L440 340 L590 200"/>
+  <path class="series" d="M860 270 L1010 340 L1160 130 L1310 200"/>
+  <circle class="point" cx="140" cy="270" r="8"/><circle class="point" cx="290" cy="130" r="8"/><circle class="point" cx="440" cy="340" r="8"/><circle class="point" cx="590" cy="200" r="8"/>
+  <circle class="point" cx="860" cy="270" r="8"/><circle class="point" cx="1010" cy="340" r="8"/><circle class="point" cx="1160" cy="130" r="8"/><circle class="point" cx="1310" cy="200" r="8"/>
+  <text x="140" y="244" text-anchor="middle" font-size="42">100</text>
+  <text x="290" y="103" text-anchor="middle" font-size="42">102</text>
+  <text x="440" y="398" text-anchor="middle" font-size="42">99</text>
+  <text x="590" y="174" text-anchor="middle" font-size="42">101</text>
+  <text x="860" y="244" text-anchor="middle" font-size="42">100</text>
+  <text x="1010" y="398" text-anchor="middle" font-size="42">99</text>
+  <text x="1160" y="103" text-anchor="middle" font-size="42">102</text>
+  <text x="1310" y="174" text-anchor="middle" font-size="42">101</text>
+  <text x="650" y="420" text-anchor="end" font-size="30">成交顺序 →</text>
+  <text x="1370" y="420" text-anchor="end" font-size="30">成交顺序 →</text>
+  <text x="720" y="473" text-anchor="middle" font-size="42">同一组 OHLC：开 100 · 高 102 · 低 99 · 收 101</text>
+</svg>

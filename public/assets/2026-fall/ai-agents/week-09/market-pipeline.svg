@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="500" viewBox="0 0 1440 500" role="img" aria-labelledby="title desc">
+  <title id="title">量化系统流程，本周只打开数据层</title>
+  <desc id="desc">获取数据、保存与预处理是本周内容；策略计算、订单、成交及账户反馈属于后续环节。本周尚未生成交易信号、目标持仓或订单。</desc>
+  <defs>
+    <marker id="arrow" markerWidth="16" markerHeight="16" refX="14" refY="8" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L16 8 L0 16 Z" fill="#291344"/></marker>
+    <style>
+      text { fill:#191919; font-family:Baskerville,"Kaiti SC",STKaiti,KaiTi,serif; font-weight:600; }
+      .node { fill:#fff; stroke:#291344; stroke-width:3; }
+      .current { fill:#f1ecfa; stroke:#5e33bf; stroke-width:4; }
+      .edge { stroke:#291344; stroke-width:4; fill:none; marker-end:url(#arrow); }
+      .purple { fill:#291344; }
+    </style>
+  </defs>
+  <rect class="current" x="25" y="130" width="205" height="145" rx="5"/>
+  <rect class="current" x="262" y="130" width="205" height="145" rx="5"/>
+  <rect class="node" x="499" y="130" width="205" height="145" rx="5"/>
+  <rect class="node" x="736" y="130" width="205" height="145" rx="5"/>
+  <rect class="node" x="973" y="130" width="205" height="145" rx="5"/>
+  <rect class="node" x="1210" y="130" width="205" height="145" rx="5"/>
+  <path class="edge" d="M233 202 H254"/><path class="edge" d="M470 202 H491"/><path class="edge" d="M707 202 H728"/><path class="edge" d="M944 202 H965"/><path class="edge" d="M1181 202 H1202"/>
+  <text x="127" y="216" text-anchor="middle" font-size="44">获取数据</text>
+  <text x="364" y="190" text-anchor="middle" font-size="44">保存</text><text x="364" y="240" text-anchor="middle" font-size="42">预处理</text>
+  <text x="601" y="188" text-anchor="middle" font-size="42">策略计算</text><text x="601" y="239" text-anchor="middle" font-size="34">信号 · 目标</text>
+  <text x="838" y="216" text-anchor="middle" font-size="48">订单</text>
+  <text x="1075" y="216" text-anchor="middle" font-size="48">成交</text>
+  <text x="1312" y="190" text-anchor="middle" font-size="44">账户</text><text x="1312" y="240" text-anchor="middle" font-size="42">反馈</text>
+  <path d="M25 305 V325 H467 V305" fill="none" stroke="#5e33bf" stroke-width="4"/>
+  <text class="purple" x="246" y="385" text-anchor="middle" font-size="48">本周：数据层</text>
+  <text x="956" y="385" text-anchor="middle" font-size="40">后续逐步实现</text>
+  <text x="720" y="465" text-anchor="middle" font-size="36">本周不生成交易信号、目标持仓或订单</text>
+</svg>

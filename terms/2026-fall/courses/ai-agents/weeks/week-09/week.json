@@ -1,0 +1,13 @@
+{
+  "id": "week-09",
+  "runbookLayout": "lesson-cards",
+  "label": "W9 · 接入 Longbridge 模拟环境",
+  "title": "接入市场数据，完成一次可核验的分析",
+  "summary": "认识市场与量化系统；通过五个操作单元完成最小授权、行情批次、数据校验、描述性分析与授权回收。",
+  "order": 9,
+  "resources": {
+    "runbook": "runbook.md",
+    "slides": "slides.md",
+    "guide": "guide.md"
+  }
+}
