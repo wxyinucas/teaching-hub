@@ -186,6 +186,7 @@
 .exercise-formulas > div { min-height: 0; overflow: hidden; font-size: clamp(17px, calc(1.48cqw * var(--slide-font-scale, 1)), 24px); }
 .exercise-formulas ul { margin: 0; padding: 0; list-style: none; }
 .exercise-formulas li { display: grid; grid-template-columns: max-content minmax(0, 1fr); align-items: center; column-gap: .55cqw; padding: .82cqw .1cqw; border-bottom: 1px solid var(--border); line-height: 1.35; }
+.exercise-formulas li:not(:has(> strong)) { display: block; }
 .exercise-formulas li:last-child { border-bottom: 0; }
 .exercise-formulas li strong { display: block; min-width: 2.3em; padding-right: .45cqw; border-right: 1px solid var(--purple-border); color: var(--purple); font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; font-size: .8em; text-align: center; }
 .exercise-formulas li > .katex { grid-column: 2; min-width: 0; white-space: nowrap; }
