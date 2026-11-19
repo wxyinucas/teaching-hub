@@ -1333,3 +1333,463 @@ $$
 - 先用介值定理找到零点
 - $\Phi(x)=\mathrm e^{x/2}f(x)$
 - 在 $[0,\eta]$ 上使用罗尔定理
+
+---
+<!-- lesson: 第六次课 -->
+<!-- layout: question -->
+# 期中考试试卷讲评
+> 按 Course Topic 重组全部试题
+
+---
+<!-- layout: question -->
+# T01 · 极限
+> 点值、无穷小阶、夹逼与左右极限
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的定义 -->
+# T01 · Exercise 01
+
+设 $f(x)$ 在 $x_0$ 的某去心邻域内有定义，则下列命题中正确的是（　）。
+
+A. 若 $\displaystyle\lim_{x\to x_0}f(x)$ 存在，则 $f(x)$ 在 $x_0$ 处必有定义
+
+B. 若 $\displaystyle\lim_{x\to x_0}f(x)=A$，则 $f(x_0)=A$
+
+C. 若 $f(x)=A$，则 $\displaystyle\lim_{x\to x_0}f(x)=A$
+
+D. $\displaystyle\lim_{x\to x_0}f(x)$ 是否存在，与 $f(x)$ 在 $x_0$ 处是否有定义无关
+
+<!-- formulas -->
+
+- 极限定义使用 $0<|x-x_0|<\delta$
+- 极限只考察 $x_0$ 的去心邻域
+- 连续性才要求 $\displaystyle\lim_{x\to x_0}f(x)=f(x_0)$
+- 课前核对 C 项中的自变量下标
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的等价关系 -->
+# T01 · Exercise 02
+
+当 $x\to0$ 时，无穷小
+
+$$
+\sqrt[10]{1+3x^6}-1
+$$
+
+与 $x^p$ 同阶，则 $p$ 等于（　）。
+
+A. $3$　　B. $6$　　C. $10$　　D. $12$
+
+<!-- formulas -->
+
+- 令 $u=3x^6$
+- $\displaystyle(1+u)^\alpha-1\sim\alpha u$
+- 同阶要求比值趋于非零常数
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的准则 -->
+# T01 · Exercise 03
+
+计算
+
+$$
+\lim_{n\to\infty}
+\left(
+\frac1{\sqrt{n^2+1}}
++\frac1{\sqrt{n^2+2}}
++\cdots
++\frac1{\sqrt{n^2+n}}
+\right).
+$$
+
+<!-- formulas -->
+
+- 共有 $n$ 项
+- 对 $1\le k\le n$，统一比较
+  $\displaystyle\frac1{\sqrt{n^2+k}}$
+- 夹逼准则
+- 不需要使用定积分
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的恒等变换与展开 -->
+# T01 · Exercise 04
+
+计算
+
+$$
+\lim_{x\to0}
+(\cos2x)^{\frac1{x\sin x}}.
+$$
+
+<!-- formulas -->
+
+- $\displaystyle a(x)^{b(x)}
+=\exp[b(x)\ln a(x)]$
+- $\displaystyle\cos2x=1-2x^2+o(x^2)$
+- $\displaystyle\ln(1+u)=u+o(u)$
+- $\displaystyle\sin x=x+o(x)$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的左右极限 -->
+# T01 · Exercise 05
+
+已知极限
+
+$$
+\lim_{x\to0}
+\left(
+\frac{2+\mathrm e^{1/x}}
+{1+\mathrm e^{1/x}}
++\frac{\sin ax}{|x|}
+\right)
+$$
+
+存在，求 $a$ 及该极限值。
+
+<!-- formulas -->
+
+- 双侧极限存在要求左右极限相等
+- $x\to0^+$ 时：$\mathrm e^{1/x}\to+\infty$，$|x|=x$
+- $x\to0^-$ 时：$\mathrm e^{1/x}\to0$，$|x|=-x$
+- $\displaystyle\lim_{x\to0}\frac{\sin ax}{x}=a$
+
+---
+<!-- layout: question -->
+# T02 · 连续性
+> 候选间断点与分段点拼接
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的间断点分类 -->
+# T02 · Exercise 06
+
+设 $f(x)=\dfrac{x^3-x}{\sin\pi x}$。讨论其间断点，则结论为（　）。
+
+A. 有三个可去间断点　　B. 只有一个可去间断点
+
+C. 有两个跳跃间断点　　D. 有无穷多个第一类间断点
+
+<!-- formulas -->
+
+- 先解 $\sin\pi x=0$
+- $x^3-x=x(x-1)(x+1)$
+- 同时为零时继续比较消失的阶
+- 函数无界时属于无穷间断点
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的连续性条件 -->
+# T02 · Exercise 07
+
+已知
+
+$$
+f(x)=
+\begin{cases}
+\dfrac{\sin2x+\mathrm e^{2ax}-1}{x},&x\ne0,\\[6pt]
+a,&x=0,
+\end{cases}
+$$
+
+在 $(-\infty,+\infty)$ 上连续，求 $a$。
+
+<!-- formulas -->
+
+- 拼接条件：
+  $\displaystyle\lim_{x\to0}f(x)=f(0)$
+- $\displaystyle\lim_{u\to0}\frac{\sin u}{u}=1$
+- $\displaystyle\lim_{u\to0}\frac{\mathrm e^u-1}{u}=1$
+
+---
+<!-- layout: question -->
+# T03 · 导数、求导与微分
+> 差商、复合结构与参数方程
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的导数定义 -->
+# T03 · Exercise 08
+
+设 $f'(x_0)=2$，则
+
+$$
+\lim_{h\to0}
+\frac{f(x_0+2h)-f(x_0-h)}h
+$$
+
+等于（　）。
+
+A. $2$　　B. $1$　　C. $6$　　D. 不确定
+
+<!-- formulas -->
+
+- 在分子中加减 $f(x_0)$
+- $\displaystyle
+f'(x_0)=
+\lim_{\Delta x\to0}
+\frac{f(x_0+\Delta x)-f(x_0)}{\Delta x}$
+- 分别检查增量 $2h$ 与 $-h$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的可导条件 -->
+# T03 · Exercise 09
+
+设
+
+$$
+f(x)=
+\begin{cases}
+x^2,&x\le1,\\
+ax+b,&x>1,
+\end{cases}
+$$
+
+若 $f$ 在 $x=1$ 处可导，则 $(a,b)$ 等于（　）。
+
+A. $(2,-1)$　　B. $(2,1)$
+
+C. $(-2,1)$　　D. $(1,0)$
+
+<!-- formulas -->
+
+- 可导必连续
+- 先比较左右函数值
+- 再比较左右导数
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的导数定义 -->
+# T03 · Exercise 10
+
+设 $f(0)=0$，则 $f$ 在 $x=0$ 处可导的充要条件是下列哪个极限存在（　）。
+
+A. $\lim_{x\to0}\frac{f(\ln(1+x^2))}{x}$　　B. $\lim_{x\to0}\frac{f(1-\cos x)}{x^2}$
+
+C. $\lim_{x\to0}\frac{f(x^2)}x$　　D. $\lim_{x\to0}\frac{f(\mathrm e^x-1)}x$
+
+<!-- formulas -->
+
+- $\displaystyle f'(0)=\lim_{t\to0}\frac{f(t)}t$
+- 检查内层变量是否覆盖 $t\to0^-$ 与 $t\to0^+$
+- 检查新变量与原增量是否同阶
+- 反例可从 $f(t)=|t|$ 开始尝试
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 反函数求导公式 -->
+# T03 · Exercise 11
+
+设
+
+$$
+y=x+\mathrm e^x
+$$
+
+的反函数为 $x=\varphi(y)$，求
+
+$$
+\varphi'(1).
+$$
+
+<!-- formulas -->
+
+- 先由 $y_0=g(x_0)$ 找到对应的 $x_0$
+- $\displaystyle(g^{-1})'(y_0)=\frac1{g'(x_0)}$
+- $\displaystyle g(x)=x+\mathrm e^x$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的高阶导数规律 -->
+# T03 · Exercise 12
+
+设 $f(x)=\sin2x$，求
+
+$$
+f^{(2026)}
+\left(\frac\pi4\right).
+$$
+
+<!-- formulas -->
+
+- $\displaystyle
+\frac{d^n}{dx^n}\sin(ax)
+=
+a^n\sin\left(ax+\frac{n\pi}{2}\right)$
+- 三角函数连续求导以 $4$ 为周期
+- 先计算 $2026\bmod4$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 切线与导数 -->
+# T03 · Exercise 13
+
+已知曲线 $y=f(x)$ 在点 $(1,f(1))$ 处的切线为
+
+$$
+y=3x-1.
+$$
+
+求
+
+$$
+f(1),
+\qquad
+f'(1).
+$$
+
+<!-- formulas -->
+
+- 切点位于切线上
+- $\displaystyle
+y-f(x_0)=f'(x_0)(x-x_0)$
+- 导数等于切线斜率
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的求导与微分公式 -->
+# T03 · Exercise 14
+
+1. 设
+   $$
+   y=(1+x^2)^{1/x},
+   $$
+   求 $y'(1)$。
+
+2. 已知
+   $$
+   y=\ln(\mathrm e^x+\cos2x),
+   $$
+   求 $dy$。
+
+<!-- formulas -->
+
+- 幂指函数：先写 $\ln y$
+- $\displaystyle(\ln u)'=\frac{u'}u$
+- 商的求导法则
+- $\displaystyle dy=y'\,dx$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 参数方程求导公式 -->
+# T03 · Exercise 15
+
+设
+
+$$
+\begin{cases}
+x=\arctan t,\\
+y=7t-\cos t,
+\end{cases}
+$$
+
+求
+
+$$
+\left.
+\frac{d^2y}{dx^2}
+\right|_{t=0}.
+$$
+
+<!-- formulas -->
+
+- $\displaystyle\frac{dy}{dx}
+=\frac{dy/dt}{dx/dt}$
+- $\displaystyle
+\frac{d^2y}{dx^2}
+=
+\frac{\dfrac d{dt}\left(\dfrac{dy}{dx}\right)}
+{dx/dt}$
+- 先确认 $\displaystyle dx/dt\ne0$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 复合函数求导法则 -->
+# T03 · Exercise 16
+
+已知
+
+$$
+y=\mathrm e^{f\left(\frac{x-1}{x+1}\right)},
+\qquad
+f(x)=\arctan x,
+$$
+
+求
+
+$$
+\left.\frac{dy}{dx}\right|_{x=0}.
+$$
+
+<!-- formulas -->
+
+- $\displaystyle u=\frac{x-1}{x+1}$
+- $x\longmapsto u\longmapsto f(u)\longmapsto\mathrm e^{f(u)}$
+- $\displaystyle(\arctan u)'=\frac1{1+u^2}$
+- 指定点计算时先求 $u(0)$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 连续、可导与导函数连续 -->
+# T03 · Exercise 17
+
+设 $f(0)=0$；当 $x\ne0$ 时，$f(x)=x^2\sin\dfrac1x+x$。
+
+（1）证明 $f$ 在 $x=0$ 处连续；
+
+（2）判断 $f$ 在 $x=0$ 处是否可导；若可导，求 $f'(0)$ 并讨论 $f'$ 在 $x=0$ 处的连续性。
+
+<!-- formulas -->
+
+- 连续：$\displaystyle\lim_{x\to0}f(x)=f(0)$
+- 可导：回到 $x=0$ 处的差商
+- 导函数连续：$\displaystyle\lim_{x\to0}f'(x)=f'(0)$
+- $\displaystyle|\sin(1/x)|\le1$
+
+---
+<!-- layout: question -->
+# T05 · 导数的应用
+> 方程根的存在性与唯一性
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 可能用到的定理 -->
+# T05 · Exercise 18
+
+证明方程
+
+$$
+x\cdot2^x=1
+$$
+
+在区间 $(0,1)$ 内有且仅有一个实根。
+
+<!-- formulas -->
+
+- 令 $\displaystyle F(x)=x\cdot2^x-1$
+- 介值定理用于证明根存在
+- 导数符号用于证明严格单调
+- 拉格朗日中值定理连接导数符号与函数值变化
