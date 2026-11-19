@@ -1357,7 +1357,7 @@ A. 若 $\displaystyle\lim_{x\to x_0}f(x)$ 存在，则 $f(x)$ 在 $x_0$ 处必�
 
 B. 若 $\displaystyle\lim_{x\to x_0}f(x)=A$，则 $f(x_0)=A$
 
-C. 若 $f(x)=A$，则 $\displaystyle\lim_{x\to x_0}f(x)=A$
+C. 若 $f(x_0)=A$，则 $\displaystyle\lim_{x\to x_0}f(x)=A$
 
 D. $\displaystyle\lim_{x\to x_0}f(x)$ 是否存在，与 $f(x)$ 在 $x_0$ 处是否有定义无关
 
@@ -1366,7 +1366,6 @@ D. $\displaystyle\lim_{x\to x_0}f(x)$ 是否存在，与 $f(x)$ 在 $x_0$ 处是
 - 极限定义使用 $0<|x-x_0|<\delta$
 - 极限只考察 $x_0$ 的去心邻域
 - 连续性才要求 $\displaystyle\lim_{x\to x_0}f(x)=f(x_0)$
-- 课前核对 C 项中的自变量下标
 
 ---
 <!-- layout: exercise -->
