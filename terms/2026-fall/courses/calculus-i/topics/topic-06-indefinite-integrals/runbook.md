@@ -5756,31 +5756,100 @@
   $$
 
   求 $y'(0)$。
-- 令
+- **第一步：从头替换符号，只看复合结构**。依次令
 
   $$
   u=\frac{x-1}{x+1},
   \qquad
-  u'=\frac2{(x+1)^2}.
+  v=f(u),
+  \qquad
+  y=\mathrm e^v.
   $$
 
-- 因为
+  于是变量之间的依赖关系为
 
   $$
-  f'(u)=\frac1{1+u^2},
+  x\longmapsto u\longmapsto v\longmapsto y.
   $$
 
-  所以由链式法则，
+  一般地，把三层复合函数写成
+
+  $$
+  u=U(x),
+  \qquad
+  v=G(u),
+  \qquad
+  y=H(v),
+  \qquad\text{即}\qquad
+  y=H\bigl(G(U(x))\bigr),
+  $$
+
+  则三层复合的链式法则为
+
+  $$
+  \frac{dy}{dx}
+  =
+  \frac{dy}{dv}
+  \frac{dv}{du}
+  \frac{du}{dx}
+  =
+  H'\bigl(G(U(x))\bigr)
+  G'\bigl(U(x)\bigr)
+  U'(x).
+  $$
+
+  对本题而言，这个公式先写成
+
+  $$
+  \frac{dy}{dx}
+  =
+  \mathrm e^v f'(u)u'(x).
+  $$
+
+- **第二步：逐层计算三个导数因子**。
+
+  $$
+  \frac{dy}{dv}=\mathrm e^v,
+  \qquad
+  \frac{dv}{du}=f'(u)=\frac1{1+u^2},
+  \qquad
+  \frac{du}{dx}=\frac2{(x+1)^2}.
+  $$
+
+  因而
 
   $$
   y'
   =
   \mathrm e^{\arctan u}
   \frac1{1+u^2}
-  \frac2{(x+1)^2}.
+  \frac2{(x+1)^2},
+  \qquad
+  u=\frac{x-1}{x+1}.
   $$
 
-- 当 $x=0$ 时，$u=-1$，因此
+- **第三步：从内层开始代入指定点**。当 $x=0$ 时，
+
+  $$
+  u(0)=-1,
+  \qquad
+  v(0)=f(-1)=\arctan(-1)=-\frac\pi4.
+  $$
+
+  三个导数因子在对应位置的值分别为
+
+  $$
+  \left.\frac{dy}{dv}\right|_{v=-\pi/4}
+  =\mathrm e^{-\pi/4},
+  \qquad
+  \left.\frac{dv}{du}\right|_{u=-1}
+  =\frac12,
+  \qquad
+  \left.\frac{du}{dx}\right|_{x=0}
+  =2.
+  $$
+
+  所以
 
   $$
   \boxed{
@@ -5919,7 +5988,7 @@
   $$
 
   由介值定理，至少存在一点 $\xi\in(0,1)$，使 $F(\xi)=0$。
-- 再证明根不可能有两个。对 $x\in(0,1)$，
+- **唯一性：由 $F'(x)>0$ 证明严格递增，因此至多有一个根**。对 $x\in(0,1)$，
 
   $$
   F'(x)

@@ -1743,10 +1743,10 @@ $$
 
 <!-- formulas -->
 
-- $\displaystyle u=\frac{x-1}{x+1}$
-- $x\longmapsto u\longmapsto f(u)\longmapsto\mathrm e^{f(u)}$
+- $\displaystyle u=\frac{x-1}{x+1},\quad v=f(u),\quad y=\mathrm e^v$
+- $\displaystyle\frac{dy}{dx}=\frac{dy}{dv}\frac{dv}{du}\frac{du}{dx}$
 - $\displaystyle(\arctan u)'=\frac1{1+u^2}$
-- 指定点计算时先求 $u(0)$
+- 指定点计算从 $u(0)$ 开始，逐层向外
 
 ---
 <!-- layout: exercise -->
@@ -1789,6 +1789,6 @@ $$
 <!-- formulas -->
 
 - 令 $\displaystyle F(x)=x\cdot2^x-1$
-- 介值定理用于证明根存在
-- 导数符号用于证明严格单调
-- 拉格朗日中值定理连接导数符号与函数值变化
+- 介值定理：端点异号 $\Longrightarrow$ 至少一个根
+- 拉格朗日中值定理：$F'(x)>0\Longrightarrow F$ 严格递增
+- 严格递增 $\Longrightarrow$ 至多一个根
