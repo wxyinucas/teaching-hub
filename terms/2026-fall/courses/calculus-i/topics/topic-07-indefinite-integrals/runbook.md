@@ -2580,16 +2580,27 @@
 - 三类固定对应关系为
 
   $$
-  \begin{array}{c|c|c}
-  \text{根式结构} & \text{使用的恒等式} & \text{选择}\\ \hline
-  a^2-x^2 & 1-\sin^2t=\cos^2t & x=a\sin t\\
-  a^2+x^2 & 1+\tan^2t=\sec^2t & x=a\tan t\\
-  x^2-a^2 & \sec^2t-1=\tan^2t & x=a\sec t
+  \begin{array}{c|c|c|c}
+  \text{二次式结构} & \text{使用的恒等式} & \text{选择} & \text{微分与换元结果}\\ \hline
+  a^2-x^2
+  & 1-\sin^2t=\cos^2t
+  & x=a\sin t
+  & \begin{gathered}dx=a\cos t\,dt\\a^2-x^2=a^2\cos^2t\end{gathered}\\
+  a^2+x^2
+  & 1+\tan^2t=\sec^2t
+  & x=a\tan t
+  & \begin{gathered}dx=a\sec^2t\,dt\\a^2+x^2=a^2\sec^2t\end{gathered}\\
+  x^2-a^2
+  & \sec^2t-1=\tan^2t
+  & x=a\sec t
+  & \begin{gathered}dx=a\sec t\tan t\,dt\\x^2-a^2=a^2\tan^2t\end{gathered}
   \end{array}
   $$
 
+- 这张表归纳的是二次式在代换后怎样变成完全平方，并不要求它一定出现在根号内；本节三道例题恰好都以二次根式出现。若二次式位于根号内，再取平方根便分别得到 $a|\cos t|$、$a|\sec t|$、$a|\tan t|$，参数区间负责进一步确定绝对值的符号。
+
 - **算法步骤**：
-  1. 先辨认根式内部属于哪一种加减结构。
+  1. 先辨认需要处理的二次式属于哪一种加减结构。
   2. 选择能够使二次式成为完全平方的三角表示。
   3. 给 $t$ 选择使代换一一对应、相关三角函数符号确定的区间。
   4. 同时改写 $x$、$dx$ 与根式，确认被积式中不再残留 $x$。
