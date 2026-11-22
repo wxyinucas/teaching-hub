@@ -1,5 +1,7 @@
 # W9｜接入市场数据，完成一次可核验的分析
 
+本指南以 `~/course/ai-agents` 为课程仓库路径。已有的 `~/course/w02-workbench` 可以继续使用，只需把下面的仓库路径前缀替换为实际位置；不用重新 clone 或改名。
+
 在自己的 **VS Code 中与 Agent 开发项目**。本周从模拟账户取得行情，保存、检查并分析一批数据；你决定授权范围，并核对实际产物。
 
 ## 本周在做什么
@@ -21,7 +23,7 @@
 继续使用之前 clone 的课程工作台，例如：
 
 ~~~bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 git status -sb
 git remote -v
 ~~~
@@ -215,8 +217,8 @@ uv init --bare --python 3.12
 uv add pandas matplotlib
 uv add --dev pytest
 mkdir -p fixtures tests
-cp ~/course/w02-workbench/week-09/fixtures/*.json fixtures/
-cp ~/course/w02-workbench/week-09/checks/test_market_data.py tests/
+cp ~/course/ai-agents/week-09/fixtures/*.json fixtures/
+cp ~/course/ai-agents/week-09/checks/test_market_data.py tests/
 ~~~
 
 课程工作台不在示例路径时，只替换 `cp` 的来源路径。已经初始化过项目就检查并沿用已有环境。
@@ -576,7 +578,7 @@ LONGBRIDGE_REGION=global longbridge kline AAPL.US --period day --count 5 --adjus
 在课程工作台执行以下离线示例，不使用本人的 API：
 
 ~~~bash
-cd ~/course/w02-workbench/week-09
+cd ~/course/ai-agents/week-09
 uv sync --locked
 cd reference
 uv run --project .. --locked python fetch_batch.py --batch fixture-demo --input ../fixtures/good.json

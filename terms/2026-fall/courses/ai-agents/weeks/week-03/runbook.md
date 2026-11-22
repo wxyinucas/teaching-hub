@@ -51,7 +51,7 @@
   - [ ] 用刚接通的原生 Agent + DeepSeek，照 Guide 在 `week-03/` 建立独立 uv 项目、实现实验。
   - [ ] 自己运行公开测试，确认实际结果。
   - [ ] 自己运行 `bash rebuild.sh`，打开 CSV、图与 PDF。
-  - [ ] 核对实际参数与数字；确认 W2 根项目配置未改，记下展示耗时。
+  - [ ] 核对实际参数与数字；确认 `week-02/` 项目配置未改，记下展示耗时。
 - **准备测试反例**
   - [ ] 在仓库外建立新临时目录，复制 `demos/week-03-buffon/` 的 `experiment.py`、`pyproject.toml`、`uv.lock`、`.python-version`，以及 `week-03/tests/`；不复制 `.venv`。
   - [ ] 在副本执行 `uv sync --locked`，先确认全套测试通过。
@@ -129,7 +129,7 @@
 **① 回到已有工作区。** 在 WSL Bash 中执行：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 code .
 ```
 
@@ -323,12 +323,12 @@ code .
 **① 回到已有仓库。** 在 WSL Terminal 执行：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 pwd
 git status --short
 ```
 
-- 路径应指向 W2 的 `w02-workbench`；看到已有修改先辨认，保留它们与本地 commit，不重新 clone 或初始化。
+- 路径应指向已有的课程仓库根 `ai-agents`；看到已有修改先辨认，保留它们与本地 commit，不重新 clone 或初始化。
 
 **② 找到教师 remote。** 执行：
 
@@ -362,7 +362,7 @@ ls
 ```
 
 - Terminal 路径与 Explorer 都应是 `week-03/`。依次指出：`EXPERIMENT.txt` 是要求，`tests/` 是部分验收，`report.tex` 是模板，`rebuild.sh` 是重建入口；初始材料不提供完整 Python 实现，已有实现者查看自己的版本。
-- 本周 uv 项目与 W2 根项目分开，Git 仍沿用 W2 历史；现在只编译 LaTeX，尚未建立本周 Python 项目时不先运行 `uv run`。
+- 本周 uv 项目与 `week-02/` 项目分开，Git 仍沿用 W2 历史；现在只编译 LaTeX，尚未建立本周 Python 项目时不先运行 `uv run`。
 
 **⑤ 先查已有 LaTeX 组件。** 向 Agent 发送：
 
@@ -573,7 +573,7 @@ uv run --locked python -m pytest -q tests/test_experiment.py
 
 ```text
 按现有要求，在 week-03 建立独立的 uv Python 3.12 项目，加入 matplotlib 和 pytest。
-pyproject.toml、uv.lock、.venv 留在本周目录，不改 W2 根项目；uv init 加 --no-workspace，不另建 Git 仓库。
+pyproject.toml、uv.lock、.venv 留在本周目录，不改 `week-02/` 项目；uv init 加 --no-workspace，不另建 Git 仓库。
 本周 [tool.pytest.ini_options] 设置 testpaths = ["tests"]。
 实现 experiment.py，默认 seed=42，每次实验在循环外初始化一次随机数生成器。
 默认运行 1000、10000、100000 次投针，CSV 保存真实参数、交叉数与估计值。
@@ -588,7 +588,7 @@ uv run --locked pytest -q
 ```
 
 - 核对实际输出与 Agent 工具记录；原始公开测试应为 `20 passed`。失败先看原因，修实现，不接受只在聊天里说“全部通过”。
-- 在 Source Control 确认 W2 根项目配置未被改，教师 `tests/` 与 `rebuild.sh` 未被改；独立项目没建好，停在此处补齐，不借根项目环境继续运行。
+- 在 Source Control 确认 `week-02/` 项目配置未被改，教师 `tests/` 与 `rebuild.sh` 未被改；独立项目没建好，停在此处补齐，不借其他周的项目环境继续运行。
 
 **④ 用刚才三问接受自己的实现。** 在自己的 `experiment.py` 找相交判据、估计公式与 seed 初始化位置；写法可以不同，依据同一规格判断。
 
@@ -639,7 +639,7 @@ bash rebuild.sh
 
 > 能力介绍是一份待验证的说明，实际工具与结果才是证据。
 
-**① 先选正在看的项目。** 已完成者打开自己的 `week-03/`；尚无 Python 实现者打开 W2 仓库根目录，用 `demos/week-03-buffon/` 只读导读，测试在 `week-03/tests/`。后者只借源码学习，自己的报告可继续完成。
+**① 先选正在看的项目。** 已完成者打开自己的 `week-03/`；尚无 Python 实现者打开课程仓库根目录，用 `demos/week-03-buffon/` 只读导读，测试在 `week-03/tests/`。后者只借源码学习，自己的报告可继续完成。
 
 - 看 Explorer 顶部与 Terminal 的 `pwd`，确认窗口对应哪个目录；教师源码与学生源码不能混用路径。
 
@@ -764,17 +764,17 @@ uv run --locked pytest -q
 
 - 若 `.gitignore` 还列着 `results.csv`、`results-table.tex`、`results-params.tex`、`results.png`，先移除这些结果文件的忽略条目；想保存 PDF 时也移除 `report.pdf` 条目。凭据、环境、缓存与编译中间文件仍排除，再查看实际待提交文件。
 
-**② 回到同一个 Git 仓库根目录。** 以下 Git 操作在 W2 仓库根目录进行，不在 `week-03/` 新建仓库：
+**② 回到同一个 Git 仓库根目录。** 以下 Git 操作在已有课程仓库根目录进行，不在 `week-03/` 新建仓库：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 git rev-parse --show-toplevel
 git status --short --untracked-files=all
 git diff -- week-03
 git diff --cached --name-only
 ```
 
-- 第一条 Git 输出应是原来的 `w02-workbench` 仓库；状态列出本周文件与已有其他改动。
+- 第一条 Git 输出应是原来的 `ai-agents` 仓库；状态列出本周文件与已有其他改动。
 - 普通 diff 检查已跟踪文件；`U`／`??` 新文件逐个打开看完整内容，图片和 PDF 亲自打开。确认没有 Key、环境目录和编译中间文件，也没有混入不属于本次保存的改动。
 - 最后一条检查是否已有暂存内容；有不认识的文件先核对，不能因为新加了 W3 就忽略它们。
 

@@ -2,6 +2,8 @@
 
 > W2 · 3 × 50 min · 约 30 名学生，按零编程基础设计 · 无助教
 
+本台本的新克隆示例使用 `~/course/ai-agents`。已有 `~/course/w02-workbench` 继续沿用，只替换仓库路径前缀；W2 的 Python、环境与签名文件统一在 `week-02/`。
+
 ## 知识地图
 
 - **Road map：从可接续工作台进入可运行、可追踪的项目**
@@ -50,7 +52,7 @@
 
 - [ ] 在真实 Windows + WSL 2 设备中，从 WSL 执行 `code .`，确认 VS Code 左下角显示 `WSL: Ubuntu`，新建终端后 `uname -s` 输出 `Linux`。
 - [ ] 确认 Windows 版 VS Code、Microsoft WSL 扩展、Git 与 uv 可用；确认学校网络可以通过 Ubuntu 软件源安装 `tree`。
-- [ ] 在临时目录完整走通 `cli-lab` 的创建、移动与清理；正式演示开始前确认 `~/course/cli-lab` 和 `~/course/w02-workbench` 尚不存在。
+- [ ] 在临时目录完整走通 `cli-lab` 的创建、移动与清理；正式演示开始前确认 `~/course/cli-lab` 和 `~/course/ai-agents` 尚不存在。
 - [ ] 保存一张 VS Code Explorer 与 WSL Bash 集成终端同时可见的真实画面，作为投影或设备异常时的 Plan B。
 
 *翻页：同一份文件，两种操作入口*
@@ -253,19 +255,20 @@ tree -L 2
 
 *翻页：Clone 的来源与本地目标*
 
+- 已有课程仓库者沿用原目录，跳过 clone；下面只供首次取得仓库。
 - 第 35 分钟停止继续扩展文件实验，统一进入 clone；尚未完成的目录清理课后继续，不占用项目取得与本课收口时间：
 
 ```bash
 cd ~
 pwd
-git clone https://github.com/wxyinucas/ai-agents.git ~/course/w02-workbench
-cd ~/course/w02-workbench
+git clone https://github.com/wxyinucas/ai-agents.git ~/course/ai-agents
+cd ~/course/ai-agents
 pwd
 tree -L 2
 code .
 ```
 
-- 检查：VS Code 左下角显示 `WSL: Ubuntu`，Explorer 顶层目录是 `w02-workbench`；在打开或切换后的窗口中新建 Integrated Terminal，再运行 `pwd`，输出应以 `/course/w02-workbench` 结尾。
+- 检查：VS Code 左下角显示 `WSL: Ubuntu`，Explorer 顶层目录是 `ai-agents`；在打开或切换后的窗口中新建 Integrated Terminal，再运行 `pwd`，输出应以 `/course/ai-agents` 结尾。
 - 目标目录已经存在或 clone 报错时，保留终端输出并直接求助；不删除目录，也不换一个名字继续 clone。
 - 说明：本周工作台代码用于观察，不作为 W3 报告的实现基线；这份仓库和本地提交历史会在 W3 继续使用。
 
@@ -314,7 +317,7 @@ command [subcommand] [options] [positional arguments]
 ~/course/cli-lab/inbox/some.py
 └── 观察：当前目录、脚本路径与 PATH
 
-~/course/w02-workbench/
+~/course/ai-agents/week-02/
 └── 观察：机器上的 Python 与项目需要的 Python
 ```
 
@@ -325,12 +328,12 @@ command [subcommand] [options] [positional arguments]
 **课前检查**
 
 - [ ] 在真实 WSL 环境确认 `vim`、`python3` 和 `uv` 都能由 `command -v` 找到；缺少任何一项时保留输出并直接求助。
-- [ ] 从干净 clone 删除本地 `.venv` 后完整运行 `uv sync --locked`，记录首次下载用时，并保存同步成功与项目 Python 路径的画面作为 Plan B。
-- [ ] 确认第一课时结束时保留了空的 `~/course/cli-lab/inbox`，且 `~/course/w02-workbench` 已成功取得。
+- [ ] 在干净 clone 的 `week-02/` 中删除本地 `.venv` 后完整运行 `uv sync --locked`，记录首次下载用时，并保存同步成功与项目 Python 路径的画面作为 Plan B。
+- [ ] 确认第一课时结束时保留了空的 `~/course/cli-lab/inbox`，且 `~/course/ai-agents` 已成功取得。
 
 *翻页：为什么同一个命令一成一败？*
 
-- 从第一课时保留的 `w02-workbench` 窗口之外，另开一个 `cli-lab` 窗口：
+- 从第一课时保留的 `ai-agents` 窗口之外，另开一个 `cli-lab` 窗口：
 
 ```bash
 code -n ~/course/cli-lab
@@ -474,10 +477,10 @@ Python ── 当前目录 + 参数 ──> some.py
   - 升级应当成为一次主动、可观察、重新接受测试的改动，而不是在下次安装时悄悄发生。
 - 版本信息也不能保证跨操作系统、CPU 架构或外部服务完全复现；
   - 但即使原环境不能直接运行，它仍为新系统重建和排查环境提供了充分线索。
-- 切回第一课时保留的 `w02-workbench` 窗口；此时仓库根目录同时也是 uv 项目根目录：
+- 切回第一课时保留的 `ai-agents` 窗口，展开 `week-02/`；课程仓库根负责 Git，周目录负责本周的 uv 环境：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents/week-02
 pwd
 ```
 
@@ -501,7 +504,7 @@ pwd
 
 *翻页：项目环境：声明、锁定、恢复*
 
-- 在 `w02-workbench` 仓库根（也是 uv 项目根）执行：
+- 在 `week-02/` 项目目录执行：
 
 ```bash
 command -v uv
@@ -570,10 +573,10 @@ printenv COURSE_MODE
 
 *翻页：先准备提交身份*
 
-- 切回 Explorer 根目录为 `w02-workbench` 的 VS Code 窗口，在仓库根执行；把示例代号替换为教师指定或认可的公开标识：
+- 切回 Explorer 根目录为 `ai-agents` 的 VS Code 窗口，终端进入 `week-02/`；Git 仍使用同一份父仓库。把示例代号替换为教师指定或认可的公开标识：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents/week-02
 pwd
 git config --local user.name "s07"
 git config --local user.email "s07@example.invalid"
@@ -599,7 +602,7 @@ git status --short
 
 *翻页：只改一个可验证输入*
 
-- 在 Explorer 中打开仓库根目录的 `signature.toml`，只把 `teacher` 改为教师指定或认可的公开标识，例如：
+- 在 Explorer 中打开 `week-02/signature.toml`，只把 `teacher` 改为教师指定或认可的公开标识，例如：
 
 ```toml
 [student]
@@ -631,7 +634,7 @@ COURSE_MODE=fixture uv run --locked python course_check.py
 
 *翻页：一个改动，两个观察入口*
 
-- 在仓库根执行：
+- 在 `week-02/` 项目目录执行：
 
 ```bash
 git status --short
@@ -754,7 +757,7 @@ git show --stat --oneline HEAD
 
 *翻页：本地 commit 后，Git 记录了什么？*
 
-- 在仓库根执行：
+- 在 `week-02/` 项目目录执行：
 
 ```bash
 git status --short
@@ -777,7 +780,7 @@ git remote get-url origin
 - 做得快：
   - 完成 Guide 中任意一张独立挑战卡；
   - 做 0 张不影响本周完成状态，不提前进入 W3。
-- 下一周先沿用已打开的 `w02-workbench` 窗口接通 Agent；报告阶段更新同一仓库并进入 `week-03/`，由子项目自己的 `pyproject.toml`、`uv.lock` 和 `.venv/` 恢复环境。
+- 下一周先沿用已打开的 `ai-agents` 窗口接通 Agent；报告阶段更新同一仓库并进入 `week-03/`，由子项目自己的 `pyproject.toml`、`uv.lock` 和 `.venv/` 恢复环境。
 
 #### 本次课回顾
 

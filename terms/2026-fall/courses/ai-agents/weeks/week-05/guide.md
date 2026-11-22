@@ -1,5 +1,7 @@
 # W5 学生指南：操作、遍历与核验
 
+本指南以 `~/course/ai-agents` 为课程仓库路径。已有的 `~/course/w02-workbench` 可以继续使用，只需把下面的仓库路径前缀替换为实际位置；不用重新 clone 或改名。
+
 本周继续使用已有的 `ai-agents` 仓库，在 `week-05/` 练习。材料、Notebook 和测试只维护在[课程仓库](https://github.com/wxyinucas/ai-agents/tree/main/week-05)，不改 W2～W4 的环境与成果。
 
 > **本周 CI 重点操作：先在自己的 GitHub 仓库启用 Actions。** 三道基础题的改动提交并 push 后，进入 **Actions → W5 data operations**，核对本次提交的 **student** 检查结果。具体步骤见下文“重点操作：启用 Actions，提交并查看 CI”；教师仓库的绿色结果不能代替自己的验收。
@@ -23,7 +25,7 @@ uv --version
 在已有仓库的 Terminal 中先确认远端：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 git remote -v
 ```
 
@@ -37,7 +39,7 @@ git remote -v
 更新成功后进入本周目录，核对 `pwd` 输出的路径末尾为 `week-05`：
 
 ```bash
-cd ~/course/w02-workbench/week-05
+cd ~/course/ai-agents/week-05
 pwd
 ```
 
@@ -89,7 +91,7 @@ uv 找不到、更新冲突或下载受阻时，保留当前目录、命令和�
 先完成前面的 `uv sync --locked`。首次使用网页版时，在本周目录登记一个 kernel，让网页使用本周 `.venv`：
 
 ```bash
-cd ~/course/w02-workbench/week-05
+cd ~/course/ai-agents/week-05
 uv run --locked python -m ipykernel install --user --name ai-agents-w5 --display-name "W5 Python 3.12"
 ```
 
@@ -181,7 +183,7 @@ uv run --locked pytest -q
 回仓库根目录检查：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 git remote -v
 git status -sb
 git diff -- week-05/operations.py week-05/tests/test_student.py

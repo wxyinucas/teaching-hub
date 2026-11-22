@@ -1,16 +1,18 @@
 # W6 学生指南：函数、调用与可见性
 
+本指南以 `~/course/ai-agents` 为课程仓库路径。已有的 `~/course/w02-workbench` 可以继续使用，只需把下面的仓库路径前缀替换为实际位置；不用重新 clone 或改名。
+
 本周继续使用已有的 `ai-agents` 仓库，在 `week-06/` 中跟练。完整题目、错误代码、函数壳、检查与参考都在 `demo.ipynb`；本指南帮助你同步材料、启动环境和恢复运行状态。
 
 ## 先保存自己的成果，再同步 Notebook
 
-Windows 同学在已有的 VS Code WSL Terminal 中操作；macOS 同学使用已有终端，无需 WSL。下面沿用之前的仓库路径 `~/course/w02-workbench`；如果你的目录不同，替换为实际路径。
+Windows 同学在已有的 VS Code WSL Terminal 中操作；macOS 同学使用已有终端，无需 WSL。下面沿用之前的仓库路径 `~/course/ai-agents`；如果你的目录不同，替换为实际路径。
 
 1. 如果已经在 Notebook 中练习，先保存，并将自己的成果另存为 `demo-my.ipynb`；已有同名文件时换一个名字，避免覆盖旧成果。
 2. 在仓库根目录检查本地状态和远端：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 git status -sb
 git remote -v
 ```

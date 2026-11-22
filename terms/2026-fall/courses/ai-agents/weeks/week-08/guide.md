@@ -1,5 +1,7 @@
 # W8｜从新项目到数据分析
 
+本指南以 `~/course/ai-agents` 为课程仓库路径。已有的 `~/course/w02-workbench` 可以继续使用，只需把下面的仓库路径前缀替换为实际位置；不用重新 clone 或改名。
+
 你在自己的 **VS Code 中与 Agent 开发项目**。课堂 Notebook 由教师展示，不是本周需要填写或提交的练习本。
 
 本周依次做三件事：建立并修改分析项目，接入 R／MATLAB 编辑工作台，再使用教师提供的外部数据。
@@ -11,7 +13,7 @@
 在之前 clone 的工作台根目录查看状态和 remote，例如：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 git status -sb
 git remote -v
 ```
@@ -63,7 +65,7 @@ analyze.py 提供 fit_line(x,y)，返回 (slope,intercept)，只能从输入数�
 
 ```bash
 mkdir -p tests
-cp ~/course/w02-workbench/week-08/checks/test_analysis.py tests/
+cp ~/course/ai-agents/week-08/checks/test_analysis.py tests/
 uv run pytest -q
 ```
 
@@ -98,7 +100,7 @@ seed-003：回到噪声标准差 1，仅将 seed 改为 43。
 参考项目的运行示例，在课程工作台中执行：
 
 ```bash
-cd ~/course/w02-workbench/week-08
+cd ~/course/ai-agents/week-08
 uv sync --locked
 cd reference
 uv run --locked python simulate.py --config configs/base-001.json --out data/base-001.csv
@@ -181,8 +183,8 @@ PostgreSQL 的连接、查询与导出由教师演示。你不需要安装数据
 若课堂使用备用数据，可从已更新的课程材料复制：
 
 ```bash
-cp ~/course/w02-workbench/week-08/data/application.csv data/
-cp ~/course/w02-workbench/week-08/data/application.meta.json data/
+cp ~/course/ai-agents/week-08/data/application.csv data/
+cp ~/course/ai-agents/week-08/data/application.meta.json data/
 ```
 
 备用文件是合成实验记录，来源已在元数据中标明。它们能继续分析，但不能证明你或教师本次成功调用了数据库。

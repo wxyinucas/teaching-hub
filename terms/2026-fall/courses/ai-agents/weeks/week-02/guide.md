@@ -1,13 +1,16 @@
 # W2 学生行动指南：位置、环境与版本
 
+本指南以 `~/course/ai-agents` 为课程仓库路径。已有的 `~/course/w02-workbench` 可以继续使用，只需把下面的仓库路径前缀替换为实际位置；不用重新 clone 或改名。
+
 本周使用两个位置：
 
 ```text
 ~/course/cli-lab/
 └── 练习文件、目录、路径与命令查找
 
-~/course/w02-workbench/
-└── 练习项目环境、Git 状态与本地 commit
+~/course/ai-agents/             # 整门课的 Git 仓库
+└── week-02/                   # 本周独立的 uv 项目
+    └── 练习项目环境、Git 状态与本地 commit
 ```
 
 三节课依次完成三件事：
@@ -16,7 +19,7 @@
 2. 区分脚本路径、`PATH` 与项目 Python，用 uv 恢复并运行项目；
 3. 让一项修改经历工作区、暂存区和本地历史，同时证明它尚未上传。
 
-本周工作台代码用于课堂观察，不作为 W3 报告的实现基线；W3 会继续使用这份仓库和本地提交历史。
+本周工作台代码位于 `week-02/`，用于课堂观察；W3 在 `week-03/` 使用自己的项目环境，继续沿用同一份 Git 仓库和提交历史。课程仓库根用于导航，各周目录是独立的 uv 项目。
 
 本指南中的 **Explorer** 指 VS Code 左侧的文件浏览区，不是 Windows 文件资源管理器；**Integrated Terminal** 指 VS Code 内置的终端面板，本周在其中运行 WSL Bash；**Source Control** 指 VS Code 左侧用来观察 Git 状态的面板。
 
@@ -209,18 +212,18 @@ pwd
 ls ~/course
 ```
 
-若 `~/course` 的列表中已经有 `w02-workbench`，停下求助，不执行 clone。确认目标不存在后，只执行：
+已有课程仓库者沿用原目录，跳过 clone，直接进入下方的目录查看步骤；旧名 `w02-workbench` 也可继续使用。首次取得仓库时，若目标 `ai-agents` 已存在但不确定内容，先求助；确认目标不存在后再执行：
 
 ```bash
-git clone https://github.com/wxyinucas/ai-agents.git ~/course/w02-workbench
+git clone https://github.com/wxyinucas/ai-agents.git ~/course/ai-agents
 ```
 
-`git` 是 command，`clone` 是 subcommand，仓库 URL 与 `~/course/w02-workbench` 是两个位置参数：前者说明来源，后者指定本地目标目录。目标不存在时 Git 会创建它；若省略目标目录，Git 通常会在当前位置按仓库名创建 `ai-agents/`。本课明确指定统一目录。
+`git` 是 command，`clone` 是 subcommand，仓库 URL 与 `~/course/ai-agents` 是两个位置参数：前者说明来源，后者指定本地目标目录。目标不存在时 Git 会创建它；若省略目标目录，Git 通常会在当前位置按仓库名创建 `ai-agents/`。本课明确指定统一目录。
 
 确认 clone 成功后再执行：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 pwd
 tree -L 2
 code .
@@ -228,7 +231,7 @@ code .
 
 `tree -L 2` 只显示当前目录以下两层，避免一次打印过多内容；`-L` 是带值 option，`2` 是它的值。
 
-在打开或切换后的 `w02-workbench` 窗口中新建 Integrated Terminal，再运行一次 `pwd`。它应以 `/course/w02-workbench` 结尾。
+在打开或切换后的 `ai-agents` 窗口中新建 Integrated Terminal，再运行一次 `pwd`。它应以 `/course/ai-agents` 结尾。
 
 此时暂时把 `git clone` 理解为“把远端仓库取得为本地目录”；第三课时再解释它附带的 Git 关系。
 
@@ -252,9 +255,9 @@ command [subcommand] [options] [positional arguments]
 ### 第一课时完成核对
 
 - [ ] `~/course/cli-lab/inbox` 存在且为空；
-- [ ] `~/course/w02-workbench` 已成功 clone；
-- [ ] `w02-workbench` 窗口左下角显示 `WSL: Ubuntu`；
-- [ ] 新终端的 `pwd` 指向 `~/course/w02-workbench`。
+- [ ] `~/course/ai-agents` 已成功 clone；
+- [ ] `ai-agents` 窗口左下角显示 `WSL: Ubuntu`；
+- [ ] 新终端的 `pwd` 指向 `~/course/ai-agents`。
 
 ### 第一课时需要停下求助的情况
 
@@ -394,10 +397,10 @@ Python ── 当前目录 + 参数 ──▶ some.py
 
 ### 4. 查看项目声明的运行条件
 
-切回 Explorer 根目录为 `w02-workbench` 的窗口，在其集成终端执行：
+切回 Explorer 根目录为 `ai-agents` 的窗口，展开 `week-02/`；在集成终端进入本周项目：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents/week-02
 pwd
 ls -la
 ```
@@ -423,7 +426,7 @@ ls -la
 
 ### 5. 用 uv 恢复并核对项目环境
 
-仍在 `w02-workbench` 仓库根（也是 uv 项目根）执行：
+仍在 `week-02/` 项目根执行；Git 仓库根是它的上一级 `ai-agents/`：
 
 ```bash
 command -v uv
@@ -438,7 +441,7 @@ uv run --locked python -c 'import sys; print(sys.executable)'
 刷新 Explorer，确认项目根出现 `.venv/`。再比较两次 Python 路径：
 
 - `python3 -c ...` 输出的是机器环境中的 Python，例如 `/usr/bin/python3`；
-- `uv run --locked python -c ...` 输出的路径应位于当前项目根的 `.../w02-workbench/.venv/bin/python`。
+- `uv run --locked python -c ...` 输出的路径应位于当前项目根的 `.../ai-agents/week-02/.venv/bin/python`。
 
 本课程统一使用 `uv run` 明确说明“从当前项目环境运行”，不要求手动激活 `.venv`。
 
@@ -477,7 +480,7 @@ pytest 应显示 `6 passed`；最后的 `printenv COURSE_MODE` 应没有输出�
 
 - [ ] 从 `inbox` 运行 `some.py` 成功；从 `cli-lab` 省略路径时失败，补全路径后成功；
 - [ ] 能说明 Shell 如何找到 `python3`，以及 Python 如何找到 `some.py`；
-- [ ] 项目 Python 路径位于 `w02-workbench/.venv/`；
+- [ ] 项目 Python 路径位于 `ai-agents/week-02/.venv/`；
 - [ ] 程序显示 `RUNTIME_CHECK=PASS`，pytest 显示 `6 passed`；
 - [ ] 最后的 `printenv COURSE_MODE` 没有输出。
 
@@ -493,10 +496,10 @@ pytest 应显示 `6 passed`；最后的 `printenv COURSE_MODE` 应没有输出�
 
 ### 1. 设置本仓库提交身份并确认干净起点
 
-切回 `w02-workbench` 窗口，在仓库根目录执行；把示例 `s07` 替换为教师指定或认可的公开标识：
+切回 `ai-agents` 窗口，在 `week-02/` 中执行；Git 会使用上一级课程仓库，把示例 `s07` 替换为教师指定或认可的公开标识：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents/week-02
 pwd
 git config --local user.name "s07"
 git config --local user.email "s07@example.invalid"
@@ -511,7 +514,7 @@ git status --short
 
 ### 2. 用 VS Code 修改并验证公开签名
 
-在 Explorer 中打开仓库根目录的 `signature.toml`，只把 `teacher` 改为教师指定或认可的公开标识，例如：
+在 Explorer 中打开 `week-02/signature.toml`，只把 `teacher` 改为教师指定或认可的公开标识，例如：
 
 ```toml
 [student]
@@ -528,7 +531,7 @@ COURSE_MODE=fixture uv run --locked python course_check.py
 
 ### 3. CLI 先观察工作区，Source Control 随后对照
 
-在仓库根执行：
+在 `week-02/` 项目目录执行：
 
 ```bash
 git status --short
@@ -612,7 +615,7 @@ git revert SHORT_SHA
 
 ### 6. 核对尚未 push 的本地 commit
 
-`git clone` 会把来源仓库的网络地址记录为 `origin`。在仓库根执行：
+`git clone` 会把来源仓库的网络地址记录为 `origin`。在 `week-02/` 项目目录执行：
 
 ```bash
 git status --short
@@ -657,7 +660,7 @@ git remote get-url origin
 
 ### A｜两种路径
 
-从仓库根出发，先用 `cat` 和相对路径显示一次文件内容：
+从 `week-02/` 项目目录出发，先用 `cat` 和相对路径显示一次文件内容：
 
 ```bash
 cat signature.toml
@@ -679,7 +682,7 @@ COURSE_MODE=fixture uv run --locked pytest -q
 
 ### D｜只读检查项目环境
 
-在 `w02-workbench` 仓库根执行：
+在 `week-02/` 项目目录执行：
 
 ```bash
 uv tree --locked
@@ -690,7 +693,7 @@ uv lock --check
 
 ### E｜用对象 ID 查看历史
 
-在仓库根执行：
+在 `week-02/` 项目目录执行：
 
 ```bash
 git rev-parse HEAD
@@ -715,4 +718,4 @@ git show --stat --oneline SHORT_SHA
 
 真实现场比“清理后重新开始”更容易判断和接续。
 
-W3 先沿用本周已打开的 `w02-workbench` 窗口接通 Agent，再更新同一仓库并进入 `week-03/` 完成报告。这个子项目使用自己的 `pyproject.toml`、`uv.lock` 和 `.venv/`；发布到个人远端时保留本周已有的 Git 历史。
+W3 先沿用本周已打开的 `ai-agents` 窗口接通 Agent，再更新同一仓库并进入 `week-03/` 完成报告。这个子项目使用自己的 `pyproject.toml`、`uv.lock` 和 `.venv/`；发布到个人远端时保留本周已有的 Git 历史。

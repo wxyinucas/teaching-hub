@@ -1,5 +1,7 @@
 # W4 学生指南：给追加实验保留独立方案
 
+本指南以 `~/course/ai-agents` 为课程仓库路径。已有的 `~/course/w02-workbench` 可以继续使用，只需把下面的仓库路径前缀替换为实际位置；不用重新 clone 或改名。
+
 本周继续使用已有的 `ai-agents` 仓库，在 `week-04/` 完成独立的 Python 练习。不换仓库，不改 W2、W3 的环境和报告，也不需要另建 Git 仓库。
 
 ## 背景与目的
@@ -33,7 +35,7 @@ probe ─────────────────────→ 整数�
 在 VS Code 的 WSL Terminal 执行：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 git remote -v
 ```
 
@@ -58,7 +60,7 @@ git remote -v
 更新成功后执行：
 
 ```bash
-cd ~/course/w02-workbench/week-04
+cd ~/course/ai-agents/week-04
 uv sync --locked
 code .
 ```
@@ -337,7 +339,7 @@ uv run --locked pytest -q tests/test_acceptance.py --impl=student
 沿用已有仓库和本地提交方式，不要求实验分支、模拟远端或 CI：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 git status -sb
 git diff -- week-04/variant.py week-04/tests/test_student.py
 git add -- week-04/variant.py week-04/tests/test_student.py

@@ -1,5 +1,7 @@
 # W3 学生行动指南：接通 Agent，用证据理解一次委托
 
+本指南以 `~/course/ai-agents` 为课程仓库路径。已有的 `~/course/w02-workbench` 可以继续使用，只需把下面的仓库路径前缀替换为实际位置；不用重新 clone 或改名。
+
 > 先接通自己的 DeepSeek API，再用测试和实际文件核验实验报告，最后让 Agent 带你认识 VS Code 与现有代码。按顺序跟做即可；没完成的报告可以课后继续，不要求不断增加代码功能。
 
 ## 本周路线与边界
@@ -17,7 +19,7 @@
 
 ## 课前准备
 
-沿用 W2 已经使用的 **VS Code + WSL** 环境，以及 `~/course/w02-workbench` 中的 `ai-agents` 仓库和本地 commit。不重复安装 WSL、VS Code、Git 或 uv，也不重新 clone。
+沿用 W2 已经使用的 **VS Code + WSL** 环境，以及 `~/course/ai-agents` 中的 `ai-agents` 仓库和本地 commit。不重复安装 WSL、VS Code、Git 或 uv，也不重新 clone。
 
 还没有完成前两周配置时，参考 [W1 Guide](#/terms/2026-fall/courses/ai-agents/weeks/week-01/guide) 和 [W2 Guide](#/terms/2026-fall/courses/ai-agents/weeks/week-02/guide)补做即可。
 
@@ -28,7 +30,7 @@
 在 WSL Bash 中运行：
 
 ~~~bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 code .
 ~~~
 
@@ -202,7 +204,7 @@ macOS 补充：不安装 WSL，也不运行 apt。先检查已有的 XeLaTeX；�
 在 WSL Terminal 中进入上周已经 clone 的仓库，先核对 remote：
 
 ~~~bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 git remote -v
 ~~~
 
@@ -225,7 +227,7 @@ code .
 现在应该看到：
 
 ~~~text
-w02-workbench/week-03/
+ai-agents/week-03/
 ├── README-materials.md       # 材料说明
 ├── EXPERIMENT.txt            # 实验和接口要求
 ├── report.tex                # 中文报告模板
@@ -235,7 +237,7 @@ w02-workbench/week-03/
 
 阅读 `README-materials.md` 和 `EXPERIMENT.txt`，随后直接在这个目录完成实现和报告。
 
-**Python 项目独立，Git 历史沿用。** W3 的 `pyproject.toml`、`uv.lock` 和 `.venv` 都放在 `week-03/`，不改仓库根目录的 W2 项目；不复制文件，不在子目录执行 `git init`。
+**Python 项目独立，Git 历史沿用。** W3 的 `pyproject.toml`、`uv.lock` 和 `.venv` 都放在 `week-03/`；W2 的对应文件位于独立的 `week-02/`。两个目录使用同一份 Git 历史，不在子目录执行 `git init`。
 
 ### 3. 先编译空报告
 
@@ -313,8 +315,8 @@ assert experiment.crosses_line(distance, angle) is expected
 ~~~text
 按现有 EXPERIMENT.txt 和 tests，在当前 week-03 目录建立独立的 uv Python 3.12 项目，
 加入 matplotlib 和 pytest，并生成 uv.lock。
-pyproject.toml、uv.lock 和 .venv 都放在 week-03，不改仓库根目录的 W2 项目。
-使用 uv init 时加 --no-workspace，不把 W3 加入父项目，也不另建 Git 仓库。
+pyproject.toml、uv.lock 和 .venv 都放在 week-03，不改 week-02 的环境与代码。
+使用 uv init 时加 --no-workspace，保持本周项目独立，也不另建 Git 仓库。
 在本周 pyproject.toml 的 [tool.pytest.ini_options] 中设置 testpaths = ["tests"]，不沿用 W2 测试配置。
 实现蒲丰投针，默认 seed=42，比较 1000、10000、100000 次投针。
 每次独立实验只初始化一次随机数生成器，不在取样循环中重设 seed。
@@ -420,7 +422,7 @@ bash rebuild.sh
 需要切回仓库根目录时，在 WSL Terminal 运行：
 
 ~~~bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 code .
 ~~~
 
@@ -652,7 +654,7 @@ GitHub 登录与授权由本人完成；这个账号用于上传，不是 DeepSe
 先告诉 Agent 或教师：**你在哪个目录、刚做了什么、实际出现了什么**。命令和完整报错通常比“它不行了”更有用；截图与文字先遮住 Key。
 
 ~~~text
-我在 ~/course/w02-workbench/week-03，当前做到：……
+我在 ~/course/ai-agents/week-03，当前做到：……
 我运行的命令或点击的入口是：……
 实际输出或截图是：……
 请先定位问题，说明下一步该做什么，再帮我修复。
@@ -666,7 +668,7 @@ GitHub 登录与授权由本人完成；这个账号用于上传，不是 DeepSe
 
 ~~~text
 我已有 W2 的本地 commit，想更新教师 wxyinucas/ai-agents 的材料，并继续完成 W3。
-本地仓库是 ~/course/w02-workbench；刚才执行的命令和完整输出是：……
+本地仓库是 ~/course/ai-agents；刚才执行的命令和完整输出是：……
 请检查 Git 状态与 remote，解释问题，再帮我完成 pull 或需要的 merge，保留我的提交和文件。
 教师 remote 可能还是 origin，也可能已改为 upstream，请按实际状态处理。
 需要我作决定时先问我，不要删除改动、重写历史或替我 push。

@@ -1,10 +1,12 @@
 # W7｜调试：找到第一次偏差
 
+本指南以 `~/course/ai-agents` 为课程仓库路径。已有的 `~/course/w02-workbench` 可以继续使用，只需把下面的仓库路径前缀替换为实际位置；不用重新 clone 或改名。
+
 这周用 Notebook 调试器找到第一次偏差。每道题已经给出错误版本、固定数组和检查。**先在断点处说清预期和实际看到的值，再决定改哪一行。**
 
 ## 获取本周材料
 
-继续使用已经 clone 的 [ai-agents 课程仓库](https://github.com/wxyinucas/ai-agents)，例如 `~/course/w02-workbench`。本周材料随这份仓库更新，保留已有 Git 历史。Windows 用户在 WSL 终端中完成下面的操作。
+继续使用已经 clone 的 [ai-agents 课程仓库](https://github.com/wxyinucas/ai-agents)，例如 `~/course/ai-agents`。本周材料随这份仓库更新，保留已有 Git 历史。Windows 用户在 WSL 终端中完成下面的操作。
 
 ### 1. 保存自己的工作
 
@@ -13,7 +15,7 @@
 进入已有工作台的根目录，查看本地改动和 remote：
 
 ```bash
-cd ~/course/w02-workbench
+cd ~/course/ai-agents
 git status -sb
 git remote -v
 ```

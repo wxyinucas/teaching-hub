@@ -66,7 +66,7 @@
 - **从 Bash 启动 Python，查询 probe。** 在 VS Code 的 WSL Terminal 执行：
 
   ~~~bash
-  cd ~/course/w02-workbench
+  cd ~/course/ai-agents
   echo "现在由 Bash 解释输入"
   uv run --locked python
   ~~~
@@ -577,7 +577,7 @@
 - **打开本周目录，建立已经给定的独立环境。** 更新步骤使用 Guide，在 WSL Terminal 执行：
 
   ~~~bash
-  cd ~/course/w02-workbench/week-04
+  cd ~/course/ai-agents/week-04
   uv sync --locked
   code .
   ~~~
@@ -772,7 +772,7 @@
   - [ ] 课前：准备本地演示副本，核对只暂存本周实现与学生测试的步骤；沿用原 Git 历史，不另建实验分支或模拟远端。
 
   ~~~bash
-  cd ~/course/w02-workbench
+  cd ~/course/ai-agents
   git rev-parse --show-toplevel
   git status -sb
   git diff -- week-04/variant.py week-04/tests/test_student.py

@@ -68,7 +68,7 @@ Bash 解释命令
 ## 本地目标
 **课程工作台**
 
-`~/course/w02-workbench`
+`~/course/ai-agents`
 
 <!-- footer -->
 `git clone <URL> [<TARGET>]` 取得材料和历史；第三课时再打开 remote 关系。

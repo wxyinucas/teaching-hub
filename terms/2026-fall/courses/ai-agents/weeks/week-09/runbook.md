@@ -34,7 +34,7 @@
 - 已实测的技术入口：2026-11-16，教师 Mac、CLI 0.31.2、仅基础行情的 Demo 授权，最近 100 根 AAPL 日 K 返回成功。按日期查询的 `kline history` 仍有额度问题，本周采用普通 `kline`；不以真实开户、入金或购买权益解决课堂任务。
 
 ~~~bash
-cd ~/ai-agents/week-09
+cd ~/course/ai-agents/week-09
 uv sync --locked
 cd reference
 code .
