@@ -510,25 +510,7 @@ $$
 <!-- layout: exercise -->
 <!-- timer: 60 -->
 <!-- formulas-title: 先判断 -->
-# 例一 · 教材第 138 页例 10
-
-在 $0<x<\dfrac{\pi}{2}$ 上计算
-
-$$
-\int\frac{dx}{\sin^2x\cos^2x}.
-$$
-
-<!-- formulas -->
-
-- 先做什么预处理？
-- 整理后能调用哪些基本公式？
-- 第一行怎样改写？
-
----
-<!-- layout: exercise -->
-<!-- timer: 60 -->
-<!-- formulas-title: 先判断 -->
-# 例二 · 教材第 140 页例 1
+# 例一 · 教材第 140 页例 1
 
 计算
 
@@ -544,27 +526,29 @@ $$
 
 ---
 <!-- layout: exercise -->
-<!-- timer: 60 -->
+<!-- timer: 120 -->
 <!-- formulas-title: 先判断 -->
-# 例三 · 教材第 141 页例 7
+# 例二 · 教材第 141 页例 7、例 8
 
-计算
+比较计算
 
 $$
-\int\tan x\,dx.
+\int\tan x\,dx,
+\qquad
+\int\sec x\,dx.
 $$
 
 <!-- formulas -->
 
-- 应当采用哪一种方法？
-- 为什么先把 $\tan x$ 写成商？
-- 谁与自己的导数配套？
+- $\tan x$ 怎样改写成已经存在的 $g'(x)/g(x)$？
+- $\sec x$ 应当乘以怎样的 $1$，制造同一种结构？
+- 两题最终调用哪一条基本积分公式？
 
 ---
 <!-- layout: exercise -->
 <!-- timer: 90 -->
 <!-- formulas-title: 先判断 -->
-# 例四 · 教材第 142 页例 12
+# 例三 · 教材第 142 页例 12
 
 计算
 
@@ -577,6 +561,24 @@ $$
 - 应当采用哪一种方法？
 - 哪个奇次幂保留一个因子？
 - 其余部分怎样改写？
+
+---
+<!-- layout: exercise -->
+<!-- timer: 90 -->
+<!-- formulas-title: 先判断 -->
+# 例四 · 教材第 142 页例 10
+
+计算
+
+$$
+\int\cos^4x\,dx.
+$$
+
+<!-- formulas -->
+
+- 为什么不适合保留一个因子凑微分？
+- 应当使用哪一条积化和差公式降幂？
+- 第一次降幂后，哪一项还要继续处理？
 
 ---
 <!-- layout: exercise -->
@@ -598,9 +600,27 @@ $$
 
 ---
 <!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 先判断 -->
+# 例六 · 教材第 138 页例 10
+
+在 $0<x<\dfrac{\pi}{2}$ 上计算
+
+$$
+\int\frac{dx}{\sin^2x\cos^2x}.
+$$
+
+<!-- formulas -->
+
+- 先做什么预处理？
+- 整理后能调用哪些基本公式？
+- 第一行怎样改写？
+
+---
+<!-- layout: exercise -->
 <!-- timer: 90 -->
 <!-- formulas-title: 先判断 -->
-# 例六 · 教材第 146 页习题 4-2 第 1 题（4）
+# 例七 · 教材第 146 页习题 4-2 第 1 题（4）
 
 计算
 
@@ -616,16 +636,18 @@ $$
 
 ---
 <!-- layout: content -->
-# 六道例题的归类
+<!-- table-style: comparison -->
+# 七题归类
 
-| 例题 | 最终方法 | 识别与预处理 |
+| 例题 | 最终方法 | 识别动作 |
 | --- | --- | --- |
-| [例一](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/35) | 基本公式 | 恒等变形，拆成 $\sec^2x+\csc^2x$ |
-| [例二](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/36) | 第一类换元 | $x^2\,dx$ 与 $d(x^3)$ 配套 |
-| [例三](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/37) | 第一类换元 | $\tan x=\sin x/\cos x$，分子与 $d(\cos x)$ 配套 |
-| [例四](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/38) | 第一类换元 | $\cos x$ 为奇次幂，留一个因子，其余降幂 |
-| [例五](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/39) | 第一类换元 | $\sin x\cos x\,dx$ 与 $d(\sin^2x)$ 配套 |
-| [例六](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/40) | 基本公式与第一类换元 | 先做多项式除法，再按线性性质拆开 |
+| [例一](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/35) | 第一类换元 | 整体与配套导数 |
+| [例二](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/36) | 第一类换元 | 识别／制造对数结构 |
+| [例三](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/37) | 第一类换元 | 奇幂：留一因子 |
+| [例四](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/38) | 基本公式 | 偶幂：积化和差 |
+| [例五](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/39) | 第一类换元 | 倒推多层整体 |
+| [例六](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/40) | 基本公式 | 恒等拆项 |
+| [例七](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/41) | 基本公式＋换元 | 先除后拆 |
 
 ---
 <!-- layout: question -->
@@ -704,7 +726,7 @@ $$
 <!-- layout: exercise -->
 <!-- timer: 180 -->
 <!-- formulas-title: 先完成前三步 -->
-# 例七 · 教材第 143 页例 14
+# 教材第 143 页例 14
 
 设 $a>0$，计算
 

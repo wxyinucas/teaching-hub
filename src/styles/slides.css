@@ -127,6 +127,15 @@
 .slide-content.has-comparison-table .slide-content-body tbody td + td {
   border-left: 1px solid #dddce1;
 }
+.slide-content.has-comparison-table .slide-content-body table:has(tbody tr:nth-child(7)) th,
+.slide-content.has-comparison-table .slide-content-body table:has(tbody tr:nth-child(7)) td {
+  padding-block: .4cqw;
+  line-height: 1.35;
+}
+.slide-content.has-comparison-table:has(.slide-content-body tbody tr:nth-child(7)) .slide-heading {
+  display: none;
+  position: absolute;
+}
 .slide-content.has-footer { display: flex; flex-direction: column; justify-content: space-between; }
 .slide-content.has-footer .slide-content-body { flex: 1; height: auto; }
 .slide-cover { display: flex; flex-direction: column; justify-content: center; padding: 6.2cqw; }
