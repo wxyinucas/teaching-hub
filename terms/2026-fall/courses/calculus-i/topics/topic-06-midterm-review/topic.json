@@ -1,0 +1,13 @@
+{
+  "id": "topic-06-midterm-review",
+  "label": "T06",
+  "title": "阶段复习与期中讲评",
+  "summary": "按课程 Topic 整理跨专题答疑与期中复习题，并通过期中试卷讲评回到极限、连续、导数及其应用的定义、定理与算法。",
+  "lessonCount": 3,
+  "order": 7,
+  "resources": {
+    "runbook": "runbook.md",
+    "slides": "slides.md",
+    "guide": "guide.md"
+  }
+}

@@ -22,6 +22,12 @@ describe('teacher notes rendering', () => {
     expect(html).toContain('rel="noopener noreferrer"')
   })
 
+  it('keeps in-app hash links in the current slide window', () => {
+    const html = renderSlideMarkdown('[例一](#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/35)')
+    expect(html).toContain('href="#/terms/2026-fall/courses/calculus-i/topics/topic-07-indefinite-integrals/slides/35"')
+    expect(html).not.toContain('target="_blank"')
+  })
+
   it('marks Markdown bold text for visual spacing without inserting text characters', () => {
     expect(renderNotes('前文**重点**后文').html)
       .toContain('前文<strong class="markdown-strong">重点</strong>后文')

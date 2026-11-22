@@ -15,8 +15,11 @@ const markdown = createMarkdown()
 const slideMarkdown = createMarkdown()
 
 function externalLink(tokens, index, options, env, renderer) {
-  tokens[index].attrSet('target', '_blank')
-  tokens[index].attrSet('rel', 'noopener noreferrer')
+  const href = tokens[index].attrGet('href') ?? ''
+  if (!href.startsWith('#')) {
+    tokens[index].attrSet('target', '_blank')
+    tokens[index].attrSet('rel', 'noopener noreferrer')
+  }
   return renderer.renderToken(tokens, index, options)
 }
 

@@ -631,6 +631,12 @@ describe('slides reader', () => {
     expect(wrapper.find('.slide-footer').exists()).toBe(false)
   })
 
+  it('scopes comparison-table styling to marked content pages', () => {
+    const deck = parseSlides('<!-- table-style: comparison -->\n# 对照表\n\n| 类别 | 内容 | |\n| --- | --- | --- |\n| 一类 | 左 | 右 |')
+    wrapper = mount(SlidesReader, { props: { deck, page: 1 } })
+    expect(wrapper.find('.slide-content.has-comparison-table').exists()).toBe(true)
+  })
+
   it('copies the complete prompt from a prompt page', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     vi.stubGlobal('navigator', { clipboard: { writeText } })

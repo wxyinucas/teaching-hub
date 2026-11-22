@@ -1,7 +1,8 @@
 import { renderSlideMarkdown } from './markdown.js'
 
-const directivePattern = /<!--\s*(layout|section|subsection|column|footer|lead|lesson|timer|formulas-title|formulas)\s*(?::\s*([^>]*?))?\s*-->/gi
+const directivePattern = /<!--\s*(layout|section|subsection|column|footer|lead|lesson|timer|formulas-title|formulas|table-style)\s*(?::\s*([^>]*?))?\s*-->/gi
 const allowedLayouts = new Set(['cover', 'question', 'columns', 'prompt', 'agenda', 'tree', 'exercise', 'content'])
+const allowedTableStyles = new Set(['comparison'])
 
 function splitPages(source) {
   const pages = []
@@ -89,6 +90,10 @@ function readContent(raw, index, sectionIndex) {
   if (footerParts.length > 2) throw new Error('一页课件只能有一个 footer。')
   const clean = stripDirectives(footerParts[0])
   const { title, body } = readTitle(clean)
+  const tableStyle = directive(raw, 'table-style')
+  if (tableStyle && !allowedTableStyles.has(tableStyle)) {
+    throw new Error(`不支持的课件表格样式：${tableStyle}`)
+  }
   return {
     number: index + 1,
     layout: 'content',
@@ -96,6 +101,7 @@ function readContent(raw, index, sectionIndex) {
     title,
     html: renderSlideMarkdown(body),
     footerHtml: footerParts[1] ? renderSlideMarkdown(stripDirectives(footerParts[1])) : '',
+    tableStyle,
   }
 }
 

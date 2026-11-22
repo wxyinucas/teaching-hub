@@ -55,6 +55,23 @@ describe('static slides Markdown parser', () => {
     expect(() => parseSlides('# 重复\n\n<!-- footer -->\n一次\n<!-- footer -->\n两次')).toThrow('只能有一个 footer')
   })
 
+  it('parses a local comparison-table style without leaking its directive', () => {
+    const slide = parseSlides([
+      '<!-- table-style: comparison -->',
+      '# 积分表',
+      '',
+      '| 类别 | 内容 | |',
+      '| --- | --- | --- |',
+      '| 幂函数 | 公式一 | 公式二 |',
+    ].join('\n')).slides[0]
+
+    expect(slide.tableStyle).toBe('comparison')
+    expect(slide.html).toContain('<table>')
+    expect(slide.html).not.toContain('table-style')
+    expect(() => parseSlides('<!-- table-style: unknown -->\n# 页面'))
+      .toThrow('不支持的课件表格样式')
+  })
+
   it('escapes raw HTML and rejects unknown layouts or invalid column counts', () => {
     expect(parseSlides('# 页面\n\n<script>alert(1)</script>').slides[0].html).not.toContain('<script>')
     expect(() => parseSlides('<!-- layout: magic -->\n# 页面')).toThrow('不支持的课件布局')
