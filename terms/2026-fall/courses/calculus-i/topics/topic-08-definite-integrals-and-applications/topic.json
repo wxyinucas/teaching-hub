@@ -5,7 +5,15 @@
   "summary": "连接定积分概念、微积分基本公式与计算方法，并处理几何、物理应用和广义积分。",
   "lessonCount": 8,
   "order": 9,
+  "demos": [
+    {
+      "id": "definite-integral",
+      "title": "从割圆到定积分",
+      "summary": "先用内接、外切多边形夹住圆面积，再比较任分任取的矩形、梯形与抛物线局部模型怎样逼近同一个曲边梯形面积。"
+    }
+  ],
   "resources": {
+    "runbook": "runbook.md",
     "exams": {
       "scope": "course",
       "file": "exams/topics/topic-08-definite-integrals-and-applications.tex"

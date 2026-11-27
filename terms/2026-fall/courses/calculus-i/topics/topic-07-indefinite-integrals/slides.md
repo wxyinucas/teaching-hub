@@ -753,3 +753,343 @@ $$
 恒等变形、拆项、降次与配平方都属于预处理。先判断采用哪一种方法，再选择合适的预处理。
 
 ---
+<!-- lesson: 第六次课 · 第三课时 -->
+<!-- layout: question -->
+# 重新解释裂项，再选择根式代换
+> 复习已经使用过的方法，并把判断依据补完整
+
+---
+<!-- layout: agenda -->
+# 本节课的四个问题
+
+1. 裂项究竟改变了什么
+2. 待定分子的形式怎样确定
+3. 裂项以后怎样回到基本积分
+4. 什么时候应当改用根式换元
+
+---
+<!-- layout: content -->
+# 裂项是在同一个有理函数上更换表示方式
+
+设 $Q(x)=A(x)B(x)$，$\gcd(A,B)=1$，并限制 $\deg U<\deg A$、$\deg V<\deg B$。通分后，分式恒等式与多项式恒等式完全等价：
+
+$$
+\boxed{
+\frac{P(x)}{A(x)B(x)}
+=\frac{U(x)}{A(x)}+\frac{V(x)}{B(x)}
+\quad\Longleftrightarrow\quad
+P(x)=U(x)B(x)+V(x)A(x)
+}.
+$$
+
+> 裂项保持函数值不变；待定参数就是未知多项式 $U,V$ 的系数，由代特殊值或比较同次幂系数确定。
+
+---
+<!-- layout: columns -->
+# 一次与不可约二次因式的待定分子
+
+待定分子的次数必须严格低于对应实不可约因式的次数。
+
+<!-- column -->
+## 一次因式
+
+对 $x-a$，分子的次数低于 $1$，所以只保留常数：
+
+$$
+\boxed{\frac{A}{x-a}}.
+$$
+
+只需要一个待定系数 $A$。
+
+<!-- column -->
+## 不可约二次因式
+
+对 $x^2+px+q$，其中 $p^2-4q<0$，分子的次数低于 $2$，所以保留一般一次式：
+
+$$
+\boxed{\frac{Bx+C}{x^2+px+q}}.
+$$
+
+需要两个待定系数 $B,C$。
+
+---
+<!-- layout: content -->
+# 重因式为什么逐级保留
+
+对总重数 $m$，依次遍历 $k=1,2,\ldots,m$。逐级写法与直接合写满足
+
+$$
+\boxed{
+\begin{aligned}
+\sum_{k=1}^{m}\frac{A_k}{(x-a)^k}
+&=
+\frac{
+A_1(x-a)^{m-1}+A_2(x-a)^{m-2}+\cdots+A_m
+}{(x-a)^m}\\[4pt]
+&=
+\frac{
+B_{m-1}x^{m-1}+B_{m-2}x^{m-2}+\cdots+B_0
+}{(x-a)^m}.
+\end{aligned}
+}.
+$$
+
+- **每一级只配一个常数**：基本因式是一次式 $x-a$，所以第 $k$ 级的分子次数必须低于 $1$，只写 $A_k$。
+- **所有层级都要遍历**：通分后，$A_1,\ldots,A_m$ 分别控制 $(x-a)^{m-1},\ldots,1$，漏掉一级就会漏掉一类分子。
+- **两种写法等价**：$1,x-a,\ldots,(x-a)^{m-1}$ 与 $1,x,\ldots,x^{m-1}$ 覆盖同一类 $m-1$ 次及以下多项式；逐级写法更便于直接积分。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 90 -->
+<!-- formulas-title: 裂项前先完成 -->
+# 教材第 152 页例 1
+
+计算
+
+$$
+\int\frac{x^4+1}{x^3-1}\,dx.
+$$
+
+<!-- formulas -->
+
+- **先除** $x^4+1=x(x^3-1)+(x+1)$
+- **分母** $x^3-1=(x-1)(x^2+x+1)$
+- **模板** $\displaystyle\frac{x+1}{x^3-1}=\frac{A}{x-1}+\frac{Bx+C}{x^2+x+1}$
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 重因式的完整模板 -->
+# 教材第 153 页例 2
+
+计算
+
+$$
+\int\frac{x^2+1}{x(x-1)^2}\,dx.
+$$
+
+<!-- formulas -->
+
+- **一次因式** $\displaystyle\frac{A}{x}$
+- **二重因式** $\displaystyle\frac{B}{x-1}+\frac{C}{(x-1)^2}$
+- **注意** 求解后即使 $B=0$，一开始仍要保留这一项
+
+---
+<!-- layout: content -->
+# 不可约二次因式上的一次分子
+
+$$
+\begin{gathered}
+D(x)=x^2+px+q,\qquad p^2-4q<0,\qquad D'(x)=2x+p,\\[4pt]
+\boxed{
+\frac{Mx+N}{D(x)}
+=\frac M2\frac{D'(x)}{D(x)}
++\left(N-\frac{Mp}{2}\right)\frac1{D(x)}
+}
+\end{gathered}
+$$
+
+- 第一项与分母导数配套，积分后得到 $\dfrac M2\ln D(x)$。
+
+---
+<!-- layout: content -->
+# 教材第 151 页 III：判别式与配方
+
+第二项只剩常数倍 $\displaystyle\int\frac{dx}{D(x)}$，它的积分类型由 $D(x)$ 配方后的结构决定。
+
+$$
+\Delta=p^2-4q,
+\qquad
+D(x)=\left(x+\frac p2\right)^2-\frac{\Delta}{4}.
+$$
+
+- **$\Delta<0$**：令 $r^2=-\dfrac{\Delta}{4}>0$，得到 $\left(x+\dfrac p2\right)^2+r^2$，进入反正切型积分。
+- **$\Delta=0$**：得到完全平方，把它看作一次因式的重因式。
+- **$\Delta>0$**：得到平方差，继续分解为两个实一次因式。
+
+---
+<!-- layout: content -->
+# 教材第 151 页 IV：不可约二次因式的高次幂
+
+$$
+\frac{Mx+N}{\left(x^2+px+q\right)^n},
+\qquad
+n\ge2,\qquad p^2-4q<0.
+$$
+
+这类分式仍先把一次分子拆成“分母导数的倍数＋常数余项”，但常数余项还需要继续递推降幂。
+
+> 本节课不展开计算，完整方法回看教材第 151 页。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 60 -->
+<!-- formulas-title: 分子仍要继续拆 -->
+# 不可约二次因式的短例
+
+计算
+
+$$
+\int\frac{x}{x^2+x+1}\,dx.
+$$
+
+<!-- formulas -->
+
+- **拆分** $\displaystyle x=\frac12(2x+1)-\frac12$
+- **对数** $\displaystyle\int\frac{D'(x)}{D(x)}\,dx=\ln D(x)+C$
+- **配方** $\displaystyle x^2+x+1=\left(x+\frac12\right)^2+\frac34$
+
+---
+<!-- layout: question -->
+# 从裂项转向根式换元
+> 根式把两个一次因子绑在一起。尝试用它们的比值，把两个对象压成一个新变量。
+
+---
+<!-- layout: columns -->
+# 引理：两个一次因子的比值换元
+
+$$
+I=\int\frac{dx}{P^mQ^n},
+\qquad
+P(x)=ax+b,
+\quad
+Q(x)=cx+d.
+$$
+
+<!-- column -->
+## 使用条件
+
+- 固定一个使 $P,Q$ 均不为零的区间。
+- $P^m,Q^n$ 在该区间内具有实数意义。
+- 分母指数满足 $m+n=2$。
+- 两个一次因子不成比例，即 $\kappa=bc-ad\ne0$。
+
+<!-- column -->
+## 比值代换
+
+$$
+v=\frac QP,
+\qquad
+Q=Pv
+$$
+
+$$
+\boxed{dv=\frac{\kappa}{P^2}\,dx}.
+$$
+
+---
+<!-- layout: content -->
+# 为什么代换后只剩一个变量
+
+$$
+\begin{aligned}
+P^mQ^n
+&=P^m(Pv)^n
+=P^{m+n}v^n
+=P^2v^n,\\[4pt]
+dx&=\frac{P^2}{\kappa}\,dv.
+\end{aligned}
+$$
+
+因此
+
+$$
+\boxed{
+\int\frac{dx}{P^mQ^n}
+=\frac1\kappa\int v^{-n}\,dv
+}.
+$$
+
+---
+<!-- layout: columns -->
+# 比值换元的积分结论
+
+<!-- column -->
+## 幂函数情形（n ≠ 1）
+
+$$
+\int\frac{dx}{P^mQ^n}
+ =
+\frac1{\kappa(1-n)}
+\left(\frac QP\right)^{1-n}+C.
+$$
+
+<!-- column -->
+## 对数情形（n = 1）
+
+$$
+\int\frac{dx}{P^mQ}
+=\frac1\kappa\ln\left|\frac QP\right|+C.
+$$
+
+<!-- footer -->
+这里使用 $m+n=2$；若被积函数写成 $P^rQ^s$，同一个条件写作 $r+s=-2$。
+
+---
+<!-- layout: exercise -->
+<!-- timer: 90 -->
+<!-- formulas-title: 先把原式写成引理的样子 -->
+# 教材第 156 页例 7
+
+在 $-1<x<2$ 上计算
+
+$$
+I=\int\frac{dx}{(1+x)\sqrt{2+x-x^2}}.
+$$
+
+<!-- formulas -->
+
+- **因式分解** $2+x-x^2=(1+x)(2-x)$
+- **指数形式** $\displaystyle I=\int\frac{dx}{P^{3/2}Q^{1/2}},\quad m+n=2$
+- **比值代换** $\displaystyle P=1+x,\quad Q=2-x,\quad v=\frac QP$
+- **教材压缩** $\displaystyle u=\sqrt{Q/P}$
+
+---
+<!-- layout: columns -->
+# 为什么整个一次分式的根可以作为新变量
+
+<!-- column -->
+## 一次分式的根
+
+若
+
+$$
+u^n=\frac{ax+b}{cx+d},
+$$
+
+则
+
+$$
+x=\frac{b-du^n}{cu^n-a}.
+$$
+
+$x$、$dx$ 与原根式都能写成 $u$ 的有理式。
+
+<!-- column -->
+## 二次多项式的平方根
+
+若直接令
+
+$$
+u^2=ax^2+bx+c,
+$$
+
+通常仍要解关于 $x$ 的二次方程，不能保证有理地表示旧变量。
+
+<!-- footer -->
+判断依据是换元后能否把 $x$、$dx$ 与根式全部写成新变量的有理式。
+
+---
+<!-- layout: content -->
+<!-- table-style: comparison -->
+# 分式与根式的处理顺序
+
+| 题面结构 | 优先考虑 | 完整核对 |
+| --- | --- | --- |
+| 有理假分式 | 先做整式除法 | 余下部分是否已成为真分式 |
+| 有理真分式 | 按分母因式裂项 | 待定分子与重数是否完整 |
+| 不可约二次因式上的一次分子 | 拆成分母导数与常数余项 | 是否分别落入对数型与反正切型积分 |
+| 一次分式的 $n$ 次根 | 把整个根式作为新变量 | $x$、$dx$ 与根式是否全部有理化 |
+| 二次多项式的平方根 | 先查配套导数和基本公式，再比较三角代换与有理化代换 | 根式以外的因子是否也变简单 |
+
+---

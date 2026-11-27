@@ -6,6 +6,7 @@ import DerivativesDemo from '../components/demos/DerivativesDemo.vue'
 import FunctionLimitDemo from '../components/demos/FunctionLimitDemo.vue'
 import MvtTaylorDemo from '../components/demos/MvtTaylorDemo.vue'
 import DerivativeApplicationsDemo from '../components/demos/DerivativeApplicationsDemo.vue'
+import DefiniteIntegralDemo from '../components/demos/DefiniteIntegralDemo.vue'
 import SequenceLimitDemo from '../components/demos/SequenceLimitDemo.vue'
 import RolleLagrangeDemo from '../components/demos/RolleLagrangeDemo.vue'
 import NotFoundView from './NotFoundView.vue'
@@ -23,6 +24,7 @@ const demoComponents = {
   'function-limit': FunctionLimitDemo,
   'mean-value': MvtTaylorDemo,
   'derivative-applications': DerivativeApplicationsDemo,
+  'definite-integral': DefiniteIntegralDemo,
   'sequence-limit': SequenceLimitDemo,
   'rolle-lagrange': RolleLagrangeDemo,
 }
